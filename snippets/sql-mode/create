@@ -3,7 +3,7 @@
 # key: c2
 # --
 <select name='create_table'>
- CREATE TABLE goldkinn_table (
+ CREATE TABLE table (
   id      BIGINT        PRIMARY KEY,
   name    VARCHAR(64)   DEFAULT NULL COMMENT '名称',
   code    VARCHAR(64)   DEFAULT NULL COMMENT '编码',

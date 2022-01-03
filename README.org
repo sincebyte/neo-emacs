@@ -102,7 +102,7 @@ Changing config in the config.el.
 - Use `(setq user-private-dir "$usr_private_dir/dap-java-config.el" )` make it effective.
     #+begin_src lisp
     (dap-register-debug-template
-    "goldkinn-user-service"
+    "user-service"
     (list :name "Java Attach"
             :type "java"
             :request "attach"
