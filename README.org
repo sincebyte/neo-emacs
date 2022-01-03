@@ -12,6 +12,8 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 - SQL client: Ejc-sql turns Emacs into a simple SQL client which supports various databases.
 - Terminal emulator: Emacs-libvterm (vterm) is fully-fledged terminal emulator inside GNU Emacs based on libvterm.
 - Knowledge management system: Org-roam borrows principles from the Zettelkasten method, providing a solution for non-hierarchical note-taking.
+- [[http://1.117.167.195/doc/neo-emacs.html][onlinedoc]]
+
 * How to install
 ** Install emacs
 Choose your operation system and install it.
