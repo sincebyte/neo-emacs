@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: dot
+# key: dot
+# --
+#+BEGIN_SRC DOT :file dotgra.svg
+    digraph CHL {
+        node [shape="box",fontcolor="0xfffff"]
+        rankdir = LR #TB
+        CHL -> START [dir=none]
+        START -> END[color="red",fontcolor="green",dir=both]
+        condition_list -> thread [dir=none]
+        thread -> NULL_NODE
+    }
+#+END_SRC

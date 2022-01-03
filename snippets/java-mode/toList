@@ -1,0 +1,10 @@
+ -*-
+# name: tolist
+# key: tolist
+# --
+${1:list}.stream()
+    .filter  (item -> !StringUtils.isEmpty(item.toString()))
+    .map     (item -> item)
+    .sorted  (Comparator.comparing(   Long::longValue ).reversed())
+    .sorted  (Comparator.comparing( String::toString  ).reversed())
+    .collect (Collectors.toList());

@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: title
+# key: tt
+# --
+#+title:
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://7465-test-i1bhx-1301855613.tcb.qcloud.la/org-roam.css"/>
+#+OPTIONS: ^:nil
+#+OPTIONS: prop:t

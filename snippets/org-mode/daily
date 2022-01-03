@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: daily
+# key: daily
+# --
+* 汇报日期： `(format-time-string "%Y-%m-%d")`
+本周工作：
+
+下周工作：

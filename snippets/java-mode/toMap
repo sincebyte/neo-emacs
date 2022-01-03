@@ -1,0 +1,6 @@
+ -*-
+# name: tomap
+# key: tomap
+# --
+Map<Long, ${1:Dto}> id2EntityMap = ${2:list}.stream()
+                .collect(Collectors.toMap(item -> item, item -> item, (item1, item2) -> item1, TreeMap::new));

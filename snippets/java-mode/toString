@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: toString
+# key: toString
+# --
+@Override
+public String toString() {
+    return JSON.toJSONString(this);
+}

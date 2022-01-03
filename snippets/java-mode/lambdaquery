@@ -1,0 +1,10 @@
+ -*-
+# name: lambdaquery
+# key: lq
+# --
+LambdaQueryWrapper<${1:Dto}> queryWarpper = Wrappers.<$1>lambdaQuery()
+    .eq($1::getStatus, 1)
+    .in(org.apache.commons.lang.StringUtils.isNotBlank(""), $1::getId, new ArrayList())
+    .orderByAsc($1::getId);
+List<$1> listFromDb = mapper.list(new Page<>(0, 1), queryWarpper);
+$1 eoFromDb = mapper.selectOne(queryWarpper);

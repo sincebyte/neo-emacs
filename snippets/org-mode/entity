@@ -1,0 +1,27 @@
+# -*- mode: snippet -*-
+# name: entity
+# key: entity
+# --
+#+BEGIN_SRC plantuml :file ./image/db.svg
+scale 550 width
+entity t_credit_apply_log {
+  * id
+  --
+  * 客户id
+  * 客户类型
+  * ...
+}
+note left #red: 申请表\n1.获取合同\t插入\n2.签署合同\t更新
+
+entity t_product_info {
+  * id
+  -
+  * 产品名称
+  * 产品利率
+  * 资方id
+  * ...
+}
+note right #6495ED: 产品信息表
+
+t_credit_apply_log }o--|| t_product_info
+#+END_SRC

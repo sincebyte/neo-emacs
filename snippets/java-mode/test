@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: test
+# key: test
+# --
+/**
+ * $0mvn test -Dtest=`(mapconcat 'identity (split-string (replace-regexp-in-string ".*src\\(/\\(main\\|test\\)\\)?\\(/java\\)?" "" default-directory) "/" t) ".")`.`(file-name-sans-extension (buffer-name))`#${1:testName}
+ */
+@Test
+public void ${1:testName}() {
+    $0
+}

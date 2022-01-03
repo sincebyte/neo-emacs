@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: mvntest
+# key: mvnt
+# --
+$0mvn test -Dtest=`(mapconcat 'identity (split-string (replace-regexp-in-string ".*src\\(/\\(main\\|test\\)\\)?\\(/java\\)?" "" default-directory) "/" t) ".")`.`(file-name-sans-extension (buffer-name))`#`(yank)`

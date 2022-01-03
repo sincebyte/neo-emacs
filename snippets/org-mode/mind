@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: mind
+# key: mind
+# --
+#+BEGIN_SRC plantuml :file ./image/mind.svg
+@startmindmap
+,* A
+,**[#Orange] C
+,**[#Orange] D
+#+END_SRC

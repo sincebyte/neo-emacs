@@ -1,0 +1,223 @@
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://7465-test-i1bhx-1301855613.tcb.qcloud.la/org-roam.css"/>
+#+OPTIONS: ^:nil
+#+OPTIONS: prop:t
+
+[[file:./neo-emacs.gif]]
+
+* About
+Neo emacs is a configuration framework for GNU Emacs which is based on doom emacs and focuses on the java web application coding environment. Neo emacs has the following features:
+- Code completion: Lsp-java supports maven and gradle project.
+- Program debugging: Dap-java supports program debugging.
+- Http client: Rest-client is a tool to manually explore and test HTTP REST webservices just like Postman.
+- SQL client: Ejc-sql turns Emacs into a simple SQL client which supports various databases.
+- Terminal emulator: Emacs-libvterm (vterm) is fully-fledged terminal emulator inside GNU Emacs based on libvterm.
+- Knowledge management system: Org-roam borrows principles from the Zettelkasten method, providing a solution for non-hierarchical note-taking.
+* How to install
+** Install emacs
+Choose your operation system and install it.
+- [[https://www.gnu.org/software/emacs/][gnu-emacs]] is the official emacs client.
+- [[https://github.com/d12frosted/homebrew-emacs-plus][emacs-plus]] is the best choice to run NeoEmcas.
+- export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs, this depends on your installation path.
+** Building Emacs
+#+begin_src shell
+git clone git://git.savannah.gnu.org/emacs.git
+cd emacs
+git checkout emacs-28
+brew install  libxml2
+make configure
+./configure --with-native-compilation --with-modern-papirus-icon --with-no-titlebar
+make -j4
+make install
+open nextstep/Emacs.app
+#+end_src
+** Clone doom-emacs
+
+#+BEGIN_SRC shell
+git clone https://github.com/hlissner/doom-emacs.git ~/.emacs.d/
+#+END_SRC
+** Clone neo-emacs
+
+#+BEGIN_SRC shell
+git clone https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
+#+END_SRC
+** Doom Install
+Make sure that you have some setting in your terminal environment.
+
+Set up a vpn if you need it.
+
+#+BEGIN_SRC shell
+export http_proxy="ip:port"
+export https_proxy="ip:port"
+#+END_SRC
+
+Set your emacs cmd for doom install.
+
+#+BEGIN_SRC shell
+export EMACS= $YOUR EMACS CMD PATH$
+#+END_SRC
+
+At last run below, this will take few minutes. And it depends on the quality of your network.
+
+#+BEGIN_SRC shell
+~/.emacs.doom/bin/doom install
+#+END_SRC
+* Private setting
+Changing config in the config.el.
+
+| rg-exec-path              | "/opt/homebrew/bin/rg"                                                        | rg            exec path                     |
+| fd-exec-path              | "/opt/homebrew/bin/fd"                                                        | fd            exec path                     |
+| dot-exec-path             | "/opt/homebrew/bin/dot"                                                       | dot           exec path                     |
+| lsp-maven-path            | "~/.m2/settings.xml"                                                          | maven setting path                          |
+| pdflatex-exec-path        | "/Library/TeX/texbin/pdflatex"                                                | pdflatex      exec path                     |
+| org-directory             | "~/org/"                                                                      | org           root path                     |
+| org-roam-directory        | "~/org/org-roam"                                                              | org roam      root path                     |
+| lsp-java-java-path        | (concat (getenv "JAVA_11_HOME") "/bin/java")                                  | java11        exec path                     |
+| doom-font                 | (font-spec :family "等距更纱黑体 Slab SC" :size 18)                           | font setting                                |
+| display-line-numbers-type | nil                                                                           | show line number                            |
+| rime-user-data-dir        | "~/Library/Rime/"                                                             | rime config input method setting            |
+| rime-librime-root         | "~/.doom.d/myconfig/rime-macos/dist"                                          | emacs-rime/blob/master/INSTALLATION.org     |
+| emacs-module-root         | "/opt/homebrew/opt/emacs-plus@28/include"                                     | emcas module root path for build vterm      |
+| lsp-java-jdt-download-url | "http://1.117.167.195/download/jdt-language-server-1.6.0-202111261512.tar.gz" | jdt-server URL, with tencent cloud speed up |
+
+* Lsp-java Usage
+- generate .project & .classpath files
+    #+BEGIN_SRC shell
+        mvn eclipse:clean eclipse:eclipse
+    #+END_SRC
+- support projectlombok plugin
+- Key binding
+ | KEY   | FUNCTION                           | DESCRIPTION                                          |
+ | M-i   | lsp-goto-implementation            | find where sub class definition                      |
+ | M-o   | lsp-java-open-super-implementation | goto where super class definition                    |
+ | M-t   | lsp-treemacs-references            | find where your code be referenced                   |
+ | s-d   | lsp-goto-type-definition           | goto type definition                                 |
+ | , f r | lsp-format-region                  | format the region java code                          |
+ | , f b | lsp-format-buffer                  | format the whole file                                |
+ | , m   | lsp-java-add-unimplemented-methods | add function code template for unimplemented methods |
+ | ; i   | lsp-java-organize-imports          | import require package or delete some unuse package  |
+* Dap-java Usage
+- Config the debug host and port, add file $usr_private_dir/dap-java-config.el.
+- Use `(setq user-private-dir "$usr_private_dir/dap-java-config.el" )` make it effective.
+    #+begin_src lisp
+    (dap-register-debug-template
+    "goldkinn-user-service"
+    (list :name "Java Attach"
+            :type "java"
+            :request "attach"
+            :projectName "user-service"
+            :hostName "127.0.0.1"
+            :port 1044))
+    #+end_src
+- key binding
+ | KEY | FUNCTION                | DESCRIPTION     |
+ | , n | dap-next                | Breakpoint next |
+ | , b | dap-breakpoint-toggle   |                 |
+ | , c | dap-continue            |                 |
+ | , r | dap-eval-region         |                 |
+ | , a | dap-eval-thing-at-point |                 |
+ | , d | dap-debug               |                 |
+ | , u | dap-ui-repl             |                 |
+* Company box customize
+- use `M-x all-the-icons-material` for checking icon
+- company-icon icon config file: ~/.emacs.d/modules/completion/company/config.el
+* Ejc-sql Usage
+ - Config your db connection in the $usr_private_dir/db-work.el.
+   #+begin_src lisp
+    (use-package ejc-sql
+    :commands ejc-sql-mode ejc-connect
+    :config
+    (setq clomacs-httpd-default-port 18090)
+    (ejc-create-connection "connection-name"
+            :classpath      "~/.m2/repository/mysql/mysql-connector-java/8.0.17/mysql-connector-java-8.0.17.jar"
+            :connection-uri "jdbc:mysql://localhost/user?useSSL=false&user=root&password=pwd"
+            :separator      "</?\.*>" )
+    )
+    (provide 'db-work)
+   #+end_src
+ - sql file
+     #+BEGIN_SRC sql
+
+     <SELECT>
+     SELECT * FROM TABLE_ORG
+     </SELECT>
+
+     <SELECT>
+     delimiter ;
+     COMMENT ON COLUMN TABLE_ORG.PROJECT_CODE IS '项目编码';
+     COMMENT ON COLUMN TABLE_ORG.PERIOD IS '期间';
+     </SELECT>
+     #+END_SRC
+ - key binding
+    | KEY     | FUNCTION       | description                |
+    | SPC e c | ejc-connection | choose connection with ivy |
+    | C-c C-c | ejc-execute    | execute the sql            |
+* Rime Usage
+- https://github.com/DogLooksGood/emacs-rime supply this plugin.
+- https://github.com/rime/plum for more infomation.
+- some rime input method config at .doom.d/myconfig/rime-config.
+* Libvterm Usage
+- Ubuntu
+    #+begin_src shell
+    sudo apt install cmake
+    sudo apt install libtool-bin
+    #+end_src
+- MacOs
+    #+begin_src shell
+    sudo brew install cmake libtool
+    #+end_src
+- Key Binding
+   | KEY     | FUNCTION             | DESCRIPTION                                     |
+   | SPC v v | projectile-run-vterm | open vterm window base on the project root path |
+   | SPC v p | vterm-send-start     | enable vterm screen roll                        |
+   | SPC v s | vterm-send-stop      | disable vterm screen roll                       |
+* Questions
+** install ffmpeg
+- brew install ffmpeg
+** how to install all-the-icons?
+- M-x install-package all-the-icons
+- M-x all-the-icons-install-fonts
+** how to install rime ?
+- M-x install-package rime
+unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
+** how to install vterm?
+#+begin_src bash
+cd .emacs.d/.local/straight/build/vterm/
+mkdir -p build
+# install cmake and libtool-bin
+brew install cmake, brew install libtool
+mkdir -p build
+cd build
+cmake ..
+make
+#+end_src
+** lsp-springboot
+#+begin_src bash
+mvn -Djdt.js.server.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.ls/server/ -Djunit.runner.root=/Users/van/.emacs.d/.local/etc/eclipse.jdt.ls/test-runner/ -Djunit.runner.fileName=junit-platform-console-standalone.jar -Djava.debug.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.ls/server/bundles clean package -Djdt.download.url=http://download.eclipse.org/jdtls/snapshots/jdt-language-server-latest.tar.gz -f lsp-java-server-build.pom
+#+end_src
+
+mvn -Djdt.js.server.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.ls -Djunit.runner.root=/Users/van/.emacs.d/.local/etc/eclipse.jdt.ls/test-runner/ -Djunit.runner.fileName=junit-platform-console-standalone.jar -Djava.debug.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.ls/server/bundles -Pe418 clean package
+** useful key setting
+- Change caps_lock to control if pressed with other keys, to escape if pressed alone.
+  [[file:key-change.png]]
+* Dependencies
+[[https://github.com/BurntSushi/ripgrep]]
+
+[[https://github.com/junegunn/fzf]]
+
+[[https://github.com/kostafey/ejc-sql]]
+
+https://leiningen.org/
+
+[[https://plantuml.com/]]
+
+[[https://github.com/emacs-lsp/lsp-java]]
+
+https://projectlombok.org/
+
+https://github.com/DogLooksGood/emacs-rime
+
+[[https://github.com/be5invis/Sarasa-Gothic]]
+
+[[https://github.com/akicho8/string-inflection]]
+
+https://raw.githubusercontent.com/alibaba/p3c/master/p3c-formatter/eclipse-codestyle.xml

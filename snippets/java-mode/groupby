@@ -1,0 +1,6 @@
+ -*-
+# name: groupby
+# key: groupby
+# --
+Map<Long, List<${1:Dto}>> id2EntitiesMap = ${2:list}.stream()
+                .collect(Collectors.groupingBy($1::getId));

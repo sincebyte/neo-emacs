@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: modify
+# key: modify
+# --
+<select name='modify'>
+ ALTER TABLE $0 MODIFY user_name varchar(200)  NOT NULL DEFAULT '-1' COMMENT '';
+</select>

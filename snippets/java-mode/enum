@@ -1,0 +1,24 @@
+# -*- mode: snippet -*-
+# name: enum
+# key: enum
+# --
+
+package `(mapconcat 'identity (split-string (replace-regexp-in-string ".*src\\(/\\(main\\|test\\)\\)?\\(/java\\)?" "" default-directory) "/" t) ".")`;
+
+import lombok.Getter;
+import lombok.AllArgsConstructor;
+
+/**
+ * @author author
+ * @time `(format-time-string "%Y-%m-%d %H:%M:%S")`
+ **/
+@Getter
+@AllArgsConstructor
+public enum `(file-name-sans-extension (buffer-name))` {
+    $0
+    SUBMIT      (  0  , "提交"   ),
+    UNDER_REVIEW(  1  , "审核中" );
+
+    private int code;
+    private String desc;
+}

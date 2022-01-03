@@ -1,0 +1,22 @@
+# -*- mode: snippet -*-
+# name: run
+# key: run
+# --
+DEBUG_PORT=\$1
+MAVEN_RELOAD=\$2
+mvn pre-clean package -f ../pom.xml $MAVEN_RELOAD -DskipTests
+if [ -n $JREBEL_HOME ]; then
+    export JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=$DEBUG_PORT"
+    export JAVA_OPTS="$JAVA_OPTS -noverify -agentpath:$JREBEL_HOME/lib/libjrebel64.dylib"
+    echo "SETTING JREBEL=$JREBEL_HOME/lib/libjrebel64.dylib"
+fi
+java $JAVA_OPTS \
+-Xms1024m -Xmx1024m \
+-Dspring.profiles.active=local \
+-Dspring.cloud.nacos.config.file-extension=yml \
+-Dspring.cloud.nacos.config.server-addr=121.196.58.174:8848 \
+-Dspring.cloud.nacos.config.namespace=0318af8a-cd8f-4554-92ab-c4f09edcc781 \
+-Dspring.cloud.nacos.discovery.server-addr=121.196.58.174:8848 \
+-Dspring.cloud.nacos.discovery.namespace=0318af8a-cd8f-4554-92ab-c4f09edcc781 \
+-Duser.timezone=GMT+08 \
+-jar jar.jar

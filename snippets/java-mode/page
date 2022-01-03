@@ -1,0 +1,8 @@
+
+# -*- mode: snippet -*-
+# name: page
+# key: page
+# --
+QueryWrapper<${1:Dto}> $1QueryWrapper = new QueryWrapper<>();
+Page<$1> page = new Page<$1>(${2:qo}.getPageIndex(), $2.getPageSize());
+IPage<$1> pageList = taskMapper.selectPage(page, $1QueryWrapper);
