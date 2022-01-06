@@ -87,7 +87,6 @@
 (use-package lsp-mode
   :hook ((lsp-mode . lsp-enable-which-key-integration)))
 (use-package! yaml-mode)
-(use-package! lsp-java-boot)
 (use-package! lsp-java
   :config
   (setq lombok-jar-path (expand-file-name "~/.doom.d/neoemacs/lombok.jar"))
@@ -101,10 +100,7 @@
           , "-Xms500m"
           , "-Dosgi.locking=none"))
   (add-hook 'java-mode-hook 'lsp)
-  (add-hook 'java-mode-hook 'rainbow-delimiters-mode)
-  (add-hook 'conf-javaprop-mode-hook #'lsp)
-  (add-hook 'lsp-mode-hook  #'lsp-lens-mode)
-  (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode))
+  (add-hook 'java-mode-hook 'rainbow-delimiters-mode))
 
 (with-eval-after-load 'lsp-mode (setq lsp-modeline-diagnostics-scope :file))
 (setq-default indent-tabs-mode nil)

@@ -21,5 +21,5 @@
 (load-theme   'doom-badger t          ) ;; set theme
 (use-package! neoemacs                ) ;; neo-emacs main config
 
-;; (use-package! dap-java-config         )
-;; (use-package! db-work                 )
+(use-package! dap-java-config         )
+(use-package! db-work                 )
