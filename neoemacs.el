@@ -14,6 +14,7 @@
 (menu-bar-mode       0             )
 (scroll-bar-mode     0             )
 (display-time-mode   1             )
+(remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
 (custom-set-variables '(x-select-enable-clipboard t))
 
 (set-default 'truncate-lines nil  )
@@ -84,8 +85,8 @@
 (after! warnings (add-to-list 'warning-suppress-types '(yasnippet backquote-change)))
 
 ;; almost package
-(use-package lsp-mode
-  :hook ((lsp-mode . lsp-enable-which-key-integration)))
+;; (use-package lsp-mode
+;;   :hook ((lsp-mode . lsp-enable-which-key-integration)))
 (use-package! yaml-mode)
 (use-package! lsp-java
   :config
@@ -234,7 +235,6 @@
       gts-translate-list      '(("en" "zh"))
       rime-disable-predicates '(
          rime-predicate-current-uppercase-letter-p
-         rime-predicate-after-ascii-char-p
          rime-predicate-space-after-cc-p)
       gts-default-translator   (gts-translator
        :picker (gts-prompt-picker)

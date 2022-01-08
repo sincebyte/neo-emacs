@@ -6,7 +6,7 @@
       lsp-maven-path              "~/.m2/settings.xml"                                     ;; maven setting path
       org-directory               "~/org/"                                                 ;; org           root path
       org-roam-directory          "~/org/org-roam"                                         ;; org roam      root path
-      lsp-java-java-path          (concat (getenv "JAVA_11_HOME") "/bin/java")             ;; java11        exec path
+      lsp-java-java-path          (concat (getenv "JAVA_HOME") "/bin/java")                ;; java11        exec path
       user-private-dir            "~/org/org-roam/doom/config/"                            ;; user private dir
       doom-font                   (font-spec :family "等距更纱黑体 Slab SC" :size 18)      ;; font setting
       display-line-numbers-type   nil                                                      ;; show line number
