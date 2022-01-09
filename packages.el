@@ -98,6 +98,7 @@
 ;; (package! org-roam-server)
 (package! doom-snippets)
 (package! yaml-mode)
+(package! expand-region)
 ;;(package! nimbus-theme)
 ;; (package! company-tabnine)
 ;; (package! tide)

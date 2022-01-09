@@ -88,6 +88,7 @@
 ;; (use-package lsp-mode
 ;;   :hook ((lsp-mode . lsp-enable-which-key-integration)))
 (use-package! yaml-mode)
+(use-package! expand-region)
 (use-package! lsp-java
   :config
   (setq lombok-jar-path (expand-file-name "~/.doom.d/neoemacs/lombok.jar"))
@@ -180,6 +181,8 @@
 (map! :ne "; q"     'quit-window                               )
 (map! :ve "; q"     'quit-window                               )
 (map! :ne "; x"     'kill-this-buffer                          )
+(map! :ne "SPC e"   'er/expand-region                          )
+(map! :ve "SPC e"   'er/expand-region                          )
 (map! :ve "s-x"     'amx                                       )
 (map! :ie "s-1"     '+workspace/switch-to-0                    )
 (map! :ie "s-2"     '+workspace/switch-to-1                    )
