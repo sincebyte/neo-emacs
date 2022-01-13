@@ -190,6 +190,8 @@
 (map! :ie "s-4"     '+workspace/switch-to-3                    )
 (map! :ie "s-5"     '+workspace/switch-to-4                    )
 (map! :ne "; r"     'string-inflection-java-style-cycle        )
+;; 断词设置，设置以后断词更长
+;; (defalias 'forward-evil-word 'forward-evil-symbol)
 (global-set-key "\C-xm"       'browse-url-at-point             )
 (global-set-key (kbd "<RET>") 'evil-ret                        )
 (global-set-key (kbd "C-;"  ) 'toggle-input-method             )
@@ -200,7 +202,6 @@
 (global-set-key (kbd "M-d"  ) 'lsp-goto-type-definition        )
 (global-set-key (kbd "M-s"  ) 'lsp-treemacs-symbols            )
 (global-set-key (kbd "M-t"  ) 'lsp-treemacs-references         )
-(defalias 'forward-evil-word  'forward-evil-symbol             )
 (general-def 'insert "C-h"    'delete-backward-char            )
 (general-def 'insert vterm-mode-map "C-h" 'vterm-send-C-h      )
 (keyboard-translate ?\C-h ?\C-?)
