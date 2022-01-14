@@ -99,6 +99,7 @@
 (package! doom-snippets)
 (package! yaml-mode)
 (package! expand-region)
+
 ;;(package! nimbus-theme)
 ;; (package! company-tabnine)
 ;; (package! tide)
@@ -108,3 +109,6 @@
 ;; (package! org-html-themify)
 ;; (package! org-roam
 ;;   :recipe (:host github :repo "org-roam/org-roam"))
+
+(unpin! org-roam)
+(package! org-roam-ui)
