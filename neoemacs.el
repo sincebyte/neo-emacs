@@ -89,6 +89,14 @@
 ;;   :hook ((lsp-mode . lsp-enable-which-key-integration)))
 (use-package! yaml-mode)
 (use-package! expand-region)
+
+;; 暂时不打开
+;; (use-package! company-tabnine
+;;   :after company
+;;   :when (featurep! :completion company)
+;;   :config
+;;   (cl-pushnew 'company-tabnine (default-value 'company-backends)))
+
 (use-package! lsp-java
   :config
   (setq lombok-jar-path (expand-file-name "~/.doom.d/neoemacs/lombok.jar"))
@@ -166,6 +174,7 @@
 (map! :ne "SPC e c" 'ejc-connect-ivy                           )
 (map! :ne "; t"     'go-translate                              )
 (map! :ve "; t"     'go-translate                              )
+(map! :ie "s-r"     'company-tabnine                              )
 (map! :ne ", n"     'dap-next                                  )
 (map! :ne ", b"     'dap-breakpoint-toggle                     )
 (map! :ne ", c"     'dap-continue                              )
@@ -321,6 +330,8 @@
           org-roam-ui-open-on-start t))
 (add-hook 'org-mode-hook
           '+org/close-all-folds)
+
+
 
 ;; Useful configuration
 ;; (setq lsp-java-jdt-download-url "https://download.eclipse.org/jdtls/milestones/1.1.2/jdt-language-server-1.1.2-202105191944.tar.gz")
