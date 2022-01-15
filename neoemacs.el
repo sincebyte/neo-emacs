@@ -269,16 +269,16 @@
 ;; git diff line in modeline
 (defadvice vc-git-mode-line-string (after plus-minus (file) compile activate)
   "Show the information of git diff on modeline."
-  (setq ad-return-value
-	(concat (propertize ad-return-value 'face '(:foreground "white" :weight bold))
-		" "
-		(let ((plus-minus (vc-git--run-command-string file "diff" "--numstat" "--")))
-		  (if (and plus-minus
-		       (string-match "^\\([0-9]+\\)\t\\([0-9]+\\)\t" plus-minus))
-		       (concat
-			(propertize (format "+%s," (match-string 1 plus-minus)) 'face '(:foreground "green3"))
-			(propertize (format "-%s"  (match-string 2 plus-minus)) 'face '(:foreground "#50fa7b")))
-		        (propertize "√" 'face '(:foreground "green3" :weight bold)))) "")))
+(setq ad-return-value
+(concat (propertize ad-return-value 'face '(:foreground "white" :weight bold))
+        " "
+        (let ((plus-minus (vc-git--run-command-string file "diff" "--numstat" "--")))
+                (if (and plus-minus
+                (string-match "^\\([0-9]+\\)\t\\([0-9]+\\)\t" plus-minus))
+                (concat
+                (propertize (format "+%s," (match-string 1 plus-minus)) 'face '(:foreground "green3"))
+                (propertize (format "-%s"  (match-string 2 plus-minus)) 'face '(:foreground "#50fa7b")))
+                (propertize "√" 'face '(:foreground "green3" :weight bold)))) "")))
 
 ;; Define a function to connect to a server
 (defun some-serv ()
@@ -319,6 +319,8 @@
           org-roam-ui-follow t
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
+(add-hook 'org-mode-hook
+          '+org/close-all-folds)
 
 ;; Useful configuration
 ;; (setq lsp-java-jdt-download-url "https://download.eclipse.org/jdtls/milestones/1.1.2/jdt-language-server-1.1.2-202105191944.tar.gz")
