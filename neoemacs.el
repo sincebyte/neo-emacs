@@ -331,6 +331,10 @@
 (add-hook 'org-mode-hook
           '+org/close-all-folds)
 
+(use-package! indent-guide)
+(setq indent-guide-char "│")
+(indent-guide-global-mode)
+(custom-set-faces '(indent-guide-face ((t (:foreground "grey43" :background "#171717")))))
 
 
 ;; Useful configuration

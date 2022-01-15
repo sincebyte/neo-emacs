@@ -110,6 +110,7 @@
 ;; (package! org-roam
 ;;   :recipe (:host github :repo "org-roam/org-roam"))
 
-(unpin! org-roam)
+(unpin!   org-roam)
 (package! org-roam-ui)
 (package! company-tabnine)
+(package! indent-guide)
