@@ -61,6 +61,7 @@
       plantuml-default-exec-mode                 ( cond ((executable-find "plantuml") 'executable     ))
       plantuml-jar-path                          ( expand-file-name "~/.doom.d/neoemacs/plantuml.jar" )
       org-plantuml-jar-path                      ( expand-file-name "~/.doom.d/neoemacs/plantuml.jar" )
+      org-id-track-globally                      t ;; M-x org-id-update-id-locations , org-roam-update-org-id-locations
       lsp-java-format-on-type-enabled            t
       lsp-java-format-comments-enabled           nil
       lsp-completion-enable-additional-text-edit nil
@@ -331,10 +332,11 @@
 (add-hook 'org-mode-hook
           '+org/close-all-folds)
 
-(use-package! indent-guide)
-(setq indent-guide-char "│")
-(indent-guide-global-mode)
-(custom-set-faces '(indent-guide-face ((t (:foreground "grey43" :background "#171717")))))
+
+;;(use-package! indent-guide)
+;;(setq indent-guide-char "|")
+;;(indent-guide-global-mode)
+;;(custom-set-faces '(indent-guide-face ((t (:foreground "grey43" :background "#171717")))))
 
 
 ;; Useful configuration
