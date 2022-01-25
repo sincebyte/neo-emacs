@@ -64,7 +64,7 @@
       org-id-track-globally                      t ;; M-x org-id-update-id-locations , org-roam-update-org-id-locations
       lsp-java-format-on-type-enabled            t
       lsp-java-format-comments-enabled           nil
-      lsp-completion-enable-additional-text-edit nil
+      lsp-completion-enable-additional-text-edit t
       lsp-java-autobuild-enabled                 t
       lsp-java-max-concurrent-builds             12
       lsp-java-import-maven-enabled              t
