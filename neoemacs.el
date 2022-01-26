@@ -26,7 +26,7 @@
       gc-cons-threshold                          (* 2 1000 1000)
       auto-save-visited-mode                     nil
       auto-save-default                          nil
-      ;;display-line-numbers-type       '        relative
+      display-line-numbers-type                  'relative
       neo-window-width                           70
       display-time-24hr-format                   t
       display-time-day-and-date                  t
@@ -179,7 +179,6 @@
 (map! :ne "SPC e c" 'ejc-connect-ivy                           )
 (map! :ne "; t"     'go-translate                              )
 (map! :ve "; t"     'go-translate                              )
-(map! :ie "s-r"     'company-tabnine                              )
 (map! :ne ", n"     'dap-next                                  )
 (map! :ne ", b"     'dap-breakpoint-toggle                     )
 (map! :ne ", c"     'dap-continue                              )
