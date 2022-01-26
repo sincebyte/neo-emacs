@@ -1,4 +1,5 @@
 (add-to-list 'load-path          "~/.doom.d/neoemacs"  )   ;; default setting
+(add-to-list 'custom-theme-load-path "~/.doom.d/neoemacs/theme/")
 (add-to-list 'load-path          user-private-dir      )
 (add-to-list 'exec-path          pdflatex-exec-path    )
 (add-to-list 'exec-path          rg-exec-path          )
@@ -111,6 +112,7 @@
           , "-Xms500m"
           , "-Dosgi.locking=none"))
   (add-hook 'java-mode-hook 'lsp)
+  (add-hook 'java-mode-hook 'yascroll-bar-mode)
   (add-hook 'java-mode-hook 'rainbow-delimiters-mode))
 
 (with-eval-after-load 'lsp-mode (setq lsp-modeline-diagnostics-scope :file))
@@ -135,9 +137,12 @@
 (use-package! conf-evil-clipboard )
 (use-package! string-inflection   )
 (use-package! general             )
+(use-package! yascroll)
 (use-package! ejc-sql :commands ejc-sql-mode ejc-connect)
 (defun k/sql-mode-hook () (ejc-sql-mode t))
 (add-hook 'sql-mode-hook 'k/sql-mode-hook)
+(add-hook 'sql-mode-hook 'yascroll-bar-mode)
+
 ;; almost key set
 (map! :ne "f"       'evil-avy-goto-char                        )
 (map! :ne "SPC l"   'evil-window-right                         )
@@ -330,7 +335,10 @@
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
 (add-hook 'org-mode-hook
+          'yascroll-bar-mode
           '+org/close-all-folds)
+
+(setq neo-theme (if (display-graphic-p) 'icons 'alltheicon))
 
 
 ;;(use-package! indent-guide)

@@ -52,7 +52,6 @@
 (package! lsp-java)
 (package! dap-mode)
 (package! ejc-sql)
-(add-to-list 'load-path "~/.doom.d/myconfig")
 (add-to-list 'load-path "/usr/local/bin")
 (after! warnings(add-to-list 'warning-suppress-types '(yasnippet backquote-change)))
 ;; (package! db
@@ -114,3 +113,4 @@
 (package! org-roam-ui)
 (package! company-tabnine)
 (package! indent-guide)
+(package! yascroll)
