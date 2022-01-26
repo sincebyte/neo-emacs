@@ -1,5 +1,4 @@
 (add-to-list 'load-path          "~/.doom.d/neoemacs"  )   ;; default setting
-(add-to-list 'custom-theme-load-path "~/.doom.d/neoemacs/theme/")
 (add-to-list 'load-path          user-private-dir      )
 (add-to-list 'exec-path          pdflatex-exec-path    )
 (add-to-list 'exec-path          rg-exec-path          )
@@ -338,7 +337,13 @@
           'yascroll-bar-mode
           '+org/close-all-folds)
 
-(setq neo-theme (if (display-graphic-p) 'icons 'alltheicon))
+(use-package all-the-icons-ivy-rich
+  :ensure t
+  :init (all-the-icons-ivy-rich-mode 1))
+
+(use-package ivy-rich
+  :ensure t
+  :init (ivy-rich-mode 1))
 
 
 ;;(use-package! indent-guide)
