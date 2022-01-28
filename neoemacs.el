@@ -332,9 +332,8 @@
           org-roam-ui-follow t
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
-(add-hook 'org-mode-hook
-          'yascroll-bar-mode
-          '+org/close-all-folds)
+(add-hook 'org-mode-hook '+org/close-all-folds)
+(add-hook 'org-mode-hook 'yascroll-bar-mode)
 
 (use-package all-the-icons-ivy-rich
   :ensure t
