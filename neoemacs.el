@@ -76,6 +76,8 @@
       lsp-modeline-code-actions-enable           nil
       lsp-completion-show-detail                 nil
       lsp-headerline-breadcrumb-enable           nil
+      lsp-log-io                                nil
+      read-process-output-max                   (* 1024 1024)           ;; 1mb
       ejc-result-table-impl                     'ejc-result-mode
       dap-auto-configure-features               '( controls locals )
       doom-modeline-buffer-file-name-style      'truncate-with-project  )
@@ -342,6 +344,11 @@
 (use-package ivy-rich
   :ensure t
   :init (ivy-rich-mode 1))
+
+(use-package super-save
+  :ensure t
+  :config
+  (super-save-mode +1))
 
 
 ;;(use-package! indent-guide)
