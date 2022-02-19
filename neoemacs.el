@@ -26,7 +26,6 @@
       gc-cons-threshold                          (* 2 1000 1000)
       auto-save-visited-mode                     nil
       auto-save-default                          nil
-      display-line-numbers-type                  'relative
       neo-window-width                           70
       display-time-24hr-format                   t
       display-time-day-and-date                  t
@@ -336,20 +335,6 @@
           org-roam-ui-open-on-start t))
 (add-hook 'org-mode-hook '+org/close-all-folds)
 (add-hook 'org-mode-hook 'yascroll-bar-mode)
-
-(use-package all-the-icons-ivy-rich
-  :ensure t
-  :init (all-the-icons-ivy-rich-mode 1))
-
-(use-package ivy-rich
-  :ensure t
-  :init (ivy-rich-mode 1))
-
-(use-package super-save
-  :ensure t
-  :config
-  (super-save-mode +1))
-
 
 ;;(use-package! indent-guide)
 ;;(setq indent-guide-char "|")

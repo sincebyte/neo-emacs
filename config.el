@@ -9,7 +9,7 @@
       lsp-java-java-path          (concat (getenv "JAVA_HOME") "/bin/java")                ;; java11        exec path
       user-private-dir            "~/org/org-roam/command/doom/config/"                            ;; user private dir
       doom-font                   (font-spec :family "等距更纱黑体 Slab SC" :size 16)      ;; font setting
-      display-line-numbers-type   t                                                        ;; show line number
+      display-line-numbers-type   nil                                                        ;; show line number 'relative
       rime-user-data-dir          "~/Library/Rime/"                                        ;; rime config input method setting
       rime-librime-root           "~/.doom.d/neoemacs/rime-macos/dist"                     ;; emacs-rime/blob/master/INSTALLATION.org
       emacs-module-root           "/opt/homebrew/opt/emacs-plus@28/include"                ;; emcas exec path
