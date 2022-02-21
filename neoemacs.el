@@ -2,6 +2,7 @@
 (add-to-list 'load-path          user-private-dir      )
 (add-to-list 'exec-path          pdflatex-exec-path    )
 (add-to-list 'exec-path          rg-exec-path          )
+(add-to-list 'exec-path          node-bin-dir          )
 (setq org-roam-graph-executable  dot-exec-path
       lsp-java-java-path         lsp-java-java-path
       counsel-fzf-cmd            (concat fd-exec-path " --exclude={.git,.idea,.vscode,.sass-cache,node_modules,build,target,classes,out,.local,class} -c never --hidden --follow %s .")
