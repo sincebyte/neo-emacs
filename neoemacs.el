@@ -20,9 +20,22 @@
 
 (set-default 'truncate-lines nil  )
 (setq-default treemacs-width 175  )
+(defun my/disable-scroll-bars (frame)
+  (modify-frame-parameters frame
+                           '((vertical-scroll-bars . nil)
+                             (horizontal-scroll-bars . nil))))
+(defun popup-handler (app-name window-title x y w h)
+  (set-frame-position (selected-frame) (+ x 800) (+ y (+ h 600)))
+  (unless (zerop w)
+    (set-frame-size (selected-frame) 800 200 t))
+)
+;; Hook your function
+(add-hook 'ea-popup-hook 'popup-handler)
+(add-hook 'after-make-frame-functions 'my/disable-scroll-bars)
+
 (setq default-frame-alist                        '((top . 30) (left . 50) (height . 39) (width . 150))
-      ;; doom-font                                (font-spec :family "Sarasa Fixed SC" :size 18)
-      ;; doom-font                                (font-spec :family "Unifont" :size 17)
+      ;; doom-font                               (font-spec :family "Sarasa Fixed SC" :size 18)
+      ;; doom-font                               (font-spec :family "Unifont" :size 17)
       frame-title-format                         " "
       gc-cons-threshold                          (* 2 1000 1000)
       auto-save-visited-mode                     nil
@@ -76,11 +89,12 @@
       lsp-modeline-code-actions-enable           nil
       lsp-completion-show-detail                 nil
       lsp-headerline-breadcrumb-enable           nil
-      lsp-log-io                                nil
-      read-process-output-max                   (* 1024 1024)           ;; 1mb
-      ejc-result-table-impl                     'ejc-result-mode
-      dap-auto-configure-features               '( controls locals )
-      doom-modeline-buffer-file-name-style      'truncate-with-project  )
+      lsp-log-io                                 nil
+      read-process-output-max                    (* 1024 1024)           ;; 1mb
+      lsp-idle-delay                             0.500
+      ejc-result-table-impl                      'ejc-result-mode
+      dap-auto-configure-features                '( controls locals )
+      doom-modeline-buffer-file-name-style       'truncate-with-project  )
 (setq package-archives '(( "gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"   )
                          ( "org-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/"   )
                          ( "melpa"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/" )))

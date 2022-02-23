@@ -2,4 +2,4 @@
 # name: SuppressWarnings
 # key: sw
 # --
-@SuppressWarnings({ "rawtypes", "unchecked" })
+@SuppressWarnings({"rawtypes", "unchecked", "deprecation"})
