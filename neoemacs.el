@@ -60,7 +60,7 @@
       evil-operator-state-tag                    "OPERATOR"
       evil-visual-state-tag                      "VISUAL"
       evil-want-Y-yank-to-eol                    t
-      company-box-doc-enable                     nil
+      company-box-doc-enable                     t
       company-box-scrollbar                      t
       company-tooltip-limit                      12
       ;;company-tooltip-margin                     0.1

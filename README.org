@@ -79,6 +79,7 @@ Changing config in the config.el.
 | rime-user-data-dir        | "~/Library/Rime/"                                                             | rime config input method setting            |
 | rime-librime-root         | "~/.doom.d/myconfig/rime-macos/dist"                                          | emacs-rime/blob/master/INSTALLATION.org     |
 | emacs-module-root         | "/opt/homebrew/opt/emacs-plus@28/include"                                     | emcas module root path for build vterm      |
+| node-bin-dir              | "~/node-v16.14.0/bin"                                                         | node exec path                              |
 | lsp-java-jdt-download-url | "http://1.117.167.195/download/jdt-language-server-1.6.0-202111261512.tar.gz" | jdt-server URL, with tencent cloud speed up |
 
 * Lsp-java Usage
