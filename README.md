@@ -1,33 +1,33 @@
 
 # Table of Contents
 
-1.  [About](#org1a420a5)
-2.  [How to install](#orgb0df3ac)
-    1.  [Install emacs](#org562208f)
-    2.  [Building Emacs](#org9a7716c)
-    3.  [Clone doom-emacs](#org81685c8)
-    4.  [Clone neo-emacs](#org4a32dc6)
-    5.  [Doom Install](#org3db2148)
-3.  [Private setting](#org3731bd0)
-4.  [Lsp-java Usage](#org54e2186)
-5.  [Dap-java Usage](#org5a4bf84)
-6.  [Company box customize](#org6486b4b)
-7.  [Ejc-sql Usage](#orgb6397d3)
-8.  [Rime Usage](#orgf73f5a9)
-9.  [Libvterm Usage](#org12e6474)
-10. [Questions](#orgbe923be)
-    1.  [install ffmpeg](#org4ebb8db)
-    2.  [how to install all-the-icons?](#orgb5f5357)
-    3.  [how to install rime ?](#org786d76b)
-    4.  [how to install vterm?](#orgcba5996)
-    5.  [lsp-springboot](#org5086d11)
-    6.  [useful key setting](#orga25847b)
-11. [Dependencies](#org2c43e87)
+1.  [About](#org04a6571)
+2.  [How to install](#org6aa404b)
+    1.  [Install emacs](#org932ddc0)
+    2.  [Building Emacs](#org974060a)
+    3.  [Clone doom-emacs](#org3766fc2)
+    4.  [Clone neo-emacs](#org2fd4f1a)
+    5.  [Doom Install](#org2d54cdd)
+3.  [Private setting](#org8099fdd)
+4.  [Lsp-java Usage](#orgbca2671)
+5.  [Dap-java Usage](#orgfa61fcd)
+6.  [Company box customize](#org424ad8f)
+7.  [Ejc-sql Usage](#orgc24bdc1)
+8.  [Rime Usage](#orgd9f3e68)
+9.  [Libvterm Usage](#org6f5ad15)
+10. [Questions](#orgb63b53b)
+    1.  [install ffmpeg](#org8e94881)
+    2.  [how to install all-the-icons?](#orgeeb0c26)
+    3.  [how to install rime ?](#org2c2c18e)
+    4.  [how to install vterm?](#orgdda174e)
+    5.  [lsp-springboot](#orgd03abbf)
+    6.  [useful key setting](#orgc8797d0)
+11. [Dependencies](#orge5888f5)
 
 ![img](./neo-emacs.gif)
 
 
-<a id="org1a420a5"></a>
+<a id="org04a6571"></a>
 
 # About
 
@@ -42,12 +42,12 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   [onlinedoc](http://1.117.167.195/doc/neo-emacs.html)
 
 
-<a id="orgb0df3ac"></a>
+<a id="org6aa404b"></a>
 
 # How to install
 
 
-<a id="org562208f"></a>
+<a id="org932ddc0"></a>
 
 ## Install emacs
 
@@ -58,7 +58,7 @@ Choose your operation system and install it.
 -   export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs, this depends on your installation path.
 
 
-<a id="org9a7716c"></a>
+<a id="org974060a"></a>
 
 ## Building Emacs
 
@@ -73,21 +73,21 @@ Choose your operation system and install it.
     open nextstep/Emacs.app
 
 
-<a id="org81685c8"></a>
+<a id="org3766fc2"></a>
 
 ## Clone doom-emacs
 
     git clone https://github.com/hlissner/doom-emacs.git ~/.emacs.d/
 
 
-<a id="org4a32dc6"></a>
+<a id="org2fd4f1a"></a>
 
 ## Clone neo-emacs
 
     git clone https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
 
-<a id="org3db2148"></a>
+<a id="org2d54cdd"></a>
 
 ## Doom Install
 
@@ -107,7 +107,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     ~/.emacs.doom/bin/doom install
 
 
-<a id="org3731bd0"></a>
+<a id="org8099fdd"></a>
 
 # Private setting
 
@@ -216,6 +216,13 @@ Changing config in the config.el.
 
 
 <tr>
+<td class="org-left">node-bin-dir</td>
+<td class="org-left">&ldquo;~/node-v16.14.0/bin&rdquo;</td>
+<td class="org-left">node exec path</td>
+</tr>
+
+
+<tr>
 <td class="org-left">lsp-java-jdt-download-url</td>
 <td class="org-left">&ldquo;<a href="http://1.117.167.195/download/jdt-language-server-1.6.0-202111261512.tar.gz">http://1.117.167.195/download/jdt-language-server-1.6.0-202111261512.tar.gz</a>&rdquo;</td>
 <td class="org-left">jdt-server URL, with tencent cloud speed up</td>
@@ -224,7 +231,7 @@ Changing config in the config.el.
 </table>
 
 
-<a id="org54e2186"></a>
+<a id="orgbca2671"></a>
 
 # Lsp-java Usage
 
@@ -310,7 +317,7 @@ Changing config in the config.el.
     </table>
 
 
-<a id="org5a4bf84"></a>
+<a id="orgfa61fcd"></a>
 
 # Dap-java Usage
 
@@ -396,7 +403,7 @@ Changing config in the config.el.
     </table>
 
 
-<a id="org6486b4b"></a>
+<a id="org424ad8f"></a>
 
 # Company box customize
 
@@ -404,7 +411,7 @@ Changing config in the config.el.
 -   company-icon icon config file: ~/.emacs.d/modules/completion/company/config.el
 
 
-<a id="orgb6397d3"></a>
+<a id="orgc24bdc1"></a>
 
 # Ejc-sql Usage
 
@@ -468,7 +475,7 @@ Changing config in the config.el.
     </table>
 
 
-<a id="orgf73f5a9"></a>
+<a id="orgd9f3e68"></a>
 
 # Rime Usage
 
@@ -477,7 +484,7 @@ Changing config in the config.el.
 -   some rime input method config at .doom.d/myconfig/rime-config.
 
 
-<a id="org12e6474"></a>
+<a id="org6f5ad15"></a>
 
 # Libvterm Usage
 
@@ -531,19 +538,19 @@ Changing config in the config.el.
     </table>
 
 
-<a id="orgbe923be"></a>
+<a id="orgb63b53b"></a>
 
 # Questions
 
 
-<a id="org4ebb8db"></a>
+<a id="org8e94881"></a>
 
 ## install ffmpeg
 
 -   brew install ffmpeg
 
 
-<a id="orgb5f5357"></a>
+<a id="orgeeb0c26"></a>
 
 ## how to install all-the-icons?
 
@@ -551,7 +558,7 @@ Changing config in the config.el.
 -   M-x all-the-icons-install-fonts
 
 
-<a id="org786d76b"></a>
+<a id="org2c2c18e"></a>
 
 ## how to install rime ?
 
@@ -560,7 +567,7 @@ Changing config in the config.el.
 unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
 
 
-<a id="orgcba5996"></a>
+<a id="orgdda174e"></a>
 
 ## how to install vterm?
 
@@ -574,7 +581,7 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     make
 
 
-<a id="org5086d11"></a>
+<a id="orgd03abbf"></a>
 
 ## lsp-springboot
 
@@ -583,7 +590,7 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
 mvn -Djdt.js.server.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.ls -Djunit.runner.root=/Users/van/.emacs.d/.local/etc/eclipse.jdt.ls/test-runner/ -Djunit.runner.fileName=junit-platform-console-standalone.jar -Djava.debug.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.ls/server/bundles -Pe418 clean package
 
 
-<a id="orga25847b"></a>
+<a id="orgc8797d0"></a>
 
 ## useful key setting
 
@@ -591,7 +598,7 @@ mvn -Djdt.js.server.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.l
     ![img](key-change.png)
 
 
-<a id="org2c43e87"></a>
+<a id="orge5888f5"></a>
 
 # Dependencies
 
