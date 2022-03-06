@@ -352,7 +352,12 @@
 (add-hook 'org-mode-hook '+org/close-all-folds)
 (add-hook 'org-mode-hook 'yascroll-bar-mode)
 
-(beacon-mode 1)
+
+;; (beacon-mode 1)
+
+(setq minimap-minimum-width 5)
+(setq minimap-window-location 'right)
+(minimap-mode 1)
 ;;(use-package! indent-guide)
 ;;(setq indent-guide-char "|")
 ;;(indent-guide-global-mode)

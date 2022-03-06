@@ -114,4 +114,5 @@
 (package! company-tabnine)
 (package! indent-guide)
 (package! beacon)
+(package! minimap)
 (package! yascroll)
