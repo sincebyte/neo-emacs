@@ -15,6 +15,7 @@
 (menu-bar-mode       0             )
 (scroll-bar-mode     0             )
 (display-time-mode   1             )
+
 (remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
 (custom-set-variables '(x-select-enable-clipboard t))
 
@@ -351,6 +352,7 @@
 (add-hook 'org-mode-hook '+org/close-all-folds)
 (add-hook 'org-mode-hook 'yascroll-bar-mode)
 
+(beacon-mode 1)
 ;;(use-package! indent-guide)
 ;;(setq indent-guide-char "|")
 ;;(indent-guide-global-mode)

@@ -113,4 +113,5 @@
 (package! org-roam-ui)
 (package! company-tabnine)
 (package! indent-guide)
+(package! beacon)
 (package! yascroll)
