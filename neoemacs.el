@@ -357,7 +357,7 @@
 
 (setq minimap-minimum-width 5)
 (setq minimap-window-location 'right)
-(minimap-mode 1)
+(minimap-mode 0)
 ;;(use-package! indent-guide)
 ;;(setq indent-guide-char "|")
 ;;(indent-guide-global-mode)
