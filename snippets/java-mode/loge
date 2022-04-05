@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: loge
-# key: loge
-# --
-log.error("{}", e);

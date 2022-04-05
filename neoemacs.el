@@ -296,6 +296,11 @@
               :preselect (car conn-list-sorted)
               :action    #'ejc-connect)))
 
+(add-hook 'ejc-sql-connected-hook
+          (lambda ()
+            (ejc-set-column-width-limit 50)
+            (ejc-set-use-unicode t)))
+
 ;; git diff line in modeline
 (defadvice vc-git-mode-line-string (after plus-minus (file) compile activate)
   "Show the information of git diff on modeline."

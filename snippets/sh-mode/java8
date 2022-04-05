@@ -1,0 +1,5 @@
+ -*-
+# name: java8
+# key: java8
+# --
+export JAVA_HOME=$JAVA_8_HOME

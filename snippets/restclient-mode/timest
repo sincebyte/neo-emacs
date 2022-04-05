@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: timest
+# key: timest
+# --
+`(substring (number-to-string (* (time-to-seconds) 1000)) 0 13)`

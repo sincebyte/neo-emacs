@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: log
-# key: log
-# --
-log.info("\n==== [log]: {}", JSON.toJSONString($0, SerializerFeature.PrettyFormat));

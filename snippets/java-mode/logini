@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: logini
-# key: logini
-# --
-private static Logger log = LoggerFactory.getLogger(`(file-name-sans-extension (buffer-name))`.class);

@@ -116,3 +116,4 @@
 (package! beacon)
 (package! minimap)
 (package! yascroll)
+(package! rmsbolt)

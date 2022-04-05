@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: ctlr
+# key: ctlr
+# --
+	/**
+	 * 健康检查
+	 */
+	@RequestMapping("/healthCheck")
+	public ResponseEntity<String> welcome() {
+		return ResponseEntity.ok("pong");
+	}
