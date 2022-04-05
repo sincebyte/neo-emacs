@@ -160,6 +160,8 @@
 (add-hook 'sql-mode-hook 'yascroll-bar-mode)
 
 ;; almost key set
+(map! :ne "; g"     'evil-end-of-line                          )
+(map! :ne "; a"     'evil-beginning-of-line                    )
 (map! :ne "f"       'evil-avy-goto-char                        )
 (map! :ne "SPC l"   'evil-window-right                         )
 (map! :ne "C-j"     'evil-scroll-down                          )
@@ -184,11 +186,11 @@
 (map! :ne "; f"     'neotree-find                              )
 (map! :ne "; h"     'neotree-toggle                            )
 (map! :ne "; i"     'lsp-java-organize-imports                 )
-(map! :ne "; c"     'lsp-treemacs-symbols                      )
+; (map! :ne "; c"     'lsp-treemacs-symbols                      )
 (map! :ne "; o"     'neotree-projectile-action                 )
 (map! :ne "SPC e r" 'neotree-goto-resources-dir                )
-(map! :ne "; g"     'ejc-show-last-result                      )
-(map! :ne "; a"     'ranger                                    )
+;; (map! :ne "; g"     'ejc-show-last-result                      )
+;; (map! :ne "; a"     'ranger                                    )
 (map! :ne "; s"     'lsp-workspace-restart                     )
 (map! :ne "; l"     'org-toggle-narrow-to-subtree              )
 (map! :ne "; j"     '+workspace/swap-left                      )
@@ -220,6 +222,7 @@
 (map! :ie "s-4"     '+workspace/switch-to-3                    )
 (map! :ie "s-5"     '+workspace/switch-to-4                    )
 (map! :ne "; r"     'string-inflection-java-style-cycle        )
+(map! :ne "; c c"   'comment-line                              )
 ;; 断词设置，设置以后断词更长
 ;; (defalias 'forward-evil-word 'forward-evil-symbol)
 (global-set-key "\C-xm"       'browse-url-at-point             )
