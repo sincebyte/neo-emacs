@@ -79,6 +79,7 @@
       lsp-java-format-on-type-enabled            t
       lsp-java-format-comments-enabled           nil
       lsp-completion-enable-additional-text-edit t
+      lsp-java-save-actions-organize-imports     t
       lsp-java-autobuild-enabled                 t
       lsp-java-max-concurrent-builds             12
       lsp-java-import-maven-enabled              t
@@ -160,8 +161,8 @@
 (add-hook 'sql-mode-hook 'yascroll-bar-mode)
 
 ;; almost key set
-(map! :ne "; g"     'evil-end-of-line                          )
-(map! :ne "; a"     'evil-beginning-of-line                    )
+(map! :nve "; g"     'evil-end-of-line                          )
+(map! :nve "; a"     'evil-beginning-of-line                    )
 (map! :ne "f"       'evil-avy-goto-char                        )
 (map! :ne "SPC l"   'evil-window-right                         )
 (map! :ne "C-j"     'evil-scroll-down                          )
