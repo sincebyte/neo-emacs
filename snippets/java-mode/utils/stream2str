@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: 2str
+# key: 2str
+# --
+InputStream stream;
+byte[] bytes = new byte[stream.available()];
+stream.read(bytes);
+String str = new String(bytes);

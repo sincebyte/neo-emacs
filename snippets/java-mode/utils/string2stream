@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: 2stream
+# key: 2stream
+# --
+
+InputStream targetStream = new ByteArrayInputStream(str.getBytes());

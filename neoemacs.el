@@ -206,7 +206,7 @@
 (map! :ne ", a"     'dap-eval-thing-at-point                   )
 (map! :ne ", d"     'dap-debug                                 )
 (map! :ne ", u"     'dap-ui-repl                               )
-(map! :ne ", t"     'dap-breakpoint-condition                  )
+;; (map! :ne ", t"     'dap-breakpoint-condition                  )
 (map! :ne ", m"     'lsp-java-add-unimplemented-methods        )
 (map! :ne "s-d"     'lsp-goto-type-definition                  )
 (map! :ve ", f r"   'lsp-format-region                         )
@@ -376,5 +376,12 @@
 ;; Useful configuration
 ;; (setq lsp-java-jdt-download-url "https://download.eclipse.org/jdtls/milestones/1.1.2/jdt-language-server-1.1.2-202105191944.tar.gz")
 ;; (setq lsp-java-jdt-download-url "http://localhost/html/jdt-language-server-1.7.0-202112161541.tar.gz")
+
+(defun create-terminal-home ()
+  (interactive)
+  (+workspace/new "vterm home")
+  (+vterm/here t)
+)
+(map! :ne ", t"     'create-terminal-home                  )
 
 (provide 'neoemacs)
