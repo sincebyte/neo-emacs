@@ -203,6 +203,9 @@ mvn -Djdt.js.server.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.l
 - Change caps_lock to control if pressed with other keys, to escape if pressed alone.
   [[file:key-change.png]]
 * Dependencies
+
+https://github.com/hlissner/doom-emacs/blob/master/docs/getting_started.org
+
 [[https://github.com/BurntSushi/ripgrep]]
 
 [[https://github.com/junegunn/fzf]]
