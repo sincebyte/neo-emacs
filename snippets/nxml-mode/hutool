@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: hutool
+# key: hutool
+# --
+<dependency>
+    <groupId>cn.hutool</groupId>
+    <artifactId>hutool-all</artifactId>
+    <version>5.8.0.M2</version>
+</dependency>
