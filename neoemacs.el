@@ -377,6 +377,42 @@
 ;; (setq lsp-java-jdt-download-url "https://download.eclipse.org/jdtls/milestones/1.1.2/jdt-language-server-1.1.2-202105191944.tar.gz")
 ;; (setq lsp-java-jdt-download-url "http://localhost/html/jdt-language-server-1.7.0-202112161541.tar.gz")
 
+;; install mactex https://www.tug.org/mactex/
+(require 'ox-latex)
+(add-to-list 'org-latex-classes
+             '("org-article"
+               "\\documentclass[a4paper]{article}
+                \\usepackage{graphicx}
+                \\usepackage{xcolor}
+                \\usepackage{xeCJK}
+                \\usepackage{fixltx2e}
+                \\usepackage{longtable}
+                \\usepackage{float}
+                \\usepackage{tikz}
+                \\usepackage{wrapfig}
+                \\usepackage{latexsym,amssymb,amsmath}
+                \\usepackage{textcomp}
+                \\usepackage{listings}
+                \\usepackage{marvosym}
+                \\usepackage{textcomp}
+                \\usepackage{latexsym}
+                \\usepackage{natbib}
+                \\usepackage{geometry}
+                [PACKAGES]
+                [EXTRA]"
+                ("\\section{%s}"       . "\\section*{%s}"       )
+                ("\\subsection{%s}"    . "\\subsection*{%s}"    )
+                ("\\subsubsection{%s}" . "\\subsubsection*{%s}" )
+                ("\\paragraph{%s}"     . "\\paragraph*{%s}"     )
+                ("\\subparagraph{%s}"  . "\\subparagraph*{%s}"  )))
+;; Latex导出代码设置 , brew install pygments
+(setq org-latex-pdf-process '("xelatex -interaction nonstopmode %f" "xelatex -interaction nonstopmode %f")
+      org-latex-listings    t
+      org-latex-hyperref-template "\\hypersetup{\n pdfauthor={%a},\n pdftitle={%t},\n pdfkeywords={%k},\n pdfsubject={%d},\n colorlinks=true,\n linkcolor=black\n}\n")
+(add-to-list 'org-latex-packages-alist '("" "listings"))
+(add-to-list 'org-latex-packages-alist '("" "xcolor"))
+
+;; vterm custom setting
 (defun create-terminal-home ()
   (interactive)
   (+workspace/new "vterm home")
