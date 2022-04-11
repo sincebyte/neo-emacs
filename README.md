@@ -1,37 +1,37 @@
 
 # Table of Contents
 
-1.  [About](#org666b706)
-2.  [How to install](#org584c62c)
-    1.  [Install emacs](#orgb124ce1)
-    2.  [Building Emacs](#org85442ef)
-    3.  [Clone doom-emacs](#org417deed)
-    4.  [Clone neo-emacs](#org8e61cdd)
-    5.  [Doom Install](#orga9e96c2)
-3.  [Private setting](#org0e2012e)
-4.  [Lsp-java Usage](#org1f76600)
-5.  [Dap-java Usage](#orga564ffa)
-6.  [Company box customize](#org561a4e6)
-7.  [Ejc-sql Usage](#org0ee1489)
-8.  [Rime Usage](#org022ecb6)
-9.  [Libvterm Usage](#orge443221)
-10. [Questions](#org51cc716)
-    1.  [install ffmpeg](#org54839d2)
-    2.  [how to install all-the-icons?](#org151ef03)
-    3.  [how to install rime ?](#org8af6362)
-    4.  [how to install vterm?](#org7cf4380)
-    5.  [lsp-springboot](#org801f972)
-    6.  [useful key setting](#orgeae10f9)
-11. [Dependencies](#org57ebe1b)
+1.  [About](#orgad52627)
+2.  [How to install](#org3e67799)
+    1.  [Install emacs](#orgf69ec46)
+    2.  [Building Emacs](#org11ef295)
+    3.  [Clone doom-emacs](#org0887e6b)
+    4.  [Clone neo-emacs](#org670625a)
+    5.  [Doom Install](#org9fe63be)
+3.  [Private setting](#org45e707d)
+4.  [Lsp-java Usage](#orgb8179b5)
+5.  [Dap-java Usage](#org9c6a507)
+6.  [Company box customize](#orgaf5e467)
+7.  [Ejc-sql Usage](#org32f87a6)
+8.  [Rime Usage](#orgc648c5c)
+9.  [Libvterm Usage](#orgd37ad91)
+10. [Questions](#orgbc98493)
+    1.  [install ffmpeg](#org7f10258)
+    2.  [how to install all-the-icons?](#org373143c)
+    3.  [how to install rime ?](#org2c57797)
+    4.  [how to install vterm?](#org034952b)
+    5.  [lsp-springboot](#org423bf19)
+    6.  [useful key setting](#org74530b8)
+11. [Dependencies](#org360ea7a)
 
-![img](./neo-emacs.gif)
+![img](./neo-emacs.gif)  
 
 
-<a id="org666b706"></a>
+<a id="orgad52627"></a>
 
 # About
 
-Neo emacs is a configuration framework for GNU Emacs which is based on doom emacs and focuses on the java web application coding environment. Neo emacs has the following features:
+Neo emacs is a configuration framework for GNU Emacs which is based on doom emacs and focuses on the java web application coding environment. Neo emacs has the following features:  
 
 -   Code completion: Lsp-java supports maven and gradle project.
 -   Program debugging: Dap-java supports program debugging.
@@ -42,23 +42,23 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   [onlinedoc](http://1.117.167.195/doc/neo-emacs.html)
 
 
-<a id="org584c62c"></a>
+<a id="org3e67799"></a>
 
 # How to install
 
 
-<a id="orgb124ce1"></a>
+<a id="orgf69ec46"></a>
 
 ## Install emacs
 
-Choose your operation system and install it.
+Choose your operation system and install it.  
 
 -   [gnu-emacs](https://www.gnu.org/software/emacs/) is the official emacs client.
 -   [emacs-plus](https://github.com/d12frosted/homebrew-emacs-plus) is the best choice to run NeoEmcas.
 -   export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs, this depends on your installation path.
 
 
-<a id="org85442ef"></a>
+<a id="org11ef295"></a>
 
 ## Building Emacs
 
@@ -73,45 +73,45 @@ Choose your operation system and install it.
     open nextstep/Emacs.app
 
 
-<a id="org417deed"></a>
+<a id="org0887e6b"></a>
 
 ## Clone doom-emacs
 
     git clone https://github.com/hlissner/doom-emacs.git ~/.emacs.d/
 
 
-<a id="org8e61cdd"></a>
+<a id="org670625a"></a>
 
 ## Clone neo-emacs
 
     git clone https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
 
-<a id="orga9e96c2"></a>
+<a id="org9fe63be"></a>
 
 ## Doom Install
 
-Make sure that you have some setting in your terminal environment.
+Make sure that you have some setting in your terminal environment.  
 
-Set up a vpn if you need it.
+Set up a vpn if you need it.  
 
     export http_proxy="ip:port"
     export https_proxy="ip:port"
 
-Set your emacs cmd for doom install.
+Set your emacs cmd for doom install.  
 
     export EMACS= $YOUR EMACS CMD PATH$
 
-At last run below, this will take few minutes. And it depends on the quality of your network.
+At last run below, this will take few minutes. And it depends on the quality of your network.  
 
     ~/.emacs.doom/bin/doom install
 
 
-<a id="org0e2012e"></a>
+<a id="org45e707d"></a>
 
 # Private setting
 
-Changing config in the config.el.
+Changing config in the config.el.  
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -224,22 +224,29 @@ Changing config in the config.el.
 
 <tr>
 <td class="org-left">lsp-java-jdt-download-url</td>
-<td class="org-left">&ldquo;<a href="http://1.117.167.195/download/jdt-language-server-1.6.0-202111261512.tar.gz">http://1.117.167.195/download/jdt-language-server-1.6.0-202111261512.tar.gz</a>&rdquo;</td>
+<td class="org-left">&ldquo;<a href="http://1.117.167.195/download">http://1.117.167.195/download</a></td>
 <td class="org-left">jdt-server URL, with tencent cloud speed up</td>
+</tr>
+
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">/jdt-language-server-1.6.0-202111261512.tar.gz&ldquo;</td>
+<td class="org-left">&#xa0;</td>
 </tr>
 </tbody>
 </table>
 
 
-<a id="org1f76600"></a>
+<a id="orgb8179b5"></a>
 
 # Lsp-java Usage
 
--   generate .project & .classpath files
+-   generate .project & .classpath files  
     
         mvn eclipse:clean eclipse:eclipse
 -   support projectlombok plugin
--   Key binding
+-   Key binding  
     
     <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
     
@@ -317,12 +324,12 @@ Changing config in the config.el.
     </table>
 
 
-<a id="orga564ffa"></a>
+<a id="org9c6a507"></a>
 
 # Dap-java Usage
 
 -   Config the debug host and port, add file $usr\_private\_dir/dap-java-config.el.
--   Use \`(setq user-private-dir &ldquo;$usr\_private\_dir/dap-java-config.el&rdquo; )\` make it effective.
+-   Use \`(setq user-private-dir &ldquo;$usr\_private\_dir/dap-java-config.el&rdquo; )\` make it effective.  
     
         (dap-register-debug-template
         "user-service"
@@ -332,7 +339,7 @@ Changing config in the config.el.
                 :projectName "user-service"
                 :hostName "127.0.0.1"
                 :port 1044))
--   key binding
+-   key binding  
     
     <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
     
@@ -403,7 +410,7 @@ Changing config in the config.el.
     </table>
 
 
-<a id="org561a4e6"></a>
+<a id="orgaf5e467"></a>
 
 # Company box customize
 
@@ -411,11 +418,11 @@ Changing config in the config.el.
 -   company-icon icon config file: ~/.emacs.d/modules/completion/company/config.el
 
 
-<a id="org0ee1489"></a>
+<a id="org32f87a6"></a>
 
 # Ejc-sql Usage
 
--   Config your db connection in the $usr\_private\_dir/db-work.el.
+-   Config your db connection in the $usr\_private\_dir/db-work.el.  
     
         (use-package ejc-sql
         :commands ejc-sql-mode ejc-connect
@@ -427,7 +434,7 @@ Changing config in the config.el.
                 :separator      "</?\.*>" )
         )
         (provide 'db-work)
--   sql file
+-   sql file  
     
         
         <SELECT>
@@ -439,7 +446,7 @@ Changing config in the config.el.
         COMMENT ON COLUMN TABLE_ORG.PROJECT_CODE IS '项目编码';
         COMMENT ON COLUMN TABLE_ORG.PERIOD IS '期间';
         </SELECT>
--   key binding
+-   key binding  
     
     <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
     
@@ -475,7 +482,7 @@ Changing config in the config.el.
     </table>
 
 
-<a id="org022ecb6"></a>
+<a id="orgc648c5c"></a>
 
 # Rime Usage
 
@@ -484,18 +491,18 @@ Changing config in the config.el.
 -   some rime input method config at .doom.d/myconfig/rime-config.
 
 
-<a id="orge443221"></a>
+<a id="orgd37ad91"></a>
 
 # Libvterm Usage
 
--   Ubuntu
+-   Ubuntu  
     
         sudo apt install cmake
         sudo apt install libtool-bin
--   MacOs
+-   MacOs  
     
         sudo brew install cmake libtool
--   Key Binding
+-   Key Binding  
     
     <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
     
@@ -538,19 +545,19 @@ Changing config in the config.el.
     </table>
 
 
-<a id="org51cc716"></a>
+<a id="orgbc98493"></a>
 
 # Questions
 
 
-<a id="org54839d2"></a>
+<a id="org7f10258"></a>
 
 ## install ffmpeg
 
 -   brew install ffmpeg
 
 
-<a id="org151ef03"></a>
+<a id="org373143c"></a>
 
 ## how to install all-the-icons?
 
@@ -558,16 +565,16 @@ Changing config in the config.el.
 -   M-x all-the-icons-install-fonts
 
 
-<a id="org8af6362"></a>
+<a id="org2c57797"></a>
 
 ## how to install rime ?
 
 -   M-x install-package rime
 
-unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
+unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime  
 
 
-<a id="org7cf4380"></a>
+<a id="org034952b"></a>
 
 ## how to install vterm?
 
@@ -581,48 +588,50 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     make
 
 
-<a id="org801f972"></a>
+<a id="org423bf19"></a>
 
 ## lsp-springboot
 
     mvn -Djdt.js.server.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.ls/server/ -Djunit.runner.root=/Users/van/.emacs.d/.local/etc/eclipse.jdt.ls/test-runner/ -Djunit.runner.fileName=junit-platform-console-standalone.jar -Djava.debug.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.ls/server/bundles clean package -Djdt.download.url=http://download.eclipse.org/jdtls/snapshots/jdt-language-server-latest.tar.gz -f lsp-java-server-build.pom
 
-mvn -Djdt.js.server.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.ls -Djunit.runner.root=/Users/van/.emacs.d/.local/etc/eclipse.jdt.ls/test-runner/ -Djunit.runner.fileName=junit-platform-console-standalone.jar -Djava.debug.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.ls/server/bundles -Pe418 clean package
+mvn -Djdt.js.server.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.ls -Djunit.runner.root=/Users/van/.emacs.d/.local/etc/eclipse.jdt.ls/test-runner/ -Djunit.runner.fileName=junit-platform-console-standalone.jar -Djava.debug.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.ls/server/bundles -Pe418 clean package  
 
 
-<a id="orgeae10f9"></a>
+<a id="org74530b8"></a>
 
 ## useful key setting
 
--   Change caps\_lock to control if pressed with other keys, to escape if pressed alone.
+-   Change caps\_lock to control if pressed with other keys, to escape if pressed alone.  
     ![img](key-change.png)
 
 
-<a id="org57ebe1b"></a>
+<a id="org360ea7a"></a>
 
 # Dependencies
 
-<https://github.com/hlissner/doom-emacs/blob/master/docs/getting_started.org>
+<https://github.com/hlissner/doom-emacs/blob/master/docs/getting_started.org>  
 
-<https://github.com/BurntSushi/ripgrep>
+<https://github.com/BurntSushi/ripgrep>  
 
-<https://github.com/junegunn/fzf>
+<https://github.com/junegunn/fzf>  
 
-<https://github.com/kostafey/ejc-sql>
+<https://github.com/kostafey/ejc-sql>  
 
-<https://leiningen.org/>
+<https://leiningen.org/>  
 
-<https://plantuml.com/>
+<https://plantuml.com/>  
 
-<https://github.com/emacs-lsp/lsp-java>
+<https://github.com/emacs-lsp/lsp-java>  
 
-<https://projectlombok.org/>
+<https://projectlombok.org/>  
 
-<https://github.com/DogLooksGood/emacs-rime>
+<https://github.com/DogLooksGood/emacs-rime>  
 
-<https://github.com/be5invis/Sarasa-Gothic>
+<https://github.com/be5invis/Sarasa-Gothic>  
 
-<https://github.com/akicho8/string-inflection>
+<https://github.com/akicho8/string-inflection>  
 
-<https://raw.githubusercontent.com/alibaba/p3c/master/p3c-formatter/eclipse-codestyle.xml>
+<https://raw.githubusercontent.com/alibaba/p3c/master/p3c-formatter/eclipse-codestyle.xml>  
+
+<https://www.tug.org/mactex/>  
 
