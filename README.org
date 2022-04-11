@@ -1,6 +1,10 @@
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://7465-test-i1bhx-1301855613.tcb.qcloud.la/org-roam.css"/>
-#+OPTIONS: ^:nil
-#+OPTIONS: prop:t
+#+OPTIONS: prop:t timestamp:nil date:nil \n:t ^:nil
+#+LATEX_HEADER: \usepackage[UTF8]{ctex}
+#+LATEX_CLASS: org-article
+#+LATEX_HEADER: \usepackage{listings}
+#+LATEX_HEADER: \usepackage{xcolor}
+#+latex:\newpage
 
 [[file:./neo-emacs.gif]]
 
@@ -21,6 +25,7 @@ Choose your operation system and install it.
 - [[https://github.com/d12frosted/homebrew-emacs-plus][emacs-plus]] is the best choice to run NeoEmcas.
 - export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs, this depends on your installation path.
 ** Building Emacs
+#+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
 #+begin_src shell
 git clone git://git.savannah.gnu.org/emacs.git
 cd emacs
@@ -34,11 +39,13 @@ open nextstep/Emacs.app
 #+end_src
 ** Clone doom-emacs
 
+#+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
 #+BEGIN_SRC shell
 git clone https://github.com/hlissner/doom-emacs.git ~/.emacs.d/
 #+END_SRC
 ** Clone neo-emacs
 
+#+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
 #+BEGIN_SRC shell
 git clone https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 #+END_SRC
@@ -47,6 +54,7 @@ Make sure that you have some setting in your terminal environment.
 
 Set up a vpn if you need it.
 
+#+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
 #+BEGIN_SRC shell
 export http_proxy="ip:port"
 export https_proxy="ip:port"
@@ -54,41 +62,47 @@ export https_proxy="ip:port"
 
 Set your emacs cmd for doom install.
 
+#+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
 #+BEGIN_SRC shell
 export EMACS= $YOUR EMACS CMD PATH$
 #+END_SRC
 
 At last run below, this will take few minutes. And it depends on the quality of your network.
 
+#+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
 #+BEGIN_SRC shell
 ~/.emacs.doom/bin/doom install
 #+END_SRC
 * Private setting
 Changing config in the config.el.
 
-| rg-exec-path              | "/opt/homebrew/bin/rg"                                                        | rg            exec path                     |
-| fd-exec-path              | "/opt/homebrew/bin/fd"                                                        | fd            exec path                     |
-| dot-exec-path             | "/opt/homebrew/bin/dot"                                                       | dot           exec path                     |
-| lsp-maven-path            | "~/.m2/settings.xml"                                                          | maven setting path                          |
-| pdflatex-exec-path        | "/Library/TeX/texbin/pdflatex"                                                | pdflatex      exec path                     |
-| org-directory             | "~/org/"                                                                      | org           root path                     |
-| org-roam-directory        | "~/org/org-roam"                                                              | org roam      root path                     |
-| lsp-java-java-path        | (concat (getenv "JAVA_11_HOME") "/bin/java")                                  | java11        exec path                     |
-| doom-font                 | (font-spec :family "等距更纱黑体 Slab SC" :size 18)                           | font setting                                |
-| display-line-numbers-type | nil                                                                           | show line number                            |
-| rime-user-data-dir        | "~/Library/Rime/"                                                             | rime config input method setting            |
-| rime-librime-root         | "~/.doom.d/myconfig/rime-macos/dist"                                          | emacs-rime/blob/master/INSTALLATION.org     |
-| emacs-module-root         | "/opt/homebrew/opt/emacs-plus@28/include"                                     | emcas module root path for build vterm      |
-| node-bin-dir              | "~/node-v16.14.0/bin"                                                         | node exec path                              |
-| lsp-java-jdt-download-url | "http://1.117.167.195/download/jdt-language-server-1.6.0-202111261512.tar.gz" | jdt-server URL, with tencent cloud speed up |
+#+ATTR_LaTeX: :align |c|c|c|
+| rg-exec-path              | "/opt/homebrew/bin/rg"                              | rg            exec path                     |
+| fd-exec-path              | "/opt/homebrew/bin/fd"                              | fd            exec path                     |
+| dot-exec-path             | "/opt/homebrew/bin/dot"                             | dot           exec path                     |
+| lsp-maven-path            | "~/.m2/settings.xml"                                | maven setting path                          |
+| pdflatex-exec-path        | "/Library/TeX/texbin/pdflatex"                      | pdflatex      exec path                     |
+| org-directory             | "~/org/"                                            | org           root path                     |
+| org-roam-directory        | "~/org/org-roam"                                    | org roam      root path                     |
+| lsp-java-java-path        | (concat (getenv "JAVA_11_HOME") "/bin/java")        | java11        exec path                     |
+| doom-font                 | (font-spec :family "等距更纱黑体 Slab SC" :size 18) | font setting                                |
+| display-line-numbers-type | nil                                                 | show line number                            |
+| rime-user-data-dir        | "~/Library/Rime/"                                   | rime config input method setting            |
+| rime-librime-root         | "~/.doom.d/myconfig/rime-macos/dist"                | emacs-rime/blob/master/INSTALLATION.org     |
+| emacs-module-root         | "/opt/homebrew/opt/emacs-plus@28/include"           | emcas module root path for build vterm      |
+| node-bin-dir              | "~/node-v16.14.0/bin"                               | node exec path                              |
+| lsp-java-jdt-download-url | "http://1.117.167.195/download                      | jdt-server URL, with tencent cloud speed up |
+|                           | /jdt-language-server-1.6.0-202111261512.tar.gz"     |                                             |
 
 * Lsp-java Usage
 - generate .project & .classpath files
+    #+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
     #+BEGIN_SRC shell
         mvn eclipse:clean eclipse:eclipse
     #+END_SRC
 - support projectlombok plugin
 - Key binding
+ #+ATTR_LaTeX: :align |c|c|c|
  | KEY   | FUNCTION                           | DESCRIPTION                                          |
  | M-i   | lsp-goto-implementation            | find where sub class definition                      |
  | M-o   | lsp-java-open-super-implementation | goto where super class definition                    |
@@ -101,6 +115,7 @@ Changing config in the config.el.
 * Dap-java Usage
 - Config the debug host and port, add file $usr_private_dir/dap-java-config.el.
 - Use `(setq user-private-dir "$usr_private_dir/dap-java-config.el" )` make it effective.
+    #+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
     #+begin_src lisp
     (dap-register-debug-template
     "user-service"
@@ -112,6 +127,7 @@ Changing config in the config.el.
             :port 1044))
     #+end_src
 - key binding
+ #+ATTR_LaTeX: :align |c|c|c|
  | KEY | FUNCTION                | DESCRIPTION     |
  | , n | dap-next                | Breakpoint next |
  | , b | dap-breakpoint-toggle   |                 |
@@ -125,6 +141,7 @@ Changing config in the config.el.
 - company-icon icon config file: ~/.emacs.d/modules/completion/company/config.el
 * Ejc-sql Usage
  - Config your db connection in the $usr_private_dir/db-work.el.
+   #+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
    #+begin_src lisp
     (use-package ejc-sql
     :commands ejc-sql-mode ejc-connect
@@ -138,6 +155,7 @@ Changing config in the config.el.
     (provide 'db-work)
    #+end_src
  - sql file
+     #+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
      #+BEGIN_SRC sql
 
      <SELECT>
@@ -151,6 +169,7 @@ Changing config in the config.el.
      </SELECT>
      #+END_SRC
  - key binding
+    #+ATTR_LaTeX: :align |c|c|c|
     | KEY     | FUNCTION       | description                |
     | SPC e c | ejc-connection | choose connection with ivy |
     | C-c C-c | ejc-execute    | execute the sql            |
@@ -169,6 +188,7 @@ Changing config in the config.el.
     sudo brew install cmake libtool
     #+end_src
 - Key Binding
+   #+ATTR_LaTeX: :align |c|c|c|
    | KEY     | FUNCTION             | DESCRIPTION                                     |
    | SPC v v | projectile-run-vterm | open vterm window base on the project root path |
    | SPC v p | vterm-send-start     | enable vterm screen roll                        |
@@ -227,3 +247,5 @@ https://github.com/DogLooksGood/emacs-rime
 [[https://github.com/akicho8/string-inflection]]
 
 https://raw.githubusercontent.com/alibaba/p3c/master/p3c-formatter/eclipse-codestyle.xml
+
+https://www.tug.org/mactex/
