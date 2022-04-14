@@ -22,9 +22,6 @@
 (load-theme   'doom-badger t          ) ;; set theme
 (use-package! neoemacs                ) ;; neo-emacs main config
 
-;; (use-package! rmsbolt)
-(add-hook 'markdown-mode-hook 'pandoc-mode)
-
 (use-package! dap-java-config         )
 (use-package! db-work                 )
 

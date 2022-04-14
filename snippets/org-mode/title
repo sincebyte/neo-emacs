@@ -3,10 +3,10 @@
 # key: tt
 # --
 #+title:
+#+AUTHOR: 刘自杰
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://7465-test-i1bhx-1301855613.tcb.qcloud.la/org-roam.css"/>
-#+OPTIONS: prop:t timestamp:nil date:nil \n:t ^:nil
-#+LATEX_HEADER: \usepackage[UTF8]{ctex}
+#+OPTIONS: prop:t timestamp:nil \n:t ^:nil f:t
 #+LATEX_CLASS: org-article
-#+LATEX_HEADER: \usepackage{listings}
-#+LATEX_HEADER: \usepackage{xcolor}
+#+MACRO: htmlred @@html:<font color="red"></font>@@
+#+MACRO: latexred @@latex:{\color{red}@@@@latex:}@@
 #+latex:\newpage

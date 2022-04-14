@@ -381,7 +381,8 @@
 (require 'ox-latex)
 (add-to-list 'org-latex-classes
              '("org-article"
-               "\\documentclass[a4paper]{article}
+               "\\documentclass[11pt,a4paper]{article}
+                \\usepackage[UTF8]{ctex}
                 \\usepackage{graphicx}
                 \\usepackage{xcolor}
                 \\usepackage{xeCJK}
@@ -392,12 +393,27 @@
                 \\usepackage{wrapfig}
                 \\usepackage{latexsym,amssymb,amsmath}
                 \\usepackage{textcomp}
-                \\usepackage{listings}
                 \\usepackage{marvosym}
                 \\usepackage{textcomp}
                 \\usepackage{latexsym}
                 \\usepackage{natbib}
                 \\usepackage{geometry}
+                \\usepackage{color}
+                \\usepackage{listings}
+                \\definecolor{mygreen}{rgb}{0,0.6,0}
+                \\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+                \\definecolor{mymauve}{rgb}{0.58,0,0.82}
+                \\lstset{ %
+                        frame=trbl,
+                        backgroundcolor=\\color{white},                         % choose the background color
+                        basicstyle=\\等距更纱黑体\ Slab\ SC\\scriptsize,        % size of fonts used for the code
+                        breaklines=true,                                        % automatic line breaking only at whitespace
+                        captionpos=b,                                           % sets the caption-position to bottom
+                        commentstyle=\\color{mygreen},                          % comment style
+                        escapeinside={\\%*}{*)},                                % if you want to add LaTeX within your code
+                        keywordstyle=\\color{blue},                             % keyword style
+                        stringstyle=\\color{mymauve},                           % string literal style
+                }
                 [PACKAGES]
                 [EXTRA]"
                 ("\\section{%s}"       . "\\section*{%s}"       )
@@ -407,10 +423,13 @@
                 ("\\subparagraph{%s}"  . "\\subparagraph*{%s}"  )))
 ;; Latex导出代码设置 , brew install pygments
 (setq org-latex-pdf-process '("xelatex -interaction nonstopmode %f" "xelatex -interaction nonstopmode %f")
-      org-latex-listings    t
+      org-latex-listings         t
+      org-export-latex-listings  t
       org-latex-hyperref-template "\\hypersetup{\n pdfauthor={%a},\n pdftitle={%t},\n pdfkeywords={%k},\n pdfsubject={%d},\n colorlinks=true,\n linkcolor=black\n}\n")
 (add-to-list 'org-latex-packages-alist '("" "listings"))
-(add-to-list 'org-latex-packages-alist '("" "xcolor"))
+(add-to-list 'org-latex-packages-alist '("" "color"))
+
+
 
 ;; vterm custom setting
 (defun create-terminal-home ()
