@@ -1,9 +1,8 @@
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://7465-test-i1bhx-1301855613.tcb.qcloud.la/org-roam.css"/>
-#+OPTIONS: prop:t timestamp:nil date:nil \n:t ^:nil
-#+LATEX_HEADER: \usepackage[UTF8]{ctex}
+#+OPTIONS: prop:t timestamp:nil \n:t ^:nil f:t
 #+LATEX_CLASS: org-article
-#+LATEX_HEADER: \usepackage{listings}
-#+LATEX_HEADER: \usepackage{xcolor}
+#+MACRO: htmlred @@html:<font color="red"></font>@@
+#+MACRO: latexred @@latex:{\color{red}@@@@latex:}@@
 #+latex:\newpage
 
 [[file:./neo-emacs.gif]]
@@ -25,8 +24,7 @@ Choose your operation system and install it.
 - [[https://github.com/d12frosted/homebrew-emacs-plus][emacs-plus]] is the best choice to run NeoEmcas.
 - export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs, this depends on your installation path.
 ** Building Emacs
-#+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
-#+begin_src shell
+#+begin_src shell -n
 git clone git://git.savannah.gnu.org/emacs.git
 cd emacs
 git checkout emacs-28
@@ -38,14 +36,10 @@ make install
 open nextstep/Emacs.app
 #+end_src
 ** Clone doom-emacs
-
-#+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
-#+BEGIN_SRC shell
+#+BEGIN_SRC shell -n
 git clone https://github.com/hlissner/doom-emacs.git ~/.emacs.d/
 #+END_SRC
 ** Clone neo-emacs
-
-#+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
 #+BEGIN_SRC shell
 git clone https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 #+END_SRC
@@ -54,7 +48,6 @@ Make sure that you have some setting in your terminal environment.
 
 Set up a vpn if you need it.
 
-#+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
 #+BEGIN_SRC shell
 export http_proxy="ip:port"
 export https_proxy="ip:port"
@@ -62,37 +55,51 @@ export https_proxy="ip:port"
 
 Set your emacs cmd for doom install.
 
-#+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
 #+BEGIN_SRC shell
 export EMACS= $YOUR EMACS CMD PATH$
 #+END_SRC
 
 At last run below, this will take few minutes. And it depends on the quality of your network.
 
-#+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
 #+BEGIN_SRC shell
 ~/.emacs.doom/bin/doom install
 #+END_SRC
 * Private setting
 Changing config in the config.el.
 
-#+ATTR_LaTeX: :align |c|c|c|
-| rg-exec-path              | "/opt/homebrew/bin/rg"                              | rg            exec path                     |
-| fd-exec-path              | "/opt/homebrew/bin/fd"                              | fd            exec path                     |
-| dot-exec-path             | "/opt/homebrew/bin/dot"                             | dot           exec path                     |
-| lsp-maven-path            | "~/.m2/settings.xml"                                | maven setting path                          |
-| pdflatex-exec-path        | "/Library/TeX/texbin/pdflatex"                      | pdflatex      exec path                     |
-| org-directory             | "~/org/"                                            | org           root path                     |
-| org-roam-directory        | "~/org/org-roam"                                    | org roam      root path                     |
-| lsp-java-java-path        | (concat (getenv "JAVA_11_HOME") "/bin/java")        | java11        exec path                     |
-| doom-font                 | (font-spec :family "等距更纱黑体 Slab SC" :size 18) | font setting                                |
-| display-line-numbers-type | nil                                                 | show line number                            |
-| rime-user-data-dir        | "~/Library/Rime/"                                   | rime config input method setting            |
-| rime-librime-root         | "~/.doom.d/myconfig/rime-macos/dist"                | emacs-rime/blob/master/INSTALLATION.org     |
-| emacs-module-root         | "/opt/homebrew/opt/emacs-plus@28/include"           | emcas module root path for build vterm      |
-| node-bin-dir              | "~/node-v16.14.0/bin"                               | node exec path                              |
-| lsp-java-jdt-download-url | "http://1.117.167.195/download                      | jdt-server URL, with tencent cloud speed up |
-|                           | /jdt-language-server-1.6.0-202111261512.tar.gz"     |                                             |
+| <l>                       | <l>                                                 | <l>                                         |
++---------------------------+-----------------------------------------------------+------------------------------------------+
+| rg-exec-path              | "/opt/homebrew/bin/rg"                              | rg            exec path                  |
++---------------------------+-----------------------------------------------------+------------------------------------------+
+| fd-exec-path              | "/opt/homebrew/bin/fd"                              | fd            exec path                  |
++---------------------------+-----------------------------------------------------+------------------------------------------+
+| dot-exec-path             | "/opt/homebrew/bin/dot"                             | dot           exec path                  |
++---------------------------+-----------------------------------------------------+------------------------------------------+
+| lsp-maven-path            | "~/.m2/settings.xml"                                | maven setting path                       |
++---------------------------+-----------------------------------------------------+------------------------------------------+
+| pdflatex-exec-path        | "/Library/TeX/texbin/pdflatex"                      | pdflatex      exec path                  |
++---------------------------+-----------------------------------------------------+------------------------------------------+
+| org-directory             | "~/org/"                                            | org           root path                  |
++---------------------------+-----------------------------------------------------+------------------------------------------+
+| org-roam-directory        | "~/org/org-roam"                                    | org roam      root path                  |
++---------------------------+-----------------------------------------------------+------------------------------------------+
+| lsp-java-java-path        | (concat (getenv "JAVA_11_HOME") "/bin/java")        | java11        exec path                  |
++---------------------------+-----------------------------------------------------+------------------------------------------+
+| doom-font                 | (font-spec :family "your font" :size 18)            | font setting                             |
++---------------------------+-----------------------------------------------------+------------------------------------------+
+| display-line-numbers-type | nil                                                 | show line number                         |
++---------------------------+-----------------------------------------------------+------------------------------------------+
+| rime-user-data-dir        | "~/Library/Rime/"                                   | rime config input method setting         |
++---------------------------+-----------------------------------------------------+------------------------------------------+
+| rime-librime-root         | "~/.doom.d/myconfig/rime-macos/dist"                | emacs-rime/blob/master/INSTALLATION.org  |
++---------------------------+-----------------------------------------------------+------------------------------------------+
+| emacs-module-root         | "/opt/homebrew/opt/emacs-plus@28/include"           | emcas module root path for build vterm   |
++---------------------------+-----------------------------------------------------+------------------------------------------+
+| node-bin-dir              | "~/node-v16.14.0/bin"                               | node exec path                           |
++---------------------------+-----------------------------------------------------+------------------------------------------+
+| lsp-java-jdt-download-url | "http://1.117.167.195/download                      | jdt-server URL, with tencent             |
+|                           | /jdt-language-server-1.6.0-202111261512.tar.gz"     |  cloud speed up                          |
++---------------------------+-----------------------------------------------------+------------------------------------------+
 
 * Lsp-java Usage
 - generate .project & .classpath files
@@ -102,21 +109,30 @@ Changing config in the config.el.
     #+END_SRC
 - support projectlombok plugin
 - Key binding
- #+ATTR_LaTeX: :align |c|c|c|
+ | <l>   | <l>                                | <l>                                                  |
+ +-------+------------------------------------+------------------------------------------------------+
  | KEY   | FUNCTION                           | DESCRIPTION                                          |
+ +-------+------------------------------------+------------------------------------------------------+
  | M-i   | lsp-goto-implementation            | find where sub class definition                      |
+ +-------+------------------------------------+------------------------------------------------------+
  | M-o   | lsp-java-open-super-implementation | goto where super class definition                    |
+ +-------+------------------------------------+------------------------------------------------------+
  | M-t   | lsp-treemacs-references            | find where your code be referenced                   |
+ +-------+------------------------------------+------------------------------------------------------+
  | s-d   | lsp-goto-type-definition           | goto type definition                                 |
+ +-------+------------------------------------+------------------------------------------------------+
  | , f r | lsp-format-region                  | format the region java code                          |
+ +-------+------------------------------------+------------------------------------------------------+
  | , f b | lsp-format-buffer                  | format the whole file                                |
+ +-------+------------------------------------+------------------------------------------------------+
  | , m   | lsp-java-add-unimplemented-methods | add function code template for unimplemented methods |
+ +-------+------------------------------------+------------------------------------------------------+
  | ; i   | lsp-java-organize-imports          | import require package or delete some unuse package  |
+ +-------+------------------------------------+------------------------------------------------------+
 * Dap-java Usage
 - Config the debug host and port, add file $usr_private_dir/dap-java-config.el.
 - Use `(setq user-private-dir "$usr_private_dir/dap-java-config.el" )` make it effective.
-    #+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
-    #+begin_src lisp
+    #+begin_src lisp -n
     (dap-register-debug-template
     "user-service"
     (list :name "Java Attach"
@@ -127,15 +143,24 @@ Changing config in the config.el.
             :port 1044))
     #+end_src
 - key binding
- #+ATTR_LaTeX: :align |c|c|c|
+ | <l> | <l>                     | <l>             |
+ +-----+-------------------------+-----------------+
  | KEY | FUNCTION                | DESCRIPTION     |
+ +-----+-------------------------+-----------------+
  | , n | dap-next                | Breakpoint next |
+ +-----+-------------------------+-----------------+
  | , b | dap-breakpoint-toggle   |                 |
+ +-----+-------------------------+-----------------+
  | , c | dap-continue            |                 |
+ +-----+-------------------------+-----------------+
  | , r | dap-eval-region         |                 |
+ +-----+-------------------------+-----------------+
  | , a | dap-eval-thing-at-point |                 |
+ +-----+-------------------------+-----------------+
  | , d | dap-debug               |                 |
+ +-----+-------------------------+-----------------+
  | , u | dap-ui-repl             |                 |
+ +-----+-------------------------+-----------------+
 * Company box customize
 - use `M-x all-the-icons-material` for checking icon
 - company-icon icon config file: ~/.emacs.d/modules/completion/company/config.el
@@ -155,8 +180,7 @@ Changing config in the config.el.
     (provide 'db-work)
    #+end_src
  - sql file
-     #+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
-     #+BEGIN_SRC sql
+     #+BEGIN_SRC sql -n
 
      <SELECT>
      SELECT * FROM TABLE_ORG
@@ -169,10 +193,14 @@ Changing config in the config.el.
      </SELECT>
      #+END_SRC
  - key binding
-    #+ATTR_LaTeX: :align |c|c|c|
+    | <l>     | <l>            | <l>                        |
+    +---------+----------------+----------------------------+
     | KEY     | FUNCTION       | description                |
+    +---------+----------------+----------------------------+
     | SPC e c | ejc-connection | choose connection with ivy |
+    +---------+----------------+----------------------------+
     | C-c C-c | ejc-execute    | execute the sql            |
+    +---------+----------------+----------------------------+
 * Rime Usage
 - https://github.com/DogLooksGood/emacs-rime supply this plugin.
 - https://github.com/rime/plum for more infomation.
@@ -188,11 +216,16 @@ Changing config in the config.el.
     sudo brew install cmake libtool
     #+end_src
 - Key Binding
-   #+ATTR_LaTeX: :align |c|c|c|
+   | <l>     | <l>                  | <l>                                             |
+   +---------+----------------------+-------------------------------------------------+
    | KEY     | FUNCTION             | DESCRIPTION                                     |
+   +---------+----------------------+-------------------------------------------------+
    | SPC v v | projectile-run-vterm | open vterm window base on the project root path |
+   +---------+----------------------+-------------------------------------------------+
    | SPC v p | vterm-send-start     | enable vterm screen roll                        |
+   +---------+----------------------+-------------------------------------------------+
    | SPC v s | vterm-send-stop      | disable vterm screen roll                       |
+   +---------+----------------------+-------------------------------------------------+
 * Questions
 ** install ffmpeg
 - brew install ffmpeg
