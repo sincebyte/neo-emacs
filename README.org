@@ -66,40 +66,38 @@ At last run below, this will take few minutes. And it depends on the quality of 
 #+END_SRC
 * Private setting
 Changing config in the config.el.
-
-| <l>                       | <l>                                                 | <l>                                         |
-+---------------------------+-----------------------------------------------------+------------------------------------------+
-| rg-exec-path              | "/opt/homebrew/bin/rg"                              | rg            exec path                  |
-+---------------------------+-----------------------------------------------------+------------------------------------------+
-| fd-exec-path              | "/opt/homebrew/bin/fd"                              | fd            exec path                  |
-+---------------------------+-----------------------------------------------------+------------------------------------------+
-| dot-exec-path             | "/opt/homebrew/bin/dot"                             | dot           exec path                  |
-+---------------------------+-----------------------------------------------------+------------------------------------------+
-| lsp-maven-path            | "~/.m2/settings.xml"                                | maven setting path                       |
-+---------------------------+-----------------------------------------------------+------------------------------------------+
-| pdflatex-exec-path        | "/Library/TeX/texbin/pdflatex"                      | pdflatex      exec path                  |
-+---------------------------+-----------------------------------------------------+------------------------------------------+
-| org-directory             | "~/org/"                                            | org           root path                  |
-+---------------------------+-----------------------------------------------------+------------------------------------------+
-| org-roam-directory        | "~/org/org-roam"                                    | org roam      root path                  |
-+---------------------------+-----------------------------------------------------+------------------------------------------+
-| lsp-java-java-path        | (concat (getenv "JAVA_11_HOME") "/bin/java")        | java11        exec path                  |
-+---------------------------+-----------------------------------------------------+------------------------------------------+
-| doom-font                 | (font-spec :family "your font" :size 18)            | font setting                             |
-+---------------------------+-----------------------------------------------------+------------------------------------------+
-| display-line-numbers-type | nil                                                 | show line number                         |
-+---------------------------+-----------------------------------------------------+------------------------------------------+
-| rime-user-data-dir        | "~/Library/Rime/"                                   | rime config input method setting         |
-+---------------------------+-----------------------------------------------------+------------------------------------------+
-| rime-librime-root         | "~/.doom.d/myconfig/rime-macos/dist"                | emacs-rime/blob/master/INSTALLATION.org  |
-+---------------------------+-----------------------------------------------------+------------------------------------------+
-| emacs-module-root         | "/opt/homebrew/opt/emacs-plus@28/include"           | emcas module root path for build vterm   |
-+---------------------------+-----------------------------------------------------+------------------------------------------+
-| node-bin-dir              | "~/node-v16.14.0/bin"                               | node exec path                           |
-+---------------------------+-----------------------------------------------------+------------------------------------------+
-| lsp-java-jdt-download-url | "http://1.117.167.195/download                      | jdt-server URL, with tencent             |
-|                           | /jdt-language-server-1.6.0-202111261512.tar.gz"     |  cloud speed up                          |
-+---------------------------+-----------------------------------------------------+------------------------------------------+
+| <l>                       | <l>                                     | <l>                     |
++---------------------------+-----------------------------------------+-------------------------+
+| rg-exec-path              | "/opt/homebrew/bin/rg"                  | rg            exec path |
++---------------------------+-----------------------------------------+-------------------------+
+| fd-exec-path              | "/opt/homebrew/bin/fd"                  | fd            exec path |
++---------------------------+-----------------------------------------+-------------------------+
+| dot-exec-path             | "/opt/homebrew/bin/dot"                 | dot           exec path |
++---------------------------+-----------------------------------------+-------------------------+
+| lsp-maven-path            | "~/.m2/settings.xml"                    | maven setting path      |
++---------------------------+-----------------------------------------+-------------------------+
+| pdflatex-exec-path        | "/Library/TeX/texbin/pdflatex"          | pdflatex      exec path |
++---------------------------+-----------------------------------------+-------------------------+
+| org-directory             | "~/org/"                                | org           root path |
++---------------------------+-----------------------------------------+-------------------------+
+| org-roam-directory        | "~/org/org-roam"                        | org roam      root path |
++---------------------------+-----------------------------------------+-------------------------+
+| lsp-java-java-path        |                                         | java11        exec path |
++---------------------------+-----------------------------------------+-------------------------+
+| doom-font                 |                                         | font setting            |
++---------------------------+-----------------------------------------+-------------------------+
+| display-line-numbers-type | nil                                     | show line number        |
++---------------------------+-----------------------------------------+-------------------------+
+| rime-user-data-dir        | "~/Library/Rime/"                       | rime config input       |
++---------------------------+-----------------------------------------+-------------------------+
+| rime-librime-root         | "~/.doom.d/myconfig/rime-macos/dist"    | emacs-rime/blob/master/ |
++---------------------------+-----------------------------------------+-------------------------+
+| emacs-module-root         | /opt/homebrew/opt/emacs-plus@28/include | emcas module root       |
++---------------------------+-----------------------------------------+-------------------------+
+| node-bin-dir              | "~/node-v16.14.0/bin"                   | node exec path          |
++---------------------------+-----------------------------------------+-------------------------+
+| lsp-java-jdt-download-url | http://1.117.167.195/download           | jdt-server URL          |
++---------------------------+-----------------------------------------+-------------------------+
 
 * Lsp-java Usage
 - generate .project & .classpath files
@@ -109,26 +107,28 @@ Changing config in the config.el.
     #+END_SRC
 - support projectlombok plugin
 - Key binding
- | <l>   | <l>                                | <l>                                                  |
- +-------+------------------------------------+------------------------------------------------------+
- | KEY   | FUNCTION                           | DESCRIPTION                                          |
- +-------+------------------------------------+------------------------------------------------------+
- | M-i   | lsp-goto-implementation            | find where sub class definition                      |
- +-------+------------------------------------+------------------------------------------------------+
- | M-o   | lsp-java-open-super-implementation | goto where super class definition                    |
- +-------+------------------------------------+------------------------------------------------------+
- | M-t   | lsp-treemacs-references            | find where your code be referenced                   |
- +-------+------------------------------------+------------------------------------------------------+
- | s-d   | lsp-goto-type-definition           | goto type definition                                 |
- +-------+------------------------------------+------------------------------------------------------+
- | , f r | lsp-format-region                  | format the region java code                          |
- +-------+------------------------------------+------------------------------------------------------+
- | , f b | lsp-format-buffer                  | format the whole file                                |
- +-------+------------------------------------+------------------------------------------------------+
- | , m   | lsp-java-add-unimplemented-methods | add function code template for unimplemented methods |
- +-------+------------------------------------+------------------------------------------------------+
- | ; i   | lsp-java-organize-imports          | import require package or delete some unuse package  |
- +-------+------------------------------------+------------------------------------------------------+
+ | <l>   | <l>                                | <l>                                |
+ +-------+------------------------------------+------------------------------------+
+ | KEY   | FUNCTION                           | DESCRIPTION                        |
+ +-------+------------------------------------+------------------------------------+
+ | M-i   | lsp-goto-implementation            | find where sub class definition    |
+ +-------+------------------------------------+------------------------------------+
+ | M-o   | lsp-java-open-super-implementation | goto where super class definition  |
+ +-------+------------------------------------+------------------------------------+
+ | M-t   | lsp-treemacs-references            | find where your code be referenced |
+ +-------+------------------------------------+------------------------------------+
+ | s-d   | lsp-goto-type-definition           | goto type definition               |
+ +-------+------------------------------------+------------------------------------+
+ | , f r | lsp-format-region                  | format the region java code        |
+ +-------+------------------------------------+------------------------------------+
+ | , f b | lsp-format-buffer                  | format the whole file              |
+ +-------+------------------------------------+------------------------------------+
+ | , m   | lsp-java-add-unimplemented-methods | add function code template for     |
+ |       |                                    | unimplemented methods              |
+ +-------+------------------------------------+------------------------------------+
+ | ; i   | lsp-java-organize-imports          | import require package             |
+ |       |                                    | or delete some unuse package       |
+ +-------+------------------------------------+------------------------------------+
 * Dap-java Usage
 - Config the debug host and port, add file $usr_private_dir/dap-java-config.el.
 - Use `(setq user-private-dir "$usr_private_dir/dap-java-config.el" )` make it effective.
@@ -179,6 +179,7 @@ Changing config in the config.el.
     )
     (provide 'db-work)
    #+end_src
+#+latex:\newpage
  - sql file
      #+BEGIN_SRC sql -n
 
@@ -250,8 +251,6 @@ make
 #+begin_src bash
 mvn -Djdt.js.server.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.ls/server/ -Djunit.runner.root=/Users/van/.emacs.d/.local/etc/eclipse.jdt.ls/test-runner/ -Djunit.runner.fileName=junit-platform-console-standalone.jar -Djava.debug.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.ls/server/bundles clean package -Djdt.download.url=http://download.eclipse.org/jdtls/snapshots/jdt-language-server-latest.tar.gz -f lsp-java-server-build.pom
 #+end_src
-
-mvn -Djdt.js.server.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.ls -Djunit.runner.root=/Users/van/.emacs.d/.local/etc/eclipse.jdt.ls/test-runner/ -Djunit.runner.fileName=junit-platform-console-standalone.jar -Djava.debug.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.ls/server/bundles -Pe418 clean package
 ** useful key setting
 - Change caps_lock to control if pressed with other keys, to escape if pressed alone.
   [[file:key-change.png]]
