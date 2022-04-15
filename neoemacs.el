@@ -378,6 +378,7 @@
 ;; (setq lsp-java-jdt-download-url "http://localhost/html/jdt-language-server-1.7.0-202112161541.tar.gz")
 
 ;; install mactex https://www.tug.org/mactex/
+;;
 (require 'ox-latex)
 (add-to-list 'org-latex-classes
              '("org-article"
@@ -400,6 +401,7 @@
                 \\usepackage{geometry}
                 \\usepackage{color}
                 \\usepackage{listings}
+                \\usepackage{cmap}
                 \\definecolor{mygreen}{rgb}{0,0.6,0}
                 \\definecolor{mygray}{rgb}{0.5,0.5,0.5}
                 \\definecolor{mymauve}{rgb}{0.58,0,0.82}
@@ -429,7 +431,8 @@
 (add-to-list 'org-latex-packages-alist '("" "listings"))
 (add-to-list 'org-latex-packages-alist '("" "color"))
 
-
+;; (setq org-dnd-use-package t)
+;; (require 'ox-dnd)
 
 ;; vterm custom setting
 (defun create-terminal-home ()
