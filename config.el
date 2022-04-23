@@ -19,9 +19,16 @@
 
 ;; default core setting
 (add-to-list  'load-path "~/.doom.d"  )
-(load-theme   'doom-badger t          ) ;; set theme
+;; (load-theme   'doom-badger t          ) ;; set theme
+(use-package! doom-themes
+  :ensure t
+  :config
+  (load-theme 'doom-badger t)
+  (doom-themes-visual-bell-config)
+  (doom-themes-neotree-config)
+  (doom-themes-org-config))
+
 (use-package! neoemacs                ) ;; neo-emacs main config
 
-(use-package! dap-java-config         )
+(use-package! dap-java-config        )
 (use-package! db-work                 )
-

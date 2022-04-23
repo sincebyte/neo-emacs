@@ -47,7 +47,7 @@
 (add-hook 'ea-popup-hook 'popup-handler)
 (add-hook 'after-make-frame-functions 'my/disable-scroll-bars)
 
-(setq default-frame-alist                        '((top . 30) (left . 50) (height . 39) (width . 150))
+(setq default-frame-alist                        '((top . 30) (left . 50) (height . 39) (width . 100))
       ;; doom-font                               (font-spec :family "Sarasa Fixed SC" :size 18)
       ;; doom-font                               (font-spec :family "Unifont" :size 17)
       frame-title-format                         " "
