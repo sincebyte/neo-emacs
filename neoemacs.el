@@ -9,6 +9,19 @@
       lsp-java-format-settings-url               (expand-file-name "~/.doom.d/neoemacs/eclipse-codestyle.xml" )
       lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path                            ))
 
+(defun config-font-size (en-size cn-size)
+  (setq doom-font (font-spec
+                   :family "Operator Mono"
+                   :size en-size))
+  (set-face-attribute 'default nil :font
+                      (format "%s:pixelsize=%d" "Operator Mono" en-size))
+  (if (display-graphic-p)
+      (dolist (charset '(kana han cjk-misc bopomofo))
+        (set-fontset-font (frame-parameter nil 'font) charset
+                          (font-spec :family "Noto Sans SC" :size cn-size)))))
+(config-font-size 16 16)
+
+
 ;; almost setting
 ;; (global-disable-mouse-mode)
 (tool-bar-mode       0             )
@@ -139,6 +152,7 @@
 
 (use-package dap-mode
   :diminish
+  :defer t
   :config (setq-local company-backends
           '(dap-ui-repl-company          ))
   :hook   ((lsp-mode  . dap-mode          )
@@ -155,7 +169,7 @@
 (use-package! string-inflection   )
 (use-package! general             )
 (use-package! yascroll)
-(use-package! ejc-sql :commands ejc-sql-mode ejc-connect)
+(use-package! ejc-sql :commands ejc-sql-mode ejc-connect :defer t)
 (defun k/sql-mode-hook () (ejc-sql-mode t))
 (add-hook 'sql-mode-hook 'k/sql-mode-hook)
 (add-hook 'sql-mode-hook 'yascroll-bar-mode)
@@ -265,7 +279,6 @@
 (use-package! rime
   :config
   (setq rime-show-candidate 'minibuffer)
-  (setq rime-translate-keybindings '("C-n" "C-p"))
   :custom
   (rime-emacs-module-header-root emacs-module-root)
   (default-input-method "rime"))
@@ -353,6 +366,7 @@
     :after org-roam)
 (use-package! org-roam-ui
     :after org-roam ;; or :after org
+    :defer t
     :config
     (setq org-roam-ui-sync-theme t
           org-roam-ui-follow t
@@ -441,5 +455,11 @@
   (+vterm/here t)
 )
 (map! :ne ", t"     'create-terminal-home                  )
+
+(setenv "XMLLINT_INDENT" "    ")
+(use-package xml-format
+  :demand t
+  :after nxml-mode)
+
 
 (provide 'neoemacs)

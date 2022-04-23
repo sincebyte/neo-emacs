@@ -117,3 +117,4 @@
 (package! minimap)
 (package! yascroll)
 (package! rmsbolt)
+(package! xml-format)
