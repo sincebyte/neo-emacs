@@ -19,16 +19,11 @@
 
 ;; default core setting
 (add-to-list  'load-path "~/.doom.d"  )
-;; (load-theme   'doom-badger t          ) ;; set theme
-(use-package! doom-themes
-  :ensure t
-  :config
-  (load-theme 'doom-badger t)
-  (doom-themes-visual-bell-config)
-  (doom-themes-neotree-config)
-  (doom-themes-org-config))
-
+(load-theme   'doom-badger t          ) ;; set theme
 (use-package! neoemacs                ) ;; neo-emacs main config
-
+(setq ejc-set-use-unicode t)
 (use-package! dap-java-config        )
 (use-package! db-work                 )
+;; (use-package pulsing-cursor
+;;    :config (pulsing-cursor-mode +1))
+

@@ -9,21 +9,11 @@
       lsp-java-format-settings-url               (expand-file-name "~/.doom.d/neoemacs/eclipse-codestyle.xml" )
       lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path                            ))
 
-(defun config-font-size (en-size cn-size)
-  (setq doom-font (font-spec
-                   :family "Operator Mono"
-                   :size en-size))
-  (set-face-attribute 'default nil :font
-                      (format "%s:pixelsize=%d" "Operator Mono" en-size))
-  (if (display-graphic-p)
-      (dolist (charset '(kana han cjk-misc bopomofo))
-        (set-fontset-font (frame-parameter nil 'font) charset
-                          (font-spec :family "Noto Sans SC" :size cn-size)))))
-(config-font-size 16 16)
 
 
 ;; almost setting
 ;; (global-disable-mouse-mode)
+(blink-cursor-mode   0             )
 (tool-bar-mode       0             )
 (menu-bar-mode       0             )
 (scroll-bar-mode     0             )
@@ -169,7 +159,7 @@
 (use-package! string-inflection   )
 (use-package! general             )
 (use-package! yascroll)
-(use-package! ejc-sql :commands ejc-sql-mode ejc-connect :defer t)
+(use-package! ejc-sql :commands ejc-sql-mode ejc-connect :defer t :ensure nil)
 (defun k/sql-mode-hook () (ejc-sql-mode t))
 (add-hook 'sql-mode-hook 'k/sql-mode-hook)
 (add-hook 'sql-mode-hook 'yascroll-bar-mode)
@@ -291,7 +281,6 @@
        :picker (gts-prompt-picker)
        :engines (list (gts-google-engine) (gts-google-rpc-engine))
        :render (gts-buffer-render)))
-
 ;; translate
 (defun go-translate ()
   (interactive)
@@ -378,13 +367,25 @@
 
 ;; (beacon-mode 1)
 
-(setq minimap-minimum-width 5)
-(setq minimap-window-location 'right)
-(minimap-mode 0)
+;; (setq minimap-minimum-width 5)
+;; (setq minimap-window-location 'right)
+;; (minimap-mode 0)
 ;;(use-package! indent-guide)
 ;;(setq indent-guide-char "|")
 ;;(indent-guide-global-mode)
 ;;(custom-set-faces '(indent-guide-face ((t (:foreground "grey43" :background "#171717")))))
+(defun config-font-size (en-size cn-size)
+  (setq doom-font (font-spec
+                   :family "Operator Mono"
+                   :size en-size))
+  (set-face-attribute 'default nil :font
+                      (format "%s:pixelsize=%d" "Operator Mono" en-size))
+  (if (display-graphic-p)
+      (dolist (charset '(kana han cjk-misc bopomofo))
+        (set-fontset-font (frame-parameter nil 'font) charset
+                          (font-spec :family "等距更纱黑体 Slab SC" :size cn-size)))))
+(config-font-size 15 15)
+
 
 
 ;; Useful configuration
