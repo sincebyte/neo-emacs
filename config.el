@@ -37,8 +37,9 @@
   (let ((list-data (split-string (buffer-substring-no-properties (line-beginning-position) (line-end-position)) " | " ))
         (max-head-length 0)
         (c-point (point))
-        (list-head (split-string (buffer-substring-no-properties 1 (search-backward "\n" nil t (- (string-to-number(elt (split-string (what-line) " ") 1 )) 1 ) )) " | ")) )
-        ;; (line-head (buffer-substring-no-properties 1 239)))
+        (list-head (split-string
+                    (buffer-substring-no-properties
+                     1 (search-backward "\n" nil t (- (string-to-number(elt (split-string (what-line) " ") 1 )) 1 ) )) " | ")) )
     (goto-char c-point)
   (when (not (and ejc-results-detail-buffer (buffer-live-p ejc-results-detail-buffer)))
     (setq ejc-results-detail-buffer (get-buffer-create "*ejc-results-detail-buffer*"))
