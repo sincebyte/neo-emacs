@@ -275,22 +275,23 @@
   :custom
   (rime-emacs-module-header-root emacs-module-root)
   (default-input-method "rime"))
-  (setq mode-line-mule-info   '((:eval (rime-lighter)))
+(setq mode-line-mule-info   '((:eval (rime-lighter)))
       gts-translate-list      '(("en" "zh"))
       rime-disable-predicates '(
          rime-predicate-current-uppercase-letter-p
          rime-predicate-space-after-cc-p)
       gts-default-translator   (gts-translator
        :picker (gts-prompt-picker)
-       :engines (list (gts-google-engine) (gts-google-rpc-engine))
+       :engines (list (gts-bing-engine))
        :render (gts-buffer-render)))
 ;; translate
 (defun go-translate ()
   (interactive)
   (gts-translate (gts-translator
                   :picker  (gts-noprompt-picker :texter (gts-current-or-selection-texter) :single t)
-                  :engines (gts-google-rpc-engine)
+                  :engines (gts-bing-engine)
                   :render  (gts-buffer-render))))
+
 
 ;; ejc-connect ivy
 (defun ejc-connect-ivy ()
@@ -423,6 +424,10 @@
                 \\definecolor{mygreen}{rgb}{0,0.6,0}
                 \\definecolor{mygray}{rgb}{0.5,0.5,0.5}
                 \\definecolor{mymauve}{rgb}{0.58,0,0.82}
+                \\usepackage{enumitem}
+                \\setenumerate[1]{itemsep=-3pt,partopsep=-3pt,parsep=\\parskip,topsep=-3pt}
+                \\setitemize[1]{itemsep=-3pt,partopsep=-3pt,parsep=\\parskip,topsep=-3pt}
+                \\setdescription{itemsep=-3pt,partopsep=-3pt,parsep=\\parskip,topsep=-3pt}
                 \\lstset{ %
                         frame=trbl,
                         backgroundcolor=\\color{white},                         % choose the background color
