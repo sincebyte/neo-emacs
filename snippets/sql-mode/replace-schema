@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: schemarp
+# key: schemarp
+# --
+-- <Waring message="不同库之间进行库名的切换">
+-- dev: goldkinn_center_dev_inventory
+-- 替换方式 4,$s/goldkinn_center_dev_inventory/goldkinn_center_test_inventory/g

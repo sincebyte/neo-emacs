@@ -388,7 +388,7 @@
       (dolist (charset '(kana han cjk-misc bopomofo))
         (set-fontset-font (frame-parameter nil 'font) charset
                           (font-spec :family "等距更纱黑体 Slab SC" :size cn-size)))))
-(config-font-size 15 15)
+(config-font-size 17 17)
 
 
 
