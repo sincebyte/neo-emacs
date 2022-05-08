@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: tables
+# key: tables
+# --
+<select name='tables'>
+SELECT TABLE_NAME FROM information_schema.TABLES
+WHERE TABLE_SCHEMA = '$0' LIMIT 0,10
+</select>
