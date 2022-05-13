@@ -3,6 +3,7 @@
 (add-to-list 'exec-path          pdflatex-exec-path    )
 (add-to-list 'exec-path          rg-exec-path          )
 (add-to-list 'exec-path          node-bin-dir          )
+;; (add-to-list 'exec-path          "/Users/van/.m2/go/bin" )
 (setq org-roam-graph-executable  dot-exec-path
       lsp-java-java-path         lsp-java-java-path
       counsel-fzf-cmd            (concat fd-exec-path " --exclude={.git,.idea,.vscode,.sass-cache,node_modules,build,target,classes,out,.local,class} -c never --hidden --follow %s .")
@@ -98,7 +99,7 @@
       read-process-output-max                    (* 1024 1024)           ;; 1mb
       lsp-idle-delay                             0.500
       ejc-result-table-impl                      'ejc-result-mode
-      dap-auto-configure-features                '( controls locals )
+      dap-auto-configure-features                '()
       doom-modeline-buffer-file-name-style       'truncate-with-project  )
 (setq package-archives '(( "gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"   )
                          ( "org-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/"   )
@@ -143,13 +144,11 @@
 (use-package dap-mode
   :diminish
   :defer t
-  :config (setq-local company-backends
-          '(dap-ui-repl-company          ))
+  :config (setq-local company-backends '(dap-ui-repl-company )) ;; use M-: [to enable dap-repl-company]
   :hook   ((lsp-mode  . dap-mode          )
            (dap-mode  . dap-ui-mode       )
            (dap-mode  . dap-tooltip-mode  )
-           (java-mode . (lambda()
-           (require 'dap-java             )))))
+           (java-mode . (lambda() (require 'dap-java      )))))
 (require      'disable-mouse      )
 (use-package! restclient-jq       )
 (use-package! jq-mode             )
@@ -571,4 +570,16 @@
   :config
   (add-to-list 'recentf-exclude (expand-file-name package-user-dir))
   (add-to-list 'recentf-exclude "\\.emacs\\.d/\\.local/etc/workspaces/autosave"))
+
+;; (add-hook 'go-mode-hook #'lsp-deferred)
+;; ;; Set up before-save hooks to format buffer and add/delete imports.
+;; ;; Make sure you don't have other gofmt/goimports hooks enabled.
+;; (defun lsp-go-install-save-hooks ()
+;;   (add-hook 'before-save-hook #'lsp-format-buffer t t)
+;;   (add-hook 'before-save-hook #'lsp-organize-imports t t))
+;; (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+;; (lsp-register-custom-settings
+;;  '(("gopls.completeUnimported" t t)
+;;    ("gopls.staticcheck" t t)))
+
 (provide 'neoemacs)
