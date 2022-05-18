@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: tc
+# key: tc
+# --
+<select name='table comment'>
+SELECT table_name , table_comment FROM information_schema.TABLES
+where table_name like '%$0%'
+</select>

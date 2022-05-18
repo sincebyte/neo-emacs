@@ -144,11 +144,14 @@
 (use-package dap-mode
   :diminish
   :defer t
-  :config (setq-local company-backends '(dap-ui-repl-company )) ;; use M-: [to enable dap-repl-company]
+  ;; :config (setq-local company-backends '(dap-ui-repl-company )) ;; use M-: [to enable dap-repl-company]
   :hook   ((lsp-mode  . dap-mode          )
            (dap-mode  . dap-ui-mode       )
            (dap-mode  . dap-tooltip-mode  )
            (java-mode . (lambda() (require 'dap-java      )))))
+(set-company-backend! 'prog-mode
+  '(:separate company-capf company-yasnippet company-dabbrev company-ispell))
+
 (require      'disable-mouse      )
 (use-package! restclient-jq       )
 (use-package! jq-mode             )

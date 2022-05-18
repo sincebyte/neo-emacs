@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: dv
+# key: dv
+# --
+<select name='default_value'>
+select default($0) as default_value from $1 limit 1;
+</select>

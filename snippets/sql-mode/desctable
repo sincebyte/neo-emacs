@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: dc
+# key: dc
+# --
+<select name='desc table'>
+SELECT b.COLUMN_NAME , is_nullable, column_default, b.column_type, b.column_comment
+FROM information_schema. TABLES a LEFT JOIN information_schema. COLUMNS b ON a.table_name = b.TABLE_NAME
+WHERE a.table_name like '%$0%'
+</select>
