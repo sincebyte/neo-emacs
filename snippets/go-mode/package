@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: package
+# uuid: package-go
+# key: pac
+# condition: t
+# --
+package main
+import (
+    "fmt"
+)
+func main() {
+	fmt.Println("hello")$0
+}

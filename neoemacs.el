@@ -100,6 +100,7 @@
       lsp-idle-delay                             0.500
       ejc-result-table-impl                      'ejc-result-mode
       dap-auto-configure-features                '()
+      gts-translate-list                         '(("en" "zh"))
       doom-modeline-buffer-file-name-style       'truncate-with-project  )
 (setq package-archives '(( "gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"   )
                          ( "org-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/"   )
@@ -167,8 +168,9 @@
 (add-hook 'sql-mode-hook 'yascroll-bar-mode)
 
 ;; almost key set
-(map! :nve "; g"     'evil-end-of-line                         )
-(map! :nve "; a"     'evil-beginning-of-line                   )
+(map! :nve "; g"    'evil-last-non-blank                       )
+(map! :nve "; a"    'evil-first-non-blank                      )
+;; (map! :ie "S"       'rime-force-enable                         )
 (map! :ne "f"       'evil-avy-goto-char                        )
 (map! :ne "SPC l"   'evil-window-right                         )
 (map! :ne "C-j"     'evil-scroll-down                          )
@@ -278,14 +280,17 @@
   (rime-emacs-module-header-root emacs-module-root)
   (default-input-method "rime"))
 (setq mode-line-mule-info   '((:eval (rime-lighter)))
-      gts-translate-list      '(("en" "zh"))
+      rime-inline-ascii-trigger 'shift-l
       rime-disable-predicates '(
+         rime-predicate-after-alphabet-char-p
          rime-predicate-current-uppercase-letter-p
+         ;; rime-predicate-space-after-ascii-p
          rime-predicate-space-after-cc-p)
       gts-default-translator   (gts-translator
        :picker (gts-prompt-picker)
        :engines (list (gts-bing-engine))
        :render (gts-buffer-render)))
+
 ;; translate
 (defun go-translate ()
   (interactive)
