@@ -254,6 +254,15 @@ mvn -Djdt.js.server.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.l
 ** useful key setting
 - Change caps_lock to control if pressed with other keys, to escape if pressed alone.
   [[file:key-change.png]]
+* Elpa offline
+rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
+#+begin_src elisp
+(setq configuration-layer--elpa-archives
+      '(("melpa-cn" . "/soft/emacs-elpa/melpa/")
+        ("org-cn"   . "/soft/emacs-elpa/org/")
+        ("gnu-cn"   . "/soft/emacs-elpa/gnu/")
+        ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
+#+end_src
 * Dependencies
 
 https://github.com/hlissner/doom-emacs/blob/master/docs/getting_started.org

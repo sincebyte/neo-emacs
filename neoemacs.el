@@ -137,6 +137,7 @@
   (add-hook 'java-mode-hook 'yascroll-bar-mode)
   (add-hook 'java-mode-hook 'rainbow-delimiters-mode))
 
+
 (with-eval-after-load 'lsp-mode (setq lsp-modeline-diagnostics-scope :file))
 (setq-default indent-tabs-mode nil)
 (setq lsp-enable-file-watchers nil)
