@@ -173,7 +173,8 @@ Changing config in the config.el.
     :config
     (setq clomacs-httpd-default-port 18090)
     (ejc-create-connection "connection-name"
-            :classpath      "~/.m2/repository/mysql/mysql-connector-java/8.0.17/mysql-connector-java-8.0.17.jar"
+            :classpath      "~/.m2/repository/mysql/mysql-connector-java/8.0.17/
+                mysql-connector-java-8.0.17.jar"
             :connection-uri "jdbc:mysql://localhost/user?useSSL=false&user=root&password=pwd"
             :separator      "</?\.*>" )
     )
@@ -232,6 +233,45 @@ Changing config in the config.el.
    +---------+----------------------+-------------------------------------------------+
    | SPC v s | vterm-send-stop      | disable vterm screen roll                       |
    +---------+----------------------+-------------------------------------------------+
+* Elpa Offline
+rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
+#+begin_src elisp
+(setq configuration-layer--elpa-archives
+      '(("melpa-cn" . "/soft/emacs-elpa/melpa/")
+        ("org-cn"   . "/soft/emacs-elpa/org/")
+        ("gnu-cn"   . "/soft/emacs-elpa/gnu/")
+        ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
+#+end_src
+* FZF Config
+** fish config
+#+begin_src shell
+set -x FZF_DEFAULT_OPTS "--preview-window 'right:57%'
+    --preview 'bat --style=numbers --line-range :300 {}'
+    --bind ctrl-y:preview-up,ctrl-e:preview-down,ctrl-b:preview
+    -page-up,ctrl-f:preview-page-down,ctrl-u:preview-half-page-
+    up,ctrl-d:preview-half-page-down,shift-up:preview-top,shift
+    -down:preview-bottom,alt-up:half-page-up,
+    alt-down:half-page-down"
+set -x FZF_DEFAULT_COMMAND  'fd --type f --hidden --follow
+    --exclude ".git" .
+    ".idea" . ".vscode" . "node_modules" .
+    "build" . "target" . "classes" . "out" . "class" .
+    "*.svg" . "*.puml" . "*.orgids" . "*.css" . "*.DS_Store" '
+#+end_src
+** how to ignore files
+- add ~/.fdignore
+  #+begin_src txt
+    .DS_Store
+    .orgids
+    *.svg
+    *.puml
+    *.css
+    *.class
+    *.attach
+    *.~undo-tree~
+    crpt
+  #+end_src
+
 * Questions
 ** install ffmpeg
 - brew install ffmpeg
@@ -254,40 +294,18 @@ make
 #+end_src
 ** lsp-springboot
 #+begin_src bash
-mvn -Djdt.js.server.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.ls/server/ -Djunit.runner.root=/Users/van/.emacs.d/.local/etc/eclipse.jdt.ls/test-runner/ -Djunit.runner.fileName=junit-platform-console-standalone.jar -Djava.debug.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.ls/server/bundles clean package -Djdt.download.url=http://download.eclipse.org/jdtls/snapshots/jdt-language-server-latest.tar.gz -f lsp-java-server-build.pom
+mvn -Djdt.js.server.root=/Users/van/.emacs.d/.local/etc/.cache/
+lsp/eclipse.jdt.ls/server/ -Djunit.runner.root=
+/Users/van/.emacs.d/.local/etc/eclipse.jdt.ls/test-runner/
+-Djunit.runner.fileName=junit-platform-console-standalone.jar
+-Djava.debug.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/
+eclipse.jdt.ls/server/bundles clean package
+-Djdt.download.url=http://download.eclipse.org/jdtls/snapshots/
+jdt-language-server-latest.tar.gz -f lsp-java-server-build.pom
 #+end_src
 ** useful key setting
 - Change caps_lock to control if pressed with other keys, to escape if pressed alone.
   [[file:key-change.png]]
-* Elpa Offline
-rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
-#+begin_src elisp
-(setq configuration-layer--elpa-archives
-      '(("melpa-cn" . "/soft/emacs-elpa/melpa/")
-        ("org-cn"   . "/soft/emacs-elpa/org/")
-        ("gnu-cn"   . "/soft/emacs-elpa/gnu/")
-        ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
-#+end_src
-* FZF Config
-** fish config
-#+begin_src shell
-set -x FZF_DEFAULT_OPTS "--preview-window 'right:57%' --preview 'bat --style=numbers --line-range :300 {}' --bind ctrl-y:preview-up,ctrl-e:preview-down,ctrl-b:preview-page-up,ctrl-f:preview-page-down,ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down,shift-up:preview-top,shift-down:preview-bottom,alt-up:half-page-up,alt-down:half-page-down"
-set -x FZF_DEFAULT_COMMAND  'fd --type f --hidden --follow --exclude ".git" . ".idea" . ".vscode" . "node_modules" . "build" . "target" . "classes" . "out" . "class" . "*.svg" . "*.puml" . "*.orgids" . "*.css" . "*.DS_Store" '
-#+end_src
-** how to ignore files
-- add ~/.fdignore
-  #+begin_src txt
-    .DS_Store
-    .orgids
-    *.svg
-    *.puml
-    *.css
-    *.class
-    *.attach
-    *.~undo-tree~
-    crpt
-  #+end_src
-
 * Dependencies
 
 https://github.com/hlissner/doom-emacs/blob/master/docs/getting_started.org
