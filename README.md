@@ -1,34 +1,38 @@
 
 # Table of Contents
 
-1.  [About](#org4d9f28a)
-2.  [How to install](#org7c8ea52)
-    1.  [Install emacs](#org629d7d2)
-    2.  [Building Emacs](#org1068ae0)
-    3.  [Clone doom-emacs](#org4e63239)
-    4.  [Clone neo-emacs](#orgc9a68d4)
-    5.  [Doom Install](#orgb71faa9)
-3.  [Private setting](#org8e2efec)
-4.  [Lsp-java Usage](#org1c3e99b)
-5.  [Dap-java Usage](#org00f4971)
-6.  [Company box customize](#orgaf514fe)
-7.  [Ejc-sql Usage](#org3e02439)
-8.  [Rime Usage](#orga4113c7)
-9.  [Libvterm Usage](#org06c943e)
-10. [Questions](#orga4739dc)
-    1.  [install ffmpeg](#orgf85faf1)
-    2.  [how to install all-the-icons?](#org107fb16)
-    3.  [how to install rime ?](#org1294d59)
-    4.  [how to install vterm?](#org84a0f12)
-    5.  [lsp-springboot](#org163fe05)
-    6.  [useful key setting](#orgac0ffad)
-11. [Elpa offline](#org6dabbe6)
-12. [Dependencies](#orgaa338bd)
+1.  [About](#orgbc60c91)
+2.  [How to install](#orgb3c274c)
+    1.  [Install emacs](#org6dc3c53)
+    2.  [Building Emacs](#orgdca17b1)
+    3.  [Clone doom-emacs](#org80c0c4f)
+    4.  [Clone neo-emacs](#orgd15a3cf)
+    5.  [Doom Install](#orgbf9a109)
+3.  [Private setting](#org97226cc)
+4.  [Lsp-java Usage](#orgda323fa)
+5.  [Dap-java Usage](#org8fedd4b)
+6.  [Company box customize](#orgd8f3fe9)
+7.  [Ejc-sql Usage](#org6567cbf)
+8.  [Bookmark](#orga2f19bd)
+9.  [Rime Usage](#orgbbc3443)
+10. [Libvterm Usage](#orgee41f6b)
+11. [Questions](#orgf1828ea)
+    1.  [install ffmpeg](#org1aa0529)
+    2.  [how to install all-the-icons?](#orga597d1d)
+    3.  [how to install rime ?](#org5134bb5)
+    4.  [how to install vterm?](#orgc020ede)
+    5.  [lsp-springboot](#org9a0d7de)
+    6.  [useful key setting](#org37eb71b)
+12. [Elpa Offline](#org45b4ccd)
+13. [FZF Config](#orgea55b01)
+    1.  [fish config](#orga27376a)
+    2.  [how to ignore files](#org3dd1946)
+14. [Dependencies](#orgd48a48d)
 
 ![img](./neo-emacs.gif)  
 
 
-<a id="org4d9f28a"></a>
+<a id="orgbc60c91"></a>
 
 # About
 
@@ -43,12 +47,12 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   [onlinedoc](http://1.117.167.195/doc/neo-emacs.html)
 
 
-<a id="org7c8ea52"></a>
+<a id="orgb3c274c"></a>
 
 # How to install
 
 
-<a id="org629d7d2"></a>
+<a id="org6dc3c53"></a>
 
 ## Install emacs
 
@@ -59,7 +63,7 @@ Choose your operation system and install it.
 -   export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs, this depends on your installation path.
 
 
-<a id="org1068ae0"></a>
+<a id="orgdca17b1"></a>
 
 ## Building Emacs
 
@@ -74,21 +78,21 @@ Choose your operation system and install it.
     9  open nextstep/Emacs.app
 
 
-<a id="org4e63239"></a>
+<a id="org80c0c4f"></a>
 
 ## Clone doom-emacs
 
     1  git clone https://github.com/hlissner/doom-emacs.git ~/.emacs.d/
 
 
-<a id="orgc9a68d4"></a>
+<a id="orgd15a3cf"></a>
 
 ## Clone neo-emacs
 
     git clone https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
 
-<a id="orgb71faa9"></a>
+<a id="orgbf9a109"></a>
 
 ## Doom Install
 
@@ -108,7 +112,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     ~/.emacs.doom/bin/doom install
 
 
-<a id="org8e2efec"></a>
+<a id="org97226cc"></a>
 
 # Private setting
 
@@ -289,7 +293,7 @@ Changing config in the config.el.
 </table>
 
 
-<a id="org1c3e99b"></a>
+<a id="orgda323fa"></a>
 
 # Lsp-java Usage
 
@@ -414,7 +418,7 @@ Changing config in the config.el.
     </table>
 
 
-<a id="org00f4971"></a>
+<a id="org8fedd4b"></a>
 
 # Dap-java Usage
 
@@ -529,7 +533,7 @@ Changing config in the config.el.
     </table>
 
 
-<a id="orgaf514fe"></a>
+<a id="orgd8f3fe9"></a>
 
 # Company box customize
 
@@ -537,7 +541,7 @@ Changing config in the config.el.
 -   company-icon icon config file: ~/.emacs.d/modules/completion/company/config.el
 
 
-<a id="org3e02439"></a>
+<a id="org6567cbf"></a>
 
 # Ejc-sql Usage
 
@@ -611,7 +615,16 @@ Changing config in the config.el.
     </table>
 
 
-<a id="orga4113c7"></a>
+<a id="orga2f19bd"></a>
+
+# Bookmark
+
+-   the bookmark file location :~/.emacs.d/.local/etc/bookmarks
+
+    (setq bookmark-default-file "~/org/org-roam/command/doom/config/bookmark")
+
+
+<a id="orgbbc3443"></a>
 
 # Rime Usage
 
@@ -620,7 +633,7 @@ Changing config in the config.el.
 -   some rime input method config at .doom.d/myconfig/rime-config.
 
 
-<a id="org06c943e"></a>
+<a id="orgee41f6b"></a>
 
 # Libvterm Usage
 
@@ -687,19 +700,19 @@ Changing config in the config.el.
     </table>
 
 
-<a id="orga4739dc"></a>
+<a id="orgf1828ea"></a>
 
 # Questions
 
 
-<a id="orgf85faf1"></a>
+<a id="org1aa0529"></a>
 
 ## install ffmpeg
 
 -   brew install ffmpeg
 
 
-<a id="org107fb16"></a>
+<a id="orga597d1d"></a>
 
 ## how to install all-the-icons?
 
@@ -707,7 +720,7 @@ Changing config in the config.el.
 -   M-x all-the-icons-install-fonts
 
 
-<a id="org1294d59"></a>
+<a id="org5134bb5"></a>
 
 ## how to install rime ?
 
@@ -716,7 +729,7 @@ Changing config in the config.el.
 unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime  
 
 
-<a id="org84a0f12"></a>
+<a id="orgc020ede"></a>
 
 ## how to install vterm?
 
@@ -730,14 +743,14 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     make
 
 
-<a id="org163fe05"></a>
+<a id="org9a0d7de"></a>
 
 ## lsp-springboot
 
     mvn -Djdt.js.server.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.ls/server/ -Djunit.runner.root=/Users/van/.emacs.d/.local/etc/eclipse.jdt.ls/test-runner/ -Djunit.runner.fileName=junit-platform-console-standalone.jar -Djava.debug.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.ls/server/bundles clean package -Djdt.download.url=http://download.eclipse.org/jdtls/snapshots/jdt-language-server-latest.tar.gz -f lsp-java-server-build.pom
 
 
-<a id="orgac0ffad"></a>
+<a id="org37eb71b"></a>
 
 ## useful key setting
 
@@ -745,9 +758,9 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     ![img](key-change.png)
 
 
-<a id="org6dabbe6"></a>
+<a id="org45b4ccd"></a>
 
-# Elpa offline
+# Elpa Offline
 
 rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa  
 
@@ -758,7 +771,37 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="orgaa338bd"></a>
+<a id="orgea55b01"></a>
+
+# FZF Config
+
+
+<a id="orga27376a"></a>
+
+## fish config
+
+    set -x FZF_DEFAULT_OPTS "--preview-window 'right:57%' --preview 'bat --style=numbers --line-range :300 {}' --bind ctrl-y:preview-up,ctrl-e:preview-down,ctrl-b:preview-page-up,ctrl-f:preview-page-down,ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down,shift-up:preview-top,shift-down:preview-bottom,alt-up:half-page-up,alt-down:half-page-down"
+    set -x FZF_DEFAULT_COMMAND  'fd --type f --hidden --follow --exclude ".git" . ".idea" . ".vscode" . "node_modules" . "build" . "target" . "classes" . "out" . "class" . "*.svg" . "*.puml" . "*.orgids" . "*.css" . "*.DS_Store" '
+
+
+<a id="org3dd1946"></a>
+
+## how to ignore files
+
+-   add ~/.fdignore  
+    
+        .DS_Store
+        .orgids
+        *.svg
+        *.puml
+        *.css
+        *.class
+        *.attach
+        *.~undo-tree~
+        crpt
+
+
+<a id="orgd48a48d"></a>
 
 # Dependencies
 

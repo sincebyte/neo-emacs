@@ -202,6 +202,11 @@ Changing config in the config.el.
     +---------+----------------+----------------------------+
     | C-c C-c | ejc-execute    | execute the sql            |
     +---------+----------------+----------------------------+
+* Bookmark
+- the bookmark file location :~/.emacs.d/.local/etc/bookmarks
+#+begin_src lisp
+    (setq bookmark-default-file "~/org/org-roam/command/doom/config/bookmark")
+#+end_src
 * Rime Usage
 - https://github.com/DogLooksGood/emacs-rime supply this plugin.
 - https://github.com/rime/plum for more infomation.
@@ -254,7 +259,7 @@ mvn -Djdt.js.server.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.l
 ** useful key setting
 - Change caps_lock to control if pressed with other keys, to escape if pressed alone.
   [[file:key-change.png]]
-* Elpa offline
+* Elpa Offline
 rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
 #+begin_src elisp
 (setq configuration-layer--elpa-archives
@@ -263,6 +268,26 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
         ("gnu-cn"   . "/soft/emacs-elpa/gnu/")
         ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 #+end_src
+* FZF Config
+** fish config
+#+begin_src shell
+set -x FZF_DEFAULT_OPTS "--preview-window 'right:57%' --preview 'bat --style=numbers --line-range :300 {}' --bind ctrl-y:preview-up,ctrl-e:preview-down,ctrl-b:preview-page-up,ctrl-f:preview-page-down,ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down,shift-up:preview-top,shift-down:preview-bottom,alt-up:half-page-up,alt-down:half-page-down"
+set -x FZF_DEFAULT_COMMAND  'fd --type f --hidden --follow --exclude ".git" . ".idea" . ".vscode" . "node_modules" . "build" . "target" . "classes" . "out" . "class" . "*.svg" . "*.puml" . "*.orgids" . "*.css" . "*.DS_Store" '
+#+end_src
+** how to ignore files
+- add ~/.fdignore
+  #+begin_src txt
+    .DS_Store
+    .orgids
+    *.svg
+    *.puml
+    *.css
+    *.class
+    *.attach
+    *.~undo-tree~
+    crpt
+  #+end_src
+
 * Dependencies
 
 https://github.com/hlissner/doom-emacs/blob/master/docs/getting_started.org
