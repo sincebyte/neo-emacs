@@ -173,7 +173,8 @@ Changing config in the config.el.
     :config
     (setq clomacs-httpd-default-port 18090)
     (ejc-create-connection "connection-name"
-            :classpath      "~/.m2/repository/mysql/mysql-connector-java/8.0.17/mysql-connector-java-8.0.17.jar"
+            :classpath      "~/.m2/repository/mysql/mysql-connector-java/8.0.17/
+                mysql-connector-java-8.0.17.jar"
             :connection-uri "jdbc:mysql://localhost/user?useSSL=false&user=root&password=pwd"
             :separator      "</?\.*>" )
     )
@@ -254,7 +255,14 @@ make
 #+end_src
 ** lsp-springboot
 #+begin_src bash
-mvn -Djdt.js.server.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.ls/server/ -Djunit.runner.root=/Users/van/.emacs.d/.local/etc/eclipse.jdt.ls/test-runner/ -Djunit.runner.fileName=junit-platform-console-standalone.jar -Djava.debug.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/eclipse.jdt.ls/server/bundles clean package -Djdt.download.url=http://download.eclipse.org/jdtls/snapshots/jdt-language-server-latest.tar.gz -f lsp-java-server-build.pom
+mvn -Djdt.js.server.root=/Users/van/.emacs.d/.local/etc/.cache/
+lsp/eclipse.jdt.ls/server/ -Djunit.runner.root=
+/Users/van/.emacs.d/.local/etc/eclipse.jdt.ls/test-runner/
+-Djunit.runner.fileName=junit-platform-console-standalone.jar
+-Djava.debug.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/
+eclipse.jdt.ls/server/bundles clean package
+-Djdt.download.url=http://download.eclipse.org/jdtls/snapshots/
+jdt-language-server-latest.tar.gz -f lsp-java-server-build.pom
 #+end_src
 ** useful key setting
 - Change caps_lock to control if pressed with other keys, to escape if pressed alone.
