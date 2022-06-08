@@ -233,40 +233,6 @@ Changing config in the config.el.
    +---------+----------------------+-------------------------------------------------+
    | SPC v s | vterm-send-stop      | disable vterm screen roll                       |
    +---------+----------------------+-------------------------------------------------+
-* Questions
-** install ffmpeg
-- brew install ffmpeg
-** how to install all-the-icons?
-- M-x install-package all-the-icons
-- M-x all-the-icons-install-fonts
-** how to install rime ?
-- M-x install-package rime
-unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
-** how to install vterm?
-#+begin_src bash
-cd .emacs.d/.local/straight/build/vterm/
-mkdir -p build
-# install cmake and libtool-bin
-brew install cmake, brew install libtool
-mkdir -p build
-cd build
-cmake ..
-make
-#+end_src
-** lsp-springboot
-#+begin_src bash
-mvn -Djdt.js.server.root=/Users/van/.emacs.d/.local/etc/.cache/
-lsp/eclipse.jdt.ls/server/ -Djunit.runner.root=
-/Users/van/.emacs.d/.local/etc/eclipse.jdt.ls/test-runner/
--Djunit.runner.fileName=junit-platform-console-standalone.jar
--Djava.debug.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/
-eclipse.jdt.ls/server/bundles clean package
--Djdt.download.url=http://download.eclipse.org/jdtls/snapshots/
-jdt-language-server-latest.tar.gz -f lsp-java-server-build.pom
-#+end_src
-** useful key setting
-- Change caps_lock to control if pressed with other keys, to escape if pressed alone.
-  [[file:key-change.png]]
 * Elpa Offline
 rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
 #+begin_src elisp
@@ -306,6 +272,40 @@ set -x FZF_DEFAULT_COMMAND  'fd --type f --hidden --follow
     crpt
   #+end_src
 
+* Questions
+** install ffmpeg
+- brew install ffmpeg
+** how to install all-the-icons?
+- M-x install-package all-the-icons
+- M-x all-the-icons-install-fonts
+** how to install rime ?
+- M-x install-package rime
+unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
+** how to install vterm?
+#+begin_src bash
+cd .emacs.d/.local/straight/build/vterm/
+mkdir -p build
+# install cmake and libtool-bin
+brew install cmake, brew install libtool
+mkdir -p build
+cd build
+cmake ..
+make
+#+end_src
+** lsp-springboot
+#+begin_src bash
+mvn -Djdt.js.server.root=/Users/van/.emacs.d/.local/etc/.cache/
+lsp/eclipse.jdt.ls/server/ -Djunit.runner.root=
+/Users/van/.emacs.d/.local/etc/eclipse.jdt.ls/test-runner/
+-Djunit.runner.fileName=junit-platform-console-standalone.jar
+-Djava.debug.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/
+eclipse.jdt.ls/server/bundles clean package
+-Djdt.download.url=http://download.eclipse.org/jdtls/snapshots/
+jdt-language-server-latest.tar.gz -f lsp-java-server-build.pom
+#+end_src
+** useful key setting
+- Change caps_lock to control if pressed with other keys, to escape if pressed alone.
+  [[file:key-change.png]]
 * Dependencies
 
 https://github.com/hlissner/doom-emacs/blob/master/docs/getting_started.org
