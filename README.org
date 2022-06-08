@@ -271,8 +271,18 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
 * FZF Config
 ** fish config
 #+begin_src shell
-set -x FZF_DEFAULT_OPTS "--preview-window 'right:57%' --preview 'bat --style=numbers --line-range :300 {}' --bind ctrl-y:preview-up,ctrl-e:preview-down,ctrl-b:preview-page-up,ctrl-f:preview-page-down,ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down,shift-up:preview-top,shift-down:preview-bottom,alt-up:half-page-up,alt-down:half-page-down"
-set -x FZF_DEFAULT_COMMAND  'fd --type f --hidden --follow --exclude ".git" . ".idea" . ".vscode" . "node_modules" . "build" . "target" . "classes" . "out" . "class" . "*.svg" . "*.puml" . "*.orgids" . "*.css" . "*.DS_Store" '
+set -x FZF_DEFAULT_OPTS "--preview-window 'right:57%'
+    --preview 'bat --style=numbers --line-range :300 {}'
+    --bind ctrl-y:preview-up,ctrl-e:preview-down,ctrl-b:preview
+    -page-up,ctrl-f:preview-page-down,ctrl-u:preview-half-page-
+    up,ctrl-d:preview-half-page-down,shift-up:preview-top,shift
+    -down:preview-bottom,alt-up:half-page-up,
+    alt-down:half-page-down"
+set -x FZF_DEFAULT_COMMAND  'fd --type f --hidden --follow
+    --exclude ".git" .
+    ".idea" . ".vscode" . "node_modules" .
+    "build" . "target" . "classes" . "out" . "class" .
+    "*.svg" . "*.puml" . "*.orgids" . "*.css" . "*.DS_Store" '
 #+end_src
 ** how to ignore files
 - add ~/.fdignore
