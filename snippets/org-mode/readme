@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: readme
+# key: readme
+# --
+Porgram kernel
+============
+
+There are several guides for developers and users. These guides can
+be rendered in a number of formats, like HTML and PDF. Please read
+Documentation/admin-guide/README.rst first.
+
+Please read the Documentation/process/changes.rst file, as it contains the
+requirements for building and running this program, and information about
+the problems which may result by upgrading your program.
