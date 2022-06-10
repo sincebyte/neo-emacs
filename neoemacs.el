@@ -590,5 +590,6 @@
 ;; (lsp-register-custom-settings
 ;;  '(("gopls.completeUnimported" t t)
 ;;    ("gopls.staticcheck" t t)))
+(setq org-latex-create-formula-image-program 'dvisvgm)
 
 (provide 'neoemacs)
