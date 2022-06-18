@@ -65,7 +65,7 @@
       evil-operator-state-tag                    "OPERATOR"
       evil-visual-state-tag                      "VISUAL"
       evil-want-Y-yank-to-eol                    t
-      company-box-doc-enable                     t
+      company-box-doc-enable                     nil
       company-box-scrollbar                      t
       company-tooltip-limit                      12
       ;;company-tooltip-margin                     0.1
@@ -439,7 +439,7 @@
                 \\lstset{ %
                         frame=trbl,
                         backgroundcolor=\\color{white},                         % choose the background color
-                        basicstyle=\\等距更纱黑体\ Slab\ SC\\scriptsize,        % size of fonts used for the code
+                        ;; basicstyle=\\等距更纱黑体\ Slab\ SC\\scriptsize,        % size of fonts used for the code
                         breaklines=true,                                        % automatic line breaking only at whitespace
                         captionpos=b,                                           % sets the caption-position to bottom
                         commentstyle=\\color{mygreen},                          % comment style
