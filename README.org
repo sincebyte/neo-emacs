@@ -129,6 +129,12 @@ Changing config in the config.el.
  | ; i   | lsp-java-organize-imports          | import require package             |
  |       |                                    | or delete some unuse package       |
  +-------+------------------------------------+------------------------------------+
+
+
+
+- how to upgrade
+  1. download the lastest jdt-language-server from https://download.eclipse.org/jdtls/milestones
+  2. replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls
 * Dap-java Usage
 - Config the debug host and port, add file $usr_private_dir/dap-java-config.el.
 - Use `(setq user-private-dir "$usr_private_dir/dap-java-config.el" )` make it effective.

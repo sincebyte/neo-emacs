@@ -266,11 +266,11 @@
   default-directory d))))
 
 ;; set org mode
-(org-babel-do-load-languages
-  'org-babel-load-languages
-  '((emacs-lisp . nil )
-    (org        . t   )
-    (plantuml   . t   )))
+;; (org-babel-do-load-languages
+;;   'org-babel-load-languages
+;;   '((emacs-lisp . nil )
+;;     (org        . t   )
+;;     (plantuml   . t   )))
 
 
 ;; just install emacs first https://rime.im
