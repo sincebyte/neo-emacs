@@ -80,7 +80,7 @@
       plantuml-jar-path                          ( expand-file-name "~/.doom.d/neoemacs/plantuml.jar" )
       org-plantuml-jar-path                      ( expand-file-name "~/.doom.d/neoemacs/plantuml.jar" )
       org-id-track-globally                      t ;; M-x org-id-update-id-locations , org-roam-update-org-id-locations
-      lsp-java-format-on-type-enabled            t
+      lsp-java-format-on-type-enabled            nil
       lsp-java-format-comments-enabled           nil
       lsp-completion-enable-additional-text-edit t
       lsp-java-save-actions-organize-imports     t
@@ -121,8 +121,8 @@
 ;;   :config
 ;;   (cl-pushnew 'company-tabnine (default-value 'company-backends)))
 
-(use-package! lsp-java
-  :config
+;; (use-package! lsp-java
+;;   :config
   (setq lombok-jar-path (expand-file-name "~/.doom.d/neoemacs/lombok.jar"))
   (setq lsp-java-vmargs `(
           , (concat "-javaagent:" lombok-jar-path)
@@ -135,24 +135,25 @@
           , "-Dosgi.locking=none"))
   (add-hook 'java-mode-hook 'lsp)
   (add-hook 'java-mode-hook 'yascroll-bar-mode)
-  (add-hook 'java-mode-hook 'rainbow-delimiters-mode))
+  (add-hook 'java-mode-hook 'rainbow-delimiters-mode)
+;; )
 
 
-(with-eval-after-load 'lsp-mode (setq lsp-modeline-diagnostics-scope :file))
+;; (with-eval-after-load 'lsp-mode (setq lsp-modeline-diagnostics-scope :file))
 (setq-default indent-tabs-mode nil)
 (setq lsp-enable-file-watchers nil)
 ;; (add-hook 'java-mode-hook #'lsp)
 
-(use-package dap-mode
-  :diminish
-  :defer t
-  ;; :config (setq-local company-backends '(dap-ui-repl-company )) ;; use M-: [to enable dap-repl-company]
-  :hook   ((lsp-mode  . dap-mode          )
-           (dap-mode  . dap-ui-mode       )
-           (dap-mode  . dap-tooltip-mode  )
-           (java-mode . (lambda() (require 'dap-java      )))))
-(set-company-backend! 'prog-mode
-  '(:separate company-capf company-yasnippet company-dabbrev company-ispell))
+;; (use-package dap-mode
+;;   :diminish
+;;   :defer t
+;;   ;; :config (setq-local company-backends '(dap-ui-repl-company )) ;; use M-: [to enable dap-repl-company]
+;;   :hook   ((lsp-mode  . dap-mode          )
+;;            (dap-mode  . dap-ui-mode       )
+;;            (dap-mode  . dap-tooltip-mode  )
+;;            (java-mode . (lambda() (require 'dap-java      )))))
+;; (set-company-backend! 'prog-mode
+;;   '(:separate company-capf company-yasnippet company-dabbrev company-ispell))
 
 (require      'disable-mouse      )
 (use-package! restclient-jq       )
