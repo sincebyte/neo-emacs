@@ -10,8 +10,6 @@
       lsp-java-format-settings-url               (expand-file-name "~/.doom.d/neoemacs/eclipse-codestyle.xml" )
       lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path                            ))
 
-
-
 ;; almost setting
 ;; (global-disable-mouse-mode)
 (blink-cursor-mode   0             )
@@ -121,28 +119,22 @@
 ;;   :config
 ;;   (cl-pushnew 'company-tabnine (default-value 'company-backends)))
 
-;; (use-package! lsp-java
-;;   :config
-  (setq lombok-jar-path (expand-file-name "~/.doom.d/neoemacs/lombok.jar"))
-  (setq lsp-java-vmargs `(
-          , (concat "-javaagent:" lombok-jar-path)
-          , "-XX:+UseParallelGC"
-          , "-XX:GCTimeRatio=4"
-          , "-XX:AdaptiveSizePolicyWeight=90"
-          , "-Dsun.zip.disableMemoryMapping=true"
-          , "-Xmx2G"
-          , "-Xms500m"
-          , "-Dosgi.locking=none"))
-  (add-hook 'java-mode-hook 'lsp)
-  (add-hook 'java-mode-hook 'yascroll-bar-mode)
-  (add-hook 'java-mode-hook 'rainbow-delimiters-mode)
-;; )
-
-
-;; (with-eval-after-load 'lsp-mode (setq lsp-modeline-diagnostics-scope :file))
+(setq lombok-jar-path (expand-file-name "~/.doom.d/neoemacs/lombok.jar"))
+(setq lsp-java-vmargs `(
+        , (concat "-javaagent:" lombok-jar-path)
+        , "-XX:+UseParallelGC"
+        , "-XX:GCTimeRatio=4"
+        , "-XX:AdaptiveSizePolicyWeight=90"
+        , "-Dsun.zip.disableMemoryMapping=true"
+        , "-Xmx2G"
+        , "-Xms500m"
+        , "-Dosgi.locking=none"))
+(add-hook 'java-mode-hook 'lsp)
+(add-hook 'java-mode-hook 'yascroll-bar-mode)
+(add-hook 'java-mode-hook 'rainbow-delimiters-mode)
+(with-eval-after-load 'lsp-mode (setq lsp-modeline-diagnostics-scope :file))
 (setq-default indent-tabs-mode nil)
 (setq lsp-enable-file-watchers nil)
-;; (add-hook 'java-mode-hook #'lsp)
 
 ;; (use-package dap-mode
 ;;   :diminish
