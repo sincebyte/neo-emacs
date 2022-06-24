@@ -178,6 +178,7 @@
 (map! :ne "SPC v s" 'vterm-send-start                          )
 (map! :ne "SPC v c" 'counsel-rg                                )
 (map! :ne "SPC v r" 'lsp-rename                                )
+(map! :ne "SPC v l" 'lsp-java-assign-statement-to-local        )
 (map! :ne "M-j"     'drag-stuff-down                           )
 (map! :ne "M-k"     'drag-stuff-up                             )
 (map! :ne "s-;"     'comment-line                              )

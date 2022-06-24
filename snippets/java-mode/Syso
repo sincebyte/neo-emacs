@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: Syso
-# key: syso
-# --
-System.out.println("test");
