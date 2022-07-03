@@ -172,7 +172,7 @@
 (map! :ne "s-i"     'evil-goto-definition                      )
 (map! :ne "C-p"     'evil-scroll-up                            )
 (map! :ne "C-n"     'evil-scroll-down                          )
-(map! :ne "SPC z"   'counsel-fzf                               )
+;;(map! :ne "SPC z"   'counsel-fzf                               )
 (map! :ne "SPC v v" 'projectile-run-vterm                      )
 (map! :ne "SPC v p" 'vterm-send-stop                           )
 (map! :ne "SPC v s" 'vterm-send-start                          )
@@ -310,7 +310,7 @@
 
 (add-hook 'ejc-sql-connected-hook
           (lambda ()
-            (ejc-set-column-width-limit 50)
+            (ejc-set-column-width-limit 150)
             (ejc-set-use-unicode t)))
 
 ;; git diff line in modeline
