@@ -312,6 +312,11 @@ jdt-language-server-latest.tar.gz -f lsp-java-server-build.pom
 ** useful key setting
 - Change caps_lock to control if pressed with other keys, to escape if pressed alone.
   [[file:key-change.png]]
+
+** why message showed could not load undo-tree history
+#+begin_src shell
+brew install watchexec
+#+end_src
 * Dependencies
 
 https://github.com/hlissner/doom-emacs/blob/master/docs/getting_started.org
