@@ -9,6 +9,18 @@
       counsel-fzf-cmd            (concat fd-exec-path " --exclude={.git,.idea,.vscode,.sass-cache,node_modules,build,target,classes,out,.local,class} -c never --hidden --follow %s .")
       lsp-java-format-settings-url               (expand-file-name "~/.doom.d/neoemacs/eclipse-codestyle.xml" )
       lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path                            ))
+;; set font first
+(defun config-font-size (en-size cn-size)
+  (setq doom-font (font-spec
+                   :family "Operator Mono"
+                   :size en-size))
+  (set-face-attribute 'default nil :font
+                      (format "%s:pixelsize=%d" "Operator Mono" en-size))
+  (if (display-graphic-p)
+      (dolist (charset '(kana han cjk-misc bopomofo))
+        (set-fontset-font (frame-parameter nil 'font) charset
+                          (font-spec :family "等距更纱黑体 Slab SC" :size cn-size)))))
+(config-font-size 17 17)
 
 ;; almost setting
 ;; (global-disable-mouse-mode)
@@ -16,7 +28,6 @@
 (tool-bar-mode       0             )
 (menu-bar-mode       0             )
 (scroll-bar-mode     0             )
-(display-time-mode   1             )
 
 (remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
 (custom-set-variables '(x-select-enable-clipboard t))
@@ -44,10 +55,8 @@
       auto-save-visited-mode                     nil
       auto-save-default                          nil
       neo-window-width                           70
-      display-time-24hr-format                   t
-      display-time-day-and-date                  t
-      format-time-string                         "%m %H:%M:%S"
-      format-time-string                         "%m %H:%M:%S"
+      display-time-format                        "%m/%d %I%p:%M:%S"
+      display-time-default-load-average          nil
       display-time-interval                      1
       doom-modeline-height                       10
       doom-modeline-bar-width                    2
@@ -107,6 +116,7 @@
 (setq package-archives '(( "gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"   )
                          ( "org-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/"   )
                          ( "melpa"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/" )))
+(display-time-mode   1             )
 (package-initialize)
 (after! warnings (add-to-list 'warning-suppress-types '(yasnippet backquote-change)))
 
@@ -384,17 +394,6 @@
 ;;(setq indent-guide-char "|")
 ;;(indent-guide-global-mode)
 ;;(custom-set-faces '(indent-guide-face ((t (:foreground "grey43" :background "#171717")))))
-(defun config-font-size (en-size cn-size)
-  (setq doom-font (font-spec
-                   :family "Operator Mono"
-                   :size en-size))
-  (set-face-attribute 'default nil :font
-                      (format "%s:pixelsize=%d" "Operator Mono" en-size))
-  (if (display-graphic-p)
-      (dolist (charset '(kana han cjk-misc bopomofo))
-        (set-fontset-font (frame-parameter nil 'font) charset
-                          (font-spec :family "等距更纱黑体 Slab SC" :size cn-size)))))
-(config-font-size 17 17)
 
 
 
@@ -454,8 +453,8 @@
                 ("\\subparagraph{%s}"  . "\\subparagraph*{%s}"  )))
 ;; Latex导出代码设置 , brew install pygments
 (setq org-latex-pdf-process '("xelatex -interaction nonstopmode %f" "xelatex -interaction nonstopmode %f")
-      org-latex-listings         t
-      org-export-latex-listings  t
+      org-latex-src-block-backend   t
+      org-export-latex-listings     t
       org-latex-hyperref-template "\\hypersetup{\n pdfauthor={%a},\n pdftitle={%t},\n pdfkeywords={%k},\n pdfsubject={%d},\n colorlinks=true,\n linkcolor=black\n}\n")
 (add-to-list 'org-latex-packages-alist '("" "listings"))
 (add-to-list 'org-latex-packages-alist '("" "color"))
@@ -591,7 +590,7 @@
 ;; (lsp-register-custom-settings
 ;;  '(("gopls.completeUnimported" t t)
 ;;    ("gopls.staticcheck" t t)))
-(setq org-latex-create-formula-image-program 'dvisvgm)
+(setq org-preview-latex-default-process 'dvisvgm)
 (defun dired-dotfiles-toggle ()
     "Show/hide dot-files"
     (interactive)
