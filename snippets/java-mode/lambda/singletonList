@@ -3,4 +3,4 @@
 # name: singletonList
 # key: sl
 # --
-Collections.singletonList();
+Collections.singletonList(null);

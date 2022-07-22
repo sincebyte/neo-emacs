@@ -46,11 +46,15 @@
       neo-window-width                           70
       display-time-24hr-format                   t
       display-time-day-and-date                  t
+      format-time-string                         "%m %H:%M:%S"
+      format-time-string                         "%m %H:%M:%S"
+      display-time-interval                      1
       doom-modeline-height                       10
       doom-modeline-bar-width                    2
       doom-modeline-modal-icon                   nil
       doom-modeline-icon                         nil
       doom-modeline-major-mode-icon              nil
+      doom-modeline-buffer-encoding              t
       doom-neotree-enable-variable-pitch         t
       neo-show-updir-line                        t
       frame-resize-pixelwise                     nil
@@ -172,7 +176,7 @@
 (map! :ne "s-i"     'evil-goto-definition                      )
 (map! :ne "C-p"     'evil-scroll-up                            )
 (map! :ne "C-n"     'evil-scroll-down                          )
-;;(map! :ne "SPC z"   'counsel-fzf                               )
+(map! :ne "SPC z"   'counsel-fzf                               )
 (map! :ne "SPC v v" 'projectile-run-vterm                      )
 (map! :ne "SPC v p" 'vterm-send-stop                           )
 (map! :ne "SPC v s" 'vterm-send-start                          )
@@ -325,7 +329,7 @@
                 (concat
                 (propertize (format "+%s," (match-string 1 plus-minus)) 'face '(:foreground "green3"))
                 (propertize (format "-%s"  (match-string 2 plus-minus)) 'face '(:foreground "#50fa7b")))
-                (propertize "√" 'face '(:foreground "green3" :weight bold)))) "")))
+                (propertize "" 'face '(:foreground "green3" :weight bold)))) "")))
 
 ;; Define a function to connect to a server
 (defun some-serv ()
@@ -588,5 +592,17 @@
 ;;  '(("gopls.completeUnimported" t t)
 ;;    ("gopls.staticcheck" t t)))
 (setq org-latex-create-formula-image-program 'dvisvgm)
+(defun dired-dotfiles-toggle ()
+    "Show/hide dot-files"
+    (interactive)
+    (when (equal major-mode 'dired-mode)
+      (if (or (not (boundp 'dired-dotfiles-show-p)) dired-dotfiles-show-p) ; if currently showing
+        (progn
+        (set (make-local-variable 'dired-dotfiles-show-p) nil)
+        (message "h")
+        (dired-mark-files-regexp "^\\\.")
+        (dired-do-kill-lines))
+        (progn (revert-buffer) ; otherwise just revert to re-show
+                (set (make-local-variable 'dired-dotfiles-show-p) t)))))
 
 (provide 'neoemacs)
