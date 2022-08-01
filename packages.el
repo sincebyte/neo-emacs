@@ -121,3 +121,6 @@
 ;; (add-to-list 'load-path (expand-file-name "elisp" ~/workspace/ejc-sql))
 (package! ejc-sql :recipe (:host github :repo "vanniuner/ejc-sql" :branch "master"))
 (package! bookmark+ :recipe (:host github :repo "emacsmirror/bookmark-plus" :branch "master"))
+
+(package! auctex)
+(package! cdlatex)

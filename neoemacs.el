@@ -9,22 +9,10 @@
       counsel-fzf-cmd            (concat fd-exec-path " --exclude={.git,.idea,.vscode,.sass-cache,node_modules,build,target,classes,out,.local,class} -c never --hidden --follow %s .")
       lsp-java-format-settings-url               (expand-file-name "~/.doom.d/neoemacs/eclipse-codestyle.xml" )
       lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path                            ))
-;; set font first
-(defun config-font-size (en-size cn-size)
-  (setq doom-font (font-spec
-                   :family "Operator Mono"
-                   :size en-size))
-  (set-face-attribute 'default nil :font
-                      (format "%s:pixelsize=%d" "Operator Mono" en-size))
-  (if (display-graphic-p)
-      (dolist (charset '(kana han cjk-misc bopomofo))
-        (set-fontset-font (frame-parameter nil 'font) charset
-                          (font-spec :family "等距更纱黑体 Slab SC" :size cn-size)))))
-(config-font-size 17 17)
 
 ;; almost setting
 ;; (global-disable-mouse-mode)
-(blink-cursor-mode   0             )
+(blink-cursor-mode   1             )
 (tool-bar-mode       0             )
 (menu-bar-mode       0             )
 (scroll-bar-mode     0             )
@@ -49,13 +37,13 @@
 
 (setq default-frame-alist                        '((top . 30) (left . 50) (height . 39) (width . 100))
       ;; doom-font                               (font-spec :family "Sarasa Fixed SC" :size 18)
-      ;; doom-font                               (font-spec :family "Unifont" :size 17)
+      ;; doom-font                                  (font-spec :family "courier New" :size 17)
       frame-title-format                         " "
       gc-cons-threshold                          (* 2 1000 1000)
       auto-save-visited-mode                     nil
       auto-save-default                          nil
       neo-window-width                           70
-      display-time-format                        "%m/%d %I%p:%M:%S"
+      display-time-format                        "%m/%d %I:%M:%S%p"
       display-time-default-load-average          nil
       display-time-interval                      1
       doom-modeline-height                       10
@@ -403,64 +391,24 @@
 
 ;; install mactex https://www.tug.org/mactex/
 ;;
-(require 'ox-latex)
-(add-to-list 'org-latex-classes
-             '("org-article"
-               "\\documentclass[11pt,a4paper]{article}
-                \\usepackage[UTF8]{ctex}
-                \\usepackage{graphicx}
-                \\usepackage{xcolor}
-                \\usepackage{xeCJK}
-                \\usepackage{fixltx2e}
-                \\usepackage{longtable}
-                \\usepackage{float}
-                \\usepackage{tikz}
-                \\usepackage{wrapfig}
-                \\usepackage{latexsym,amssymb,amsmath}
-                \\usepackage{textcomp}
-                \\usepackage{marvosym}
-                \\usepackage{textcomp}
-                \\usepackage{latexsym}
-                \\usepackage{natbib}
-                \\usepackage{geometry}
-                \\usepackage{color}
-                \\usepackage{listings}
-                \\usepackage{cmap}
-                \\definecolor{mygreen}{rgb}{0,0.6,0}
-                \\definecolor{mygray}{rgb}{0.5,0.5,0.5}
-                \\definecolor{mymauve}{rgb}{0.58,0,0.82}
-                \\usepackage{enumitem}
-                \\setenumerate[1]{itemsep=-3pt,partopsep=-3pt,parsep=\\parskip,topsep=-3pt}
-                \\setitemize[1]{itemsep=-3pt,partopsep=-3pt,parsep=\\parskip,topsep=-3pt}
-                \\setdescription{itemsep=-3pt,partopsep=-3pt,parsep=\\parskip,topsep=-3pt}
-                \\lstset{ %
-                        frame=trbl,
-                        backgroundcolor=\\color{white},                         % choose the background color
-                        ;; basicstyle=\\等距更纱黑体\ Slab\ SC\\scriptsize,        % size of fonts used for the code
-                        breaklines=true,                                        % automatic line breaking only at whitespace
-                        captionpos=b,                                           % sets the caption-position to bottom
-                        commentstyle=\\color{mygreen},                          % comment style
-                        escapeinside={\\%*}{*)},                                % if you want to add LaTeX within your code
-                        keywordstyle=\\color{blue},                             % keyword style
-                        stringstyle=\\color{mymauve},                           % string literal style
-                }
-                [PACKAGES]
-                [EXTRA]"
-                ("\\section{%s}"       . "\\section*{%s}"       )
-                ("\\subsection{%s}"    . "\\subsection*{%s}"    )
-                ("\\subsubsection{%s}" . "\\subsubsection*{%s}" )
-                ("\\paragraph{%s}"     . "\\paragraph*{%s}"     )
-                ("\\subparagraph{%s}"  . "\\subparagraph*{%s}"  )))
-;; Latex导出代码设置 , brew install pygments
-(setq org-latex-pdf-process '("xelatex -interaction nonstopmode %f" "xelatex -interaction nonstopmode %f")
-      org-latex-src-block-backend   t
-      org-export-latex-listings     t
-      org-latex-hyperref-template "\\hypersetup{\n pdfauthor={%a},\n pdftitle={%t},\n pdfkeywords={%k},\n pdfsubject={%d},\n colorlinks=true,\n linkcolor=black\n}\n")
-(add-to-list 'org-latex-packages-alist '("" "listings"))
-(add-to-list 'org-latex-packages-alist '("" "color"))
-
-;; (setq org-dnd-use-package t)
-;; (require 'ox-dnd)
+(with-eval-after-load 'ox-latex
+ ;; http://orgmode.org/worg/org-faq.html#using-xelatex-for-pdf-export
+ ;; latexmk runs pdflatex/xelatex (whatever is specified) multiple times
+ ;; automatically to resolve the cross-references.
+ (setq org-latex-pdf-process '("latexmk -xelatex -quiet -shell-escape -f %f"))
+ (add-to-list 'org-latex-classes
+               '("elegantpaper"
+                 "\\documentclass[lang=cn]{elegantpaper}
+                 [NO-DEFAULT-PACKAGES]
+                 [PACKAGES]
+                 [EXTRA]"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (setq org-latex-listings 'minted)
+  (add-to-list 'org-latex-packages-alist '("" "minted")))
 
 ;; vterm custom setting
 (defun create-terminal-home ()
@@ -590,18 +538,5 @@
 ;; (lsp-register-custom-settings
 ;;  '(("gopls.completeUnimported" t t)
 ;;    ("gopls.staticcheck" t t)))
-(setq org-preview-latex-default-process 'dvisvgm)
-(defun dired-dotfiles-toggle ()
-    "Show/hide dot-files"
-    (interactive)
-    (when (equal major-mode 'dired-mode)
-      (if (or (not (boundp 'dired-dotfiles-show-p)) dired-dotfiles-show-p) ; if currently showing
-        (progn
-        (set (make-local-variable 'dired-dotfiles-show-p) nil)
-        (message "h")
-        (dired-mark-files-regexp "^\\\.")
-        (dired-do-kill-lines))
-        (progn (revert-buffer) ; otherwise just revert to re-show
-                (set (make-local-variable 'dired-dotfiles-show-p) t)))))
 
 (provide 'neoemacs)
