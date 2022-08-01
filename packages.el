@@ -111,7 +111,7 @@
 
 (unpin!   org-roam)
 (package! org-roam-ui)
-(package! company-tabnine)
+;; (package! company-tabnine)
 ;; (package! indent-guide)
 ;; (package! beacon)
 ;; (package! minimap)
@@ -122,6 +122,6 @@
 (package! ejc-sql :recipe (:host github :repo "vanniuner/ejc-sql" :branch "master"))
 (package! bookmark+ :recipe (:host github :repo "emacsmirror/bookmark-plus" :branch "master"))
 
-(package! auctex)
-(package! cdlatex)
-(package! org-modern)
+;; (package! auctex)
+;; (package! cdlatex)
+;; (package! org-modern)

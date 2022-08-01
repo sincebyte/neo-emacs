@@ -2,6 +2,19 @@
 ;;; Commentary:
 ;;; Code:
 ;;; base on https://gist.github.com/coldnew/7398835
+
+(defun config-font-size (en-size cn-size)
+  (setq doom-font (font-spec
+                   :family "Operator Mono"
+                   :size en-size))
+  (set-face-attribute 'default nil :font
+                      (format "%s:pixelsize=%d" "Operator Mono" en-size))
+  (if (display-graphic-p)
+      (dolist (charset '(kana han cjk-misc bopomofo))
+        (set-fontset-font (frame-parameter nil 'font) charset
+                          (font-spec :family "等距更纱黑体 Slab SC" :size cn-size)))))
+(config-font-size 17 18)
+
 (defvar emacs-english-font nil
   "The font name of English.")
 
@@ -67,6 +80,8 @@
   (setq emacs-font-size-pair-list '(( 17 . 18) ))
   ;; Setup font size based on emacs-font-size-pair
   (set-font emacs-english-font emacs-cjk-font emacs-font-size-pair))
+
+
 
 (provide 'init-font)
 ;;; init-font.el ends here

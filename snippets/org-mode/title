@@ -8,8 +8,9 @@
 #+HTML_HEAD: <style type="text/css">
 #+HTML_HEAD:   .src {color: lightgray; background: #24272E;}
 #+HTML_HEAD: </style>
-#+OPTIONS: prop:nil timestamp:nil \n:t ^:nil f:t
-#+LATEX_CLASS: org-article
+#+OPTIONS: prop:nil timestamp:t \n:t ^:nil f:t
+#+LATEX_COMPILER: xelatex
+#+LATEX_CLASS: elegantpaper
 #+MACRO: htmlred @@html:<font color="red"></font>@@
 #+MACRO: latexred @@latex:{\color{red}@@@@latex:}@@
 #+latex:\newpage
