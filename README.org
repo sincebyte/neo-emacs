@@ -286,6 +286,8 @@ set -x FZF_DEFAULT_COMMAND  'fd --type f --hidden --follow
     #+LATEX_CLASS: elegantpaper
     #+OPTIONS: prop:t
    #+end_src
+
+4. [[https://www.sheerwill.live/posts/main/20220723211325-vanilla_emacs_with_purcell/][more info]]
 * Questions
 ** install ffmpeg
 - brew install ffmpeg
