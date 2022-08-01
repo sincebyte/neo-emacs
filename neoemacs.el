@@ -408,29 +408,10 @@
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-  (setq org-latex-src-block-backend 'minted)
-  (add-to-list 'org-latex-packages-alist '("" "minted")))
-(require 'org-modern)
-(use-package org-modern
-  :after org
-  :hook (org-mode . org-modern-mode)
-  :init
-  (setq org-modern-block nil
-        org-modern-radio-target nil
-        org-modern-internal-target nil
-        org-modern-list nil
-        ;; org-modern-star nil
-        org-modern-timestamp nil
-        ;; org-modern-checkbox nil
-        org-modern-todo nil
-        ;; org-modern-footnote nil
-        org-modern-priority nil
-        org-modern-progress nil
-        org-modern-keyword nil
-        org-modern-table nil
-        org-modern-tag nil
-        org-modern-statistics nil
-        org-modern-horizontal-rule nil))
+  (setq org-latex-src-block-backend 'listings)
+  (add-to-list 'org-latex-packages-alist '("" "minted"))
+  (add-to-list 'org-latex-packages-alist '("" "listings"))
+  (add-to-list 'org-latex-packages-alist '("" "color")))
 
 ;; vterm custom setting
 (defun create-terminal-home ()

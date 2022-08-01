@@ -277,7 +277,15 @@ set -x FZF_DEFAULT_COMMAND  'fd --type f --hidden --follow
     *.~undo-tree~
     crpt
   #+end_src
-
+* Latex PDF setting
+1. install [[https://tug.org/mactex/][mactex]]
+2. put [[https://github.com/ElegantLaTeX/ElegantPaper/blob/master/elegantpaper.cls][elegantpaper.cls]] under the org file dir
+3. add the code in the head of your org mode file
+   #+begin_src org
+    #+LATEX_COMPILER: xelatex
+    #+LATEX_CLASS: elegantpaper
+    #+OPTIONS: prop:t
+   #+end_src
 * Questions
 ** install ffmpeg
 - brew install ffmpeg

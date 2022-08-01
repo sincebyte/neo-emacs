@@ -1,38 +1,40 @@
 
 # Table of Contents
 
-1.  [About](#orgd975b0a)
-2.  [How to install](#org49aa2e0)
-    1.  [Install emacs](#org02580b5)
-    2.  [Building Emacs](#org171ea4e)
-    3.  [Clone doom-emacs](#org19bc3f4)
-    4.  [Clone neo-emacs](#org740cee2)
-    5.  [Doom Install](#org0070346)
-3.  [Private setting](#org831cb25)
-4.  [Lsp-java Usage](#org99b1697)
-5.  [Dap-java Usage](#org632b281)
-6.  [Company box customize](#org66ee79d)
-7.  [Ejc-sql Usage](#org3f15ce4)
-8.  [Bookmark](#orgc65e07b)
-9.  [Rime Usage](#org6441c61)
-10. [Libvterm Usage](#org61e661b)
-11. [Elpa Offline](#orga311034)
-12. [FZF Config](#orgec5ff42)
-    1.  [fish config](#org87c3063)
-    2.  [how to ignore files](#orgd46b55d)
-13. [Questions](#org6869ce9)
-    1.  [install ffmpeg](#org4bb1175)
-    2.  [how to install all-the-icons?](#org66108bf)
-    3.  [how to install rime ?](#orgd752b48)
-    4.  [how to install vterm?](#orgafd42a5)
-    5.  [lsp-springboot](#org3b97c6a)
-    6.  [useful key setting](#orga233b96)
-14. [Dependencies](#orgc56d035)
+1.  [About](#org7fa12cf)
+2.  [How to install](#org8044d3d)
+    1.  [Install emacs](#org581c434)
+    2.  [Building Emacs](#orgc71b947)
+    3.  [Clone doom-emacs](#orgf663738)
+    4.  [Clone neo-emacs](#org23a83ce)
+    5.  [Doom Install](#orgb95e3e5)
+3.  [Private setting](#org842f84c)
+4.  [Lsp-java Usage](#org9180f02)
+5.  [Dap-java Usage](#org44d6b5f)
+6.  [Company box customize](#org52e4741)
+7.  [Ejc-sql Usage](#org36ac554)
+8.  [Bookmark](#org30477aa)
+9.  [Rime Usage](#org61bfea1)
+10. [Libvterm Usage](#orgf5c4c37)
+11. [Elpa Offline](#org18e7b8e)
+12. [FZF Config](#orgfdf97c3)
+    1.  [fish config](#orgc40e2c8)
+    2.  [how to ignore files](#orga255df4)
+13. [Latex PDF setting](#orgc3455fb)
+14. [Questions](#org1cb8c07)
+    1.  [install ffmpeg](#orgd342908)
+    2.  [how to install all-the-icons?](#orgb6a780b)
+    3.  [how to install rime ?](#org5b72565)
+    4.  [how to install vterm?](#orgff1f685)
+    5.  [lsp-springboot](#org33c6cf7)
+    6.  [useful key setting](#orga01f6fe)
+    7.  [why message showed could not load undo-tree history](#org1a81c48)
+15. [Dependencies](#orgc2939be)
 
 ![img](./neo-emacs.gif)  
 
 
-<a id="orgd975b0a"></a>
+<a id="org7fa12cf"></a>
 
 # About
 
@@ -47,12 +49,12 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   [onlinedoc](http://1.117.167.195/doc/neo-emacs.html)
 
 
-<a id="org49aa2e0"></a>
+<a id="org8044d3d"></a>
 
 # How to install
 
 
-<a id="org02580b5"></a>
+<a id="org581c434"></a>
 
 ## Install emacs
 
@@ -63,7 +65,7 @@ Choose your operation system and install it.
 -   export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs, this depends on your installation path.
 
 
-<a id="org171ea4e"></a>
+<a id="orgc71b947"></a>
 
 ## Building Emacs
 
@@ -78,21 +80,21 @@ Choose your operation system and install it.
     9  open nextstep/Emacs.app
 
 
-<a id="org19bc3f4"></a>
+<a id="orgf663738"></a>
 
 ## Clone doom-emacs
 
     1  git clone https://github.com/hlissner/doom-emacs.git ~/.emacs.d/
 
 
-<a id="org740cee2"></a>
+<a id="org23a83ce"></a>
 
 ## Clone neo-emacs
 
     git clone https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
 
-<a id="org0070346"></a>
+<a id="orgb95e3e5"></a>
 
 ## Doom Install
 
@@ -112,7 +114,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     ~/.emacs.doom/bin/doom install
 
 
-<a id="org831cb25"></a>
+<a id="org842f84c"></a>
 
 # Private setting
 
@@ -293,7 +295,7 @@ Changing config in the config.el.
 </table>
 
 
-<a id="org99b1697"></a>
+<a id="org9180f02"></a>
 
 # Lsp-java Usage
 
@@ -422,7 +424,7 @@ Changing config in the config.el.
     2.  replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls
 
 
-<a id="org632b281"></a>
+<a id="org44d6b5f"></a>
 
 # Dap-java Usage
 
@@ -537,7 +539,7 @@ Changing config in the config.el.
     </table>
 
 
-<a id="org66ee79d"></a>
+<a id="org52e4741"></a>
 
 # Company box customize
 
@@ -545,7 +547,7 @@ Changing config in the config.el.
 -   company-icon icon config file: ~/.emacs.d/modules/completion/company/config.el
 
 
-<a id="org3f15ce4"></a>
+<a id="org36ac554"></a>
 
 # Ejc-sql Usage
 
@@ -620,7 +622,7 @@ Changing config in the config.el.
     </table>
 
 
-<a id="orgc65e07b"></a>
+<a id="org30477aa"></a>
 
 # Bookmark
 
@@ -629,7 +631,7 @@ Changing config in the config.el.
     (setq bookmark-default-file "~/org/org-roam/command/doom/config/bookmark")
 
 
-<a id="org6441c61"></a>
+<a id="org61bfea1"></a>
 
 # Rime Usage
 
@@ -638,7 +640,7 @@ Changing config in the config.el.
 -   some rime input method config at .doom.d/myconfig/rime-config.
 
 
-<a id="org61e661b"></a>
+<a id="orgf5c4c37"></a>
 
 # Libvterm Usage
 
@@ -705,7 +707,7 @@ Changing config in the config.el.
     </table>
 
 
-<a id="orga311034"></a>
+<a id="org18e7b8e"></a>
 
 # Elpa Offline
 
@@ -718,12 +720,12 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="orgec5ff42"></a>
+<a id="orgfdf97c3"></a>
 
 # FZF Config
 
 
-<a id="org87c3063"></a>
+<a id="orgc40e2c8"></a>
 
 ## fish config
 
@@ -741,7 +743,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
         "*.svg" . "*.puml" . "*.orgids" . "*.css" . "*.DS_Store" '
 
 
-<a id="orgd46b55d"></a>
+<a id="orga255df4"></a>
 
 ## how to ignore files
 
@@ -758,19 +760,32 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
         crpt
 
 
-<a id="org6869ce9"></a>
+<a id="orgc3455fb"></a>
+
+# Latex PDF setting
+
+1.  install [mactex](https://tug.org/mactex/)
+2.  put [elegantpaper.cls](https://github.com/ElegantLaTeX/ElegantPaper/blob/master/elegantpaper.cls) under the org file dir
+3.  add the code in the head of your org mode file  
+    
+        #+LATEX_COMPILER: xelatex
+        #+LATEX_CLASS: elegantpaper
+        #+OPTIONS: prop:t
+
+
+<a id="org1cb8c07"></a>
 
 # Questions
 
 
-<a id="org4bb1175"></a>
+<a id="orgd342908"></a>
 
 ## install ffmpeg
 
 -   brew install ffmpeg
 
 
-<a id="org66108bf"></a>
+<a id="orgb6a780b"></a>
 
 ## how to install all-the-icons?
 
@@ -778,7 +793,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
 -   M-x all-the-icons-install-fonts
 
 
-<a id="orgd752b48"></a>
+<a id="org5b72565"></a>
 
 ## how to install rime ?
 
@@ -787,7 +802,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
 unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime  
 
 
-<a id="orgafd42a5"></a>
+<a id="orgff1f685"></a>
 
 ## how to install vterm?
 
@@ -801,7 +816,7 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     make
 
 
-<a id="org3b97c6a"></a>
+<a id="org33c6cf7"></a>
 
 ## lsp-springboot
 
@@ -815,7 +830,7 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     jdt-language-server-latest.tar.gz -f lsp-java-server-build.pom
 
 
-<a id="orga233b96"></a>
+<a id="orga01f6fe"></a>
 
 ## useful key setting
 
@@ -823,7 +838,14 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     ![img](key-change.png)
 
 
-<a id="orgc56d035"></a>
+<a id="org1a81c48"></a>
+
+## why message showed could not load undo-tree history
+
+    brew install watchexec
+
+
+<a id="orgc2939be"></a>
 
 # Dependencies
 
