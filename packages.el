@@ -124,3 +124,4 @@
 
 (package! auctex)
 (package! cdlatex)
+(package! org-modern)
