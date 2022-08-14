@@ -168,6 +168,7 @@
 (map! :nve "; g"    'evil-last-non-blank                       )
 (map! :nve "; a"    'evil-first-non-blank                      )
 ;; (map! :ie "S"       'rime-force-enable                         )
+(map! :ne "m"       'evil-avy-goto-char                        )
 (map! :ne "f"       'evil-avy-goto-char                        )
 (map! :ne "SPC l"   'evil-window-right                         )
 (map! :ne "C-j"     'evil-scroll-down                          )
@@ -530,6 +531,11 @@
 
 (use-package bookmark+
   :after bookmark)
+
+(use-package org-fragtog)
+(add-hook 'org-mode-hook 'org-fragtog-mode)
+(use-package org-appear)
+(add-hook 'org-mode-hook 'org-appear-mode)
 
 ;; (add-hook 'go-mode-hook #'lsp-deferred)
 ;; ;; Set up before-save hooks to format buffer and add/delete imports.

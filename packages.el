@@ -118,9 +118,13 @@
 (package! yascroll)
 ;; (package! rmsbolt)
 (package! xml-format)
+(package! org-fragtog)
 ;; (add-to-list 'load-path (expand-file-name "elisp" ~/workspace/ejc-sql))
-(package! ejc-sql :recipe (:host github :repo "vanniuner/ejc-sql" :branch "master"))
-(package! bookmark+ :recipe (:host github :repo "emacsmirror/bookmark-plus" :branch "master"))
+(package! ejc-sql :recipe    (:host github :repo "vanniuner/ejc-sql"         :branch "master" ))
+(package! bookmark+ :recipe  (:host github :repo "emacsmirror/bookmark-plus" :branch "master" ))
+(package! org-appear :recipe (:host github :repo "awth13/org-appear"         :branch "master" ))
+
+
 
 ;; (package! auctex)
 ;; (package! cdlatex)
