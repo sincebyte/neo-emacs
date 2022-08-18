@@ -17,6 +17,20 @@
 (menu-bar-mode       0             )
 (scroll-bar-mode     0             )
 
+;; set the alpha background
+(setq alpha-list '((92 92) (100 100)))
+(defun loop-alpha ()
+  (interactive)
+  (let ((h (car alpha-list)))
+    ((lambda (a ab)
+       (set-frame-parameter (selected-frame) 'alpha (list a ab))
+       (add-to-list 'default-frame-alist (cons 'alpha (list a ab)))
+       ) (car h) (car (cdr h)))
+    (setq alpha-list (cdr (append alpha-list (list h))))
+    )
+)
+(loop-alpha)
+
 (remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
 (custom-set-variables '(x-select-enable-clipboard t))
 
@@ -536,6 +550,9 @@
 (add-hook 'org-mode-hook 'org-fragtog-mode)
 (use-package org-appear)
 (add-hook 'org-mode-hook 'org-appear-mode)
+
+(when (not (eq (last buffer-undo-list) 'undo-tree-canary))
+    (setq buffer-undo-list (append buffer-undo-list '(nil undo-tree-canary))))
 
 ;; (add-hook 'go-mode-hook #'lsp-deferred)
 ;; ;; Set up before-save hooks to format buffer and add/delete imports.

@@ -12,7 +12,7 @@
   (if (display-graphic-p)
       (dolist (charset '(kana han cjk-misc bopomofo))
         (set-fontset-font (frame-parameter nil 'font) charset
-                          (font-spec :family "等距更纱黑体 Slab SC" :size cn-size)))))
+                          (font-spec :family "LXGW WenKai Mono" :size cn-size)))))
 (config-font-size 17 18)
 
 (defvar emacs-english-font nil
