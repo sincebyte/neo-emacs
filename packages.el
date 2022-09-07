@@ -82,7 +82,7 @@
 (package! go-translate)
 ;;(package! google-translate)
 (package! zygospore)
-;;(package! undo-tree)
+(package! undo-tree)
 ;; (package! lsp-pyright)
 (package! string-inflection)
 (package! company)

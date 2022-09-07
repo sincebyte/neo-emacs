@@ -29,7 +29,7 @@
     (setq alpha-list (cdr (append alpha-list (list h))))
     )
 )
-(loop-alpha)
+;; (loop-alpha)
 
 (remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
 (custom-set-variables '(x-select-enable-clipboard t))
@@ -148,9 +148,11 @@
 (add-hook 'java-mode-hook 'lsp)
 (add-hook 'java-mode-hook 'yascroll-bar-mode)
 (add-hook 'java-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'java-mode-hook 'vimish-fold-mode)
 (with-eval-after-load 'lsp-mode (setq lsp-modeline-diagnostics-scope :file))
 (setq-default indent-tabs-mode nil)
 (setq lsp-enable-file-watchers nil)
+;;(add-hook 'evil-local-mode-hook 'turn-on-undo-tree-mode)
 
 ;; (use-package dap-mode
 ;;   :diminish
@@ -325,6 +327,9 @@
               :keymap    ivy-minibuffer-map
               :preselect (car conn-list-sorted)
               :action    #'ejc-connect)))
+
+
+(add-hook 'evil--jump-hook (lambda () (recenter-top-bottom)))
 
 (add-hook 'ejc-sql-connected-hook
           (lambda ()
@@ -551,9 +556,6 @@
 (use-package org-appear)
 (add-hook 'org-mode-hook 'org-appear-mode)
 
-(when (not (eq (last buffer-undo-list) 'undo-tree-canary))
-    (setq buffer-undo-list (append buffer-undo-list '(nil undo-tree-canary))))
-
 ;; (add-hook 'go-mode-hook #'lsp-deferred)
 ;; ;; Set up before-save hooks to format buffer and add/delete imports.
 ;; ;; Make sure you don't have other gofmt/goimports hooks enabled.
@@ -564,5 +566,6 @@
 ;; (lsp-register-custom-settings
 ;;  '(("gopls.completeUnimported" t t)
 ;;    ("gopls.staticcheck" t t)))
+
 
 (provide 'neoemacs)
