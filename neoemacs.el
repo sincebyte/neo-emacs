@@ -1,3 +1,9 @@
+(global-disable-mouse-mode)
+(blink-cursor-mode   0             )
+(tool-bar-mode       0             )
+(menu-bar-mode       0             )
+(scroll-bar-mode     0             )
+
 (add-to-list 'load-path          "~/.doom.d/neoemacs"  )   ;; default setting
 (add-to-list 'load-path          user-private-dir      )
 (add-to-list 'exec-path          pdflatex-exec-path    )
@@ -10,12 +16,6 @@
       lsp-java-format-settings-url               (expand-file-name "~/.doom.d/neoemacs/eclipse-codestyle.xml" )
       lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path                            ))
 
-;; almost setting
-(global-disable-mouse-mode)
-(blink-cursor-mode   0             )
-(tool-bar-mode       0             )
-(menu-bar-mode       0             )
-(scroll-bar-mode     0             )
 
 ;; set the alpha background
 (setq alpha-list '((92 92) (100 100)))
@@ -407,7 +407,7 @@
 
 
 ;; Useful configuration
-;; (setq lsp-java-jdt-download-url "https://download.eclipse.org/jdtls/milestones/1.1.2/jdt-language-server-1.1.2-202105191944.tar.gz")
+(setq lsp-java-jdt-download-url "https://download.eclipse.org/jdtls/milestones/1.9.0/jdt-language-server-1.9.0-202203031534.tar.gz")
 ;; (setq lsp-java-jdt-download-url "http://localhost/html/jdt-language-server-1.7.0-202112161541.tar.gz")
 
 ;; install mactex https://www.tug.org/mactex/
