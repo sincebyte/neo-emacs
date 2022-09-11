@@ -129,12 +129,16 @@ Changing config in the config.el.
  | ; i   | lsp-java-organize-imports          | import require package             |
  |       |                                    | or delete some unuse package       |
  +-------+------------------------------------+------------------------------------+
-
-
-
 - how to upgrade
   1. download the lastest jdt-language-server from https://download.eclipse.org/jdtls/milestones
   2. replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls
+- error about vfork
+  1. go back for doom emacs
+     git reset --hard c44bc81a05f3758ceaa28921dd9c830b9c571e61
+  2. set the sbcl path
+    #+begin_src lisp
+      (setq inferior-lisp-program "/opt/homebrew/bin//sbcl")
+    #+end_src
 * Dap-java Usage
 - Config the debug host and port, add file $usr_private_dir/dap-java-config.el.
 - Use `(setq user-private-dir "$usr_private_dir/dap-java-config.el" )` make it effective.
@@ -288,6 +292,10 @@ set -x FZF_DEFAULT_COMMAND  'fd --type f --hidden --follow
    #+end_src
 
 4. [[https://www.sheerwill.live/posts/main/20220723211325-vanilla_emacs_with_purcell/][more info]]
+* Alfred
+Alfred repeat item
+perference -> Advanced -> Rebuild macOS Metadata.
+alfred -> reload
 * Questions
 ** install ffmpeg
 - brew install ffmpeg

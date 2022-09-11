@@ -9,6 +9,8 @@
 (add-to-list 'exec-path          pdflatex-exec-path    )
 (add-to-list 'exec-path          rg-exec-path          )
 (add-to-list 'exec-path          node-bin-dir          )
+(setq inferior-lisp-program "/opt/homebrew/bin//sbcl")
+
 ;; (add-to-list 'exec-path          "/Users/van/.m2/go/bin" )
 (setq org-roam-graph-executable  dot-exec-path
       lsp-java-java-path         lsp-java-java-path
@@ -78,11 +80,12 @@
       evil-operator-state-tag                    "OPERATOR"
       evil-visual-state-tag                      "VISUAL"
       evil-want-Y-yank-to-eol                    t
+      company-format-margin-function             nil
       ;; company-box-doc-enable                     nil
       ;; company-box-scrollbar                      t
       company-tooltip-limit                      12
       ;;company-tooltip-margin                     0.1
-      company-tooltip-offset-display             'lines
+      company-tooltip-offset-display             'scrollbar
       org-image-actual-width                     '(300)
       doom-modeline-vcs-max-length               200
       vterm-kill-buffer-on-exit                  t
@@ -115,9 +118,14 @@
       dap-auto-configure-features                '()
       gts-translate-list                         '(("en" "zh"))
       doom-modeline-buffer-file-name-style       'truncate-with-project  )
-(setq package-archives '(( "gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"   )
-                         ( "org-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/"   )
-                         ( "melpa"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/" )))
+;; (setq package-archives '(( "gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"   )
+;;                          ( "org-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/"   )
+;;                          ( "melpa"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/" )))
+(setq configuration-layer--elpa-archives
+      '(("melpa-cn" . "/soft/emacs-elpa/melpa/")
+        ("org-cn"   . "/soft/emacs-elpa/org/")
+        ("gnu-cn"   . "/soft/emacs-elpa/gnu/")
+        ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 (display-time-mode   1             )
 (package-initialize)
 (after! warnings (add-to-list 'warning-suppress-types '(yasnippet backquote-change)))
