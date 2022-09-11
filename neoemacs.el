@@ -11,8 +11,8 @@
       lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path                            ))
 
 ;; almost setting
-;; (global-disable-mouse-mode)
-(blink-cursor-mode   1             )
+(global-disable-mouse-mode)
+(blink-cursor-mode   0             )
 (tool-bar-mode       0             )
 (menu-bar-mode       0             )
 (scroll-bar-mode     0             )
@@ -78,8 +78,8 @@
       evil-operator-state-tag                    "OPERATOR"
       evil-visual-state-tag                      "VISUAL"
       evil-want-Y-yank-to-eol                    t
-      company-box-doc-enable                     nil
-      company-box-scrollbar                      t
+      ;; company-box-doc-enable                     nil
+      ;; company-box-scrollbar                      t
       company-tooltip-limit                      12
       ;;company-tooltip-margin                     0.1
       company-tooltip-offset-display             'lines
@@ -175,7 +175,7 @@
 (use-package! general             )
 (use-package! init-font           )
 (use-package! yascroll)
-(use-package! ejc-sql :commands ejc-sql-mode ejc-connect :defer t :ensure nil)
+(use-package! ejc-sql :commands ejc-sql-mode ejc-connect :defer t )
 (defun k/sql-mode-hook () (ejc-sql-mode t))
 (add-hook 'sql-mode-hook 'k/sql-mode-hook)
 (add-hook 'sql-mode-hook 'yascroll-bar-mode)
@@ -502,44 +502,44 @@
   (read-only-mode 1)
   (goto-char 1)))
 
-(add-hook 'lsp-mode-hook 'mycompany/change-icons)
-(defun mycompany/change-icons ()
-   "change company-box icons"
-  (interactive)
-  (print "mycompany/change-icons")
-  (setq company-box-icons-all-the-icons
-        (let ((all-the-icons-scale-factor 0.8))
-          `((Unknown . ,(all-the-icons-material "find_in_page" :height 0.8 :v-adjust -0.15))
-            (Text . ,(all-the-icons-faicon "text-width" :height 0.8 :v-adjust -0.02))
-            (Method . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
-            (Function . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
-            (Constructor . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
-            (Field     . ,(all-the-icons-material "build" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-blue))
-            (Variable . ,(all-the-icons-octicon "tag" :height 0.85 :v-adjust 0 :face 'all-the-icons-blue))
-            (Class . ,(all-the-icons-material "grain" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-blue))
-            (Interface . ,(all-the-icons-material "toll" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-blue))
-            (Module . ,(all-the-icons-material "view_module" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-lblue))
-            (Property . ,(all-the-icons-faicon "wrench" :height 0.8 :v-adjust -0.02))
-            (Unit . ,(all-the-icons-material "straighten" :height 0.8 :v-adjust -0.15))
-            (Value . ,(all-the-icons-material "format_align_right" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-lblue))
-            (Enum . ,(all-the-icons-material "storage" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-orange))
-            (Keyword . ,(all-the-icons-octicon  "key" :height 0.8 :v-adjust 0 :face 'all-the-icons-orange))
-            (Snippet . ,(all-the-icons-material "format_align_center" :height 0.8 :v-adjust -0.15))
-            (Color . ,(all-the-icons-material "palette" :height 0.8 :v-adjust -0.15))
-            (File . ,(all-the-icons-faicon "file-o" :height 0.8 :v-adjust -0.02))
-            (Reference . ,(all-the-icons-material "collections_bookmark" :height 0.8 :v-adjust -0.15))
-            (Folder . ,(all-the-icons-faicon "folder-open" :height 0.8 :v-adjust -0.02))
-            (EnumMember . ,(all-the-icons-material "format_align_right" :height 0.8 :v-adjust -0.15))
-            (Constant . ,(all-the-icons-faicon "square-o" :height 0.8 :v-adjust -0.1))
-            (Struct . ,(all-the-icons-material "streetview" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-orange))
-            (Event . ,(all-the-icons-octicon "zap" :height 0.8 :v-adjust 0 :face 'all-the-icons-orange))
-            (Operator . ,(all-the-icons-material "control_point" :height 0.8 :v-adjust -0.15))
-            (TypeParameter . ,(all-the-icons-faicon "arrows" :height 0.8 :v-adjust -0.02))
-            (Template . ,(all-the-icons-material "format_align_left" :height 0.8 :v-adjust -0.15))
-            (ElispFace     . ,(all-the-icons-material "format_paint"             :face 'all-the-icons-pink))))) )
+;; (add-hook 'lsp-mode-hook 'mycompany/change-icons)
+;; (defun mycompany/change-icons ()
+;;    "change company-box icons"
+;;   (interactive)
+;;   (print "mycompany/change-icons")
+;;   (setq company-box-icons-all-the-icons
+;;         (let ((all-the-icons-scale-factor 0.8))
+;;           `((Unknown . ,(all-the-icons-material "find_in_page" :height 0.8 :v-adjust -0.15))
+;;             (Text . ,(all-the-icons-faicon "text-width" :height 0.8 :v-adjust -0.02))
+;;             (Method . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
+;;             (Function . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
+;;             (Constructor . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
+;;             (Field     . ,(all-the-icons-material "build" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-blue))
+;;             (Variable . ,(all-the-icons-octicon "tag" :height 0.85 :v-adjust 0 :face 'all-the-icons-blue))
+;;             (Class . ,(all-the-icons-material "grain" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-blue))
+;;             (Interface . ,(all-the-icons-material "toll" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-blue))
+;;             (Module . ,(all-the-icons-material "view_module" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-lblue))
+;;             (Property . ,(all-the-icons-faicon "wrench" :height 0.8 :v-adjust -0.02))
+;;             (Unit . ,(all-the-icons-material "straighten" :height 0.8 :v-adjust -0.15))
+;;             (Value . ,(all-the-icons-material "format_align_right" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-lblue))
+;;             (Enum . ,(all-the-icons-material "storage" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-orange))
+;;             (Keyword . ,(all-the-icons-octicon  "key" :height 0.8 :v-adjust 0 :face 'all-the-icons-orange))
+;;             (Snippet . ,(all-the-icons-material "format_align_center" :height 0.8 :v-adjust -0.15))
+;;             (Color . ,(all-the-icons-material "palette" :height 0.8 :v-adjust -0.15))
+;;             (File . ,(all-the-icons-faicon "file-o" :height 0.8 :v-adjust -0.02))
+;;             (Reference . ,(all-the-icons-material "collections_bookmark" :height 0.8 :v-adjust -0.15))
+;;             (Folder . ,(all-the-icons-faicon "folder-open" :height 0.8 :v-adjust -0.02))
+;;             (EnumMember . ,(all-the-icons-material "format_align_right" :height 0.8 :v-adjust -0.15))
+;;             (Constant . ,(all-the-icons-faicon "square-o" :height 0.8 :v-adjust -0.1))
+;;             (Struct . ,(all-the-icons-material "streetview" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-orange))
+;;             (Event . ,(all-the-icons-octicon "zap" :height 0.8 :v-adjust 0 :face 'all-the-icons-orange))
+;;             (Operator . ,(all-the-icons-material "control_point" :height 0.8 :v-adjust -0.15))
+;;             (TypeParameter . ,(all-the-icons-faicon "arrows" :height 0.8 :v-adjust -0.02))
+;;             (Template . ,(all-the-icons-material "format_align_left" :height 0.8 :v-adjust -0.15))
+;;             (ElispFace     . ,(all-the-icons-material "format_paint"             :face 'all-the-icons-pink))))) )
 
 (use-package recentf
-  :ensure nil
+  ;; :ensure nil
   ;; lazy load recentf
   :init
   (add-hook 'after-init-hook #'recentf-mode)
