@@ -3,6 +3,8 @@
 (tool-bar-mode       0             )
 (menu-bar-mode       0             )
 (scroll-bar-mode     0             )
+(display-time-mode   nil           )
+(global-undo-tree-mode)
 
 (add-to-list 'load-path          "~/.doom.d/neoemacs"  )   ;; default setting
 (add-to-list 'load-path          user-private-dir      )
@@ -52,6 +54,8 @@
 (add-hook 'after-make-frame-functions 'my/disable-scroll-bars)
 
 (setq default-frame-alist                        '((top . 30) (left . 50) (height . 39) (width . 100))
+      undo-tree-auto-save-history                t
+      undo-tree-history-directory-alist          '(("." . "~/.emacs.d/undo"))
       ;; doom-font                               (font-spec :family "Sarasa Fixed SC" :size 18)
       ;; doom-font                                  (font-spec :family "courier New" :size 17)
       frame-title-format                         " "
@@ -59,9 +63,10 @@
       auto-save-visited-mode                     nil
       auto-save-default                          nil
       neo-window-width                           70
-      display-time-format                        "%m/%d %I:%M:%S%p"
+      ;; display-time-format                        "%m/%d %I:%M:%S%p"
+      display-time-format                        "%I:%M%p"
       display-time-default-load-average          nil
-      display-time-interval                      1
+      display-time-interval                      30
       doom-modeline-height                       10
       doom-modeline-bar-width                    2
       doom-modeline-modal-icon                   nil
@@ -126,7 +131,6 @@
         ("org-cn"   . "/soft/emacs-elpa/org/")
         ("gnu-cn"   . "/soft/emacs-elpa/gnu/")
         ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
-(display-time-mode   1             )
 (package-initialize)
 (after! warnings (add-to-list 'warning-suppress-types '(yasnippet backquote-change)))
 
@@ -160,7 +164,7 @@
 (with-eval-after-load 'lsp-mode (setq lsp-modeline-diagnostics-scope :file))
 (setq-default indent-tabs-mode nil)
 (setq lsp-enable-file-watchers nil)
-;;(add-hook 'evil-local-mode-hook 'turn-on-undo-tree-mode)
+(add-hook 'evil-local-mode-hook 'turn-on-undo-tree-mode)
 
 ;; (use-package dap-mode
 ;;   :diminish

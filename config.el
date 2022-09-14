@@ -14,7 +14,7 @@
       rime-user-data-dir          "~/Library/Rime/"                                        ;; rime config input method setting
       rime-librime-root           "~/.doom.d/neoemacs/rime-macos/dist"                     ;; emacs-rime/blob/master/INSTALLATION.org
       emacs-module-root           "/opt/homebrew/opt/emacs-plus@28/include"                ;; emcas exec path
-      lsp-java-jdt-download-url   "http://1.117.167.195/download/jdt-language-server-1.6.0-202111261512.tar.gz" ;; jdt-server URL,with tencent cloud speed up
+      lsp-java-jdt-download-url   "https://download.eclipse.org/jdtls/milestones/1.9.0/jdt-language-server-1.9.0-202203031534.tar.gz" ;; jdt-server URL,with tencent cloud speed up
 )
 ;; default core setting
 (add-to-list  'load-path "~/.doom.d"  )
