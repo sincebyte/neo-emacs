@@ -335,6 +335,16 @@ jdt-language-server-latest.tar.gz -f lsp-java-server-build.pom
 #+begin_src shell
 brew install watchexec
 #+end_src
+** File mode specification error: (file-missing Doing vfork No such file or directory)
+When open a Java file this error happen.
+It's because the environment do not content on your GUI Emacs.
+It works well on your termianl environment with start Emacs by Emacs -nw.
+So the solution is change the execution file with the below shell script on MacOs
+/Applications/Emacs.app/Contents/MacOS/Emacs
+#+begin_src shell
+    #!/usr/local/bin/fish
+    /opt/homebrew/bin//Emacs
+#+end_src
 * Dependencies
 
 https://github.com/hlissner/doom-emacs/blob/master/docs/getting_started.org

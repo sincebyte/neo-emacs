@@ -8,11 +8,9 @@
 
 (add-to-list 'load-path          "~/.doom.d/neoemacs"      )   ;; default setting
 (add-to-list 'load-path          user-private-dir          )
-(add-to-list 'load-path          "/opt/homebrew/bin//sbcl" )
 (add-to-list 'exec-path          pdflatex-exec-path        )
 (add-to-list 'exec-path          rg-exec-path              )
 (add-to-list 'exec-path          node-bin-dir              )
-(setq inferior-lisp-program "/opt/homebrew/bin//sbcl")
 
 (add-to-list 'exec-path          "/Users/van/.m2/go/bin" )
 (setq org-roam-graph-executable  dot-exec-path
