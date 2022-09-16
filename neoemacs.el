@@ -4,16 +4,17 @@
 (menu-bar-mode       0             )
 (scroll-bar-mode     0             )
 (display-time-mode   nil           )
-(global-undo-tree-mode)
+;; (global-undo-tree-mode)
 
-(add-to-list 'load-path          "~/.doom.d/neoemacs"  )   ;; default setting
-(add-to-list 'load-path          user-private-dir      )
-(add-to-list 'exec-path          pdflatex-exec-path    )
-(add-to-list 'exec-path          rg-exec-path          )
-(add-to-list 'exec-path          node-bin-dir          )
+(add-to-list 'load-path          "~/.doom.d/neoemacs"      )   ;; default setting
+(add-to-list 'load-path          user-private-dir          )
+(add-to-list 'load-path          "/opt/homebrew/bin//sbcl" )
+(add-to-list 'exec-path          pdflatex-exec-path        )
+(add-to-list 'exec-path          rg-exec-path              )
+(add-to-list 'exec-path          node-bin-dir              )
 (setq inferior-lisp-program "/opt/homebrew/bin//sbcl")
 
-;; (add-to-list 'exec-path          "/Users/van/.m2/go/bin" )
+(add-to-list 'exec-path          "/Users/van/.m2/go/bin" )
 (setq org-roam-graph-executable  dot-exec-path
       lsp-java-java-path         lsp-java-java-path
       counsel-fzf-cmd            (concat fd-exec-path " --exclude={.git,.idea,.vscode,.sass-cache,node_modules,build,target,classes,out,.local,class} -c never --hidden --follow %s .")
@@ -54,8 +55,8 @@
 (add-hook 'after-make-frame-functions 'my/disable-scroll-bars)
 
 (setq default-frame-alist                        '((top . 30) (left . 50) (height . 39) (width . 100))
-      undo-tree-auto-save-history                t
-      undo-tree-history-directory-alist          '(("." . "~/.emacs.d/undo"))
+      ;;undo-tree-auto-save-history                t
+      ;;undo-tree-history-directory-alist          '(("." . "~/.emacs.d/undo"))
       ;; doom-font                               (font-spec :family "Sarasa Fixed SC" :size 18)
       ;; doom-font                                  (font-spec :family "courier New" :size 17)
       frame-title-format                         " "
@@ -123,14 +124,14 @@
       dap-auto-configure-features                '()
       gts-translate-list                         '(("en" "zh"))
       doom-modeline-buffer-file-name-style       'truncate-with-project  )
-;; (setq package-archives '(( "gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"   )
-;;                          ( "org-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/"   )
-;;                          ( "melpa"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/" )))
-(setq configuration-layer--elpa-archives
-      '(("melpa-cn" . "/soft/emacs-elpa/melpa/")
-        ("org-cn"   . "/soft/emacs-elpa/org/")
-        ("gnu-cn"   . "/soft/emacs-elpa/gnu/")
-        ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
+(setq package-archives '(( "gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"   )
+                         ( "org-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/"   )
+                         ( "melpa"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/" )))
+;; (setq configuration-layer--elpa-archives
+;;       '(("melpa-cn" . "/soft/emacs-elpa/melpa/")
+;;         ("org-cn"   . "/soft/emacs-elpa/org/")
+;;         ("gnu-cn"   . "/soft/emacs-elpa/gnu/")
+;;         ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 (package-initialize)
 (after! warnings (add-to-list 'warning-suppress-types '(yasnippet backquote-change)))
 
@@ -164,7 +165,7 @@
 (with-eval-after-load 'lsp-mode (setq lsp-modeline-diagnostics-scope :file))
 (setq-default indent-tabs-mode nil)
 (setq lsp-enable-file-watchers nil)
-(add-hook 'evil-local-mode-hook 'turn-on-undo-tree-mode)
+;;(add-hook 'evil-local-mode-hook 'turn-on-undo-tree-mode)
 
 ;; (use-package dap-mode
 ;;   :diminish
@@ -567,17 +568,6 @@
 (add-hook 'org-mode-hook 'org-fragtog-mode)
 (use-package org-appear)
 (add-hook 'org-mode-hook 'org-appear-mode)
-
-;; (add-hook 'go-mode-hook #'lsp-deferred)
-;; ;; Set up before-save hooks to format buffer and add/delete imports.
-;; ;; Make sure you don't have other gofmt/goimports hooks enabled.
-;; (defun lsp-go-install-save-hooks ()
-;;   (add-hook 'before-save-hook #'lsp-format-buffer t t)
-;;   (add-hook 'before-save-hook #'lsp-organize-imports t t))
-;; (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
-;; (lsp-register-custom-settings
-;;  '(("gopls.completeUnimported" t t)
-;;    ("gopls.staticcheck" t t)))
 
 
 (provide 'neoemacs)
