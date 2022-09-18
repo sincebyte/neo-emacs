@@ -63,7 +63,7 @@
       neo-window-width                           70
       ;; display-time-format                        "%m/%d %I:%M:%S%p"
       display-time-default-load-average          nil
-      display-time-format                        "%I:%M%p"
+      display-time-format                        "%I:%M"
       display-time-interval                      30
       doom-modeline-height                       10
       doom-modeline-bar-width                    2
@@ -356,14 +356,14 @@
 (defadvice vc-git-mode-line-string (after plus-minus (file) compile activate)
   "Show the information of git diff on modeline."
 (setq ad-return-value
-(concat (propertize ad-return-value 'face '(:foreground "white" :weight bold))
+(concat (propertize ad-return-value 'face '(:foreground "green" :weight light))
         " "
         (let ((plus-minus (vc-git--run-command-string file "diff" "--numstat" "--")))
                 (if (and plus-minus
-                (string-match "^\\([0-9]+\\)\t\\([0-9]+\\)\t" plus-minus))
-                (concat
-                (propertize (format "+%s," (match-string 1 plus-minus)) 'face '(:foreground "green3"))
-                (propertize (format "-%s"  (match-string 2 plus-minus)) 'face '(:foreground "#50fa7b")))
+                (string-match "^\\([0-9]+\\)\t\\([0-9]+\\)\t" plus-minus)) ""
+                ;; (concat
+                ;; (propertize (format "+%s," (match-string 1 plus-minus)) 'face '(:foreground "green3"))
+                ;; (propertize (format "-%s"  (match-string 2 plus-minus)) 'face '(:foreground "#50fa7b")))
                 (propertize "" 'face '(:foreground "green3" :weight bold)))) "")))
 
 ;; Define a function to connect to a server
@@ -571,5 +571,47 @@
 (add-hook 'org-mode-hook 'org-fragtog-mode)
 (use-package org-appear)
 (add-hook 'org-mode-hook 'org-appear-mode)
+
+(require 'telephone-line)
+(setq telephone-line-evil-use-short-tag t)
+(setq telephone-line-lhs
+      '((evil   . (telephone-line-evil-tag-segment))
+        (accent . (telephone-line-erc-modified-channels-segment
+                   telephone-line-process-segment
+                   telephone-line-projectile-segment))
+        (evil   . (telephone-line-buffer-segment))
+        (nil    . (telephone-line-airline-position-segment))
+        ))
+
+(setq telephone-line-rhs
+      '((nil    . (telephone-line-misc-info-segment))
+        (accent . (telephone-line-vc-segment-1))
+        (evil   . (telephone-line-major-mode-segment-1))))
+
+(telephone-line-defsegment* telephone-line-major-mode-segment-1 ()
+  (let ((recursive-edit-help-echo "Recursive edit, type C-M-c to get out"))
+    `((:propertize "%" help-echo ,recursive-edit-help-echo face ,face)
+      (:propertize (:eval (s-replace "//l" "" mode-name))
+                   help-echo "Major mode\n\
+mouse-1: Display major mode menu\n\
+mouse-2: Show help for major mode\n\
+mouse-3: Toggle minor modes"
+                   mouse-face mode-line-highlight
+                   local-map ,mode-line-major-mode-keymap
+                   face ,face)
+      (:propertize "%" help-echo ,recursive-edit-help-echo face ,face))))
+
+(telephone-line-defsegment* telephone-line-vc-segment-1 ()
+  (s-replace-regexp "Git[:|-]" "" (telephone-line-raw vc-mode t)))
+
+(telephone-line-defsegment* telephone-line-empty ()
+  "")
+
+(custom-set-faces '(telephone-line-evil-normal ((t (:background "#006666" :foreground "#b3d9ff")))))
+(custom-set-faces '(telephone-line-evil-insert ((t (:background "#004d4d" :foreground "#b3d9ff")))))
+(custom-set-faces '(telephone-line-evil-visual ((t (:background "#003333" :foreground "#b3d9ff")))))
+(custom-set-faces '(telephone-line-accent-active ((t (:background "#008080" :foreground "#b3d9ff")))))
+(telephone-line-mode t)
+
 
 (provide 'neoemacs)
