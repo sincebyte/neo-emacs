@@ -118,7 +118,7 @@ Changing config in the config.el.
  +-------+------------------------------------+------------------------------------+
  | KEY   | FUNCTION                           | DESCRIPTION                        |
  +-------+------------------------------------+------------------------------------+
- | M-i   | lsp-goto-implementation            | find where sub class definition    |
+ | SPC c | lsp-goto-implementation            | find where sub class definition    |
  +-------+------------------------------------+------------------------------------+
  | M-o   | lsp-java-open-super-implementation | goto where super class definition  |
  +-------+------------------------------------+------------------------------------+
