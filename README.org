@@ -64,6 +64,13 @@ At last run below, this will take few minutes. And it depends on the quality of 
 #+BEGIN_SRC shell
 ~/.emacs.doom/bin/doom install
 #+END_SRC
+* How to update
+#+begin_src shell
+export EMACS=/Applications/Emacs.app/Contents/MacOS/EMACS-JAVA-IDE
+sh ~/.emacs.d/bin/doom upgrade
+sh ~/.emacs.d/bin/doom install
+sh ~/.emacs.d/bin/doom sync
+#+end_src
 * Private setting
 Changing config in the config.el.
 | <l>                       | <l>                                     | <l>                     |

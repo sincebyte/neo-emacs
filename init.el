@@ -19,7 +19,7 @@
        ;;japanese
 
        :completion
-       (company)           ; the ultimate code completion backend
+       (company +childframe)           ; the ultimate code completion backend
        ;; company
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
