@@ -3,7 +3,6 @@
 (tool-bar-mode       0             )
 (menu-bar-mode       0             )
 (scroll-bar-mode     0             )
-(display-time-mode   nil           )
 ;; (global-undo-tree-mode)
 
 (add-to-list 'load-path          "~/.doom.d/neoemacs"      )   ;; default setting
@@ -63,8 +62,8 @@
       auto-save-default                          nil
       neo-window-width                           70
       ;; display-time-format                        "%m/%d %I:%M:%S%p"
-      display-time-format                        "%I:%M%p"
       display-time-default-load-average          nil
+      display-time-format                        "%I:%M%p"
       display-time-interval                      30
       doom-modeline-height                       10
       doom-modeline-bar-width                    2
@@ -121,7 +120,8 @@
       ejc-result-table-impl                      'ejc-result-mode
       dap-auto-configure-features                '()
       gts-translate-list                         '(("en" "zh"))
-      doom-modeline-buffer-file-name-style       'truncate-with-project  )
+      doom-modeline-buffer-file-name-style       'file-name  )
+(display-time)
 (setq package-archives '(( "gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"   )
                          ( "org-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/"   )
                          ( "melpa"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/" )))
@@ -157,6 +157,7 @@
         , "-Xms500m"
         , "-Dosgi.locking=none"))
 (add-hook 'java-mode-hook 'lsp)
+(add-hook 'java-mode-hook 'tree-sitter-hl-mode)
 (add-hook 'java-mode-hook 'yascroll-bar-mode)
 (add-hook 'java-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'java-mode-hook 'vimish-fold-mode)
@@ -252,16 +253,19 @@
 (map! :ve "; q"     'quit-window                               )
 (map! :nve "; e"    'er/expand-region                          )
 (map! :nv "; x"     'amx                                       )
-(map! :nv "SPC t 1" '+workspace/switch-to-0                  )
-(map! :nv "SPC t 2" '+workspace/switch-to-1                  )
-(map! :nv "SPC t 3" '+workspace/switch-to-2                  )
-(map! :nv "SPC t 4" '+workspace/switch-to-3                  )
-(map! :nv "SPC t 5" '+workspace/switch-to-4                  )
+(map! :nv "SPC t 1" '+workspace/switch-to-0                    )
+(map! :nv "SPC t 2" '+workspace/switch-to-1                    )
+(map! :nv "SPC t 3" '+workspace/switch-to-2                    )
+(map! :nv "SPC t 4" '+workspace/switch-to-3                    )
+(map! :nv "SPC t 5" '+workspace/switch-to-4                    )
 (map! :ne "; r"     'string-inflection-java-style-cycle        )
 (map! :nve "; c"    'comment-line                              )
 (map! :n "C-."      #'next-buffer                              )
 (map! :ne "SPC c u" #'lsp-java-open-super-implementation       )
 (map! :ne "SPC c l" #'lsp-java-assign-statement-to-local       )
+(map! :ne "; v"     #'vc-refresh-state                         )
+(map! :ie "C-i"     #'counsel-yank-pop                         )
+
 ;; 断词设置，设置以后断词更长
 ;; (defalias 'forward-evil-word 'forward-evil-symbol)
 (global-set-key "\C-xm"       'browse-url-at-point             )
@@ -404,7 +408,7 @@
           org-roam-ui-open-on-start t))
 (add-hook 'org-mode-hook '+org/close-all-folds)
 (add-hook 'org-mode-hook 'yascroll-bar-mode)
-
+(add-hook 'org-mode-hook (map! :n "C-," #'previous-buffer))
 
 ;; (beacon-mode 1)
 
@@ -567,6 +571,5 @@
 (add-hook 'org-mode-hook 'org-fragtog-mode)
 (use-package org-appear)
 (add-hook 'org-mode-hook 'org-appear-mode)
-
 
 (provide 'neoemacs)
