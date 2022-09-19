@@ -607,10 +607,10 @@ mouse-3: Toggle minor modes"
 (telephone-line-defsegment* telephone-line-empty ()
   "")
 
-(custom-set-faces '(telephone-line-evil-normal ((t (:background "#006666" :foreground "#b3d9ff")))))
-(custom-set-faces '(telephone-line-evil-insert ((t (:background "#004d4d" :foreground "#b3d9ff")))))
-(custom-set-faces '(telephone-line-evil-visual ((t (:background "#003333" :foreground "#b3d9ff")))))
-(custom-set-faces '(telephone-line-accent-active ((t (:background "#008080" :foreground "#b3d9ff")))))
+(custom-set-faces '(telephone-line-evil-normal ((t (:background "#304d55" :foreground "#FFFFE0")))))
+(custom-set-faces '(telephone-line-evil-insert ((t (:background "#506e77" :foreground "#FFFFE0")))))
+(custom-set-faces '(telephone-line-evil-visual ((t (:background "#6b7f89" :foreground "#FFFFE0")))))
+(custom-set-faces '(telephone-line-accent-active ((t (:background "#1e3c46" :foreground "#FFFFE0")))))
 (telephone-line-mode t)
 
 
