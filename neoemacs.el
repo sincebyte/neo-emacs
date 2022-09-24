@@ -202,7 +202,7 @@
 (map! :ne "C-j"     'evil-scroll-down                          )
 (map! :ne "C-k"     'evil-scroll-up                            )
 ;; (map! :ne "s-i"     'evil-goto-definition                      )
-(map! :ne "C-p"     'evil-scroll-up                            )
+;; (map! :ne "C-p"     'evil-scroll-up                            )
 (map! :ne "C-n"     'evil-scroll-down                          )
 (map! :ne "SPC z"   'counsel-fzf                               )
 (map! :ne "SPC v v" 'projectile-run-vterm                      )
@@ -265,6 +265,10 @@
 (map! :ne "SPC c l" #'lsp-java-assign-statement-to-local       )
 (map! :ne "; v"     #'vc-refresh-state                         )
 (map! :ie "C-i"     #'counsel-yank-pop                         )
+(map! :n "SPC a"    #'+workspace/switch-left                   )
+(map! :ivn "C-l"    #'+workspace/switch-right                  )
+(map! :ivn "C-p"    #'+workspace/switch-left                   )
+(map! :n "SPC t n"  #'+workspace/new                           )
 
 ;; 断词设置，设置以后断词更长
 ;; (defalias 'forward-evil-word 'forward-evil-symbol)
@@ -576,16 +580,19 @@
 (setq telephone-line-evil-use-short-tag t)
 (setq telephone-line-lhs
       '((evil   . (telephone-line-evil-tag-segment))
-        (accent . (telephone-line-erc-modified-channels-segment
-                   telephone-line-process-segment
-                   telephone-line-projectile-segment))
-        (evil   . (telephone-line-buffer-segment))
-        (nil    . (telephone-line-airline-position-segment))
+        (nil    . ())
+        (accent . (telephone-line-projectile-segment))
+        (nil    . ())
+        (evil   . (telephone-line-buffer-segment-1))
+        (nil    . ())
+        (evil   . (telephone-line-position-segment))
+        (nil    . ())
         ))
 
 (setq telephone-line-rhs
       '((nil    . (telephone-line-misc-info-segment))
         (accent . (telephone-line-vc-segment-1))
+        (nil    . (telephone-line-rime-mode))
         (evil   . (telephone-line-major-mode-segment-1))))
 
 (telephone-line-defsegment* telephone-line-major-mode-segment-1 ()
@@ -606,6 +613,19 @@ mouse-3: Toggle minor modes"
 
 (telephone-line-defsegment* telephone-line-empty ()
   "")
+
+(telephone-line-defsegment* telephone-line-rime-mode ()
+  (if rime-mode "ㄓ" ""))
+
+(telephone-line-defsegment* telephone-line-buffer-segment-1 ()
+  `(""
+    ;; mode-line-mule-info
+    mode-line-modified
+    mode-line-client
+    mode-line-remote
+    mode-line-frame-identification
+    ,(telephone-line-raw mode-line-buffer-identification t)))
+
 
 (custom-set-faces '(telephone-line-evil-normal ((t (:background "#304d55" :foreground "#FFFFE0")))))
 (custom-set-faces '(telephone-line-evil-insert ((t (:background "#506e77" :foreground "#FFFFE0")))))

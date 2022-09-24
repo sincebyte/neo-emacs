@@ -1,0 +1,17 @@
+# -*- mode: snippet -*-
+# name: mybatisc
+# key: mybatisc
+# --
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://myjrebel.cn:3306/spring?useSSL=false
+    username: root
+    password: ***
+
+# mybatis配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml    # mapper映射文件位置
+  type-aliases-package: com.demo.entity;    # 实体类所在的位置
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl   #用于控制台打印sql语句
