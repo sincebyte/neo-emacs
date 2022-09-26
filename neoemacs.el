@@ -265,9 +265,10 @@
 (map! :ne "SPC c l" #'lsp-java-assign-statement-to-local       )
 (map! :ne "; v"     #'vc-refresh-state                         )
 (map! :ie "C-i"     #'counsel-yank-pop                         )
-(map! :n "SPC a"    #'+workspace/switch-left                   )
-(map! :ivn "C-l"    #'+workspace/switch-right                  )
-(map! :ivn "C-p"    #'+workspace/switch-left                   )
+(map! :n "K"    #'+workspace/switch-left                   )
+(map! :n "L"    #'+workspace/switch-right                  )
+;; (map! :ivn "C-l"    #'+workspace/switch-right                  )
+;; (map! :ivn "C-p"    #'+workspace/switch-left                   )
 (map! :n "SPC t n"  #'+workspace/new                           )
 
 ;; 断词设置，设置以后断词更长
@@ -580,7 +581,7 @@
 (setq telephone-line-evil-use-short-tag t)
 (setq telephone-line-lhs
       '((evil   . (telephone-line-evil-tag-segment))
-        (nil    . ())
+        (nil    . (telephone-line-rime-mode))
         (accent . (telephone-line-projectile-segment))
         (nil    . ())
         (evil   . (telephone-line-buffer-segment-1))
@@ -592,7 +593,7 @@
 (setq telephone-line-rhs
       '((nil    . (telephone-line-misc-info-segment))
         (accent . (telephone-line-vc-segment-1))
-        (nil    . (telephone-line-rime-mode))
+        (nil    . ())
         (evil   . (telephone-line-major-mode-segment-1))))
 
 (telephone-line-defsegment* telephone-line-major-mode-segment-1 ()
@@ -615,7 +616,7 @@ mouse-3: Toggle minor modes"
   "")
 
 (telephone-line-defsegment* telephone-line-rime-mode ()
-  (if rime-mode "ㄓ" ""))
+  (if rime-mode "C" ""))
 
 (telephone-line-defsegment* telephone-line-buffer-segment-1 ()
   `(""
@@ -632,6 +633,5 @@ mouse-3: Toggle minor modes"
 (custom-set-faces '(telephone-line-evil-visual ((t (:background "#6b7f89" :foreground "#FFFFE0")))))
 (custom-set-faces '(telephone-line-accent-active ((t (:background "#1e3c46" :foreground "#FFFFE0")))))
 (telephone-line-mode t)
-
 
 (provide 'neoemacs)
