@@ -313,6 +313,7 @@
   :config
   (setq rime-show-candidate 'minibuffer)
   :custom
+  ;; (rime-librime-root "~/.emacs.d/librime/dist")
   (rime-emacs-module-header-root emacs-module-root)
   (default-input-method "rime"))
 (setq mode-line-mule-info   '((:eval (rime-lighter)))
@@ -326,6 +327,7 @@
        :picker (gts-prompt-picker)
        :engines (list (gts-bing-engine))
        :render (gts-buffer-render)))
+
 
 ;; translate
 (defun go-translate ()
@@ -413,7 +415,7 @@
           org-roam-ui-open-on-start t))
 (add-hook 'org-mode-hook '+org/close-all-folds)
 (add-hook 'org-mode-hook 'yascroll-bar-mode)
-(add-hook 'org-mode-hook (map! :n "C-," #'previous-buffer))
+;; (add-hook 'org-mode-hook (map! :n "C-," #'previous-buffer))
 
 ;; (beacon-mode 1)
 
@@ -572,29 +574,29 @@
 (use-package bookmark+
   :after bookmark)
 
-(use-package org-fragtog)
-(add-hook 'org-mode-hook 'org-fragtog-mode)
-(use-package org-appear)
-(add-hook 'org-mode-hook 'org-appear-mode)
+;; (use-package org-fragtog)
+;; (add-hook 'org-mode-hook 'org-fragtog-mode)
+;; (use-package org-appear)
+;; (add-hook 'org-mode-hook 'org-appear-mode)
 
 (require 'telephone-line)
 (setq telephone-line-evil-use-short-tag t)
 (setq telephone-line-lhs
       '((evil   . (telephone-line-evil-tag-segment))
-        (nil    . (telephone-line-rime-mode))
         (accent . (telephone-line-projectile-segment))
-        (nil    . ())
-        (evil   . (telephone-line-buffer-segment-1))
-        (nil    . ())
-        (evil   . (telephone-line-position-segment))
-        (nil    . ())
+        (nil   . (telephone-line-buffer-segment-1
+                 telephone-line-empty
+                 ))
         ))
 
 (setq telephone-line-rhs
-      '((nil    . (telephone-line-misc-info-segment))
+      '((nil    . (telephone-line-misc-info-segment
+                telephone-line-rime-mode
+                ))
         (accent . (telephone-line-vc-segment-1))
-        (nil    . ())
-        (evil   . (telephone-line-major-mode-segment-1))))
+        (nil   .  (telephone-line-major-mode-segment-1))
+        (evil  .  (telephone-line-position-segment))
+        ))
 
 (telephone-line-defsegment* telephone-line-major-mode-segment-1 ()
   (let ((recursive-edit-help-echo "Recursive edit, type C-M-c to get out"))
@@ -610,13 +612,13 @@ mouse-3: Toggle minor modes"
       (:propertize "%" help-echo ,recursive-edit-help-echo face ,face))))
 
 (telephone-line-defsegment* telephone-line-vc-segment-1 ()
-  (s-replace-regexp "Git[:|-]" "" (telephone-line-raw vc-mode t)))
+  (s-replace-regexp "Git[:|-]" "" (if (telephone-line-raw vc-mode t) (telephone-line-raw vc-mode t) "")))
 
 (telephone-line-defsegment* telephone-line-empty ()
   "")
 
 (telephone-line-defsegment* telephone-line-rime-mode ()
-  (if rime-mode "C" ""))
+  (if rime-mode "R" "E"))
 
 (telephone-line-defsegment* telephone-line-buffer-segment-1 ()
   `(""
@@ -627,11 +629,10 @@ mouse-3: Toggle minor modes"
     mode-line-frame-identification
     ,(telephone-line-raw mode-line-buffer-identification t)))
 
-
-(custom-set-faces '(telephone-line-evil-normal ((t (:background "#304d55" :foreground "#FFFFE0")))))
-(custom-set-faces '(telephone-line-evil-insert ((t (:background "#506e77" :foreground "#FFFFE0")))))
-(custom-set-faces '(telephone-line-evil-visual ((t (:background "#6b7f89" :foreground "#FFFFE0")))))
-(custom-set-faces '(telephone-line-accent-active ((t (:background "#1e3c46" :foreground "#FFFFE0")))))
+(custom-set-faces '(telephone-line-evil-normal ((t (:background "#1C86EE" :foreground "#FFFFFF")))))
+(custom-set-faces '(telephone-line-evil-insert ((t (:background "#87CEFA" :foreground "#FFFFFF")))))
+(custom-set-faces '(telephone-line-evil-visual ((t (:background "#141719" :foreground "#FFFFFF")))))
+(custom-set-faces '(telephone-line-accent-active ((t (:background "#316f92" :foreground "#FFFFFF")))))
 (telephone-line-mode t)
 
 (provide 'neoemacs)
