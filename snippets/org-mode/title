@@ -4,6 +4,8 @@
 # --
 #+title:
 #+AUTHOR: vanniuner
+#!define DARKORANGE/LIGHTORANGE/DARKBLUE/LIGHTBLUE/DARKRED/LIGHTRED/DARKGREEN/LIGHTGREEN
+#!includeurl /Users/van/org/org-roam/C4-PlantUML/juststyle.puml
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://7465-test-i1bhx-1301855613.tcb.qcloud.la/org-roam.css"/>
 #+HTML_HEAD: <style type="text/css">
 #+HTML_HEAD:   .src {color: lightgray; background: #24272E;}

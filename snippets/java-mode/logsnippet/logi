@@ -2,4 +2,4 @@
 # name: logi
 # key: logi
 # --
-logger.info("log: {}");
+log.info("log: {}");

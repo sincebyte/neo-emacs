@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: json
+# key: json
+# --
+<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>fastjson</artifactId>
+    <version>1.2.75</version>
+</dependency>

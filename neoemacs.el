@@ -174,8 +174,8 @@
 ;;            (dap-mode  . dap-ui-mode       )
 ;;            (dap-mode  . dap-tooltip-mode  )
 ;;            (java-mode . (lambda() (require 'dap-java      )))))
-;; (set-company-backend! 'prog-mode
-;;   '(:separate company-capf company-yasnippet company-dabbrev company-ispell))
+(set-company-backend! 'prog-mode
+  '(:separate company-capf company-yasnippet company-dabbrev company-ispell))
 
 (require      'disable-mouse      )
 (use-package! restclient-jq       )
@@ -260,16 +260,17 @@
 (map! :nv "SPC t 5" '+workspace/switch-to-4                    )
 (map! :ne "; r"     'string-inflection-java-style-cycle        )
 (map! :nve "; c"    'comment-line                              )
-(map! :n "C-."      #'next-buffer                              )
-(map! :ne "SPC c u" #'lsp-java-open-super-implementation       )
-(map! :ne "SPC c l" #'lsp-java-assign-statement-to-local       )
-(map! :ne "; v"     #'vc-refresh-state                         )
-(map! :ie "C-i"     #'counsel-yank-pop                         )
-(map! :n "K"    #'+workspace/switch-left                   )
-(map! :n "L"    #'+workspace/switch-right                  )
+(map! :n "C-."      'next-buffer                               )
+(map! :ne "SPC c u" 'lsp-java-open-super-implementation        )
+(map! :ne "SPC c l" 'lsp-java-assign-statement-to-local        )
+(map! :ne "; v"     'vc-refresh-state                         )
+(map! :ie "C-i"     'counsel-yank-pop                         )
+(map! :n "K"    '+workspace/switch-left                   )
+(map! :n "L"    '+workspace/switch-right                  )
 ;; (map! :ivn "C-l"    #'+workspace/switch-right                  )
 ;; (map! :ivn "C-p"    #'+workspace/switch-left                   )
-(map! :n "SPC t n"  #'+workspace/new                           )
+(map! :n "SPC t n"  '+workspace/new                           )
+(map! :vn "SPC c b" #'chrome-focus                            )
 
 ;; 断词设置，设置以后断词更长
 ;; (defalias 'forward-evil-word 'forward-evil-symbol)
@@ -352,7 +353,7 @@
               :action    #'ejc-connect)))
 
 
-(add-hook 'evil--jump-hook (lambda () (recenter-top-bottom)))
+;; (add-hook 'evil--jump-hook (lambda () (recenter-top-bottom)))
 
 (add-hook 'ejc-sql-connected-hook
           (lambda ()
@@ -634,5 +635,13 @@ mouse-3: Toggle minor modes"
 (custom-set-faces '(telephone-line-evil-visual ((t (:background "#141719" :foreground "#FFFFFF")))))
 (custom-set-faces '(telephone-line-accent-active ((t (:background "#316f92" :foreground "#FFFFFF")))))
 (telephone-line-mode t)
+
+(defun chrome-focus ()
+  (interactive)
+  (do-applescript
+   (concat
+   "tell application \"Google Chrome\"\n"
+   "    activate front window\n"
+   "end tell")))
 
 (provide 'neoemacs)
