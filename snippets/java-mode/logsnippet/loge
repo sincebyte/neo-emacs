@@ -2,4 +2,4 @@
 # name: loge
 # key: loge
 # --
-log.error("{}", e);
+log.error("==== [error]: {}", e);

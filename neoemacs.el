@@ -84,7 +84,7 @@
       evil-visual-state-tag                      "VISUAL"
       evil-want-Y-yank-to-eol                    t
       company-format-margin-function             nil
-      ;; company-box-doc-enable                     nil
+      company-box-doc-enable                     nil
       ;; company-box-scrollbar                      t
       company-tooltip-limit                      12
       ;;company-tooltip-margin                     0.1

@@ -2,4 +2,4 @@
 # name: logj
 # key: logj
 # --
-log.info("\n==== [log]: {}", JSON.toJSONString($0, SerializerFeature.PrettyFormat));
+log.info("==== [log]: {}", JSON.toJSONString($0, SerializerFeature.PrettyFormat));

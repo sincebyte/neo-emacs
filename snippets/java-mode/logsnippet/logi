@@ -2,4 +2,4 @@
 # name: logi
 # key: logi
 # --
-log.info("log: {}");
+log.info("==== [log]: {}");
