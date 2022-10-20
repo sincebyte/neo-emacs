@@ -102,7 +102,7 @@
       lsp-java-format-on-type-enabled            nil
       lsp-java-format-comments-enabled           nil
       lsp-completion-enable-additional-text-edit t
-      lsp-java-save-actions-organize-imports     t
+      lsp-java-save-actions-organize-imports     nil
       lsp-java-autobuild-enabled                 t
       lsp-java-max-concurrent-builds             12
       lsp-java-import-maven-enabled              t
@@ -247,7 +247,7 @@
 ;; (map! :ne ", t"     'dap-breakpoint-condition                  )
 (map! :ne ", m"     'lsp-java-add-unimplemented-methods        )
 ;; (map! :ne "s-d"     'lsp-goto-type-definition                  )
-(map! :ve ", f r"   'lsp-format-region                         )
+(map! :nve ", f r"   'lsp-format-region                         )
 (map! :ne ", f b"   'lsp-format-buffer                         )
 (map! :ne "; q"     'quit-window                               )
 (map! :ve "; q"     'quit-window                               )
@@ -643,5 +643,8 @@ mouse-3: Toggle minor modes"
    "tell application \"Google Chrome\"\n"
    "    activate front window\n"
    "end tell")))
+
+;; (add-to-list 'custom-theme-load-path "/Users/van/.doom.d/neoemacs")
+;; (load-theme 'leuven-dark t)
 
 (provide 'neoemacs)
