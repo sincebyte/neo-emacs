@@ -51,9 +51,12 @@
 (add-hook 'ea-popup-hook 'popup-handler)
 (add-hook 'after-make-frame-functions 'my/disable-scroll-bars)
 
-(setq default-frame-alist                        '((top . 30) (left . 50) (height . 39) (width . 100))
+;; (use-package lsp-mode
+;;   :hook ((lsp-mode . lsp-enable-which-key-integration)))
+
+(setq default-frame-alist                        '((top . 40) (left . 450) (height . 39) (width . 120))
       ;;undo-tree-auto-save-history                t
-      ;;undo-tree-history-directory-alist          '(("." . "~/.emacs.d/undo"))
+      undo-tree-history-directory-alist          '(("." . "~/.emacs.d/undo"))
       ;; doom-font                               (font-spec :family "Sarasa Fixed SC" :size 18)
       ;; doom-font                                  (font-spec :family "courier New" :size 17)
       frame-title-format                         " "
@@ -70,21 +73,26 @@
       doom-modeline-modal-icon                   nil
       doom-modeline-icon                         nil
       doom-modeline-major-mode-icon              nil
-      doom-modeline-buffer-encoding              t
+      doom-modeline-buffer-encoding              nil
       doom-neotree-enable-variable-pitch         t
       neo-show-updir-line                        t
       frame-resize-pixelwise                     nil
       org-roam-v2-ack                            t
       org-confirm-babel-evaluate                 nil
-      evil-emacs-state-tag                       "EMACS"
-      evil-insert-state-tag                      "INSERT"
-      evil-motion-state-tag                      "MOTION"
-      evil-normal-state-tag                      "NORMAL"
-      evil-operator-state-tag                    "OPERATOR"
-      evil-visual-state-tag                      "VISUAL"
+      evil-emacs-state-tag                       "E"
+      evil-insert-state-tag                      "I"
+      evil-motion-state-tag                      "M"
+      evil-normal-state-tag                      "N"
+      evil-operator-state-tag                    "O"
+      evil-visual-state-tag                      "V"
+      evil-replace-state-tag                     "R"
       evil-want-Y-yank-to-eol                    t
       company-format-margin-function             nil
-      company-box-doc-enable                     nil
+      doom-modeline-continuous-word-count-modes '(java-mode)
+      doom-modeline-enable-word-count  4
+
+
+      ;; company-box-doc-enable                     nil
       ;; company-box-scrollbar                      t
       company-tooltip-limit                      12
       ;;company-tooltip-margin                     0.1
@@ -99,22 +107,30 @@
       plantuml-jar-path                          ( expand-file-name "~/.doom.d/neoemacs/plantuml.jar" )
       org-plantuml-jar-path                      ( expand-file-name "~/.doom.d/neoemacs/plantuml.jar" )
       org-id-track-globally                      t ;; M-x org-id-update-id-locations , org-roam-update-org-id-locations
-      lsp-java-format-on-type-enabled            nil
-      lsp-java-format-comments-enabled           nil
-      lsp-completion-enable-additional-text-edit t
-      lsp-java-save-actions-organize-imports     nil
-      lsp-java-autobuild-enabled                 t
-      lsp-java-max-concurrent-builds             12
-      lsp-java-import-maven-enabled              t
-      lsp-java-maven-download-sources            t
-      lsp-completion-sort-initial-results        t
-      lsp-java-format-on-type-enabled            t
-      lsp-inhibit-message                        t
-      lsp-java-completion-overwrite              nil
-      lsp-modeline-code-actions-enable           nil
-      lsp-completion-show-detail                 nil
-      lsp-headerline-breadcrumb-enable           nil
-      lsp-log-io                                 nil
+      ;; lsp-java-format-on-type-enabled            nil
+      ;; lsp-java-format-comments-enabled           nil
+      ;; lsp-completion-enable-additional-text-edit t
+      ;; lsp-java-save-actions-organize-imports     nil
+      ;; lsp-java-autobuild-enabled                 t
+      ;; lsp-java-max-concurrent-builds             12
+      ;; lsp-java-import-maven-enabled              t
+      ;; lsp-java-maven-download-sources            t
+      ;; lsp-completion-sort-initial-results        t
+      ;; lsp-java-format-on-type-enabled            t
+      ;; lsp-inhibit-message                        t
+      ;; lsp-java-completion-overwrite              nil
+      ;; lsp-java-completion-guess-method-arguments t
+      ;; ;; indentation-based                          nil
+      ;; lsp-java-progress-string                   nil
+      ;; lsp-modeline-code-actions-enable           nil
+      ;; lsp-completion-show-detail                 nil
+      ;; lsp-headerline-breadcrumb-enable           nil
+      ;; lsp-java-code-generation-use-blocks        t
+      ;; lsp-java-configuration-check-project-settings-exclusions t
+      ;; lsp-java-signature-help-enabled            t
+      ;; lsp-signature-auto-activate                nil
+      ;; lsp-log-io                                 nil
+      ;; lsp-lens-enable t
       read-process-output-max                    (* 1024 1024)           ;; 1mb
       lsp-idle-delay                             0.500
       ejc-result-table-impl                      'ejc-result-mode
@@ -134,8 +150,6 @@
 (after! warnings (add-to-list 'warning-suppress-types '(yasnippet backquote-change)))
 
 ;; almost package
-;; (use-package lsp-mode
-;;   :hook ((lsp-mode . lsp-enable-which-key-integration)))
 (use-package! yaml-mode)
 (use-package! expand-region)
 
@@ -158,12 +172,56 @@
         , "-Dosgi.locking=none"))
 (add-hook 'java-mode-hook 'lsp)
 (add-hook 'java-mode-hook 'tree-sitter-hl-mode)
-(add-hook 'java-mode-hook 'yascroll-bar-mode)
+;; (add-hook 'java-mode-hook 'yascroll-bar-mode)
 (add-hook 'java-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'java-mode-hook 'vimish-fold-mode)
-(with-eval-after-load 'lsp-mode (setq lsp-modeline-diagnostics-scope :file))
+(add-hook 'java-mode-hook
+       (setq lsp-modeline-diagnostics-enable :file)
+       (setq lsp-eldoc-enable-hover t
+        lsp-java-format-on-type-enabled            nil
+        lsp-java-format-comments-enabled           nil
+        lsp-completion-enable-additional-text-edit t
+        lsp-java-save-actions-organize-imports     nil
+        lsp-java-autobuild-enabled                 t
+        lsp-java-max-concurrent-builds             12
+        lsp-java-import-maven-enabled              t
+        lsp-java-maven-download-sources            t
+        lsp-completion-sort-initial-results        t
+        lsp-java-format-on-type-enabled            t
+        lsp-inhibit-message                        t
+        lsp-java-completion-overwrite              nil
+        lsp-java-completion-guess-method-arguments t
+        ;; indentation-based                          nil
+        lsp-java-progress-string                   nil
+        lsp-modeline-code-actions-enable           nil
+        lsp-completion-show-detail                 nil
+        lsp-headerline-breadcrumb-enable           nil
+        lsp-java-code-generation-use-blocks        t
+        lsp-java-configuration-check-project-settings-exclusions t
+        lsp-java-signature-help-enabled            t
+        lsp-signature-auto-activate                nil
+        lsp-ui-sideline-show-hover t
+        lsp-ui-sideline-show-code-actions t
+        lsp-ui-sideline-enable t
+        lsp-headerline-breadcrumb-icons-enable nil
+        lsp-completion-show-label-description nil
+        lsp-completion-show-kind t
+        lsp-modeline-diagnostics-scope :file
+        lsp-log-io                                 nil
+        ;; lsp-symbol-kinds '((1 . "File")(2 . "Module")(6 . "Met"))
+        lsp-lens-enable                            t))
+;; (with-eval-after-load 'lsp-mode
+;;         (setq lsp-modeline-diagnostics-scope :file))
+;; (require 'lsp-java-boot)
+;; to enable the lenses
+;; (add-hook 'lsp-mode-hook #'lsp-lens-mode)
+;; (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
+
 (setq-default indent-tabs-mode nil)
 (setq lsp-enable-file-watchers nil)
+;; (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
+(set-company-backend! 'prog-mode
+  '(:separate company-capf company-yasnippet company-dabbrev company-ispell))
 ;;(add-hook 'evil-local-mode-hook 'turn-on-undo-tree-mode)
 
 ;; (use-package dap-mode
@@ -174,8 +232,7 @@
 ;;            (dap-mode  . dap-ui-mode       )
 ;;            (dap-mode  . dap-tooltip-mode  )
 ;;            (java-mode . (lambda() (require 'dap-java      )))))
-(set-company-backend! 'prog-mode
-  '(:separate company-capf company-yasnippet company-dabbrev company-ispell))
+;;
 
 (require      'disable-mouse      )
 (use-package! restclient-jq       )
@@ -190,7 +247,7 @@
 (use-package! ejc-sql :commands ejc-sql-mode ejc-connect :defer t )
 (defun k/sql-mode-hook () (ejc-sql-mode t))
 (add-hook 'sql-mode-hook 'k/sql-mode-hook)
-(add-hook 'sql-mode-hook 'yascroll-bar-mode)
+;; (add-hook 'sql-mode-hook 'yascroll-bar-mode)
 
 ;; almost key set
 (map! :nve "; g"    'evil-last-non-blank                       )
@@ -526,41 +583,41 @@
   (read-only-mode 1)
   (goto-char 1)))
 
-(add-hook 'lsp-mode-hook 'mycompany/change-icons)
-(defun mycompany/change-icons ()
-   "change company-box icons"
-  (interactive)
-  (print "mycompany/change-icons")
-  (setq company-box-icons-all-the-icons
-        (let ((all-the-icons-scale-factor 0.8))
-          `((Unknown . ,(all-the-icons-material "find_in_page" :height 0.8 :v-adjust -0.15))
-            (Text . ,(all-the-icons-faicon "text-width" :height 0.8 :v-adjust -0.02))
-            (Method . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
-            (Function . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
-            (Constructor . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
-            (Field     . ,(all-the-icons-material "build" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-blue))
-            (Variable . ,(all-the-icons-octicon "tag" :height 0.85 :v-adjust 0 :face 'all-the-icons-blue))
-            (Class . ,(all-the-icons-material "grain" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-blue))
-            (Interface . ,(all-the-icons-material "toll" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-blue))
-            (Module . ,(all-the-icons-material "view_module" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-lblue))
-            (Property . ,(all-the-icons-faicon "wrench" :height 0.8 :v-adjust -0.02))
-            (Unit . ,(all-the-icons-material "straighten" :height 0.8 :v-adjust -0.15))
-            (Value . ,(all-the-icons-material "format_align_right" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-lblue))
-            (Enum . ,(all-the-icons-material "storage" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-orange))
-            (Keyword . ,(all-the-icons-octicon  "key" :height 0.8 :v-adjust 0 :face 'all-the-icons-orange))
-            (Snippet . ,(all-the-icons-material "format_align_center" :height 0.8 :v-adjust -0.15))
-            (Color . ,(all-the-icons-material "palette" :height 0.8 :v-adjust -0.15))
-            (File . ,(all-the-icons-faicon "file-o" :height 0.8 :v-adjust -0.02))
-            (Reference . ,(all-the-icons-material "collections_bookmark" :height 0.8 :v-adjust -0.15))
-            (Folder . ,(all-the-icons-faicon "folder-open" :height 0.8 :v-adjust -0.02))
-            (EnumMember . ,(all-the-icons-material "format_align_right" :height 0.8 :v-adjust -0.15))
-            (Constant . ,(all-the-icons-faicon "square-o" :height 0.8 :v-adjust -0.1))
-            (Struct . ,(all-the-icons-material "streetview" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-orange))
-            (Event . ,(all-the-icons-octicon "zap" :height 0.8 :v-adjust 0 :face 'all-the-icons-orange))
-            (Operator . ,(all-the-icons-material "control_point" :height 0.8 :v-adjust -0.15))
-            (TypeParameter . ,(all-the-icons-faicon "arrows" :height 0.8 :v-adjust -0.02))
-            (Template . ,(all-the-icons-material "format_align_left" :height 0.8 :v-adjust -0.15))
-            (ElispFace     . ,(all-the-icons-material "format_paint"             :face 'all-the-icons-pink))))) )
+;; (add-hook 'lsp-mode-hook 'mycompany/change-icons)
+;; (defun mycompany/change-icons ()
+;;    "change company-box icons"
+;;   (interactive)
+;;   (print "mycompany/change-icons")
+;;   (setq company-box-icons-all-the-icons
+;;         (let ((all-the-icons-scale-factor 0.8))
+;;           `((Unknown . ,(all-the-icons-material "find_in_page" :height 0.8 :v-adjust -0.15))
+;;             (Text . ,(all-the-icons-faicon "text-width" :height 0.8 :v-adjust -0.02))
+;;             (Method . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
+;;             (Function . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
+;;             (Constructor . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
+;;             (Field     . ,(all-the-icons-material "build" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-blue))
+;;             (Variable . ,(all-the-icons-octicon "tag" :height 0.85 :v-adjust 0 :face 'all-the-icons-blue))
+;;             (Class . ,(all-the-icons-material "grain" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-blue))
+;;             (Interface . ,(all-the-icons-material "toll" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-blue))
+;;             (Module . ,(all-the-icons-material "view_module" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-lblue))
+;;             (Property . ,(all-the-icons-faicon "wrench" :height 0.8 :v-adjust -0.02))
+;;             (Unit . ,(all-the-icons-material "straighten" :height 0.8 :v-adjust -0.15))
+;;             (Value . ,(all-the-icons-material "format_align_right" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-lblue))
+;;             (Enum . ,(all-the-icons-material "storage" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-orange))
+;;             (Keyword . ,(all-the-icons-octicon  "key" :height 0.8 :v-adjust 0 :face 'all-the-icons-orange))
+;;             (Snippet . ,(all-the-icons-material "format_align_center" :height 0.8 :v-adjust -0.15))
+;;             (Color . ,(all-the-icons-material "palette" :height 0.8 :v-adjust -0.15))
+;;             (File . ,(all-the-icons-faicon "file-o" :height 0.8 :v-adjust -0.02))
+;;             (Reference . ,(all-the-icons-material "collections_bookmark" :height 0.8 :v-adjust -0.15))
+;;             (Folder . ,(all-the-icons-faicon "folder-open" :height 0.8 :v-adjust -0.02))
+;;             (EnumMember . ,(all-the-icons-material "format_align_right" :height 0.8 :v-adjust -0.15))
+;;             (Constant . ,(all-the-icons-faicon "square-o" :height 0.8 :v-adjust -0.1))
+;;             (Struct . ,(all-the-icons-material "streetview" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-orange))
+;;             (Event . ,(all-the-icons-octicon "zap" :height 0.8 :v-adjust 0 :face 'all-the-icons-orange))
+;;             (Operator . ,(all-the-icons-material "control_point" :height 0.8 :v-adjust -0.15))
+;;             (TypeParameter . ,(all-the-icons-faicon "arrows" :height 0.8 :v-adjust -0.02))
+;;             (Template . ,(all-the-icons-material "format_align_left" :height 0.8 :v-adjust -0.15))
+;;             (ElispFace     . ,(all-the-icons-material "format_paint"             :face 'all-the-icons-pink))))) )
 
 (use-package recentf
   ;; :ensure nil
@@ -580,69 +637,61 @@
 ;; (use-package org-appear)
 ;; (add-hook 'org-mode-hook 'org-appear-mode)
 
-(require 'telephone-line)
-(setq telephone-line-evil-use-short-tag t)
-(setq telephone-line-lhs
-      '((evil   . (telephone-line-evil-tag-segment))
-        (accent . (telephone-line-projectile-segment))
-        (nil   . (telephone-line-buffer-segment-1
-                 telephone-line-empty
-                 ))
-        ))
+;; (require 'telephone-line)
+;; (setq telephone-line-evil-use-short-tag t)
+;; (setq telephone-line-lhs
+;;       '((evil   . (telephone-line-evil-tag-segment))
+;;         (accent . (telephone-line-projectile-segment))
+;;         (nil   . (telephone-line-buffer-segment-1
+;;                  telephone-line-empty
+;;                  ))
+;;         ))
 
-(setq telephone-line-rhs
-      '((nil    . (telephone-line-misc-info-segment
-                telephone-line-rime-mode
-                ))
-        (accent . (telephone-line-vc-segment-1))
-        (nil   .  (telephone-line-major-mode-segment-1))
-        (evil  .  (telephone-line-position-segment))
-        ))
+;; (setq telephone-line-rhs
+;;       '((nil    . (telephone-line-misc-info-segment
+;;                 telephone-line-rime-mode
+;;                 ))
+;;         (accent . (telephone-line-vc-segment-1))
+;;         (nil   .  (telephone-line-major-mode-segment-1))
+;;         (evil  .  (telephone-line-position-segment))
+;;         ))
 
-(telephone-line-defsegment* telephone-line-major-mode-segment-1 ()
-  (let ((recursive-edit-help-echo "Recursive edit, type C-M-c to get out"))
-    `((:propertize "%" help-echo ,recursive-edit-help-echo face ,face)
-      (:propertize (:eval (s-replace "//l" "" mode-name))
-                   help-echo "Major mode\n\
-mouse-1: Display major mode menu\n\
-mouse-2: Show help for major mode\n\
-mouse-3: Toggle minor modes"
-                   mouse-face mode-line-highlight
-                   local-map ,mode-line-major-mode-keymap
-                   face ,face)
-      (:propertize "%" help-echo ,recursive-edit-help-echo face ,face))))
+;; (telephone-line-defsegment* telephone-line-major-mode-segment-1 ()
+;;   (let ((recursive-edit-help-echo "Recursive edit, type C-M-c to get out"))
+;;     `((:propertize "%" help-echo ,recursive-edit-help-echo face ,face)
+;;       (:propertize (:eval (s-replace "//l" "" mode-name))
+;;                    help-echo "Major mode\n\
+;; mouse-1: Display major mode menu\n\
+;; mouse-2: Show help for major mode\n\
+;; mouse-3: Toggle minor modes"
+;;                    mouse-face mode-line-highlight
+;;                    local-map ,mode-line-major-mode-keymap
+;;                    face ,face)
+;;       (:propertize "%" help-echo ,recursive-edit-help-echo face ,face))))
 
-(telephone-line-defsegment* telephone-line-vc-segment-1 ()
-  (s-replace-regexp "Git[:|-]" "" (if (telephone-line-raw vc-mode t) (telephone-line-raw vc-mode t) "")))
+;; (telephone-line-defsegment* telephone-line-vc-segment-1 ()
+;;   (s-replace-regexp "Git[:|-]" "" (if (telephone-line-raw vc-mode t) (telephone-line-raw vc-mode t) "")))
 
-(telephone-line-defsegment* telephone-line-empty ()
-  "")
+;; (telephone-line-defsegment* telephone-line-empty ()
+;;   "")
 
-(telephone-line-defsegment* telephone-line-rime-mode ()
-  (if rime-mode "R" "E"))
+;; (telephone-line-defsegment* telephone-line-rime-mode ()
+;;   (if rime-mode "R" "E"))
 
-(telephone-line-defsegment* telephone-line-buffer-segment-1 ()
-  `(""
-    ;; mode-line-mule-info
-    mode-line-modified
-    mode-line-client
-    mode-line-remote
-    mode-line-frame-identification
-    ,(telephone-line-raw mode-line-buffer-identification t)))
+;; (telephone-line-defsegment* telephone-line-buffer-segment-1 ()
+;;   `(""
+;;     ;; mode-line-mule-info
+;;     mode-line-modified
+;;     mode-line-client
+;;     mode-line-remote
+;;     mode-line-frame-identification
+;;     ,(telephone-line-raw mode-line-buffer-identification t)))
 
-(custom-set-faces '(telephone-line-evil-normal ((t (:background "#1C86EE" :foreground "#FFFFFF")))))
-(custom-set-faces '(telephone-line-evil-insert ((t (:background "#87CEFA" :foreground "#FFFFFF")))))
-(custom-set-faces '(telephone-line-evil-visual ((t (:background "#141719" :foreground "#FFFFFF")))))
-(custom-set-faces '(telephone-line-accent-active ((t (:background "#316f92" :foreground "#FFFFFF")))))
-(telephone-line-mode t)
-
-(defun chrome-focus ()
-  (interactive)
-  (do-applescript
-   (concat
-   "tell application \"Google Chrome\"\n"
-   "    activate front window\n"
-   "end tell")))
+;; (custom-set-faces '(telephone-line-evil-normal ((t (:background "#1C86EE" :foreground "#FFFFFF")))))
+;; (custom-set-faces '(telephone-line-evil-insert ((t (:background "#87CEFA" :foreground "#FFFFFF")))))
+;; (custom-set-faces '(telephone-line-evil-visual ((t (:background "#141719" :foreground "#FFFFFF")))))
+;; (custom-set-faces '(telephone-line-accent-active ((t (:background "#316f92" :foreground "#FFFFFF")))))
+;; (telephone-line-mode t)
 
 ;; (add-to-list 'custom-theme-load-path "/Users/van/.doom.d/neoemacs")
 ;; (load-theme 'leuven-dark t)

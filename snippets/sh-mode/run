@@ -19,5 +19,8 @@ java $JAVA_OPTS \
 -Dspring.cloud.nacos.discovery.server-addr=121.196.58.174:8848 \
 -Dspring.cloud.nacos.discovery.namespace=0318af8a-cd8f-4554-92ab-c4f09edcc781 \
 -Dlogging.config=/var/pb/logback-spring.xml \
+-Dlogging.level.com.baomidou.mybatisplus=DEBUG \
+-Dmybatis-plus.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl \
+-Dlogging.level.com.vanniuner.transactionTest.mapper=DEBUG \
 -Duser.timezone=GMT+08 \
 -jar jar.jar

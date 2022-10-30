@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: showindex
+# key: showindex
+# --
+<select name='show index'>
+SHOW INDEX FROM $0
+</select>

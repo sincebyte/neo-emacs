@@ -19,8 +19,8 @@
        ;;japanese
 
        :completion
-       (company +childframe)           ; the ultimate code completion backend
-       ;; company
+       ;; (company +childframe)           ; the ultimate code completion backend
+       company
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        (ivy)               ; a search engine for love and life
@@ -34,7 +34,7 @@
        hl-todo           ; highlight TODO/CANC/NOTE/DEPR/HACK/REVI/DONE
        ;;hydra
        ;; indent-guides     ; highlighted indent columns
-       ;; modeline          ; snazzy, Atom-inspired modeline, plus API
+       modeline          ; snazzy, Atom-inspired modeline, plus API
        nav-flash         ; blink the current line after jumping
        neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
@@ -68,7 +68,7 @@
        electric          ; smarter, keyword-based electric-indent
        ;;ibuffer         ; interactive buffer management
        vc                ; version-control and Emacs, sitting in a tree
-       ;; (undo +tree)
+       (undo +tree)
 
        :term
        ;;eshell            ; a consistent, cross-platform shell (WIP)
