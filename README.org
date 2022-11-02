@@ -37,7 +37,7 @@ open nextstep/Emacs.app
 #+end_src
 ** Clone doom-emacs
 #+BEGIN_SRC shell -n
-git clone https://github.com/hlissner/doom-emacs.git ~/.emacs.d/
+git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.emacs.d
 #+END_SRC
 ** Clone neo-emacs
 #+BEGIN_SRC shell
