@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: log
+# key: log
+# --
+file_put_contents('/Library/WebServer/Documents/tmp/zd.log', date('Y-m-d H:i:s').' create==='.PHP_EOL,FILE_APPEND);
