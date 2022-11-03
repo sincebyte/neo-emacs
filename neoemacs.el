@@ -201,12 +201,13 @@
         lsp-java-signature-help-enabled            t
         lsp-signature-auto-activate                nil
         lsp-ui-sideline-show-hover t
-        lsp-ui-sideline-show-code-actions t
+        lsp-ui-sideline-show-code-actions nil
         lsp-ui-sideline-enable t
         lsp-headerline-breadcrumb-icons-enable nil
         lsp-completion-show-label-description nil
         lsp-completion-show-kind t
         lsp-modeline-diagnostics-scope :file
+        lsp--highlight-kind-face nil
         lsp-log-io                                 nil
         ;; lsp-symbol-kinds '((1 . "File")(2 . "Module")(6 . "Met"))
         lsp-lens-enable                            t))
@@ -327,7 +328,7 @@
 ;; (map! :ivn "C-l"    #'+workspace/switch-right                  )
 ;; (map! :ivn "C-p"    #'+workspace/switch-left                   )
 (map! :n "SPC t n"  '+workspace/new                           )
-(map! :vn "SPC c b" #'chrome-focus                            )
+;; (map! :vn "SPC c b" #'chrome-focus                            )
 
 ;; 断词设置，设置以后断词更长
 ;; (defalias 'forward-evil-word 'forward-evil-symbol)
@@ -696,4 +697,5 @@
 ;; (add-to-list 'custom-theme-load-path "/Users/van/.doom.d/neoemacs")
 ;; (load-theme 'leuven-dark t)
 
+(custom-set-faces '(lsp-face-highlight-read ((t (:background "#283747")))))
 (provide 'neoemacs)

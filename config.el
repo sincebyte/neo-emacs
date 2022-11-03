@@ -13,13 +13,14 @@
       display-line-numbers-type   nil                                               ;; show line number 'relative
       rime-user-data-dir          "~/Library/Rime/"                                        ;; rime config input method setting
       rime-librime-root           "~/.doom.d/neoemacs/rime-macos/dist"                     ;; emacs-rime/blob/master/INSTALLATION.org
-      emacs-module-root           "/opt/homebrew/opt/emacs-plus@28/include"                ;; emcas exec path
+      emacs-module-root           "/Applications/Emacs.app/Contents/Resources/include"                ;; emcas exec path
       rime-emacs-module-header-root "/Applications/Emacs.app/Contents/Resources/include"   ;; for emacs rime, brew do not needed
       lsp-java-jdt-download-url   "https://download.eclipse.org/jdtls/milestones/1.9.0/jdt-language-server-1.9.0-202203031534.tar.gz" ;; jdt-server URL,with tencent cloud speed up
 )
+
 ;; default core setting
 (add-to-list  'load-path "~/.doom.d"  )
-(load-theme   'doom-tomorrow-night t  ) ;; set theme
+(load-theme   'doom-one             t ) ;; set theme
 (use-package! neoemacs                ) ;; neo-emacs main config
 (use-package! dap-java-config         )
 (use-package! db-work                 )
