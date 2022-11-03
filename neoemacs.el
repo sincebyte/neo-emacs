@@ -176,8 +176,8 @@
 (add-hook 'java-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'java-mode-hook 'vimish-fold-mode)
 (add-hook 'java-mode-hook
-       (setq lsp-modeline-diagnostics-enable :file)
        (setq lsp-eldoc-enable-hover t
+        lsp-modeline-diagnostics-enable            :file
         lsp-java-format-on-type-enabled            nil
         lsp-java-format-comments-enabled           nil
         lsp-completion-enable-additional-text-edit t
