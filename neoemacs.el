@@ -20,8 +20,9 @@
 
 
 ;; set the alpha background
-(setq alpha-list '((92 92) (100 100)))
+(setq-default alpha-list '((95 100) (100 100)))
 (defun loop-alpha ()
+  ;;doc
   (interactive)
   (let ((h (car alpha-list)))
     ((lambda (a ab)
@@ -94,7 +95,6 @@
       company-format-margin-function             'company-text-icons-margin
       company-text-icons-format                  " %s "
       company-text-icons-add-background          t
-        ;;//lsp-progress-prefix
       company-text-face-extra-attributes         '(:weight bold :slant italic)
       company-dabbrev-ignore-case                nil
       company-tooltip-flip-when-above            t
@@ -125,7 +125,7 @@
 ;;         ("gnu-cn"   . "/soft/emacs-elpa/gnu/")
 ;;         ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 (package-initialize)
-(after! warnings (add-to-list 'warning-suppress-types '(yasnippet backquote-change)))
+(after! warnings (add-to-list 'warning-suppress-types '(yasnippet backquote-change tree-sitter)))
 
 ;; almost package
 (use-package! yaml-mode)
@@ -154,8 +154,10 @@
 (add-hook 'java-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'java-mode-hook 'vimish-fold-mode)
 (add-hook 'java-mode-hook
-       (setq lsp-eldoc-enable-hover t
+       (setq lsp-eldoc-enable-hover                t
         lsp-modeline-diagnostics-enable            :file
+        lsp-enable-snippet                         nil
+        lsp-java-completion-guess-method-arguments t
         lsp-java-format-on-type-enabled            nil
         lsp-java-format-comments-enabled           nil
         lsp-completion-enable-additional-text-edit t
@@ -169,27 +171,26 @@
         lsp-inhibit-message                        t
         lsp-java-completion-overwrite              nil
         lsp-java-completion-guess-method-arguments t
-        ;; indentation-based                          nil
-        ;; lsp-java-progress-string                   nil
         lsp-completion-show-kind nil
         lsp-java-progress-reports-enabled          nil
         lsp-modeline-code-actions-enable           nil
         lsp-completion-show-detail                 nil
-        lsp-headerline-breadcrumb-enable           nil
         lsp-java-code-generation-use-blocks        t
-        lsp-java-configuration-check-project-settings-exclusions t
         lsp-java-signature-help-enabled            t
         lsp-signature-auto-activate                nil
-        lsp-ui-sideline-show-hover t
-        lsp-ui-sideline-show-code-actions nil
-        lsp-ui-sideline-enable t
-        lsp-headerline-breadcrumb-icons-enable nil
-        lsp-completion-show-label-description nil
-        lsp-modeline-diagnostics-scope :file
-        lsp--highlight-kind-face nil
+        lsp-ui-sideline-show-hover                 t
+        lsp-ui-sideline-show-code-actions          nil
+        lsp-ui-sideline-enable                     t
+        lsp-headerline-breadcrumb-icons-enable     nil
+        lsp-headerline-breadcrumb-enable           nil
+        lsp-completion-show-label-description      nil
+        lsp-modeline-diagnostics-scope             :file
         lsp-log-io                                 nil
-        ;; lsp-symbol-kinds '((1 . "File")(2 . "Module")(6 . "Met"))
-        lsp-lens-enable                            t))
+        lsp-lens-enable                            t
+        ;; lsp--highlight-kind-face                nil
+        ;; indentation-based                          nil
+        ;; lsp-java-progress-string                   "loading..."
+        lsp-java-configuration-check-project-settings-exclusions t ))
 ;; (with-eval-after-load 'lsp-mode
 ;;         (setq lsp-modeline-diagnostics-scope :file))
 ;; (require 'lsp-java-boot)
@@ -610,8 +611,8 @@
   (add-to-list 'recentf-exclude "\\.emacs\\.d/\\.local/etc/workspaces/autosave"))
 
 (use-package bookmark+
-  :after bookmark)
-
+  :after bookmark
+  :init (setq-default bookmark-save-flag 1))
 ;; (use-package org-fragtog)
 ;; (add-hook 'org-mode-hook 'org-fragtog-mode)
 ;; (use-package org-appear)
