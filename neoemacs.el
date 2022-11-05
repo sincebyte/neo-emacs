@@ -94,6 +94,7 @@
       company-format-margin-function             'company-text-icons-margin
       company-text-icons-format                  " %s "
       company-text-icons-add-background          t
+        ;;//lsp-progress-prefix
       company-text-face-extra-attributes         '(:weight bold :slant italic)
       company-dabbrev-ignore-case                nil
       company-tooltip-flip-when-above            t
@@ -109,7 +110,7 @@
       org-plantuml-jar-path                      ( expand-file-name "~/.doom.d/neoemacs/plantuml.jar" )
       org-id-track-globally                      t ;; M-x org-id-update-id-locations , org-roam-update-org-id-locations
       read-process-output-max                    (* 1024 1024)           ;; 1mb
-      lsp-idle-delay                             0.1
+      lsp-idle-delay                             0.01
       ejc-result-table-impl                      'ejc-result-mode
       dap-auto-configure-features                '()
       gts-translate-list                         '(("en" "zh"))
@@ -169,7 +170,9 @@
         lsp-java-completion-overwrite              nil
         lsp-java-completion-guess-method-arguments t
         ;; indentation-based                          nil
-        lsp-java-progress-string                   nil
+        ;; lsp-java-progress-string                   nil
+        lsp-completion-show-kind nil
+        lsp-java-progress-reports-enabled          nil
         lsp-modeline-code-actions-enable           nil
         lsp-completion-show-detail                 nil
         lsp-headerline-breadcrumb-enable           nil
@@ -182,7 +185,6 @@
         lsp-ui-sideline-enable t
         lsp-headerline-breadcrumb-icons-enable nil
         lsp-completion-show-label-description nil
-        lsp-completion-show-kind t
         lsp-modeline-diagnostics-scope :file
         lsp--highlight-kind-face nil
         lsp-log-io                                 nil
@@ -614,65 +616,5 @@
 ;; (add-hook 'org-mode-hook 'org-fragtog-mode)
 ;; (use-package org-appear)
 ;; (add-hook 'org-mode-hook 'org-appear-mode)
-
-;; (require 'telephone-line)
-;; (setq telephone-line-evil-use-short-tag t)
-;; (setq telephone-line-lhs
-;;       '((evil   . (telephone-line-evil-tag-segment))
-;;         (accent . (telephone-line-projectile-segment))
-;;         (nil   . (telephone-line-buffer-segment-1
-;;                  telephone-line-empty
-;;                  ))
-;;         ))
-
-;; (setq telephone-line-rhs
-;;       '((nil    . (telephone-line-misc-info-segment
-;;                 telephone-line-rime-mode
-;;                 ))
-;;         (accent . (telephone-line-vc-segment-1))
-;;         (nil   .  (telephone-line-major-mode-segment-1))
-;;         (evil  .  (telephone-line-position-segment))
-;;         ))
-
-;; (telephone-line-defsegment* telephone-line-major-mode-segment-1 ()
-;;   (let ((recursive-edit-help-echo "Recursive edit, type C-M-c to get out"))
-;;     `((:propertize "%" help-echo ,recursive-edit-help-echo face ,face)
-;;       (:propertize (:eval (s-replace "//l" "" mode-name))
-;;                    help-echo "Major mode\n\
-;; mouse-1: Display major mode menu\n\
-;; mouse-2: Show help for major mode\n\
-;; mouse-3: Toggle minor modes"
-;;                    mouse-face mode-line-highlight
-;;                    local-map ,mode-line-major-mode-keymap
-;;                    face ,face)
-;;       (:propertize "%" help-echo ,recursive-edit-help-echo face ,face))))
-
-;; (telephone-line-defsegment* telephone-line-vc-segment-1 ()
-;;   (s-replace-regexp "Git[:|-]" "" (if (telephone-line-raw vc-mode t) (telephone-line-raw vc-mode t) "")))
-
-;; (telephone-line-defsegment* telephone-line-empty ()
-;;   "")
-
-;; (telephone-line-defsegment* telephone-line-rime-mode ()
-;;   (if rime-mode "R" "E"))
-
-;; (telephone-line-defsegment* telephone-line-buffer-segment-1 ()
-;;   `(""
-;;     ;; mode-line-mule-info
-;;     mode-line-modified
-;;     mode-line-client
-;;     mode-line-remote
-;;     mode-line-frame-identification
-;;     ,(telephone-line-raw mode-line-buffer-identification t)))
-
-;; (custom-set-faces '(telephone-line-evil-normal ((t (:background "#1C86EE" :foreground "#FFFFFF")))))
-;; (custom-set-faces '(telephone-line-evil-insert ((t (:background "#87CEFA" :foreground "#FFFFFF")))))
-;; (custom-set-faces '(telephone-line-evil-visual ((t (:background "#141719" :foreground "#FFFFFF")))))
-;; (custom-set-faces '(telephone-line-accent-active ((t (:background "#316f92" :foreground "#FFFFFF")))))
-;; (telephone-line-mode t)
-
-;; (add-to-list 'custom-theme-load-path "/Users/van/.doom.d/neoemacs")
-;; (load-theme 'leuven-dark t)
-
 (custom-set-faces '(lsp-face-highlight-read ((t (:background "#283747")))))
 (provide 'neoemacs)
