@@ -55,18 +55,16 @@
 ;;   :hook ((lsp-mode . lsp-enable-which-key-integration)))
 
 (setq default-frame-alist                        '((top . 40) (left . 450) (height . 39) (width . 120))
-      ;;undo-tree-auto-save-history                t
       undo-tree-history-directory-alist          '(("." . "~/.emacs.d/undo"))
       ;; doom-font                               (font-spec :family "Sarasa Fixed SC" :size 18)
-      ;; doom-font                                  (font-spec :family "courier New" :size 17)
+      ;; doom-font                               (font-spec :family "courier New" :size 17)
       frame-title-format                         " "
       gc-cons-threshold                          (* 2 1000 1000)
       auto-save-visited-mode                     nil
       auto-save-default                          nil
       neo-window-width                           70
-      ;; display-time-format                        "%m/%d %I:%M:%S%p"
       display-time-default-load-average          nil
-      display-time-format                        "%I:%M"
+      display-time-format                        "%I:%M" ;; "%m/%d %I:%M:%S%p"
       display-time-interval                      30
       doom-modeline-height                       10
       doom-modeline-bar-width                    2
@@ -87,16 +85,19 @@
       evil-visual-state-tag                      "V"
       evil-replace-state-tag                     "R"
       evil-want-Y-yank-to-eol                    t
-      company-format-margin-function             nil
       doom-modeline-continuous-word-count-modes '(java-mode)
-      doom-modeline-enable-word-count  4
-
-
-      ;; company-box-doc-enable                     nil
-      ;; company-box-scrollbar                      t
-      company-tooltip-limit                      12
-      ;;company-tooltip-margin                     0.1
+      doom-modeline-enable-word-count            4
+      company-box-doc-enable                     nil
+      company-tooltip-limit                      7
       company-tooltip-offset-display             'scrollbar
+      company-frontends                          '(company-pseudo-tooltip-frontend company-echo-metadata-frontend)
+      company-format-margin-function             'company-text-icons-margin
+      company-text-icons-format                  " %s "
+      company-text-icons-add-background          t
+      company-text-face-extra-attributes         '(:weight bold :slant italic)
+      company-dabbrev-ignore-case                nil
+      company-tooltip-flip-when-above            t
+      company-show-quick-access                  nil
       org-image-actual-width                     '(300)
       doom-modeline-vcs-max-length               200
       vterm-kill-buffer-on-exit                  t
@@ -107,32 +108,8 @@
       plantuml-jar-path                          ( expand-file-name "~/.doom.d/neoemacs/plantuml.jar" )
       org-plantuml-jar-path                      ( expand-file-name "~/.doom.d/neoemacs/plantuml.jar" )
       org-id-track-globally                      t ;; M-x org-id-update-id-locations , org-roam-update-org-id-locations
-      ;; lsp-java-format-on-type-enabled            nil
-      ;; lsp-java-format-comments-enabled           nil
-      ;; lsp-completion-enable-additional-text-edit t
-      ;; lsp-java-save-actions-organize-imports     nil
-      ;; lsp-java-autobuild-enabled                 t
-      ;; lsp-java-max-concurrent-builds             12
-      ;; lsp-java-import-maven-enabled              t
-      ;; lsp-java-maven-download-sources            t
-      ;; lsp-completion-sort-initial-results        t
-      ;; lsp-java-format-on-type-enabled            t
-      ;; lsp-inhibit-message                        t
-      ;; lsp-java-completion-overwrite              nil
-      ;; lsp-java-completion-guess-method-arguments t
-      ;; ;; indentation-based                          nil
-      ;; lsp-java-progress-string                   nil
-      ;; lsp-modeline-code-actions-enable           nil
-      ;; lsp-completion-show-detail                 nil
-      ;; lsp-headerline-breadcrumb-enable           nil
-      ;; lsp-java-code-generation-use-blocks        t
-      ;; lsp-java-configuration-check-project-settings-exclusions t
-      ;; lsp-java-signature-help-enabled            t
-      ;; lsp-signature-auto-activate                nil
-      ;; lsp-log-io                                 nil
-      ;; lsp-lens-enable t
       read-process-output-max                    (* 1024 1024)           ;; 1mb
-      lsp-idle-delay                             0.500
+      lsp-idle-delay                             0.1
       ejc-result-table-impl                      'ejc-result-mode
       dap-auto-configure-features                '()
       gts-translate-list                         '(("en" "zh"))

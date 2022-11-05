@@ -13,8 +13,8 @@
       (dolist (charset '(kana han cjk-misc bopomofo))
         (set-fontset-font (frame-parameter nil 'font) charset
                           (font-spec :family "LXGW WenKai Mono" :size cn-size)))))
-(config-font-size 17 18)
-;; (config-font-size 19 20)
+;; (config-font-size 17 18)
+(config-font-size 19 20)
 
 (defvar emacs-english-font nil
   "The font name of English.")
@@ -77,11 +77,11 @@
   ;; setup default english font and cjk font
   (setq emacs-english-font "Operator Mono")
   (setq emacs-cjk-font "LXGW WenKai Mono")
-  (setq emacs-font-size-pair '(17 . 18))
-  (setq emacs-font-size-pair-list '(( 17 . 18) ))
+  ;; (setq emacs-font-size-pair '(17 . 18))
+  ;; (setq emacs-font-size-pair-list '(( 17 . 18) ))
 
-  ;; (setq emacs-font-size-pair '(19 . 20))
-  ;; (setq emacs-font-size-pair-list '(( 19 . 20) ))
+  (setq emacs-font-size-pair '(19 . 20))
+  (setq emacs-font-size-pair-list '(( 19 . 20) ))
   ;; Setup font size based on emacs-font-size-pair
   (set-font emacs-english-font emacs-cjk-font emacs-font-size-pair))
 
