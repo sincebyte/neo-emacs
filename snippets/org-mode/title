@@ -3,11 +3,11 @@
 # key: tt
 # --
 #+title: `(file-name-sans-extension (buffer-name))`
-#+AUTHOR: vanniuner
-#!define DARKORANGE/LIGHTORANGE/DARKBLUE/LIGHTBLUE/DARKRED/LIGHTRED/DARKGREEN/LIGHTGREEN
-#!includeurl /Users/van/org/org-roam/C4-PlantUML/juststyle.puml
+#+AUTHOR: Goldkinn-LZJ, liuzijie@goldkinn.com.cn
+# #!define DARKORANGE/LIGHTORANGE/DARKBLUE/LIGHTBLUE/DARKRED/LIGHTRED/DARKGREEN/LIGHTGREEN
+# #!includeurl /Users/van/org/org-roam/C4-PlantUML/juststyle.puml
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://emacs-1308440781.cos.ap-chengdu.myqcloud.com/org_css.css"/>
-#+OPTIONS: prop:nil timestamp:t \n:t ^:nil f:t toc:t
+#+OPTIONS: prop:nil timestamp:t \n:t ^:nil f:t toc:t author:t num:t H:2
 #+LATEX_COMPILER: xelatex
 #+LATEX_CLASS: elegantpaper
 #+MACRO: htmlred @@html:<font color="red"></font>@@
