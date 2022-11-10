@@ -4,6 +4,7 @@
 # --
 #+BEGIN_SRC plantuml :file ./image/db.svg
 scale 550 width
+skinparam backgroundColor transparent
 entity t_credit_apply_log {
   * id
   --

@@ -618,4 +618,14 @@
 ;; (use-package org-appear)
 ;; (add-hook 'org-mode-hook 'org-appear-mode)
 (custom-set-faces '(lsp-face-highlight-read ((t (:background "#283747")))))
+
+(defun org-org-html--format-image (source attributes info)
+  (format "<img src=\"data:image/%s+xml;base64,%s\"%s />"
+      (or (file-name-extension source) "")
+      (base64-encode-string
+       (with-temp-buffer
+        (insert-file-contents-literally source)
+        (buffer-string)))
+      (file-name-nondirectory source)))
+(advice-add #'org-html--format-image :override #'org-org-html--format-image)
 (provide 'neoemacs)

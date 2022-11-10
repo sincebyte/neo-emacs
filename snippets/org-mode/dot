@@ -5,6 +5,9 @@
 #+BEGIN_SRC DOT :file image/dotgra.svg
     digraph G {
         node [shape="box",fontcolor="0xfffff"]
+        bgcolor="transparent"
+        node [shape="box",fontcolor="#c475db"]
+        edge [color="#a69fe0"]
         rankdir = TD
          NC -> SlaughterServer1 [dir=both,minlen=2,label="ϟ"]
          NC -> SlaughterServer2 [dir=both,minlen=2,label="ϟ"]
