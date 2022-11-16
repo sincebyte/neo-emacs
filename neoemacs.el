@@ -618,6 +618,7 @@
 ;; (use-package org-appear)
 ;; (add-hook 'org-mode-hook 'org-appear-mode)
 (custom-set-faces '(lsp-face-highlight-read ((t (:background "#283747")))))
+(custom-set-faces '(tide-hl-identifier-face ((t (:background "#283747")))))
 
 (defun org-org-html--format-image (source attributes info)
   (format "<img src=\"data:image/%s+xml;base64,%s\"%s />"
