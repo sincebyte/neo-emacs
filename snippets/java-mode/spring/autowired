@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: autowired
+# key: au
+# --
+@Autowired

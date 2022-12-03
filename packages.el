@@ -126,6 +126,8 @@
 (package! ejc-sql :recipe    (:host github :repo "vanniuner/ejc-sql"         :branch "master" ))
 (package! bookmark+ :recipe  (:host github :repo "emacsmirror/bookmark-plus" :branch "master" ))
 (package! org-appear :recipe (:host github :repo "awth13/org-appear"         :branch "master" ))
+;; (package! atom-one-dark)
+;; (package! org-excalidraw :recipe (:host github :repo "wdavew/org-excalidraw"     :branch "main" ))
 ;; (package! telephone-line)
 
 

@@ -114,7 +114,7 @@
       ejc-result-table-impl                      'ejc-result-mode
       dap-auto-configure-features                '()
       gts-translate-list                         '(("en" "zh"))
-      doom-modeline-buffer-file-name-style       'file-name  )
+      doom-modeline-buffer-file-name-style       'truncate-with-project  )
 (display-time)
 (setq package-archives '(( "gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"   )
                          ( "org-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/"   )
@@ -154,43 +154,42 @@
 (add-hook 'java-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'java-mode-hook 'vimish-fold-mode)
 (add-hook 'java-mode-hook
-       (setq lsp-eldoc-enable-hover                t
-        lsp-modeline-diagnostics-enable            :file
-        lsp-enable-snippet                         nil
-        lsp-java-completion-guess-method-arguments t
-        lsp-java-format-on-type-enabled            nil
+       (setq
+        lsp-eldoc-enable-hover                     t
         lsp-java-format-comments-enabled           nil
-        lsp-completion-enable-additional-text-edit t
         lsp-java-save-actions-organize-imports     nil
         lsp-java-autobuild-enabled                 t
-        lsp-java-max-concurrent-builds             12
-        lsp-java-import-maven-enabled              t
-        lsp-java-maven-download-sources            t
-        lsp-completion-sort-initial-results        t
-        lsp-java-format-on-type-enabled            t
         lsp-inhibit-message                        t
-        lsp-java-completion-overwrite              nil
         lsp-java-completion-guess-method-arguments t
-        lsp-completion-show-kind nil
-        lsp-java-progress-reports-enabled          nil
-        lsp-modeline-code-actions-enable           nil
+        lsp-completion-show-kind                   nil
+        lsp-completion-sort-initial-results        t
         lsp-completion-show-detail                 nil
-        lsp-java-code-generation-use-blocks        t
-        lsp-java-signature-help-enabled            t
-        lsp-signature-auto-activate                nil
-        lsp-ui-sideline-show-hover                 t
-        lsp-ui-sideline-show-code-actions          nil
-        lsp-ui-sideline-enable                     t
-        lsp-headerline-breadcrumb-icons-enable     nil
-        lsp-headerline-breadcrumb-enable           nil
+        lsp-completion-enable-additional-text-edit t
+        lsp-java-progress-reports-enabled          nil
         lsp-completion-show-label-description      nil
-        lsp-modeline-diagnostics-scope             :file
-        lsp-log-io                                 nil
-        lsp-lens-enable                            t
+        lsp-modeline-diagnostics-enable            t
+        lsp-modeline-diagnostics-scope             :workspace
+        lsp-modeline-code-actions-enable           nil
+        lsp-lens-enable                            t))
+        ;; lsp-enable-snippet                         nil
+        ;; lsp-java-max-concurrent-builds             12
+        ;; lsp-java-import-maven-enabled              t
+        ;; lsp-java-maven-download-sources            t
+        ;; lsp-java-format-on-type-enabled            t
+        ;; lsp-java-completion-overwrite              t
+        ;; lsp-java-signature-help-enabled            t
+        ;; lsp-signature-auto-activate                t
+        ;; lsp-java-code-generation-use-blocks        t
+        ;; lsp-ui-sideline-show-code-actions          nil
+        ;; lsp-ui-sideline-show-hover                 t
+        ;; lsp-ui-sideline-enable                     t
+        ;; lsp-headerline-breadcrumb-icons-enable     nil
+        ;; lsp-headerline-breadcrumb-enable           nil
+        ;; lsp-log-io                                 nil
         ;; lsp--highlight-kind-face                nil
         ;; indentation-based                          nil
         ;; lsp-java-progress-string                   "loading..."
-        lsp-java-configuration-check-project-settings-exclusions t ))
+        ;; lsp-java-configuration-check-project-settings-exclusions t ))
 ;; (with-eval-after-load 'lsp-mode
 ;;         (setq lsp-modeline-diagnostics-scope :file))
 ;; (require 'lsp-java-boot)
@@ -617,8 +616,10 @@
 ;; (add-hook 'org-mode-hook 'org-fragtog-mode)
 ;; (use-package org-appear)
 ;; (add-hook 'org-mode-hook 'org-appear-mode)
-(custom-set-faces '(lsp-face-highlight-read ((t (:background "#283747")))))
+(custom-set-faces '(lsp-face-highlight-read ((t (:background "#283747" :underline nil)))))
 (custom-set-faces '(tide-hl-identifier-face ((t (:background "#283747")))))
+(custom-set-faces '(mode-line ((t (:background "#323232" :foreground "#f4f4f4" :box "#323232")))))
+;; (custom-set-faces '(tree-sitter-hl-face:method ((t (:foreground "#0bc9cf")))))
 
 (defun org-org-html--format-image (source attributes info)
   (format "<img src=\"data:image/%s+xml;base64,%s\"%s />"
@@ -629,4 +630,15 @@
         (buffer-string)))
       (file-name-nondirectory source)))
 (advice-add #'org-html--format-image :override #'org-org-html--format-image)
+(setq org-html-table-caption-above nil)
+
+;; (add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
+;; (require 'eaf)
+;; (require 'eaf-browser)
+
+(prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+
 (provide 'neoemacs)
