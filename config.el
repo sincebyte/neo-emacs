@@ -4,7 +4,6 @@
       dot-exec-path               "/opt/homebrew/bin/dot"                                  ;; dot           exec path
       pdflatex-exec-path          "/Library/TeX/texbin/pdflatex"                           ;; pdflatex      exec path
       lsp-maven-path              "~/.m2/settings.xml"                                  ;; maven setting path
-      ;; lsp-maven-path              "/Users/van/goldkinn-work/yonbip1119/settings-bip2.xml"  ;; maven setting path
       org-directory               "~/org/"                                                 ;; org           root path
       org-roam-directory          "~/org/org-roam"                                         ;; org roam      root path
       lsp-java-java-path          (concat (getenv "JAVA_HOME") "/bin/java")                ;; java11        exec path
