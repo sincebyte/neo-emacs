@@ -5,10 +5,16 @@
 
 (defun config-font-size (en-size cn-size)
   (setq doom-font (font-spec
-                   :family "Operator Mono"
+                   ;; :family "Operator Mono"
+                   ;; :family "Share Tech Mono"
+                   :family "victor Mono"
+                   ;; :family "Xanh Mono"
                    :size en-size))
   (set-face-attribute 'default nil :font
-                      (format "%s:pixelsize=%d" "Operator Mono" en-size))
+                      ;; (format "%s:pixelsize=%d" "Operator Mono" en-size))
+                      ;; (format "%s:pixelsize=%d" "Share Tech Mono" en-size))
+                      (format "%s:pixelsize=%d" "victor Mono" en-size))
+                      ;; (format "%s:pixelsize=%d" "Xanh Mono" en-size))
   (if (display-graphic-p)
       (dolist (charset '(kana han cjk-misc bopomofo))
         (set-fontset-font (frame-parameter nil 'font) charset
@@ -75,7 +81,10 @@
   (global-set-key (kbd "C-M--") 'decrease-emacs-font-size)
 
   ;; setup default english font and cjk font
-  (setq emacs-english-font "Operator Mono")
+  ;; (setq emacs-english-font "Operator Mono")
+  ;; (setq emacs-english-font "Share Tech Mono")
+  (setq emacs-english-font "victor Mono")
+  ;; (setq emacs-english-font "Xanh Mono")
   (setq emacs-cjk-font "LXGW WenKai Mono")
   ;; (setq emacs-font-size-pair '(17 . 18))
   ;; (setq emacs-font-size-pair-list '(( 17 . 18) ))
@@ -84,7 +93,6 @@
   (setq emacs-font-size-pair-list '(( 19 . 20) ))
   ;; Setup font size based on emacs-font-size-pair
   (set-font emacs-english-font emacs-cjk-font emacs-font-size-pair))
-
 
 
 (provide 'init-font)

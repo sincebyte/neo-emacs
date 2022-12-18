@@ -10,6 +10,7 @@
 (add-to-list 'exec-path          pdflatex-exec-path        )
 (add-to-list 'exec-path          rg-exec-path              )
 (add-to-list 'exec-path          node-bin-dir              )
+(add-to-list 'exec-path          "/opt/homebrew/bin//d2"   )
 
 (add-to-list 'exec-path          "/Users/van/.m2/go/bin" )
 (setq org-roam-graph-executable  dot-exec-path
@@ -57,8 +58,9 @@
 
 (setq default-frame-alist                        '((top . 40) (left . 450) (height . 39) (width . 120))
       undo-tree-history-directory-alist          '(("." . "~/.emacs.d/undo"))
-      ;; doom-font                               (font-spec :family "Sarasa Fixed SC" :size 18)
+      ;; doom-font                                  (font-spec :family "Noto Sans Mono CJK SC" :size 18)
       ;; doom-font                               (font-spec :family "courier New" :size 17)
+      ;; doom-font                                  (font-spec :family "victor Mono" :size 17)
       frame-title-format                         " "
       gc-cons-threshold                          (* 2 1000 1000)
       auto-save-visited-mode                     nil
@@ -74,6 +76,7 @@
       doom-modeline-major-mode-icon              nil
       doom-modeline-buffer-encoding              nil
       doom-neotree-enable-variable-pitch         t
+      neo-theme (if (display-graphic-p) 'icons 'arrow)
       neo-show-updir-line                        t
       frame-resize-pixelwise                     nil
       org-roam-v2-ack                            t
@@ -114,7 +117,7 @@
       ejc-result-table-impl                      'ejc-result-mode
       dap-auto-configure-features                '()
       gts-translate-list                         '(("en" "zh"))
-      doom-modeline-buffer-file-name-style       'truncate-with-project  )
+      doom-modeline-buffer-file-name-style       'file-name  )
 (display-time)
 (setq package-archives '(( "gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"   )
                          ( "org-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/"   )
@@ -395,6 +398,7 @@
 (add-hook 'ejc-sql-connected-hook
           (lambda ()
             (ejc-set-column-width-limit 150)
+            (ejc-set-fetch-size 120)
             (ejc-set-use-unicode t)))
 
 ;; git diff line in modeline
@@ -618,7 +622,7 @@
 ;; (add-hook 'org-mode-hook 'org-appear-mode)
 (custom-set-faces '(lsp-face-highlight-read ((t (:background "#283747" :underline nil)))))
 (custom-set-faces '(tide-hl-identifier-face ((t (:background "#283747")))))
-(custom-set-faces '(mode-line ((t (:background "#323232" :foreground "#f4f4f4" :box "#323232")))))
+;; (custom-set-faces '(mode-line ((t (:background "#323232" :foreground "#f4f4f4" :box "#323232")))))
 ;; (custom-set-faces '(tree-sitter-hl-face:method ((t (:foreground "#0bc9cf")))))
 
 (defun org-org-html--format-image (source attributes info)
@@ -641,4 +645,20 @@
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 
+(use-package keypression
+  :config
+  (setq keypression-use-child-frame nil
+      keypression-fade-out-delay .3
+      keypression-frame-justify 'keypression-left-justified
+      keypression-cast-command-name t
+      keypression-cast-command-name-format "%s %s"
+      keypression-combine-same-keystrokes t
+      keypression-foreground-for-dark-mode "#4eaeef"
+      keypression-background-for-dark-mode "#282c33"
+      keypression-x-offset 300
+      keypression-y-offset 90
+      keypression-font-face-attribute '(:width normal :height 150 :weight thin )))
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages '((d2 . t)))
 (provide 'neoemacs)
