@@ -13,11 +13,12 @@ fi
 java $JAVA_OPTS \
 -Xms1024m -Xmx1024m \
 -Dspring.profiles.active=local \
+-Dspring.application.name=your_app_name \
 -Dspring.cloud.nacos.config.file-extension=yml \
--Dspring.cloud.nacos.config.server-addr=121.196.58.174:8848 \
--Dspring.cloud.nacos.config.namespace=0318af8a-cd8f-4554-92ab-c4f09edcc781 \
--Dspring.cloud.nacos.discovery.server-addr=121.196.58.174:8848 \
--Dspring.cloud.nacos.discovery.namespace=0318af8a-cd8f-4554-92ab-c4f09edcc781 \
+-Dspring.cloud.nacos.config.server-addr=nacos:8848 \
+-Dspring.cloud.nacos.config.namespace=0318af8a-cd8f-4554-92ab \
+-Dspring.cloud.nacos.discovery.server-addr=nacos:8848 \
+-Dspring.cloud.nacos.discovery.namespace=0318af8a-cd8f-4554-92ab \
 -Dlogging.config=/var/pb/logback-spring.xml \
 -Dlogging.level.com.baomidou.mybatisplus=DEBUG \
 -Dmybatis-plus.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl \

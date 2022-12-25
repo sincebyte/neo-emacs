@@ -20,7 +20,7 @@
         (set-fontset-font (frame-parameter nil 'font) charset
                           (font-spec :family "LXGW WenKai Mono" :size cn-size)))))
 ;; (config-font-size 17 18)
-(config-font-size 19 20)
+(config-font-size 20 22)
 
 (defvar emacs-english-font nil
   "The font name of English.")
@@ -89,8 +89,8 @@
   ;; (setq emacs-font-size-pair '(17 . 18))
   ;; (setq emacs-font-size-pair-list '(( 17 . 18) ))
 
-  (setq emacs-font-size-pair '(19 . 20))
-  (setq emacs-font-size-pair-list '(( 19 . 20) ))
+  (setq emacs-font-size-pair '(20 . 22))
+  (setq emacs-font-size-pair-list '(( 20 . 22) ))
   ;; Setup font size based on emacs-font-size-pair
   (set-font emacs-english-font emacs-cjk-font emacs-font-size-pair))
 
