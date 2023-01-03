@@ -67,14 +67,16 @@
       auto-save-default                          nil
       neo-window-width                           70
       display-time-default-load-average          nil
-      display-time-format                        "%I:%M" ;; "%m/%d %I:%M:%S%p"
-      display-time-interval                      30
+      ;; display-time-format                        "%I:%M" ;; "%m/%d %I:%M:%S%p"
+      ;; display-time-interval                      30
       doom-modeline-height                       10
       doom-modeline-bar-width                    2
       doom-modeline-modal-icon                   nil
       doom-modeline-icon                         nil
       doom-modeline-major-mode-icon              nil
       doom-modeline-buffer-encoding              nil
+      doom-modeline-lsp nil
+      doom-modeline-modal t
       doom-neotree-enable-variable-pitch         t
       neo-theme (if (display-graphic-p) 'icons 'arrow)
       neo-show-updir-line                        t
@@ -117,8 +119,8 @@
       ejc-result-table-impl                      'ejc-result-mode
       dap-auto-configure-features                '()
       gts-translate-list                         '(("en" "zh"))
-      doom-modeline-buffer-file-name-style       'file-name  )
-(display-time)
+      doom-modeline-buffer-file-name-style       'truncate-with-project  )
+;; (display-time)
 (setq package-archives '(( "gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"   )
                          ( "org-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/"   )
                          ( "melpa"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/" )))
@@ -659,7 +661,10 @@
       keypression-y-offset 90
       keypression-font-face-attribute '(:width normal :height 150 :weight thin )))
 
-(require 'magit)
+
+;; (require 'magit)
+(use-package! magit
+  :config
 (defun my/magit--with-difftastic (buffer command)
   "Run COMMAND with GIT_EXTERNAL_DIFF=difft then show result in BUFFER."
   (let ((process-environment
@@ -757,7 +762,28 @@
    ("s" "Difftastic Show" my/magit-show-with-difftastic)])
 (transient-append-suffix 'magit-dispatch "!"
   '("#" "My Magit Cmds" my/magit-aux-commands))
+)
 
 (define-key magit-status-mode-map (kbd "#") #'my/magit-aux-commands)
+
+(require 'awesome-tray)
+
+(setq awesome-tray-git-show-status t
+      awesome-tray-date-format "%H:%M"
+      awesome-tray-file-path-truncate-dirname-levels 10
+      awesome-tray-file-path-full-dirname-levels 10
+)
+(defun my-awesome-tray-nil-info ()
+  (concat "" ""))
+(setq awesome-tray-module-alist
+  '(
+    ("file-path" . (my-awesome-tray-nil-info awesome-tray-module-file-path-face))
+    ("date" . (awesome-tray-module-date-info awesome-tray-module-date-face))
+    ("battery"   . (my-awesome-tray-nil-info awesome-tray-module-battery-face))
+    ("mode-name" . (my-awesome-tray-nil-info awesome-tray-module-battery-face))
+    ("location"  . (my-awesome-tray-nil-info awesome-tray-module-battery-face))
+    ("belong"    . (my-awesome-tray-nil-info awesome-tray-module-battery-face))
+    ))
+(awesome-tray-enable)
 
 (provide 'neoemacs)
