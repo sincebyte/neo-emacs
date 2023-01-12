@@ -229,7 +229,7 @@ Changing config in the config.el.
     +---------+----------------+----------------------------+
     | C-c C-c | ejc-execute    | execute the sql            |
     +---------+----------------+----------------------------+
-* Eredis-sql Usage
+* Eredis Usage
 ** connect setting
 *M-x* ielm
 #+begin_src lisp
