@@ -244,9 +244,9 @@ key binding C-c C-c
 (eredis-select 1)
 ;; query center-bpm:flow-list-count
 (eredis-get "center-bpm:flow-list-count")
+(eredis-org-table-from-keys '("center-bpm:flow-list-count" ))
 #+end_src
 
-#+begin_src lisp
 | Key                        | Value(s) | Type   |
 |----------------------------+----------+--------|
 | center-bpm:flow-list-count |        1 | string |
