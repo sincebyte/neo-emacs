@@ -1,0 +1,23 @@
+# -*- mode: snippet -*-
+# name: json
+# key: json
+# --
+#+BEGIN_SRC plantuml :file json-t.png
+@startjson
+<style>
+document {
+  BackGroundColor transparent
+}
+</style>
+#highlight "lastName"
+#highlight "address" / "city"
+#highlight "phoneNumbers" / "0" / "number"
+{
+  "lastName": "Smith",
+  "address": {
+    "streetAddress": "21 2nd Street",
+    "city": "New York",
+  }
+}
+@endjson
+#+END_SRC

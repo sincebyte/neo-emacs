@@ -3,6 +3,7 @@
 # key: order
 # --
 #+BEGIN_SRC plantuml :file ./image/time.svg
+skinparam backgroundColor transparent
 
 A -> B: reqest
 B -> B: handle
