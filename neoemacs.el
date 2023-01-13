@@ -74,7 +74,7 @@
       doom-modeline-modal-icon                   nil
       doom-modeline-icon                         nil
       doom-modeline-major-mode-icon              nil
-      doom-modeline-buffer-encoding              nil
+      doom-modeline-buffer-encoding              t
       doom-modeline-lsp nil
       doom-modeline-modal t
       doom-neotree-enable-variable-pitch         t
@@ -84,12 +84,12 @@
       org-roam-v2-ack                            t
       org-confirm-babel-evaluate                 nil
       evil-emacs-state-tag                       "E"
-      evil-insert-state-tag                      "I"
-      evil-motion-state-tag                      "M"
-      evil-normal-state-tag                      "N"
-      evil-operator-state-tag                    "O"
-      evil-visual-state-tag                      "V"
-      evil-replace-state-tag                     "R"
+      evil-insert-state-tag                      "INSERT"
+      evil-motion-state-tag                      "MOTION"
+      evil-normal-state-tag                      "NORMAL"
+      evil-operator-state-tag                    "OPERATOR"
+      evil-visual-state-tag                      "VISUAL"
+      evil-replace-state-tag                     "REPLACE"
       evil-want-Y-yank-to-eol                    t
       doom-modeline-continuous-word-count-modes '(java-mode)
       doom-modeline-enable-word-count            4
@@ -119,7 +119,7 @@
       ejc-result-table-impl                      'ejc-result-mode
       dap-auto-configure-features                '()
       gts-translate-list                         '(("en" "zh"))
-      doom-modeline-buffer-file-name-style       'truncate-with-project  )
+      doom-modeline-buffer-file-name-style       'file-name  )
 ;; (display-time)
 (setq package-archives '(( "gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"   )
                          ( "org-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/"   )
@@ -377,7 +377,7 @@
   (interactive)
   (gts-translate (gts-translator
                   :picker  (gts-noprompt-picker :texter (gts-current-or-selection-texter) :single t)
-                  :engines (gts-bing-engine)
+                  :engines (gts-google-rpc-engine)
                   :render  (gts-buffer-render))))
 
 
@@ -775,9 +775,15 @@
 )
 (defun my-awesome-tray-nil-info ()
   (concat "" ""))
+
+(defun projectile-project-root-single ()
+  (elt
+    (delete "" (split-string (projectile-project-root) "/" ))
+    (- (length (delete "" (split-string (projectile-project-root) "/" ))) 1)))
+
 (setq awesome-tray-module-alist
   '(
-    ("file-path" . (my-awesome-tray-nil-info awesome-tray-module-file-path-face))
+    ("file-path" . (projectile-project-root-single awesome-tray-module-file-path-face))
     ("date" . (awesome-tray-module-date-info awesome-tray-module-date-face))
     ("battery"   . (my-awesome-tray-nil-info awesome-tray-module-battery-face))
     ("mode-name" . (my-awesome-tray-nil-info awesome-tray-module-battery-face))
