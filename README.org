@@ -387,6 +387,10 @@ So the solution is change the execution file with the below shell script on MacO
     #!/usr/local/bin/fish
     /Applications/Emacs.app/Contents/MacOS/Emacs.old
 #+end_src
+** image dir
+#+begin_src shell
+ln -s ~/org/org-roam/image any_where/image
+#+end_src
 * Dependencies
 
 https://github.com/hlissner/doom-emacs/blob/master/docs/getting_started.org

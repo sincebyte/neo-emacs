@@ -627,14 +627,38 @@
 ;; (custom-set-faces '(mode-line ((t (:background "#323232" :foreground "#f4f4f4" :box "#323232")))))
 ;; (custom-set-faces '(tree-sitter-hl-face:method ((t (:foreground "#0bc9cf")))))
 
+(defun org-html--format-image-old (source attributes info)
+  "Return \"img\" tag with given SOURCE and ATTRIBUTES.
+SOURCE is a string specifying the location of the image.
+ATTRIBUTES is a plist, as returned by
+`org-export-read-attribute'.  INFO is a plist used as
+a communication channel."
+  (org-html-close-tag
+   "img"
+   (org-html--make-attribute-string
+    (org-combine-plists
+     (list :src source
+           :alt (if (string-match-p
+                     (concat "^" org-preview-latex-image-directory) source)
+                    (org-html-encode-plain-text
+                     (org-find-text-property-in-string 'org-latex-src source))
+                  (file-name-nondirectory source)))
+     (if (string= "svg" (file-name-extension source))
+         (org-combine-plists '(:class "org-svg") attributes '(:fallback nil))
+       attributes)))
+   info))
+
 (defun org-org-html--format-image (source attributes info)
-  (format "<img src=\"data:image/%s+xml;base64,%s\"%s />"
+  ;; doc
+  (if (string-match "http" source)
+    (org-html--format-image-old source attributes info)
+    (format "<img src=\"data:image/%s+xml;base64,%s\"%s />"
       (or (file-name-extension source) "")
       (base64-encode-string
        (with-temp-buffer
         (insert-file-contents-literally source)
         (buffer-string)))
-      (file-name-nondirectory source)))
+      (file-name-nondirectory source))))
 (advice-add #'org-html--format-image :override #'org-org-html--format-image)
 (setq org-html-table-caption-above nil)
 
