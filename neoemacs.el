@@ -21,7 +21,7 @@
 
 
 ;; set the alpha background
-(setq-default alpha-list '((95 100) (100 100)))
+(setq-default alpha-list '((99 100) (100 100)))
 (defun loop-alpha ()
   ;;doc
   (interactive)
