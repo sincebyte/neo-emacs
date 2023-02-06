@@ -65,7 +65,7 @@
       gc-cons-threshold                          (* 2 1000 1000)
       auto-save-visited-mode                     nil
       auto-save-default                          nil
-      neo-window-width                           70
+      neo-window-width                           30
       display-time-default-load-average          nil
       ;; display-time-format                        "%I:%M" ;; "%m/%d %I:%M:%S%p"
       ;; display-time-interval                      30
@@ -826,6 +826,22 @@ a communication channel."
   (setq org-appear-autokeywords t)
   (setq org-appear-inside-latex t)
   )
+
+(use-package shrface
+  :defer t
+  :config
+  (shrface-basic)
+  (shrface-trial)
+  (shrface-default-keybindings) ; setup default keybindings
+  (setq shrface-href-versatile t))
+
+(use-package eww
+  :defer t
+  :init
+  (add-hook 'eww-after-render-hook #'shrface-mode)
+  :config
+  (require 'shrface))
+
 
 
 (provide 'neoemacs)
