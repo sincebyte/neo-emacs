@@ -114,12 +114,15 @@
       plantuml-jar-path                          ( expand-file-name "~/.doom.d/neoemacs/plantuml.jar" )
       org-plantuml-jar-path                      ( expand-file-name "~/.doom.d/neoemacs/plantuml.jar" )
       org-id-track-globally                      t ;; M-x org-id-update-id-locations , org-roam-update-org-id-locations
+      org-html-preamble-format                   '(("en" "<div id=\"preamble\" class=\"status\"><p class=\"author\">Made with ✍ by %a</p></div>"))
       read-process-output-max                    (* 1024 1024)           ;; 1mb
       lsp-idle-delay                             0.01
       ejc-result-table-impl                      'ejc-result-mode
       dap-auto-configure-features                '()
       gts-translate-list                         '(("en" "zh"))
       doom-modeline-buffer-file-name-style       'file-name  )
+(setq )
+
 ;; (display-time)
 (setq package-archives '(( "gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"   )
                          ( "org-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/"   )
@@ -841,7 +844,6 @@ a communication channel."
   (add-hook 'eww-after-render-hook #'shrface-mode)
   :config
   (require 'shrface))
-
 
 
 (provide 'neoemacs)
