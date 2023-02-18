@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: process
+# key: process
+# --
+<select name='process sql'>
+SELECT routine_definition FROM information_schema.Routines WHERE ROUTINE_NAME='list_add'
+</select>
