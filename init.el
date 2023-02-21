@@ -82,6 +82,7 @@
        ;;grammar           ; tasing grammar mistake every you make
 
        :tools
+       tree-sitter
        ;;ansible
        ;;debugger          ; FIXME stepping through code, to help you add bugs
        ;;direnv

@@ -56,7 +56,7 @@
 ;; (use-package lsp-mode
 ;;   :hook ((lsp-mode . lsp-enable-which-key-integration)))
 
-(setq default-frame-alist                        '((top . 40) (left . 450) (height . 39) (width . 120))
+(setq default-frame-alist                        '((top . 40) (left . 250) (height . 39) (width . 100))
       undo-tree-history-directory-alist          '(("." . "~/.emacs.d/undo"))
       ;; doom-font                                  (font-spec :family "Noto Sans Mono CJK SC" :size 18)
       ;; doom-font                               (font-spec :family "courier New" :size 17)
@@ -261,7 +261,7 @@
 ;; (map! :ne "s-;"     'comment-line                              )
 (map! :ne "; w"     'save-buffer                               )
 (map! :ne "; b"     'switch-to-buffer                          )
-(map! :ne "; e"     'ace-window                                )
+;; (map! :ne "; e"     'ace-window                                )
 (map! :ne "; d"     'zygospore-toggle-delete-other-windows     )
 (map! :ve "; d"     'zygospore-toggle-delete-other-windows     )
 (map! :ne "; f"     'neotree-find                              )
@@ -298,11 +298,11 @@
 (map! :ve "; q"     'quit-window                               )
 (map! :nve "; e"    'er/expand-region                          )
 (map! :nv "; x"     'amx                                       )
-(map! :nv "SPC t 1" '+workspace/switch-to-0                    )
-(map! :nv "SPC t 2" '+workspace/switch-to-1                    )
-(map! :nv "SPC t 3" '+workspace/switch-to-2                    )
-(map! :nv "SPC t 4" '+workspace/switch-to-3                    )
-(map! :nv "SPC t 5" '+workspace/switch-to-4                    )
+(map! :nv "s-1" '+workspace/switch-to-0                    )
+(map! :nv "s-2" '+workspace/switch-to-1                    )
+(map! :nv "s-3" '+workspace/switch-to-2                    )
+(map! :nv "s-4" '+workspace/switch-to-3                    )
+(map! :nv "s-5" '+workspace/switch-to-5                    )
 (map! :ne "; r"     'string-inflection-java-style-cycle        )
 (map! :nve "; c"    'comment-line                              )
 (map! :n "C-."      'next-buffer                               )
@@ -820,7 +820,7 @@ a communication channel."
 (awesome-tray-enable)
 
 (use-package org-appear
-  :ensure t
+  ;; :ensure t
   :hook (org-mode . org-appear-mode)
   :config
   (setq org-appear-autolinks t)
@@ -845,5 +845,17 @@ a communication channel."
   :config
   (require 'shrface))
 
+(defun doom-dashboard-widget-banner ()
+ (let ((point (point)))
+   (mapc (lambda (line)
+           (insert (propertize (+doom-dashboard--center +doom-dashboard--width line)
+                               'face 'doom-dashboard-banner) " ")
+           (insert "\n"))
+  '("|¯¯\\|¯¯|/¯x¯¯\\ /¯¯¯¯¯\\ /¯x¯¯\\|¯¯\\/¯¯¯| /¯¯¯¯|/¯¯¯¯\\ /¯¯¯¯¯/ "
+    "|     '| (\\__/|| x   || (\\__/|      '|/    !||(\\__/|\\ __¯¯¯\\"
+    "|__|\\__|\\____\\ \\_____/ \\____\\|._|\\/||/__/¯|_|\\_____\\ /_____/"
+    "                                                        -v1.2.0-     "
+    "                                                                     "))))
+(defun doom-dashboard-widget-footer () (insert ""))
 
 (provide 'neoemacs)

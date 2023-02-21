@@ -261,6 +261,16 @@ key binding C-c C-c
 - https://github.com/DogLooksGood/emacs-rime supply this plugin.
 - https://github.com/rime/plum for more infomation.
 - some rime input method config at .doom.d/myconfig/rime-config.
+- 'emacs-module.h' file not found
+ #+begin_src shell
+  lib.c:23:10: fatal error: 'emacs-module.h' file not found
+    #include <emacs-module.h>
+            ^~~~~~~~~~~~~~~~
+ #+end_src
+
+ #+begin_src shell
+cp /opt/homebrew/opt/emacs-plus@29/include/emacs-module.h /Users/van/.doom.d/neoemacs/rime-macos/dist/include
+ #+end_src
 * Libvterm Usage
 - Ubuntu
     #+begin_src shell
