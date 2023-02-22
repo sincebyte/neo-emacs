@@ -1,9 +1,20 @@
-(global-disable-mouse-mode)
 (blink-cursor-mode   0             )
 (tool-bar-mode       0             )
 (menu-bar-mode       0             )
 (scroll-bar-mode     0             )
 ;; (global-undo-tree-mode)
+(defun doom-dashboard-widget-banner ()
+ (let ((point (point)))
+   (mapc (lambda (line)
+           (insert (propertize (+doom-dashboard--center +doom-dashboard--width line)
+                               'face 'doom-dashboard-banner) " ")
+           (insert "\n"))
+  '("|¯¯\\|¯¯|/¯x¯¯\\ /¯¯¯¯¯\\ /¯x¯¯\\|¯¯\\/¯¯¯| /¯¯¯¯|/¯¯¯¯\\ /¯¯¯¯¯/ "
+    "|     '| (\\__/|| x   || (\\__/|      '|/    !||(\\__/|\\ __¯¯¯\\"
+    "|__|\\__|\\____\\ \\_____/ \\____\\|._|\\/||/__/¯|_|\\_____\\ /_____/"
+    "                                                        -v1.2.0-     "
+    "                                                                     "))))
+(defun doom-dashboard-widget-footer () (insert ""))
 
 (add-to-list 'load-path          "~/.doom.d/neoemacs"      )   ;; default setting
 (add-to-list 'load-path          user-private-dir          )
@@ -18,21 +29,21 @@
       counsel-fzf-cmd            (concat fd-exec-path " --exclude={.git,.idea,.vscode,.sass-cache,node_modules,build,target,classes,out,.local,class} -c never --hidden --follow %s .")
       lsp-java-format-settings-url               (expand-file-name "~/.doom.d/neoemacs/eclipse-codestyle.xml" )
       lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path                            ))
-
+(use-package! init-benchmarking )
 
 ;; set the alpha background
-(setq-default alpha-list '((99 100) (100 100)))
-(defun loop-alpha ()
-  ;;doc
-  (interactive)
-  (let ((h (car alpha-list)))
-    ((lambda (a ab)
-       (set-frame-parameter (selected-frame) 'alpha (list a ab))
-       (add-to-list 'default-frame-alist (cons 'alpha (list a ab)))
-       ) (car h) (car (cdr h)))
-    (setq alpha-list (cdr (append alpha-list (list h))))
-    )
-)
+;; (setq-default alpha-list '((99 100) (100 100)))
+;; (defun loop-alpha ()
+;;   ;;doc
+;;   (interactive)
+;;   (let ((h (car alpha-list)))
+;;     ((lambda (a ab)
+;;        (set-frame-parameter (selected-frame) 'alpha (list a ab))
+;;        (add-to-list 'default-frame-alist (cons 'alpha (list a ab)))
+;;        ) (car h) (car (cdr h)))
+;;     (setq alpha-list (cdr (append alpha-list (list h))))
+;;     )
+;; )
 ;; (loop-alpha)
 
 (remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
@@ -53,8 +64,6 @@
 (add-hook 'ea-popup-hook 'popup-handler)
 (add-hook 'after-make-frame-functions 'my/disable-scroll-bars)
 
-;; (use-package lsp-mode
-;;   :hook ((lsp-mode . lsp-enable-which-key-integration)))
 
 (setq default-frame-alist                        '((top . 40) (left . 250) (height . 39) (width . 100))
       undo-tree-history-directory-alist          '(("." . "~/.emacs.d/undo"))
@@ -118,7 +127,6 @@
       read-process-output-max                    (* 1024 1024)           ;; 1mb
       lsp-idle-delay                             0.01
       ejc-result-table-impl                      'ejc-result-mode
-      dap-auto-configure-features                '()
       gts-translate-list                         '(("en" "zh"))
       doom-modeline-buffer-file-name-style       'file-name  )
 (setq )
@@ -127,24 +135,13 @@
 (setq package-archives '(( "gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"   )
                          ( "org-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/"   )
                          ( "melpa"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/" )))
-;; (setq configuration-layer--elpa-archives
-;;       '(("melpa-cn" . "/soft/emacs-elpa/melpa/")
-;;         ("org-cn"   . "/soft/emacs-elpa/org/")
-;;         ("gnu-cn"   . "/soft/emacs-elpa/gnu/")
-;;         ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 (package-initialize)
 (after! warnings (add-to-list 'warning-suppress-types '(yasnippet backquote-change tree-sitter)))
+(setq byte-compile-warnings '(cl-functions))
 
 ;; almost package
-(use-package! yaml-mode)
-(use-package! expand-region)
-
-;; 暂时不打开
-;; (use-package! company-tabnine
-;;   :after company
-;;   :when (featurep! :completion company)
-;;   :config
-;;   (cl-pushnew 'company-tabnine (default-value 'company-backends)))
+(use-package! yaml-mode :defer t)
+(use-package! expand-region :defer t)
 
 (setq lombok-jar-path (expand-file-name "~/.doom.d/neoemacs/lombok.jar"))
 (setq lsp-java-vmargs `(
@@ -158,7 +155,6 @@
         , "-Dosgi.locking=none"))
 (add-hook 'java-mode-hook 'lsp)
 (add-hook 'java-mode-hook 'tree-sitter-hl-mode)
-;; (add-hook 'java-mode-hook 'yascroll-bar-mode)
 (add-hook 'java-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'java-mode-hook 'vimish-fold-mode)
 (add-hook 'java-mode-hook
@@ -178,76 +174,34 @@
         lsp-modeline-diagnostics-enable            t
         lsp-modeline-diagnostics-scope             :workspace
         lsp-modeline-code-actions-enable           nil
+        lsp-enable-file-watchers                   nil
         lsp-lens-enable                            t))
-        ;; lsp-enable-snippet                         nil
-        ;; lsp-java-max-concurrent-builds             12
-        ;; lsp-java-import-maven-enabled              t
-        ;; lsp-java-maven-download-sources            t
-        ;; lsp-java-format-on-type-enabled            t
-        ;; lsp-java-completion-overwrite              t
-        ;; lsp-java-signature-help-enabled            t
-        ;; lsp-signature-auto-activate                t
-        ;; lsp-java-code-generation-use-blocks        t
-        ;; lsp-ui-sideline-show-code-actions          nil
-        ;; lsp-ui-sideline-show-hover                 t
-        ;; lsp-ui-sideline-enable                     t
-        ;; lsp-headerline-breadcrumb-icons-enable     nil
-        ;; lsp-headerline-breadcrumb-enable           nil
-        ;; lsp-log-io                                 nil
-        ;; lsp--highlight-kind-face                nil
-        ;; indentation-based                          nil
-        ;; lsp-java-progress-string                   "loading..."
-        ;; lsp-java-configuration-check-project-settings-exclusions t ))
-;; (with-eval-after-load 'lsp-mode
-;;         (setq lsp-modeline-diagnostics-scope :file))
-;; (require 'lsp-java-boot)
-;; to enable the lenses
-;; (add-hook 'lsp-mode-hook #'lsp-lens-mode)
-;; (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
-
 (setq-default indent-tabs-mode nil)
-(setq lsp-enable-file-watchers nil)
-;; (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
+
 (set-company-backend! 'prog-mode
   '(:separate company-capf company-yasnippet company-dabbrev company-ispell))
-;;(add-hook 'evil-local-mode-hook 'turn-on-undo-tree-mode)
 
-;; (use-package dap-mode
-;;   :diminish
-;;   :defer t
-;;   ;; :config (setq-local company-backends '(dap-ui-repl-company )) ;; use M-: [to enable dap-repl-company]
-;;   :hook   ((lsp-mode  . dap-mode          )
-;;            (dap-mode  . dap-ui-mode       )
-;;            (dap-mode  . dap-tooltip-mode  )
-;;            (java-mode . (lambda() (require 'dap-java      )))))
-;;
-
-(require      'disable-mouse      )
-(use-package! restclient-jq       )
-(use-package! jq-mode             )
+;; (require      'disable-mouse      )
+(use-package! restclient-jq       :defer t)
+(use-package! jq-mode             :defer t)
+(use-package! zygospore           :defer t)
+(use-package! conf-evil-clipboard :defer t)
+(use-package! string-inflection   :defer t)
+(use-package! general             :defer t)
 (use-package! go-translate        )
-(use-package! zygospore           )
-(use-package! conf-evil-clipboard )
-(use-package! string-inflection   )
-(use-package! general             )
 (use-package! init-font           )
-(use-package! yascroll)
 (use-package! ejc-sql :commands ejc-sql-mode ejc-connect :defer t )
 (defun k/sql-mode-hook () (ejc-sql-mode t))
 (add-hook 'sql-mode-hook 'k/sql-mode-hook)
-;; (add-hook 'sql-mode-hook 'yascroll-bar-mode)
 
 ;; almost key set
 (map! :nve "; g"    'evil-last-non-blank                       )
 (map! :nve "; a"    'evil-first-non-blank                      )
-;; (map! :ie "S"       'rime-force-enable                         )
 (map! :ne "m"       'evil-avy-goto-char                        )
 (map! :ne "f"       'evil-avy-goto-char                        )
 (map! :ne "SPC l"   'evil-window-right                         )
 (map! :ne "C-j"     'evil-scroll-down                          )
 (map! :ne "C-k"     'evil-scroll-up                            )
-;; (map! :ne "s-i"     'evil-goto-definition                      )
-;; (map! :ne "C-p"     'evil-scroll-up                            )
 (map! :ne "C-n"     'evil-scroll-down                          )
 (map! :ne "SPC z"   'counsel-fzf                               )
 (map! :ne "SPC v v" 'projectile-run-vterm                      )
@@ -258,20 +212,15 @@
 (map! :ne "SPC v l" 'lsp-java-assign-statement-to-local        )
 (map! :ne "M-j"     'drag-stuff-down                           )
 (map! :ne "M-k"     'drag-stuff-up                             )
-;; (map! :ne "s-;"     'comment-line                              )
 (map! :ne "; w"     'save-buffer                               )
 (map! :ne "; b"     'switch-to-buffer                          )
-;; (map! :ne "; e"     'ace-window                                )
 (map! :ne "; d"     'zygospore-toggle-delete-other-windows     )
 (map! :ve "; d"     'zygospore-toggle-delete-other-windows     )
 (map! :ne "; f"     'neotree-find                              )
 (map! :ne "; h"     'neotree-toggle                            )
 (map! :ne "; i"     'lsp-java-organize-imports                 )
-; (map! :ne "; c"     'lsp-treemacs-symbols                      )
 (map! :ne "; o"     'neotree-projectile-action                 )
 (map! :ne "SPC e r" 'neotree-goto-resources-dir                )
-;; (map! :ne "; g"     'ejc-show-last-result                      )
-;; (map! :ne "; a"     'ranger                                    )
 (map! :ne "; s"     'lsp-workspace-restart                     )
 (map! :ne "; l"     'org-toggle-narrow-to-subtree              )
 (map! :ne "; j"     '+workspace/swap-left                      )
@@ -282,16 +231,7 @@
 (map! :n "SPC e e"  'goto-result-detail                        )
 (map! :ne "; t"     'go-translate                              )
 (map! :ve "; t"     'go-translate                              )
-(map! :ne ", n"     'dap-next                                  )
-(map! :ne ", b"     'dap-breakpoint-toggle                     )
-(map! :ne ", c"     'dap-continue                              )
-(map! :ne ", r"     'dap-eval-region                           )
-(map! :ne ", a"     'dap-eval-thing-at-point                   )
-(map! :ne ", d"     'dap-debug                                 )
-(map! :ne ", u"     'dap-ui-repl                               )
-;; (map! :ne ", t"     'dap-breakpoint-condition                  )
 (map! :ne ", m"     'lsp-java-add-unimplemented-methods        )
-;; (map! :ne "s-d"     'lsp-goto-type-definition                  )
 (map! :nve ", f r"   'lsp-format-region                         )
 (map! :ne ", f b"   'lsp-format-buffer                         )
 (map! :ne "; q"     'quit-window                               )
@@ -319,7 +259,7 @@
 
 ;; 断词设置，设置以后断词更长
 ;; (defalias 'forward-evil-word 'forward-evil-symbol)
-(global-set-key "\C-xm"       'browse-url-at-point             )
+;; (global-set-key "\C-xm"       'browse-url-at-point             )
 (global-set-key (kbd "<RET>") 'evil-ret                        )
 (global-set-key (kbd "C-;"  ) 'toggle-input-method             )
 (global-set-key (kbd "C-."  ) 'next-buffer                     )
@@ -346,16 +286,9 @@
         (expand-file-name "~/")))
   default-directory d))))
 
-;; set org mode
-;; (org-babel-do-load-languages
-;;   'org-babel-load-languages
-;;   '((emacs-lisp . nil )
-;;     (org        . t   )
-;;     (plantuml   . t   )))
-
-
 ;; just install emacs first https://rime.im
 (use-package! rime
+  :defer t
   :config
   (setq rime-show-candidate 'minibuffer)
   :custom
@@ -451,6 +384,7 @@
 
 
 (use-package! websocket
+    :defer t
     :after org-roam)
 (use-package! org-roam-ui
     :after org-roam ;; or :after org
@@ -461,20 +395,7 @@
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
 (add-hook 'org-mode-hook '+org/close-all-folds)
-(add-hook 'org-mode-hook 'yascroll-bar-mode)
 ;; (add-hook 'org-mode-hook (map! :n "C-," #'previous-buffer))
-
-;; (beacon-mode 1)
-
-;; (setq minimap-minimum-width 5)
-;; (setq minimap-window-location 'right)
-;; (minimap-mode 0)
-;;(use-package! indent-guide)
-;;(setq indent-guide-char "|")
-;;(indent-guide-global-mode)
-;;(custom-set-faces '(indent-guide-face ((t (:foreground "grey43" :background "#171717")))))
-
-
 
 ;; Useful configuration
 (setq lsp-java-jdt-download-url "https://download.eclipse.org/jdtls/milestones/1.9.0/jdt-language-server-1.9.0-202203031534.tar.gz")
@@ -514,6 +435,7 @@
 (setenv "XMLLINT_INDENT" "    ")
 (use-package xml-format
   :demand t
+  :defer t
   :after nxml-mode)
 
 
@@ -572,45 +494,10 @@
   (read-only-mode 1)
   (goto-char 1)))
 
-;; (add-hook 'lsp-mode-hook 'mycompany/change-icons)
-;; (defun mycompany/change-icons ()
-;;    "change company-box icons"
-;;   (interactive)
-;;   (print "mycompany/change-icons")
-;;   (setq company-box-icons-all-the-icons
-;;         (let ((all-the-icons-scale-factor 0.8))
-;;           `((Unknown . ,(all-the-icons-material "find_in_page" :height 0.8 :v-adjust -0.15))
-;;             (Text . ,(all-the-icons-faicon "text-width" :height 0.8 :v-adjust -0.02))
-;;             (Method . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
-;;             (Function . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
-;;             (Constructor . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
-;;             (Field     . ,(all-the-icons-material "build" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-blue))
-;;             (Variable . ,(all-the-icons-octicon "tag" :height 0.85 :v-adjust 0 :face 'all-the-icons-blue))
-;;             (Class . ,(all-the-icons-material "grain" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-blue))
-;;             (Interface . ,(all-the-icons-material "toll" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-blue))
-;;             (Module . ,(all-the-icons-material "view_module" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-lblue))
-;;             (Property . ,(all-the-icons-faicon "wrench" :height 0.8 :v-adjust -0.02))
-;;             (Unit . ,(all-the-icons-material "straighten" :height 0.8 :v-adjust -0.15))
-;;             (Value . ,(all-the-icons-material "format_align_right" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-lblue))
-;;             (Enum . ,(all-the-icons-material "storage" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-orange))
-;;             (Keyword . ,(all-the-icons-octicon  "key" :height 0.8 :v-adjust 0 :face 'all-the-icons-orange))
-;;             (Snippet . ,(all-the-icons-material "format_align_center" :height 0.8 :v-adjust -0.15))
-;;             (Color . ,(all-the-icons-material "palette" :height 0.8 :v-adjust -0.15))
-;;             (File . ,(all-the-icons-faicon "file-o" :height 0.8 :v-adjust -0.02))
-;;             (Reference . ,(all-the-icons-material "collections_bookmark" :height 0.8 :v-adjust -0.15))
-;;             (Folder . ,(all-the-icons-faicon "folder-open" :height 0.8 :v-adjust -0.02))
-;;             (EnumMember . ,(all-the-icons-material "format_align_right" :height 0.8 :v-adjust -0.15))
-;;             (Constant . ,(all-the-icons-faicon "square-o" :height 0.8 :v-adjust -0.1))
-;;             (Struct . ,(all-the-icons-material "streetview" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-orange))
-;;             (Event . ,(all-the-icons-octicon "zap" :height 0.8 :v-adjust 0 :face 'all-the-icons-orange))
-;;             (Operator . ,(all-the-icons-material "control_point" :height 0.8 :v-adjust -0.15))
-;;             (TypeParameter . ,(all-the-icons-faicon "arrows" :height 0.8 :v-adjust -0.02))
-;;             (Template . ,(all-the-icons-material "format_align_left" :height 0.8 :v-adjust -0.15))
-;;             (ElispFace     . ,(all-the-icons-material "format_paint"             :face 'all-the-icons-pink))))) )
-
 (use-package recentf
   ;; :ensure nil
   ;; lazy load recentf
+  :defer t
   :init
   (add-hook 'after-init-hook #'recentf-mode)
   (setq recentf-max-saved-items 200)
@@ -619,17 +506,13 @@
   (add-to-list 'recentf-exclude "\\.emacs\\.d/\\.local/etc/workspaces/autosave"))
 
 (use-package bookmark+
+  :defer t
   :after bookmark
   :init (setq-default bookmark-save-flag 1))
-;; (use-package org-fragtog)
-;; (add-hook 'org-mode-hook 'org-fragtog-mode)
-;; (use-package org-appear)
-;; (add-hook 'org-mode-hook 'org-appear-mode)
 (custom-set-faces '(lsp-face-highlight-read ((t (:background "#283747" :underline nil)))))
 (custom-set-faces '(tide-hl-identifier-face ((t (:background "#283747")))))
-;; (custom-set-faces '(mode-line ((t (:background "#323232" :foreground "#f4f4f4" :box "#323232")))))
-;; (custom-set-faces '(tree-sitter-hl-face:method ((t (:foreground "#0bc9cf")))))
 
+;; html image base64
 (defun org-html--format-image-old (source attributes info)
   "Return \"img\" tag with given SOURCE and ATTRIBUTES.
 SOURCE is a string specifying the location of the image.
@@ -665,9 +548,6 @@ a communication channel."
 (advice-add #'org-html--format-image :override #'org-org-html--format-image)
 (setq org-html-table-caption-above nil)
 
-;; (add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
-;; (require 'eaf)
-;; (require 'eaf-browser)
 
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
@@ -675,6 +555,7 @@ a communication channel."
 (set-keyboard-coding-system 'utf-8)
 
 (use-package keypression
+  :defer t
   :config
   (setq keypression-use-child-frame nil
       keypression-fade-out-delay .3
@@ -688,126 +569,16 @@ a communication channel."
       keypression-y-offset 90
       keypression-font-face-attribute '(:width normal :height 150 :weight thin )))
 
-
-;; (require 'magit)
-(use-package! magit
+(use-package! awesome-tray
   :config
-(defun my/magit--with-difftastic (buffer command)
-  "Run COMMAND with GIT_EXTERNAL_DIFF=difft then show result in BUFFER."
-  (let ((process-environment
-         (cons (concat "GIT_EXTERNAL_DIFF=difft --width="
-                       (number-to-string (frame-width)))
-               process-environment)))
-    ;; Clear the result buffer (we might regenerate a diff, e.g., for
-    ;; the current changes in our working directory).
-    (with-current-buffer buffer
-      (setq buffer-read-only nil)
-      (erase-buffer))
-    ;; Now spawn a process calling the git COMMAND.
-    (make-process
-     :name (buffer-name buffer)
-     :buffer buffer
-     :command command
-     ;; Don't query for running processes when emacs is quit.
-     :noquery t
-     ;; Show the result buffer once the process has finished.
-     :sentinel (lambda (proc event)
-                 (when (eq (process-status proc) 'exit)
-                   (with-current-buffer (process-buffer proc)
-                     (goto-char (point-min))
-                     (ansi-color-apply-on-region (point-min) (point-max))
-                     (setq buffer-read-only t)
-                     (view-mode)
-                     (end-of-line)
-                     ;; difftastic diffs are usually 2-column side-by-side,
-                     ;; so ensure our window is wide enough.
-                     (let ((width (current-column)))
-                       (while (zerop (forward-line 1))
-                         (end-of-line)
-                         (setq width (max (current-column) width)))
-                       ;; Add column size of fringes
-                       (setq width (+ width
-                                      (fringe-columns 'left)
-                                      (fringe-columns 'right)))
-                       (goto-char (point-min))
-                       (pop-to-buffer
-                        (current-buffer)
-                        `(;; If the buffer is that wide that splitting the frame in
-                          ;; two side-by-side windows would result in less than
-                          ;; 80 columns left, ensure it's shown at the bottom.
-                          ,(when (> 80 (- (frame-width) width))
-                             #'display-buffer-at-bottom)
-                          (window-width
-                           . ,(min width (frame-width))))))))))))
-(defun my/magit-show-with-difftastic (rev)
-  "Show the result of \"git show REV\" with GIT_EXTERNAL_DIFF=difft."
-  (interactive
-   (list (or
-          ;; If REV is given, just use it.
-          (when (boundp 'rev) rev)
-          ;; If not invoked with prefix arg, try to guess the REV from
-          ;; point's position.
-          (and (not current-prefix-arg)
-               (or (magit-thing-at-point 'git-revision t)
-                   (magit-branch-or-commit-at-point)))
-          ;; Otherwise, query the user.
-          (magit-read-branch-or-commit "Revision"))))
-  (if (not rev)
-      (error "No revision specified")
-    (my/magit--with-difftastic
-     (get-buffer-create (concat "*git show difftastic " rev "*"))
-     (list "git" "--no-pager" "show" "--ext-diff" rev))))
-(defun my/magit-diff-with-difftastic (arg)
-  "Show the result of \"git diff ARG\" with GIT_EXTERNAL_DIFF=difft."
-  (interactive
-   (list (or
-          ;; If RANGE is given, just use it.
-          (when (boundp 'range) range)
-          ;; If prefix arg is given, query the user.
-          (and current-prefix-arg
-               (magit-diff-read-range-or-commit "Range"))
-          ;; Otherwise, auto-guess based on position of point, e.g., based on
-          ;; if we are in the Staged or Unstaged section.
-          (pcase (magit-diff--dwim)
-            ('unmerged (error "unmerged is not yet implemented"))
-            ('unstaged nil)
-            ('staged "--cached")
-            (`(stash . ,value) (error "stash is not yet implemented"))
-            (`(commit . ,value) (format "%s^..%s" value value))
-            ((and range (pred stringp)) range)
-            (_ (magit-diff-read-range-or-commit "Range/Commit"))))))
-  (let ((name (concat "*git diff difftastic"
-                      (if arg (concat " " arg) "")
-                      "*")))
-    (my/magit--with-difftastic
-     (get-buffer-create name)
-     `("git" "--no-pager" "diff" "--ext-diff" ,@(when arg (list arg))))))
-(transient-define-prefix my/magit-aux-commands ()
-  "My personal auxiliary magit commands."
-  ["Auxiliary commands"
-   ("d" "Difftastic Diff (dwim)" my/magit-diff-with-difftastic)
-   ("s" "Difftastic Show" my/magit-show-with-difftastic)])
-(transient-append-suffix 'magit-dispatch "!"
-  '("#" "My Magit Cmds" my/magit-aux-commands))
-)
-
-(define-key magit-status-mode-map (kbd "#") #'my/magit-aux-commands)
-
-(require 'awesome-tray)
-
-(setq awesome-tray-git-show-status t
-      awesome-tray-date-format "%H:%M"
-      awesome-tray-file-path-truncate-dirname-levels 10
-      awesome-tray-file-path-full-dirname-levels 10
-)
-(defun my-awesome-tray-nil-info ()
-  (concat "" ""))
-
+  (setq awesome-tray-git-show-status t
+        awesome-tray-date-format "%H:%M"
+        awesome-tray-file-path-truncate-dirname-levels 10
+        awesome-tray-file-path-full-dirname-levels 10))
+(defun my-awesome-tray-nil-info () (concat "" ""))
 (defun projectile-project-root-single ()
-  (elt
-    (delete "" (split-string (projectile-project-root) "/" ))
+  (elt (delete "" (split-string (projectile-project-root) "/" ))
     (- (length (delete "" (split-string (projectile-project-root) "/" ))) 1)))
-
 (setq awesome-tray-module-alist
   '(
     ("file-path" . (projectile-project-root-single awesome-tray-module-file-path-face))
@@ -815,20 +586,18 @@ a communication channel."
     ("battery"   . (my-awesome-tray-nil-info awesome-tray-module-battery-face))
     ("mode-name" . (my-awesome-tray-nil-info awesome-tray-module-battery-face))
     ("location"  . (my-awesome-tray-nil-info awesome-tray-module-battery-face))
-    ("belong"    . (my-awesome-tray-nil-info awesome-tray-module-battery-face))
-    ))
+    ("belong"    . (my-awesome-tray-nil-info awesome-tray-module-battery-face))))
 (awesome-tray-enable)
 
 (use-package org-appear
-  ;; :ensure t
+  :defer t
   :hook (org-mode . org-appear-mode)
   :config
   (setq org-appear-autolinks t)
   (setq org-appear-autosubmarkers t)
   (setq org-appear-autoentities t)
   (setq org-appear-autokeywords t)
-  (setq org-appear-inside-latex t)
-  )
+  (setq org-appear-inside-latex t))
 
 (use-package shrface
   :defer t
@@ -844,18 +613,5 @@ a communication channel."
   (add-hook 'eww-after-render-hook #'shrface-mode)
   :config
   (require 'shrface))
-
-(defun doom-dashboard-widget-banner ()
- (let ((point (point)))
-   (mapc (lambda (line)
-           (insert (propertize (+doom-dashboard--center +doom-dashboard--width line)
-                               'face 'doom-dashboard-banner) " ")
-           (insert "\n"))
-  '("|¯¯\\|¯¯|/¯x¯¯\\ /¯¯¯¯¯\\ /¯x¯¯\\|¯¯\\/¯¯¯| /¯¯¯¯|/¯¯¯¯\\ /¯¯¯¯¯/ "
-    "|     '| (\\__/|| x   || (\\__/|      '|/    !||(\\__/|\\ __¯¯¯\\"
-    "|__|\\__|\\____\\ \\_____/ \\____\\|._|\\/||/__/¯|_|\\_____\\ /_____/"
-    "                                                        -v1.2.0-     "
-    "                                                                     "))))
-(defun doom-dashboard-widget-footer () (insert ""))
 
 (provide 'neoemacs)

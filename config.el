@@ -22,7 +22,6 @@
 (add-to-list  'load-path "~/.doom.d"  )
 ;;(load-theme   'atom-one-dark        t ) ;; set theme
 (use-package! neoemacs                ) ;; neo-emacs main config
-(use-package! dap-java-config         )
 (use-package! db-work                 )
 
 (yas-global-mode 1)

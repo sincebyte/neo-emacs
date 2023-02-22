@@ -1,18 +1,3 @@
-;; (custom-set-faces '(hl-line ((t (:background "#222")))))
-(defun doom-dashboard-widget-banner ()
- (let ((point (point)))
-   (mapc (lambda (line)
-           (insert (propertize (+doom-dashboard--center +doom-dashboard--width line)
-                               'face 'doom-dashboard-banner) " ")
-           (insert "\n"))
-  '("|¯¯\\|¯¯|/¯x¯¯\\ /¯¯¯¯¯\\ /¯x¯¯\\|¯¯\\/¯¯¯| /¯¯¯¯|/¯¯¯¯\\ /¯¯¯¯¯/ "
-    "|     '| (\\__/|| x   || (\\__/|      '|/    !||(\\__/|\\ __¯¯¯\\"
-    "|__|\\__|\\____\\ \\_____/ \\____\\|._|\\/||/__/¯|_|\\_____\\ /_____/"
-    "                                                        -v1.2.0-     "
-    "                                                                     "))))
-(defun doom-dashboard-widget-footer () (insert ""))
-
-
 ;; key for marco
 (map! :ne "SPC i n" 'marco-java-new)
 (map! :ne "SPC i t" 'marco-insert-java-return)
