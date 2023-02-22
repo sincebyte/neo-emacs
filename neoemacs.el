@@ -15,14 +15,12 @@
     "                                                        -v1.2.0-     "
     "                                                                     "))))
 (defun doom-dashboard-widget-footer () (insert ""))
-
 (add-to-list 'load-path          "~/.doom.d/neoemacs"      )   ;; default setting
 (add-to-list 'load-path          user-private-dir          )
 (add-to-list 'exec-path          pdflatex-exec-path        )
 (add-to-list 'exec-path          rg-exec-path              )
 (add-to-list 'exec-path          node-bin-dir              )
 (add-to-list 'exec-path          "/opt/homebrew/bin/d2"   )
-
 (add-to-list 'exec-path          "/Users/van/.m2/go/bin" )
 (setq org-roam-graph-executable  dot-exec-path
       lsp-java-java-path         lsp-java-java-path
@@ -67,17 +65,12 @@
 
 (setq default-frame-alist                        '((top . 40) (left . 250) (height . 39) (width . 100))
       undo-tree-history-directory-alist          '(("." . "~/.emacs.d/undo"))
-      ;; doom-font                                  (font-spec :family "Noto Sans Mono CJK SC" :size 18)
-      ;; doom-font                               (font-spec :family "courier New" :size 17)
-      ;; doom-font                                  (font-spec :family "victor Mono" :size 17)
       frame-title-format                         " "
       gc-cons-threshold                          (* 2 1000 1000)
       auto-save-visited-mode                     nil
       auto-save-default                          nil
       neo-window-width                           30
       display-time-default-load-average          nil
-      ;; display-time-format                        "%I:%M" ;; "%m/%d %I:%M:%S%p"
-      ;; display-time-interval                      30
       doom-modeline-height                       10
       doom-modeline-bar-width                    2
       doom-modeline-modal-icon                   nil
@@ -232,43 +225,33 @@
 (map! :ne "; t"     'go-translate                              )
 (map! :ve "; t"     'go-translate                              )
 (map! :ne ", m"     'lsp-java-add-unimplemented-methods        )
-(map! :nve ", f r"   'lsp-format-region                         )
+(map! :nve ", f r"  'lsp-format-region                         )
 (map! :ne ", f b"   'lsp-format-buffer                         )
 (map! :ne "; q"     'quit-window                               )
 (map! :ve "; q"     'quit-window                               )
 (map! :nve "; e"    'er/expand-region                          )
 (map! :nv "; x"     'amx                                       )
-(map! :nv "s-1" '+workspace/switch-to-0                    )
-(map! :nv "s-2" '+workspace/switch-to-1                    )
-(map! :nv "s-3" '+workspace/switch-to-2                    )
-(map! :nv "s-4" '+workspace/switch-to-3                    )
-(map! :nv "s-5" '+workspace/switch-to-5                    )
+(map! :nv "s-1"     '+workspace/switch-to-0                    )
+(map! :nv "s-2"     '+workspace/switch-to-1                    )
+(map! :nv "s-3"     '+workspace/switch-to-2                    )
+(map! :nv "s-4"     '+workspace/switch-to-3                    )
+(map! :nv "s-5"     '+workspace/switch-to-5                    )
+(map! :n "K"        '+workspace/switch-left                    )
+(map! :n "L"        '+workspace/switch-right                   )
 (map! :ne "; r"     'string-inflection-java-style-cycle        )
 (map! :nve "; c"    'comment-line                              )
 (map! :n "C-."      'next-buffer                               )
 (map! :ne "SPC c u" 'lsp-java-open-super-implementation        )
 (map! :ne "SPC c l" 'lsp-java-assign-statement-to-local        )
-(map! :ne "; v"     'vc-refresh-state                         )
-(map! :ie "C-i"     'counsel-yank-pop                         )
-(map! :n "K"    '+workspace/switch-left                   )
-(map! :n "L"    '+workspace/switch-right                  )
-;; (map! :ivn "C-l"    #'+workspace/switch-right                  )
-;; (map! :ivn "C-p"    #'+workspace/switch-left                   )
-(map! :n "SPC t n"  '+workspace/new                           )
-;; (map! :vn "SPC c b" #'chrome-focus                            )
+(map! :ne "; v"     'vc-refresh-state                          )
+(map! :ie "C-i"     'counsel-yank-pop                          )
+(map! :n "SPC t n"  '+workspace/new                            )
 
 ;; 断词设置，设置以后断词更长
-;; (defalias 'forward-evil-word 'forward-evil-symbol)
-;; (global-set-key "\C-xm"       'browse-url-at-point             )
 (global-set-key (kbd "<RET>") 'evil-ret                        )
 (global-set-key (kbd "C-;"  ) 'toggle-input-method             )
 (global-set-key (kbd "C-."  ) 'next-buffer                     )
 (global-set-key (kbd "C-,"  ) 'previous-buffer                 )
-;; (global-set-key (kbd "M-i"  ) 'lsp-goto-implementation         )
-;; (global-set-key (kbd "M-o"  ) 'lsp-java-open-super-implementation)
-;; (global-set-key (kbd "M-d"  ) 'lsp-goto-type-definition        )
-;; (global-set-key (kbd "M-s"  ) 'lsp-treemacs-symbols            )
-;; (global-set-key (kbd "M-t"  ) 'lsp-treemacs-references         )
 (general-def 'insert "C-h"    'delete-backward-char            )
 (general-def 'insert vterm-mode-map "C-h" 'vterm-send-C-h      )
 (keyboard-translate ?\C-h ?\C-?)
@@ -348,9 +331,6 @@
         (let ((plus-minus (vc-git--run-command-string file "diff" "--numstat" "--")))
                 (if (and plus-minus
                 (string-match "^\\([0-9]+\\)\t\\([0-9]+\\)\t" plus-minus)) ""
-                ;; (concat
-                ;; (propertize (format "+%s," (match-string 1 plus-minus)) 'face '(:foreground "green3"))
-                ;; (propertize (format "-%s"  (match-string 2 plus-minus)) 'face '(:foreground "#50fa7b")))
                 (propertize "" 'face '(:foreground "green3" :weight bold)))) "")))
 
 ;; Define a function to connect to a server
@@ -395,14 +375,9 @@
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
 (add-hook 'org-mode-hook '+org/close-all-folds)
-;; (add-hook 'org-mode-hook (map! :n "C-," #'previous-buffer))
 
-;; Useful configuration
-(setq lsp-java-jdt-download-url "https://download.eclipse.org/jdtls/milestones/1.9.0/jdt-language-server-1.9.0-202203031534.tar.gz")
-;; (setq lsp-java-jdt-download-url "http://localhost/html/jdt-language-server-1.7.0-202112161541.tar.gz")
 
 ;; install mactex https://www.tug.org/mactex/
-;;
 (with-eval-after-load 'ox-latex
  ;; http://orgmode.org/worg/org-faq.html#using-xelatex-for-pdf-export
  ;; latexmk runs pdflatex/xelatex (whatever is specified) multiple times
@@ -509,8 +484,8 @@
   :defer t
   :after bookmark
   :init (setq-default bookmark-save-flag 1))
-(custom-set-faces '(lsp-face-highlight-read ((t (:background "#283747" :underline nil)))))
-(custom-set-faces '(tide-hl-identifier-face ((t (:background "#283747")))))
+;; (custom-set-faces '(lsp-face-highlight-read ((t (:background "#283747" :underline nil)))))
+;; (custom-set-faces '(tide-hl-identifier-face ((t (:background "#283747")))))
 
 ;; html image base64
 (defun org-html--format-image-old (source attributes info)
@@ -554,20 +529,20 @@ a communication channel."
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 
-(use-package keypression
-  :defer t
-  :config
-  (setq keypression-use-child-frame nil
-      keypression-fade-out-delay .3
-      keypression-frame-justify 'keypression-left-justified
-      keypression-cast-command-name t
-      keypression-cast-command-name-format "%s %s"
-      keypression-combine-same-keystrokes t
-      keypression-foreground-for-dark-mode "#4eaeef"
-      keypression-background-for-dark-mode "#282c33"
-      keypression-x-offset 300
-      keypression-y-offset 90
-      keypression-font-face-attribute '(:width normal :height 150 :weight thin )))
+;; (use-package keypression
+;;   :defer t
+;;   :config
+;;   (setq keypression-use-child-frame nil
+;;       keypression-fade-out-delay .3
+;;       keypression-frame-justify 'keypression-left-justified
+;;       keypression-cast-command-name t
+;;       keypression-cast-command-name-format "%s %s"
+;;       keypression-combine-same-keystrokes t
+;;       keypression-foreground-for-dark-mode "#4eaeef"
+;;       keypression-background-for-dark-mode "#282c33"
+;;       keypression-x-offset 300
+;;       keypression-y-offset 90
+;;       keypression-font-face-attribute '(:width normal :height 150 :weight thin )))
 
 (use-package! awesome-tray
   :config
@@ -606,7 +581,7 @@ a communication channel."
   (shrface-trial)
   (shrface-default-keybindings) ; setup default keybindings
   (setq shrface-href-versatile t))
-
+(use-package ob-sql-mode :ensure t)
 (use-package eww
   :defer t
   :init

@@ -9,13 +9,12 @@
       lsp-java-java-path          (concat (getenv "JAVA_HOME") "/bin/java")                ;; java11        exec path
       node-bin-dir                "~/soft/node-v16.14.0/bin"                               ;; node home
       user-private-dir            "~/org/org-roam/command/doom/config/"                    ;; user private dir
-      ;;doom-font                   (font-spec :family "等距更纱黑体 Slab SC" :size 16)    ;; font setting
       display-line-numbers-type   nil                                                      ;; show line number 'relative
       rime-user-data-dir          "~/Library/Rime/"                                        ;; rime config input method setting
       rime-librime-root           "~/.doom.d/neoemacs/rime-macos/dist"                     ;; emacs-rime/blob/master/INSTALLATION.org
       emacs-module-root           "/Applications/Emacs.app/Contents/Resources/include"     ;; emcas exec path
       rime-emacs-module-header-root "/opt/homebrew/opt/emacs-plus@29/include"              ;; for emacs rime, brew do not needed
-      lsp-java-jdt-download-url   "https://download.eclipse.org/jdtls/milestones/1.9.0/jdt-language-server-1.9.0-202203031534.tar.gz" ;; jdt-server URL,with tencent cloud speed up
+      lsp-java-jdt-download-url   "http://1.117.167.195/download/jdt-language-server-1.7.0-202112161541.tar.gz"
 )
 
 ;; default core setting
