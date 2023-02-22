@@ -2,7 +2,6 @@
 (tool-bar-mode       0             )
 (menu-bar-mode       0             )
 (scroll-bar-mode     0             )
-;; (global-undo-tree-mode)
 (defun doom-dashboard-widget-banner ()
  (let ((point (point)))
    (mapc (lambda (line)
@@ -20,8 +19,8 @@
 (add-to-list 'exec-path          pdflatex-exec-path        )
 (add-to-list 'exec-path          rg-exec-path              )
 (add-to-list 'exec-path          node-bin-dir              )
-(add-to-list 'exec-path          "/opt/homebrew/bin/d2"   )
-(add-to-list 'exec-path          "/Users/van/.m2/go/bin" )
+(add-to-list 'exec-path          "/opt/homebrew/bin/d2"    )
+(add-to-list 'exec-path          "/Users/van/.m2/go/bin"   )
 (setq org-roam-graph-executable  dot-exec-path
       lsp-java-java-path         lsp-java-java-path
       counsel-fzf-cmd            (concat fd-exec-path " --exclude={.git,.idea,.vscode,.sass-cache,node_modules,build,target,classes,out,.local,class} -c never --hidden --follow %s .")
@@ -77,8 +76,8 @@
       doom-modeline-icon                         nil
       doom-modeline-major-mode-icon              nil
       doom-modeline-buffer-encoding              t
-      doom-modeline-lsp nil
-      doom-modeline-modal t
+      doom-modeline-lsp                          nil
+      doom-modeline-modal                        t
       doom-neotree-enable-variable-pitch         t
       neo-theme (if (display-graphic-p) 'icons 'arrow)
       neo-show-updir-line                        t
@@ -122,7 +121,6 @@
       ejc-result-table-impl                      'ejc-result-mode
       gts-translate-list                         '(("en" "zh"))
       doom-modeline-buffer-file-name-style       'file-name  )
-(setq )
 
 ;; (display-time)
 (setq package-archives '(( "gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"   )
@@ -133,7 +131,9 @@
 (setq byte-compile-warnings '(cl-functions))
 
 ;; almost package
-(use-package! yaml-mode :defer t)
+
+(use-package! magit         :defer t)
+(use-package! yaml-mode     :defer t)
 (use-package! expand-region :defer t)
 
 (setq lombok-jar-path (expand-file-name "~/.doom.d/neoemacs/lombok.jar"))
@@ -484,16 +484,12 @@
   :defer t
   :after bookmark
   :init (setq-default bookmark-save-flag 1))
-;; (custom-set-faces '(lsp-face-highlight-read ((t (:background "#283747" :underline nil)))))
-;; (custom-set-faces '(tide-hl-identifier-face ((t (:background "#283747")))))
+(custom-set-faces '(lsp-face-highlight-read  ((t (:foreground "#57a6db" :background "#292C33" :underline nil)))))
+(custom-set-faces '(lsp-face-highlight-write ((t (:foreground "#57a6db" :background "#292C33" :underline nil)))))
+(custom-set-faces '(tide-hl-identifier-face  ((t (:foreground "#57a6db" :background "#292C33")))))
 
 ;; html image base64
 (defun org-html--format-image-old (source attributes info)
-  "Return \"img\" tag with given SOURCE and ATTRIBUTES.
-SOURCE is a string specifying the location of the image.
-ATTRIBUTES is a plist, as returned by
-`org-export-read-attribute'.  INFO is a plist used as
-a communication channel."
   (org-html-close-tag
    "img"
    (org-html--make-attribute-string
@@ -528,21 +524,6 @@ a communication channel."
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
-
-;; (use-package keypression
-;;   :defer t
-;;   :config
-;;   (setq keypression-use-child-frame nil
-;;       keypression-fade-out-delay .3
-;;       keypression-frame-justify 'keypression-left-justified
-;;       keypression-cast-command-name t
-;;       keypression-cast-command-name-format "%s %s"
-;;       keypression-combine-same-keystrokes t
-;;       keypression-foreground-for-dark-mode "#4eaeef"
-;;       keypression-background-for-dark-mode "#282c33"
-;;       keypression-x-offset 300
-;;       keypression-y-offset 90
-;;       keypression-font-face-attribute '(:width normal :height 150 :weight thin )))
 
 (use-package! awesome-tray
   :config
@@ -581,7 +562,7 @@ a communication channel."
   (shrface-trial)
   (shrface-default-keybindings) ; setup default keybindings
   (setq shrface-href-versatile t))
-(use-package ob-sql-mode :ensure t)
+(use-package ob-sql-mode :defer t)
 (use-package eww
   :defer t
   :init

@@ -76,6 +76,14 @@
 (package! ob-sql-mode       )
 (package! string-inflection )
 (package! tree-sitter-langs )
+
 (package! ejc-sql    :recipe (:host github :repo "vanniuner/ejc-sql"         :branch "master" ))
 (package! bookmark+  :recipe (:host github :repo "emacsmirror/bookmark-plus" :branch "master" ))
 (package! org-appear :recipe (:host github :repo "awth13/org-appear"         :branch "master" ))
+
+
+;; 禁用的包
+(package! mml           :disable t)
+(package! semantic      :disable t)
+(package! log-edit      :disable t)
+(package! browse-url    :disable t)
