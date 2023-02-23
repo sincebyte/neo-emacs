@@ -10,8 +10,8 @@
            (insert "\n"))
   '("|¯¯\\|¯¯|/¯x¯¯\\ /¯¯¯¯¯\\ /¯x¯¯\\|¯¯\\/¯¯¯| /¯¯¯¯|/¯¯¯¯\\ /¯¯¯¯¯/ "
     "|     '| (\\__/|| x   || (\\__/|      '|/    !||(\\__/|\\ __¯¯¯\\"
-    "|__|\\__|\\____\\ \\_____/ \\____\\|._|\\/||/__/¯|_|\\_____\\ /_____/"
-    "                                                        -v1.2.0-     "
+    "|__|\\__|\\____\\ \\_____/ \\____\\|._|\\/||/__/¯|_|\\____\\ /______/"
+    "                                                         v1.3.0      "
     "                                                                     "))))
 (defun doom-dashboard-widget-footer () (insert ""))
 (add-to-list 'load-path          "~/.doom.d/neoemacs"      )   ;; default setting
@@ -417,7 +417,6 @@
 ;; for ejc-sql query detail
 (defvar ejc-results-detail-buffer nil
   "The results detail buffer.")
-
 
 (defun goto-result-detail-next ()
    "goto result detail next from ejc-result-out buffer."
