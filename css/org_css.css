@@ -9,11 +9,14 @@ body {
 code {
     font-family: "Inconsolata", monospace;
     font-size: 16px;
+    padding: 0px 4px 0px;
+    color: hsla(209,68%,75%,100%);
 }
 
-p>code, li>code {
-    background-color: #eee;
-    padding: 0.25em;
+p>code, li>code, td>code {
+    background-color: hsla(212,8%,26%, 100%);;
+    outline: 1px solid hsla(222,13%,14%,100%);
+    cursor: pointer;
 }
 
 h1, h2, h3 ,h4, h5{
@@ -99,7 +102,12 @@ a[href^="http"]:after {
 #meta {
     margin-top: 2em;
 }
-
+.figure-number::after{
+    content: ' ▲ '
+}
+.table-number::after{
+    content: ' ▲'
+}
 #table-of-contents a:link,
 #table-of-contents a:visited {
     /* background: transparent; */
@@ -199,8 +207,8 @@ img {
 
 div.notice {
     position: relative;
-    margin: 0 1.2em;
     padding: 0.25em 1em;
+    margin-bottom: 1em;
     border-left: 4px solid;
 }
 
@@ -218,27 +226,46 @@ div.notice a[href^="http"]:after {
 }
 
 div.notice:before {
+    font-size: 200%;
     position: absolute;
-    top: 0;
-    right: 0;
-    padding: 0.25em 0.5em 0;
-    font-size: 60%;
-    border-bottom-left-radius: 0.5em;
+    top: 50%;
+    left: 0.3em;
+    width: 2.2em;
+    transform: translateY(-50%);
+    text-align: center;
+    text-shadow: 0 0 6px hsl(220,13%,18%,100%);
+    content: "💡";
+}
+
+div.notice p ,div.notice-info p, div.notice-warning p ,div.notice-example p{
+    padding-left: 4em;
 }
 
 .notice-warning {
-    background: #fcc;
-    color: #600;
+    background: hsla(35,47%,70%,28%);
+    color: hsla(0,0%,87%,100%);
+    position: relative;
+    padding: 0.25em 1em;
+    border-left: 4px solid hsla(35,47%,70%,100%);
+    margin-bottom: 1em;
 }
 
 .notice-example {
     background: #def;
     color: #069;
+    position: relative;
+    padding: 0.25em 1em;
+    border-left: 4px solid;
+    margin-bottom: 1em;
 }
 
 .notice-info {
-    background: #efe;
-    color: #060;
+    background: hsla(85,40%,56%,30%);
+    color: hsla(0,0%,87%,100%);
+    position: relative;
+    padding: 0.25em 1em;
+    border-left: 4px solid #060;
+    margin-bottom: 1em;
 }
 
 .notice-warning a {
@@ -254,21 +281,40 @@ div.notice:before {
 }
 
 div.notice-warning:before {
-    content: "WARNING";
-    background: #c99;
-    color: #fcc;
+    font-size: 200%;
+    position: absolute;
+    top: 50%;
+    left: 0.3em;
+    width: 2.2em;
+    transform: translateY(-50%);
+    text-align: center;
+    text-shadow: 0 0 6px hsl(220,13%,18%,100%);
+    content: "⚠️";
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Noto Emoji";
 }
 
 div.notice-example:before {
-    content: "EXAMPLE";
-    background: #abc;
-    color: #def;
+    position: absolute;
+    font-size: 200%;
+    top: 50%;
+    left: 0.3em;
+    width: 2.2em;
+    transform: translateY(-50%);
+    text-align: center;
+    text-shadow: 0 0 6px hsl(220,13%,18%,100%);
+    content: "🍐️";
 }
 
 div.notice-info:before {
-    content: "INFO";
-    background: #9c9;
-    color: #efe;
+    font-size: 200%;
+    position: absolute;
+    top: 50%;
+    left: 0.3em;
+    width: 2.2em;
+    transform: translateY(-50%);
+    text-align: center;
+    text-shadow: 0 0 6px hsl(220,13%,18%,100%);
+    content: "💡";
 }
 
 pre {
@@ -303,7 +349,7 @@ pre.src {
 	background-color: #24272E;
     padding: 0.5em;
     border-left: 4px solid hsla(222,12%,10%);
-    box-shadow: 1px 1px 1px hsla(222,12%,9%);
+    /* box-shadow: 1px 1px 1px hsla(222,12%,9%); */
 }
 
 pre.src:before {
@@ -313,7 +359,7 @@ pre.src:before {
     top: 0;
     right: 0;
     padding: 0.25em 0.5em;
-    border-bottom-left-radius: 8px;
+    /* border-bottom-left-radius: 8px; */
     border: 0;
     color: #4eaeef;
     font-size: 80%;
@@ -373,6 +419,14 @@ span.org-rainbow-delimiters-depth-4, span.org-rainbow-delimiters-depth-8 {
 
 div.figure {
     font-size: 0.85em;
+    color:hsl(286,59%,66%);
+}
+
+div.figure p:nth-child(1) {
+    margin-bottom: 0px;
+}
+div.figure p:nth-child(2) {
+    margin-top: 0px;
 }
 
 .tag {
@@ -395,7 +449,7 @@ div.figure {
     font-family: "Roboto Slab", Helvetica, Arial, sans-serif;
     font-weight: normal;
     padding: 0 0.25em;
-    border-radius: 0.2em;
+    /* border-radius: 0.2em; */
 }
 
 .todo {
@@ -440,6 +494,7 @@ div.figure {
 
     #table-of-contents h2 {
         margin-top: 0;
+        margin-left: .5em;
     }
 
     #table-of-contents code {
@@ -451,6 +506,18 @@ div.figure {
     }
 }
 
+.title {
+    font-weight: 800;
+    line-height: 1;
+    font-size: 2.3em;
+}
+
+.subtitle {
+    color: hsla(247,51%,75%,100%);
+    font-weight: 400;
+}
+
+
 @media screen and (max-width: 1024px) {
     html, body {
         font-size: 14px;
@@ -460,9 +527,6 @@ div.figure {
         display: none;
     }
 
-    h1.title {
-        margin-left: 5%;
-    }
 
     div.outline-2, #footnotes {
         margin-left: 5%;
@@ -531,6 +595,7 @@ pre.src:hover:before{
     position: fixed;
     color: hsla(204, 83%, 62%, 100%);
     line-height: .7;
+    z-index: 100;
 }
 
 blockquote:before {
@@ -545,11 +610,11 @@ blockquote:before {
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
     text-align: center;
-    text-shadow: 0 0 6px hsla(var(--bg-h), var(--bg-s), var(--bg-l), 100%);
+    text-shadow: 0 0 6px hsl(220,13%,18%,100%)
 }
 
 blockquote {
-    padding: 0.4em 1.8em;
+    padding: 0.1em 1.8em;
     background-color: hsl(204,65%,60%,30%);
     adding: 0.4em 1.8em;
     padding-left: 5.2em;
@@ -558,7 +623,8 @@ blockquote {
     line-height: 1.5;
     color: #DEDEDE;
     border: 0px solid hsl(204,65%,60%,30%);
-    box-shadow: 2px 2px 2px hsl(204,65%,60%,28%);
+    /* box-shadow: 2px 2px 2px hsl(204,65%,60%,28%); */
+    border-left: 4px solid hsl(204,65%,60%,100%);
     margin: 0em;
     margin-bottom: 1em;
     margin-top: 1em;
@@ -585,9 +651,10 @@ i {
 }
 
 caption {
-    padding: 10px;
+    padding-bottom: 20px;
     caption-side: bottom;
-    color: hsl(286,59%,66%);
+    color: hsl(286,59%,68%);;
+    text-align: left;
 }
 
 .linenr {

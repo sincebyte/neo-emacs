@@ -518,7 +518,6 @@
 (advice-add #'org-html--format-image :override #'org-org-html--format-image)
 (setq org-html-table-caption-above nil)
 
-
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)

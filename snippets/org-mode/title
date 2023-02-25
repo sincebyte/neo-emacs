@@ -3,6 +3,7 @@
 # key: tt
 # --
 #+title: `(file-name-sans-extension (buffer-name))`
+#+SUBTITLE: this is subtitle
 #+AUTHOR: vanniuner
 # #!define DARKORANGE/LIGHTORANGE/DARKBLUE/LIGHTBLUE/DARKRED/LIGHTRED/DARKGREEN/LIGHTGREEN
 # #!includeurl /Users/van/org/org-roam/C4-PlantUML/juststyle.puml
