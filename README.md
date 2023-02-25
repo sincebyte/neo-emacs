@@ -1,47 +1,47 @@
 
 # Table of Contents
 
-1.  [About](#org8dc56b5)
-2.  [How to install](#org50893fc)
-    1.  [Install emacs](#org2c4fd43)
-    2.  [Building Emacs](#orgc0c5775)
-    3.  [Clone doom-emacs](#org3349101)
-    4.  [Clone neo-emacs](#org8948238)
-    5.  [Doom Install](#orgbf531ef)
-3.  [How to update](#orgb72d5de)
-4.  [Private setting](#org1ba0f47)
-5.  [Lsp-java Usage](#org8904910)
-6.  [Dap-java Usage](#orge833a38)
-7.  [Company box customize](#org7816ce6)
-8.  [Ejc-sql Usage](#org63157ee)
-9.  [Eredis Usage](#orgd058b7b)
-    1.  [connect setting](#org37e4e3c)
-    2.  [send redis command on org mode](#org908785e)
-10. [Bookmark](#orgdf560a6)
-11. [Rime Usage](#org78d0798)
-12. [Libvterm Usage](#org13e555f)
-13. [Elpa Offline](#org80b60c4)
-14. [FZF Config](#org9085bab)
-    1.  [fish config](#org68c1541)
-    2.  [how to ignore files](#orgb379320)
-15. [Latex PDF setting](#orgb627728)
-16. [Alfred](#org3a89145)
-17. [Questions](#org2c57025)
-    1.  [install ffmpeg](#orgfbf3bf2)
-    2.  [how to install all-the-icons?](#orgda4d407)
-    3.  [how to install rime ?](#org2c26ffa)
-    4.  [how to install vterm?](#orgd2f272e)
-    5.  [lsp-springboot](#org2348820)
-    6.  [useful key setting](#org9136055)
-    7.  [why message showed could not load undo-tree history](#orgc3824a8)
-    8.  [File mode specification error: (file-missing Doing vfork No such file or directory)](#org178d59e)
-    9.  [image dir](#org83f9f5b)
-18. [Dependencies](#org69c31c0)
+1.  [About](#orgde9c21c)
+2.  [How to install](#org9fd77f7)
+    1.  [Install emacs](#org6dbd067)
+    2.  [Building Emacs](#orgcbd072c)
+    3.  [Clone doom-emacs](#org05b1f52)
+    4.  [Clone neo-emacs](#org157383a)
+    5.  [Doom Install](#org581c718)
+3.  [How to update](#orgee7b1d5)
+4.  [Private setting](#org479972f)
+5.  [Lsp-java Usage](#org0a23847)
+6.  [Dap-java Usage](#orgb07efcc)
+7.  [Company box customize](#orged908a5)
+8.  [Ejc-sql Usage](#org2445ea4)
+9.  [Eredis Usage](#org79e757d)
+    1.  [connect setting](#org5c796a5)
+    2.  [send redis command on org mode](#orgc49e341)
+10. [Bookmark](#org80a34c5)
+11. [Rime Usage](#orgb363c93)
+12. [Libvterm Usage](#org4f49a43)
+13. [Elpa Offline](#orgee734b9)
+14. [FZF Config](#org838be7b)
+    1.  [fish config](#org8caed63)
+    2.  [how to ignore files](#orgf3cef22)
+15. [Latex PDF setting](#orgdb75860)
+16. [Alfred](#orgf10241e)
+17. [Questions](#org3776aee)
+    1.  [install ffmpeg](#org73d3ffd)
+    2.  [how to install all-the-icons?](#orge043179)
+    3.  [how to install rime ?](#org0f50550)
+    4.  [how to install vterm?](#org5dc51ea)
+    5.  [lsp-springboot](#org535b5c5)
+    6.  [useful key setting](#org9891af7)
+    7.  [why message showed could not load undo-tree history](#org2397d86)
+    8.  [File mode specification error: (file-missing Doing vfork No such file or directory)](#orgde0340c)
+    9.  [image dir](#org842cf21)
+18. [Dependencies](#orgf666232)
 
-![img](./neo-emacs-1.gif)  
+![img](./image-use.png)  
 
 
-<a id="org8dc56b5"></a>
+<a id="orgde9c21c"></a>
 
 # About
 
@@ -57,12 +57,12 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   [onlinedoc](http://1.117.167.195/doc/neo-emacs.html)
 
 
-<a id="org50893fc"></a>
+<a id="org9fd77f7"></a>
 
 # How to install
 
 
-<a id="org2c4fd43"></a>
+<a id="org6dbd067"></a>
 
 ## Install emacs
 
@@ -73,7 +73,7 @@ Choose your operation system and install it.
 -   export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs, this depends on your installation path.
 
 
-<a id="orgc0c5775"></a>
+<a id="orgcbd072c"></a>
 
 ## Building Emacs
 
@@ -88,21 +88,21 @@ Choose your operation system and install it.
     9  open nextstep/Emacs.app
 
 
-<a id="org3349101"></a>
+<a id="org05b1f52"></a>
 
 ## Clone doom-emacs
 
     1  git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.emacs.d
 
 
-<a id="org8948238"></a>
+<a id="org157383a"></a>
 
 ## Clone neo-emacs
 
     git clone https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
 
-<a id="orgbf531ef"></a>
+<a id="org581c718"></a>
 
 ## Doom Install
 
@@ -122,7 +122,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     ~/.emacs.doom/bin/doom install
 
 
-<a id="orgb72d5de"></a>
+<a id="orgee7b1d5"></a>
 
 # How to update
 
@@ -132,7 +132,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     sh ~/.emacs.d/bin/doom sync
 
 
-<a id="org1ba0f47"></a>
+<a id="org479972f"></a>
 
 # Private setting
 
@@ -313,7 +313,7 @@ Changing config in the config.el.
 </table>
 
 
-<a id="org8904910"></a>
+<a id="org0a23847"></a>
 
 # Lsp-java Usage
 
@@ -447,7 +447,7 @@ Changing config in the config.el.
             (setq inferior-lisp-program "/opt/homebrew/bin//sbcl")
 
 
-<a id="orge833a38"></a>
+<a id="orgb07efcc"></a>
 
 # Dap-java Usage
 
@@ -562,7 +562,7 @@ Changing config in the config.el.
     </table>
 
 
-<a id="org7816ce6"></a>
+<a id="orged908a5"></a>
 
 # Company box customize
 
@@ -570,7 +570,7 @@ Changing config in the config.el.
 -   company-icon icon config file: ~/.emacs.d/modules/completion/company/config.el
 
 
-<a id="org63157ee"></a>
+<a id="org2445ea4"></a>
 
 # Ejc-sql Usage
 
@@ -645,12 +645,12 @@ Changing config in the config.el.
     </table>
 
 
-<a id="orgd058b7b"></a>
+<a id="org79e757d"></a>
 
 # Eredis Usage
 
 
-<a id="org37e4e3c"></a>
+<a id="org5c796a5"></a>
 
 ## connect setting
 
@@ -661,7 +661,7 @@ Changing config in the config.el.
     (eredis-auth "pwd" rp)
 
 
-<a id="org908785e"></a>
+<a id="orgc49e341"></a>
 
 ## send redis command on org mode
 
@@ -701,7 +701,7 @@ key binding C-c C-c
 </table>
 
 
-<a id="orgdf560a6"></a>
+<a id="org80a34c5"></a>
 
 # Bookmark
 
@@ -710,7 +710,7 @@ key binding C-c C-c
     (setq bookmark-default-file "~/org/org-roam/command/doom/config/bookmark")
 
 
-<a id="org78d0798"></a>
+<a id="orgb363c93"></a>
 
 # Rime Usage
 
@@ -726,7 +726,7 @@ key binding C-c C-c
         cp /opt/homebrew/opt/emacs-plus@29/include/emacs-module.h /Users/van/.doom.d/neoemacs/rime-macos/dist/include
 
 
-<a id="org13e555f"></a>
+<a id="org4f49a43"></a>
 
 # Libvterm Usage
 
@@ -793,7 +793,7 @@ key binding C-c C-c
     </table>
 
 
-<a id="org80b60c4"></a>
+<a id="orgee734b9"></a>
 
 # Elpa Offline
 
@@ -806,12 +806,12 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="org9085bab"></a>
+<a id="org838be7b"></a>
 
 # FZF Config
 
 
-<a id="org68c1541"></a>
+<a id="org8caed63"></a>
 
 ## fish config
 
@@ -829,7 +829,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
         "*.svg" . "*.puml" . "*.orgids" . "*.css" . "*.DS_Store" '
 
 
-<a id="orgb379320"></a>
+<a id="orgf3cef22"></a>
 
 ## how to ignore files
 
@@ -846,7 +846,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
         crpt
 
 
-<a id="orgb627728"></a>
+<a id="orgdb75860"></a>
 
 # Latex PDF setting
 
@@ -861,7 +861,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
 4.  [more info](https://www.sheerwill.live/posts/main/20220723211325-vanilla_emacs_with_purcell/)
 
 
-<a id="org3a89145"></a>
+<a id="orgf10241e"></a>
 
 # Alfred
 
@@ -870,19 +870,19 @@ perference -> Advanced -> Rebuild macOS Metadata.
 alfred -> reload  
 
 
-<a id="org2c57025"></a>
+<a id="org3776aee"></a>
 
 # Questions
 
 
-<a id="orgfbf3bf2"></a>
+<a id="org73d3ffd"></a>
 
 ## install ffmpeg
 
 -   brew install ffmpeg
 
 
-<a id="orgda4d407"></a>
+<a id="orge043179"></a>
 
 ## how to install all-the-icons?
 
@@ -890,7 +890,7 @@ alfred -> reload
 -   M-x all-the-icons-install-fonts
 
 
-<a id="org2c26ffa"></a>
+<a id="org0f50550"></a>
 
 ## how to install rime ?
 
@@ -899,7 +899,7 @@ alfred -> reload
 unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime  
 
 
-<a id="orgd2f272e"></a>
+<a id="org5dc51ea"></a>
 
 ## how to install vterm?
 
@@ -913,7 +913,7 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     make
 
 
-<a id="org2348820"></a>
+<a id="org535b5c5"></a>
 
 ## lsp-springboot
 
@@ -927,7 +927,7 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     jdt-language-server-latest.tar.gz -f lsp-java-server-build.pom
 
 
-<a id="org9136055"></a>
+<a id="org9891af7"></a>
 
 ## useful key setting
 
@@ -935,14 +935,14 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     ![img](key-change.png)
 
 
-<a id="orgc3824a8"></a>
+<a id="org2397d86"></a>
 
 ## why message showed could not load undo-tree history
 
     brew install watchexec
 
 
-<a id="org178d59e"></a>
+<a id="orgde0340c"></a>
 
 ## File mode specification error: (file-missing Doing vfork No such file or directory)
 
@@ -962,14 +962,14 @@ So the solution is change the execution file with the below shell script on MacO
     /Applications/Emacs.app/Contents/MacOS/Emacs.old
 
 
-<a id="org83f9f5b"></a>
+<a id="org842cf21"></a>
 
 ## image dir
 
     ln -s ~/org/org-roam/image any_where/image
 
 
-<a id="org69c31c0"></a>
+<a id="orgf666232"></a>
 
 # Dependencies
 
