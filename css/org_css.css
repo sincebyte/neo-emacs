@@ -665,3 +665,7 @@ caption {
     padding-bottom: 0px;
     line-height: 0;
 }
+
+mjx-container {
+    text-align: left !important;
+}
