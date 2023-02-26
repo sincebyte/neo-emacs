@@ -345,6 +345,9 @@ set -x FZF_DEFAULT_COMMAND  'fd --type f --hidden --follow
 Alfred repeat item
 perference -> Advanced -> Rebuild macOS Metadata.
 alfred -> reload
+* Doom org style
+A vairty of template about org mode code which one referenced the doom doc style [[http://1.117.167.195/doc/doomorgstyle.html][Preview]]
+How to use? [[https://github.com/vanniuner/doom-org-style]]
 * Questions
 ** install ffmpeg
 - brew install ffmpeg
