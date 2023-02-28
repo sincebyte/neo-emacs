@@ -348,6 +348,25 @@ alfred -> reload
 * Doom org style
 A vairty of template about org mode code which one referenced the doom doc style [[http://1.117.167.195/doc/doomorgstyle.html][Preview]]
 How to use? [[https://github.com/vanniuner/doom-org-style]]
+* Dot sketchviz
+#+begin_src shell
+    cd ~/.doom.d/neoemacs/sketchviz/sketch.js
+    npm install --save roughjs
+    npm i jsdom
+#+end_src
+
+- usage
+    #+BEGIN_SRC dotsk :file dotsk-demo.svg
+        digraph G {
+            bgcolor="transparent"
+            rankdir = LR
+            a -> b [minlen=2,label="ϟ"]
+        }
+    #+END_SRC
+
+    #+RESULTS:
+    [[file:dotsk-demo.svg]]
+
 * Questions
 ** install ffmpeg
 - brew install ffmpeg

@@ -68,7 +68,7 @@
   (let* ((out-file (cdr (or (assq :file params)
 			    (error "You need to specify a :file parameter"))))
 	 (cmdline (or (cdr (assq :cmdline params))))
-	 (cmd (or (cdr (assq :cmd params)) "node /Users/van/workspace/sketchviz/sketch.js"))
+	 (cmd (or (cdr (assq :cmd params)) (concat "node " doom-user-dir "neoemacs/sketchviz/sketch.js")))
 	 (coding-system-for-read 'utf-8) ;use utf-8 with sub-processes
 	 (coding-system-for-write 'utf-8)
 	 (in-file (org-babel-temp-file "dotsk-")))
