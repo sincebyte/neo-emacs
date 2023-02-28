@@ -76,6 +76,7 @@
 (package! ob-sql-mode       )
 (package! string-inflection )
 (package! tree-sitter-langs )
+(package! auto-complete     )
 
 ;; (package! ejc-sql    :recipe (:host github :repo "vanniuner/ejc-sql"         :branch "master" ))
 (package! bookmark+  :recipe (:host github :repo "emacsmirror/bookmark-plus" :branch "master" ))

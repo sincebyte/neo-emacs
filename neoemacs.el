@@ -184,6 +184,19 @@
 (use-package! go-translate        )
 (use-package! init-font           )
 (use-package! ejc-sql :commands ejc-sql-mode ejc-connect :defer t )
+(use-package! ejc-autocomplete :defer t)
+(use-package! auto-complete
+  :defer t
+  :config
+  (define-key ac-complete-mode-map "\C-j" 'ac-next)
+  (define-key ac-complete-mode-map "\C-k" 'ac-previous)
+  (define-key ac-complete-mode-map "\C-n" 'ac-next)
+  (define-key ac-complete-mode-map "\C-p" 'ac-previous))
+(add-hook 'ejc-sql-minor-mode-hook
+          (lambda ()
+            (auto-complete-mode t)
+            (ejc-ac-setup)))
+
 (defun k/sql-mode-hook () (ejc-sql-mode t))
 (add-hook 'sql-mode-hook 'k/sql-mode-hook)
 
@@ -222,8 +235,8 @@
 (map! :n "SPC e p"  'goto-result-detail-prev                   )
 (map! :n "SPC e n"  'goto-result-detail-next                   )
 (map! :n "SPC e e"  'goto-result-detail                        )
-(map! :ne "; t"     'go-translate                              )
-(map! :ve "; t"     'go-translate                              )
+(map! :ne "; t"     'gts-do-translate                          )
+(map! :ve "; t"     'gts-do-translate                          )
 (map! :ne ", m"     'lsp-java-add-unimplemented-methods        )
 (map! :nve ", f r"  'lsp-format-region                         )
 (map! :ne ", f b"   'lsp-format-buffer                         )
@@ -292,12 +305,12 @@
 
 
 ;; translate
-(defun go-translate ()
-  (interactive)
-  (gts-translate (gts-translator
-                  :picker  (gts-noprompt-picker :texter (gts-current-or-selection-texter) :single t)
-                  :engines (gts-google-rpc-engine)
-                  :render  (gts-buffer-render))))
+;; (defun go-translate ()
+;;   (interactive)
+;;   (gts-translate (gts-translator
+;;                   :picker  (gts-noprompt-picker :texter (gts-current-or-selection-texter) :single t)
+;;                   :engines (gts-google-rpc-engine)
+;;                   :render  (gts-buffer-render))))
 
 
 ;; ejc-connect ivy
@@ -340,29 +353,6 @@
   (erc :server "irc.libera.chat"
        :port   "6697")))
 
-;;number-region
-(defun number-region (start end)
-  (interactive "r")
-  (let* ((count 1)
-     (indent-region-function (lambda (start end)
-                   (save-excursion
-                     (setq end (copy-marker end))
-                     (goto-char start)
-                     (while (< (point) end)
-                       (or (and (bolp) (eolp))
-                       (insert (format "%d " count))
-                       (setq count (1+ count)))
-                       (forward-line 1))
-                     (move-marker end nil)))))
-    (indent-region start end)))
-
-;; goto resources
-(defun neotree-goto-resources-dir ()
-  (interactive)
-  (let ((d (locate-dominating-file default-directory "resources")))
-    (neotree-dir d)))
-
-
 (use-package! websocket
     :defer t
     :after org-roam)
@@ -376,6 +366,11 @@
           org-roam-ui-open-on-start t))
 (add-hook 'org-mode-hook '+org/close-all-folds)
 
+(with-eval-after-load 'org
+(org-babel-do-load-languages 'org-babel-load-languages
+'((dotsk    . t)
+  (plantuml . t))))
+(setq org-babel-dotsk-command "node /Users/van/workspace/sketchviz/sketch.js")
 
 ;; install mactex https://www.tug.org/mactex/
 (with-eval-after-load 'ox-latex
@@ -398,14 +393,6 @@
   (add-to-list 'org-latex-packages-alist '("" "minted"))
   (add-to-list 'org-latex-packages-alist '("" "listings"))
   (add-to-list 'org-latex-packages-alist '("" "color")))
-
-;; vterm custom setting
-(defun create-terminal-home ()
-  (interactive)
-  (+workspace/new "vterm home")
-  (+vterm/here t)
-)
-(map! :ne ", t"     'create-terminal-home                  )
 
 (setenv "XMLLINT_INDENT" "    ")
 (use-package xml-format
@@ -568,4 +555,5 @@
   :config
   (require 'shrface))
 
+(use-package dotsk :defer t)
 (provide 'neoemacs)
