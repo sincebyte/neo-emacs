@@ -14,17 +14,17 @@
     "                                                         v1.3.0      "
     "                                                                     "))))
 (defun doom-dashboard-widget-footer () (insert ""))
-(add-to-list 'load-path          "~/.doom.d/neoemacs"      )   ;; default setting
-(add-to-list 'load-path          user-private-dir          )
-(add-to-list 'exec-path          pdflatex-exec-path        )
-(add-to-list 'exec-path          rg-exec-path              )
-(add-to-list 'exec-path          node-bin-dir              )
-(add-to-list 'exec-path          "/opt/homebrew/bin/d2"    )
-(add-to-list 'exec-path          "/Users/van/.m2/go/bin"   )
+(add-to-list 'load-path          (concat doom-user-dir "neoemacs"))   ;; default setting
+(add-to-list 'load-path          user-private-dir                 )
+(add-to-list 'exec-path          pdflatex-exec-path               )
+(add-to-list 'exec-path          rg-exec-path                     )
+(add-to-list 'exec-path          node-bin-dir                     )
+(add-to-list 'exec-path          "/opt/homebrew/bin/d2"           )
+(add-to-list 'exec-path          "/Users/van/.m2/go/bin"          )
 (setq org-roam-graph-executable  dot-exec-path
       lsp-java-java-path         lsp-java-java-path
       counsel-fzf-cmd            (concat fd-exec-path " --exclude={.git,.idea,.vscode,.sass-cache,node_modules,build,target,classes,out,.local,class} -c never --hidden --follow %s .")
-      lsp-java-format-settings-url               (expand-file-name "~/.doom.d/neoemacs/eclipse-codestyle.xml" )
+      lsp-java-format-settings-url               (expand-file-name (concat doom-user-dir "neoemacs/eclipse-codestyle.xml"))
       lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path                            ))
 (use-package! init-benchmarking )
 
@@ -111,9 +111,9 @@
       neo-window-fixed-size                      nil
       treemacs--width-is-locked                  nil
       org-agenda-files                           (list (concat org-roam-directory "/agenda/GTD.org"))
-      plantuml-default-exec-mode                 ( cond ((executable-find "plantuml") 'executable     ))
-      plantuml-jar-path                          ( expand-file-name "~/.doom.d/neoemacs/plantuml.jar" )
-      org-plantuml-jar-path                      ( expand-file-name "~/.doom.d/neoemacs/plantuml.jar" )
+      plantuml-jar-path                          ( expand-file-name (concat doom-user-dir "neoemacs/plantuml.jar"))
+      plantuml-default-exec-mode                 'jar
+      lombok-jar-path                            ( expand-file-name (concat doom-user-dir "neoemacs/lombok.jar"))
       org-id-track-globally                      t ;; M-x org-id-update-id-locations , org-roam-update-org-id-locations
       org-html-preamble-format                   '(("en" "<div id=\"preamble\" class=\"status\"><p class=\"author\">Made with ✍ by %a</p></div>"))
       read-process-output-max                    (* 1024 1024)           ;; 1mb
@@ -127,7 +127,7 @@
                          ( "org-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/"   )
                          ( "melpa"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/" )))
 (package-initialize)
-(after! warnings (add-to-list 'warning-suppress-types '(yasnippet backquote-change tree-sitter)))
+(after! warnings (add-to-list 'warning-suppress-types '(yasnippet backquote-change tree-sitter org org-loaddefs)))
 (setq byte-compile-warnings '(cl-functions))
 
 ;; almost package
@@ -136,7 +136,6 @@
 (use-package! yaml-mode     :defer t)
 (use-package! expand-region :defer t)
 
-(setq lombok-jar-path (expand-file-name "~/.doom.d/neoemacs/lombok.jar"))
 (setq lsp-java-vmargs `(
         , (concat "-javaagent:" lombok-jar-path)
         , "-XX:+UseParallelGC"
@@ -288,7 +287,6 @@
   :config
   (setq rime-show-candidate 'minibuffer)
   :custom
-  ;; (rime-librime-root "~/.emacs.d/librime/dist")
   (rime-emacs-module-header-root emacs-module-root)
   (default-input-method "rime"))
 (setq mode-line-mule-info   '((:eval (rime-lighter)))
@@ -325,9 +323,6 @@
               :keymap    ivy-minibuffer-map
               :preselect (car conn-list-sorted)
               :action    #'ejc-connect)))
-
-
-;; (add-hook 'evil--jump-hook (lambda () (recenter-top-bottom)))
 
 (add-hook 'ejc-sql-connected-hook
           (lambda ()
@@ -366,12 +361,6 @@
           org-roam-ui-open-on-start t))
 (add-hook 'org-mode-hook '+org/close-all-folds)
 
-(with-eval-after-load 'org
-(org-babel-do-load-languages 'org-babel-load-languages
-'((dotsk    . t)
-  (plantuml . t))))
-(setq org-babel-dotsk-command "node /Users/van/workspace/sketchviz/sketch.js")
-
 ;; install mactex https://www.tug.org/mactex/
 (with-eval-after-load 'ox-latex
  ;; http://orgmode.org/worg/org-faq.html#using-xelatex-for-pdf-export
@@ -399,61 +388,6 @@
   :demand t
   :defer t
   :after nxml-mode)
-
-
-;; for ejc-sql query detail
-(defvar ejc-results-detail-buffer nil
-  "The results detail buffer.")
-
-(defun goto-result-detail-next ()
-   "goto result detail next from ejc-result-out buffer."
-  (interactive)
-  (switch-to-buffer ejc-results-buffer-name)
-  (forward-line 1)
-  (goto-result-detail)
-)
-
-(defun goto-result-detail-prev ()
-   "goto result detail prev from ejc-result-out buffer."
-  (interactive)
-  (switch-to-buffer ejc-results-buffer-name)
-  (forward-line -1)
-  (goto-result-detail)
-)
-
-(defun goto-result-detail ()
-   "goto result detail use current line."
-  (interactive)
-  (let ((list-data (split-string (buffer-substring-no-properties (line-beginning-position) (line-end-position)) " | " ))
-        (max-head-length 0)
-        (c-point (point))
-        (list-head (split-string
-                    (buffer-substring-no-properties
-                     1 (search-backward "\n" nil t (- (string-to-number(elt (split-string (what-line) " ") 1 )) 1 ) )) " | ")) )
-    (goto-char c-point)
-  (when (not (and ejc-results-detail-buffer (buffer-live-p ejc-results-detail-buffer)))
-    (setq ejc-results-detail-buffer (get-buffer-create "*ejc-results-detail-buffer*"))
-  (with-current-buffer ejc-results-detail-buffer (ejc-result-mode)))
-  ;; (print (string-to-number(elt (split-string (what-line) " ") 1 )))
-  ;; (print (search-backward "\n" nil t (- (string-to-number(elt (split-string (what-line) " ") 1 )) 1 ) ))
-  (switch-to-buffer ejc-results-detail-buffer)
-  (read-only-mode -1)
-  (erase-buffer)
-  (cl-loop
-   for element in list-head
-   do
-   (setq element (string-trim element))
-   (if (< max-head-length (length element))
-          (setq max-head-length (length element))))
-  (cl-loop
-    for i from 0 to (- (length list-head) 1)
-    do (with-current-buffer ejc-results-detail-buffer (insert
-        (string-trim (elt list-head i))
-        (string-join (make-list (- max-head-length (length (string-trim (elt list-head i))) ) " ") "")
-        "  | " (elt list-data i) "\n"))
-   )
-  (read-only-mode 1)
-  (goto-char 1)))
 
 (use-package recentf
   ;; :ensure nil
