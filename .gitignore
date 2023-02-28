@@ -3,4 +3,3 @@ logs/
 .DS_Store
 .local
 custom.el
-dotsk-demo.svg
