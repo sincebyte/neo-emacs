@@ -183,18 +183,18 @@
 (use-package! go-translate        )
 (use-package! init-font           )
 (use-package! ejc-sql :commands ejc-sql-mode ejc-connect :defer t )
-(use-package! ejc-autocomplete :defer t)
-(use-package! auto-complete
-  :defer t
-  :config
-  (define-key ac-complete-mode-map "\C-j" 'ac-next)
-  (define-key ac-complete-mode-map "\C-k" 'ac-previous)
-  (define-key ac-complete-mode-map "\C-n" 'ac-next)
-  (define-key ac-complete-mode-map "\C-p" 'ac-previous))
-(add-hook 'ejc-sql-minor-mode-hook
-          (lambda ()
-            (auto-complete-mode t)
-            (ejc-ac-setup)))
+;; (use-package! ejc-autocomplete :defer t)
+;; (use-package! auto-complete
+;;   :defer t
+;;   :config
+;;   (define-key ac-complete-mode-map "\C-j" 'ac-next)
+;;   (define-key ac-complete-mode-map "\C-k" 'ac-previous)
+;;   (define-key ac-complete-mode-map "\C-n" 'ac-next)
+;;   (define-key ac-complete-mode-map "\C-p" 'ac-previous))
+;; (add-hook 'ejc-sql-minor-mode-hook
+;;           (lambda ()
+;;             (auto-complete-mode t)
+;;             (ejc-ac-setup)))
 
 (defun k/sql-mode-hook () (ejc-sql-mode t))
 (add-hook 'sql-mode-hook 'k/sql-mode-hook)
@@ -490,4 +490,10 @@
   (require 'shrface))
 
 (use-package dotsk :defer t)
+
+(setq org-html-mathjax-options
+  '((path "https://cdn.bootcss.com/mathjax/3.0.5/es5/tex-mml-chtml.js")))
+
+(use-package doctor-chatgpt )
+(setq doctor-chatgpt-revchatgpt-version "v1")
 (provide 'neoemacs)
