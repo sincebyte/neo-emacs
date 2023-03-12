@@ -8,7 +8,7 @@
       org-roam-directory             "~/org/org-roam"                                         ;; org roam      root path
       lsp-java-java-path             (concat (getenv "JAVA_HOME") "/bin/java")                ;; java11        exec path
       node-bin-dir                   "~/soft/node-v16.14.0/bin"                               ;; node home
-      user-private-dir               "~/org/org-roam/command/doom/config/"                    ;; user private dir
+      user-private-dir               "~/org/org-roam/emacs/command/doom/config/"                    ;; user private dir
       display-line-numbers-type      nil                                                      ;; show line number 'relative
       rime-user-data-dir             "~/Library/Rime/"                                        ;; rime config input method setting
       rime-librime-root              (concat doom-user-dir "neoemacs/rime-macos/dist")        ;; emacs-rime/blob/master/INSTALLATION.org
