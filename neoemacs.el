@@ -64,6 +64,7 @@
 
 (setq default-frame-alist                        '((top . 40) (left . 250) (height . 39) (width . 100))
       undo-tree-history-directory-alist          '(("." . "~/.emacs.d/undo"))
+      dired-dwim-target t
       frame-title-format                         " "
       gc-cons-threshold                          (* 2 1000 1000)
       auto-save-visited-mode                     nil
@@ -473,7 +474,11 @@
   (setq org-appear-autoentities t)
   (setq org-appear-autokeywords t)
   (setq org-appear-inside-latex t))
-
+(setq org-roam-capture-templates
+'(("d" "default" plain "%?"
+        :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+subtitle: \n#+author: vanniuner\n#+SETUPFILE: ~/.doom.d/org-head.setup")
+        :unnarrowed t)
+))
 (use-package shrface
   :defer t
   :config
