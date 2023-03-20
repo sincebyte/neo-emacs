@@ -170,6 +170,15 @@
         lsp-enable-file-watchers                   nil
         lsp-lens-enable                            t))
 (setq-default indent-tabs-mode nil)
+;; (use-package! lsp-java-boot
+;;   :after lsp-mode
+;;   :preface
+;;   ;; (add-hook 'conf-javaprop-mode-local-vars-hook #'lsp!)
+;;   ;; (add-hook 'yaml-mode-local-vars-hook #'lsp!)
+;;   :config
+;;    ;; to enable the lenses
+;;    (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode))
+
 
 (set-company-backend! 'prog-mode
   '(:separate company-capf company-yasnippet company-dabbrev company-ispell))
@@ -404,7 +413,8 @@
 (use-package bookmark+
   :defer t
   :after bookmark
-  :init (setq-default bookmark-save-flag 1))
+  :init (setq-default bookmark-save-flag 1)
+        (setq bookmark-default-file (concat org-roam-directory "/emacs/command/doom/config/bookmark")))
 (custom-set-faces '(lsp-face-highlight-read  ((t (:foreground "#57a6db" :background "#292C33" :underline nil)))))
 (custom-set-faces '(lsp-face-highlight-write ((t (:foreground "#57a6db" :background "#292C33" :underline nil)))))
 (custom-set-faces '(tide-hl-identifier-face  ((t (:foreground "#57a6db" :background "#292C33")))))

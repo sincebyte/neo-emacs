@@ -89,3 +89,5 @@
 (package! log-edit      :disable t)
 (package! browse-url    :disable t)
 (package! dap-java      :disable t)
+
+(unpin! lsp-mode lsp-java)
