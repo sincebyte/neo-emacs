@@ -69,7 +69,7 @@
       gc-cons-threshold                          (* 2 1000 1000)
       auto-save-visited-mode                     nil
       auto-save-default                          nil
-      neo-window-width                           30
+      neo-window-width                           60
       display-time-default-load-average          nil
       doom-modeline-height                       10
       doom-modeline-bar-width                    2
@@ -268,6 +268,7 @@
 (map! :ne "; v"     'vc-refresh-state                          )
 (map! :ie "C-i"     'counsel-yank-pop                          )
 (map! :n "SPC t n"  '+workspace/new                            )
+(map! :n "SPC r r"  'quickrun-shell                            )
 
 ;; 断词设置，设置以后断词更长
 (global-set-key (kbd "<RET>") 'evil-ret                        )
@@ -463,8 +464,10 @@
         awesome-tray-file-path-full-dirname-levels 10))
 (defun my-awesome-tray-nil-info () (concat "" ""))
 (defun projectile-project-root-single ()
-  (elt (delete "" (split-string (projectile-project-root) "/" ))
-    (- (length (delete "" (split-string (projectile-project-root) "/" ))) 1)))
+    (if (> (length (delete "" (split-string (projectile-project-root) "/" ))) 3)
+        (string-join (nthcdr 3 (delete "" (split-string (projectile-project-root) "/" ))) "/")
+            (elt (delete "" (split-string (projectile-project-root) "/" ))
+            (- (length (delete "" (split-string (projectile-project-root) "/" ))) 1))))
 (setq awesome-tray-module-alist
   '(
     ("file-path" . (projectile-project-root-single awesome-tray-module-file-path-face))
