@@ -26,6 +26,7 @@
       counsel-fzf-cmd            (concat fd-exec-path " --exclude={.git,.idea,.vscode,.sass-cache,node_modules,build,target,classes,out,.local,class} -c never --hidden --follow %s .")
       lsp-java-format-settings-url               (expand-file-name (concat doom-user-dir "neoemacs/eclipse-codestyle.xml"))
       lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path                            ))
+;; (setq lsp-java-vmargs '((concat "-javaagent:" (concat doom-user-dir "neoemacs/lombok.jar"))))
 (use-package! init-benchmarking )
 
 ;; set the alpha background
@@ -137,15 +138,7 @@
 (use-package! yaml-mode     :defer t)
 (use-package! expand-region :defer t)
 
-(setq lsp-java-vmargs `(
-        , (concat "-javaagent:" lombok-jar-path)
-        , "-XX:+UseParallelGC"
-        , "-XX:GCTimeRatio=4"
-        , "-XX:AdaptiveSizePolicyWeight=90"
-        , "-Dsun.zip.disableMemoryMapping=true"
-        , "-Xmx2G"
-        , "-Xms500m"
-        , "-Dosgi.locking=none"))
+
 (add-hook 'java-mode-hook 'lsp)
 (add-hook 'java-mode-hook 'tree-sitter-hl-mode)
 (add-hook 'java-mode-hook 'rainbow-delimiters-mode)

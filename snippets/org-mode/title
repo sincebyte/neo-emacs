@@ -5,10 +5,4 @@
 #+title: `(file-name-sans-extension (buffer-name))`
 #+subtitle: this is subtitle
 #+author: vanniuner
-#+HTML_HEAD: <script src  = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-#+HTML_HEAD: <script src  = "https://emacs-1308440781.cos.ap-chengdu.myqcloud.com/scroll.js"></script>
-#+HTML_HEAD: <link   href = "https://emacs-1308440781.cos.ap-chengdu.myqcloud.com/org_css.css" rel="stylesheet" type="text/css"></link>
-#+OPTIONS: prop:nil timestamp:t \n:t ^:nil f:t toc:t author:t num:t H:2
-#+LATEX_COMPILER: xelatex
-#+LATEX_CLASS: elegantpaper
-#+latex:\newpage
+#+SETUPFILE: ~/.doom.d/org-head.setup
