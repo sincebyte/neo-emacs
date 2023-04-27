@@ -122,7 +122,7 @@
       lsp-idle-delay                             0.01
       ejc-result-table-impl                      'ejc-result-mode
       gts-translate-list                         '(("en" "zh"))
-      doom-modeline-buffer-file-name-style       'truncate-all  )
+      doom-modeline-buffer-file-name-style       'buffer-name  )
 
 ;; (display-time)
 (setq package-archives '(( "gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"   )
