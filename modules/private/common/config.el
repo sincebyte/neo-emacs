@@ -1,21 +1,74 @@
-;; key for marco
-(map! :ne "SPC i n" 'marco-java-new)
-(map! :ne "SPC i t" 'marco-insert-java-return)
-(map! :ne "SPC d d" 'kill-other-buffer)
-(map! :ne "SPC d q" 'ejc-table-queryvis)
+;;; private/common/config.el -*- lexical-binding: t; -*-
+(blink-cursor-mode   0             )
+(tool-bar-mode       0             )
+(menu-bar-mode       0             )
+(scroll-bar-mode     0             )
+
+;; gc setting
+(defmacro k-time (&rest body) `(let ((time (current-time))) ,@body (float-time (time-since time))))
+(defvar k-gc-timer (run-with-idle-timer 15 t 'garbage-collect  ))
 
 (defun kill-other-buffer ()
   (interactive)
   (dolist (buffer (delq (current-buffer) (buffer-list))) (kill-buffer buffer)))
 
-;; java new 对象，使用方法在，光标位于某类开始
-(fset 'marco-java-new
-   [?b ?v ?e ?y ?A ?  escape escape ?p ?\; ?r ?A ?  ?= ?  ?n ?e ?w ?  escape escape ?p ?a ?\( ?\) ?\; escape escape ?\; ?w])
+(defun doom-dashboard-widget-banner ()
+  "For neoemacs ascii logo."
+ (let ((point (point)))
+   (mapc (lambda (line)
+           (insert (propertize (+doom-dashboard--center +doom-dashboard--width line)
+                               'face 'doom-dashboard-banner) " ")
+           (insert "\n"))
+  '("|¯¯\\|¯¯|/¯x¯¯\\ /¯¯¯¯¯\\ /¯x¯¯\\|¯¯\\/¯¯¯| /¯¯¯¯|/¯¯¯¯\\ /¯¯¯¯¯/ "
+    "|     '| (\\__/|| x   || (\\__/|      '|/    !||(\\__/|\\ __¯¯¯\\"
+    "|__|\\__|\\____\\ \\_____/ \\____\\|._|\\/||/__/¯|_|\\____\\ /______/"
+    "                                                         v1.3.1      "
+    "                                                                     "))))
+(defun doom-dashboard-widget-footer () "For empty element." (insert ""))
 
-;; 补全java函数返回的结果，使用方法：在lsp-java模式下将光标位于函数开始（此宏兼容性欠佳）
-(fset 'marco-insert-java-return
-   (kmacro-lambda-form [?\s-i ?v ?F ?  ?f escape ?w ?v ?e ?y ?\s-, ?0 ?P ?a ?  ?\s-v ?  ?= ?  escape ?b ?b ?V ?, ?f ?r escape ?\; ?r ?b] 0 "%d"))
+(setq org-html-mathjax-options
+  '((path "https://cdn.bootcss.com/mathjax/3.0.5/es5/tex-mml-chtml.js")))
 
-;; 获取表格的queryvis, 使用方法：在ejc-sql模式下光标移动至表名上
-(fset 'ejc-table-queryvis
-   (kmacro-lambda-form [?\s-x ?e ?j ?c ?- ?d ?e ?s ?c ?r ?i ?b ?e ?- ?t ?a ?b ?l ?e return return ?  ?w ?l ?  ?t ?r ?j ?j ?j ?j ?V ?G ?: ?s ?/ ?| ?. ?+ ?\\ ?n ?/ ?  ?/ ?g left left backspace ?, return ?V ?: ?s ?/ ?\\ ?s ?+ ?/ ?  ?/ ?g return ?i ?\( escape ?$ ?a ?\C-? ?\C-? ?\) escape ?0 ?k ?k ?k ?k ?w ?w ?v ?e ?y ?j ?j ?j ?j ?0 ?P ?0 ?V ?y ?  ?w ?h ?o ?\s-v escape ?\; ?w ?k ?\; ?d] 0 "%d"))
+(remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
+(custom-set-variables '(x-select-enable-clipboard t))
+
+(set-default 'truncate-lines nil  )
+(setq-default treemacs-width 175  )
+
+
+(defun my/disable-scroll-bars (frame)
+  (modify-frame-parameters frame
+                           '((vertical-scroll-bars . nil)
+                             (horizontal-scroll-bars . nil))))
+(defun popup-handler (app-name window-title x y w h)
+  (set-frame-position (selected-frame) (+ x 800) (+ y (+ h 600)))
+  (unless (zerop w)
+    (set-frame-size (selected-frame) 800 200 t))
+)
+;; Hook your function
+(add-hook 'ea-popup-hook 'popup-handler)
+(add-hook 'after-make-frame-functions 'my/disable-scroll-bars)
+
+;; set the alpha background
+;; (setq-default alpha-list '((99 100) (100 100)))
+;; (defun loop-alpha ()
+;;   ;;doc
+;;   (interactive)
+;;   (let ((h (car alpha-list)))
+;;     ((lambda (a ab)
+;;        (set-frame-parameter (selected-frame) 'alpha (list a ab))
+;;        (add-to-list 'default-frame-alist (cons 'alpha (list a ab)))
+;;        ) (car h) (car (cdr h)))
+;;     (setq alpha-list (cdr (append alpha-list (list h))))
+;;     )
+;; )
+;; (loop-alpha)
+
+(prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+
+(custom-set-faces '(lsp-face-highlight-read  ((t (:foreground "#57a6db" :background "#292C33" :underline nil)))))
+(custom-set-faces '(lsp-face-highlight-write ((t (:foreground "#57a6db" :background "#292C33" :underline nil)))))
+(custom-set-faces '(tide-hl-identifier-face  ((t (:foreground "#57a6db" :background "#292C33")))))
