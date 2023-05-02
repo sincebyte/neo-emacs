@@ -72,3 +72,23 @@
 (custom-set-faces '(lsp-face-highlight-read  ((t (:foreground "#57a6db" :background "#292C33" :underline nil)))))
 (custom-set-faces '(lsp-face-highlight-write ((t (:foreground "#57a6db" :background "#292C33" :underline nil)))))
 (custom-set-faces '(tide-hl-identifier-face  ((t (:foreground "#57a6db" :background "#292C33")))))
+
+;; neotree setting
+(setq neo-show-updir-line t
+      neo-show-hidden-files nil
+      neo-hidden-regexp-list
+        '(;; vcs folders
+          "^\\.\\(?:git\\|hg\\|svn\\)$"
+          ;; eclipse
+          "\\.\\(settings\\|classpath\\|factorypath\\)$"
+          ;; store
+          "^\\.DS_Store$"
+          ;; compiled files
+          "\\.\\(?:pyc\\|o\\|elc\\|lock\\|css.map\\|class\\)$"
+          ;; generated files, caches or local pkgs
+          "^\\(?:node_modules\\|vendor\\|.\\(project\\|cask\\|yardoc\\|sass-cache\\)\\)$"
+          ;; org-mode folders
+          "^\\.\\(?:sync\\|export\\|attach\\)$"
+          ;; temp files
+          "~$"
+          "^#.*#$"))

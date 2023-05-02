@@ -18,7 +18,7 @@
 )
 
 ;; default core setting
-(add-to-list 'load-path doom-user-dir  )
+(add-to-list 'load-path          doom-user-dir  )
 (add-to-list 'load-path          (concat doom-user-dir "neoemacs"))   ;; default setting
 (add-to-list 'load-path          user-private-dir                 )
 (add-to-list 'exec-path          pdflatex-exec-path               )
@@ -39,7 +39,9 @@
       gc-cons-threshold                          (* 2 1000 1000)
       auto-save-visited-mode                     nil
       auto-save-default                          nil
-      neo-window-width                           60
+      neo-window-width                           35
+      ;; neo-theme (if (display-graphic-p) 'icons 'arrow)
+      treemacs--width-is-locked                  nil
       display-time-default-load-average          nil
       doom-modeline-height                       10
       doom-modeline-bar-width                    2
@@ -49,12 +51,10 @@
       doom-modeline-buffer-encoding              t
       doom-modeline-lsp                          nil
       doom-modeline-modal                        t
+      doom-modeline-vcs-max-length               200
+      doom-modeline-buffer-file-name-style       'buffer-name
       doom-neotree-enable-variable-pitch         t
-      neo-theme (if (display-graphic-p) 'icons 'arrow)
-      neo-show-updir-line                        t
       frame-resize-pixelwise                     nil
-      org-roam-v2-ack                            t
-      org-confirm-babel-evaluate                 nil
       evil-emacs-state-tag                       "E"
       evil-insert-state-tag                      "INSERT"
       evil-motion-state-tag                      "MOTION"
@@ -76,15 +76,15 @@
       company-dabbrev-ignore-case                nil
       company-tooltip-flip-when-above            t
       company-show-quick-access                  nil
-      org-image-actual-width                     '(300)
-      doom-modeline-vcs-max-length               200
       vterm-kill-buffer-on-exit                  t
       neo-window-fixed-size                      nil
-      treemacs--width-is-locked                  nil
-      org-agenda-files                           (list (concat org-roam-directory "/agenda/GTD.org"))
       plantuml-jar-path                          ( expand-file-name (concat doom-user-dir "neoemacs/plantuml.jar"))
       plantuml-default-exec-mode                 'jar
       lombok-jar-path                            ( expand-file-name (concat doom-user-dir "neoemacs/lombok.jar"))
+      org-confirm-babel-evaluate                 nil
+      org-roam-v2-ack                            t
+      org-agenda-files                           (list (concat org-roam-directory "/agenda/GTD.org"))
+      org-image-actual-width                     '(300)
       org-id-track-globally                      t ;; M-x org-id-update-id-locations , org-roam-update-org-id-locations
       org-html-preamble-format                   '(("en" "<div id=\"preamble\" class=\"status\"><p class=\"author\">Made with ✍ by %a</p></div>"))
       org-roam-capture-templates                 '(("d" "default" plain "%?"
@@ -92,10 +92,8 @@
                                   :unnarrowed t))
       org-html-table-caption-above               nil
       read-process-output-max                    (* 1024 1024)           ;; 1mb
-      lsp-idle-delay                             0.01
       ejc-result-table-impl                      'ejc-result-mode
-      gts-translate-list                         '(("en" "zh"))
-      doom-modeline-buffer-file-name-style       'buffer-name  )
+      gts-translate-list                         '(("en" "zh")))
 
 ;; (display-time)
 (setq package-archives '(( "gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"   )
@@ -106,12 +104,14 @@
 (setq byte-compile-warnings '(cl-functions))
 
 ;; almost package
-(use-package! db-work               )
-(use-package! magit         :defer t)
-(use-package! yaml-mode     :defer t)
-(use-package! expand-region :defer t)
-(use-package! init-benchmarking )
 ;; (require      'disable-mouse      )
+(use-package! go-translate                )
+(use-package! init-font                   )
+(use-package! init-benchmarking           )
+(use-package! db-work                     )
+(use-package! magit               :defer t)
+(use-package! yaml-mode           :defer t)
+(use-package! expand-region       :defer t)
 (use-package! restclient-jq       :defer t)
 (use-package! jq-mode             :defer t)
 (use-package! zygospore           :defer t)
@@ -120,16 +120,16 @@
 (use-package! general             :defer t)
 (use-package! dotsk               :defer t)
 (use-package! ob-sql-mode         :defer t)
-(use-package! go-translate        )
-(use-package! init-font           )
-(use-package! ejc-sql :commands ejc-sql-mode ejc-connect :defer t )
+(use-package! ejc-sql             :defer t
+  :commands ejc-sql-mode ejc-connect      )
 
-(add-hook 'java-mode-hook 'lsp)
-(add-hook 'java-mode-hook 'tree-sitter-hl-mode)
-(add-hook 'java-mode-hook 'rainbow-delimiters-mode)
-(add-hook 'java-mode-hook 'vimish-fold-mode)
+;; (add-hook 'java-mode-hook 'lsp)
+;; (add-hook 'java-mode-hook 'tree-sitter-hl-mode)
+;; (add-hook 'java-mode-hook 'rainbow-delimiters-mode)
+;; (add-hook 'java-mode-hook 'vimish-fold-mode)
 (add-hook 'java-mode-hook
        (setq
+        lsp-idle-delay                             0.01
         lsp-eldoc-enable-hover                     t
         lsp-java-format-comments-enabled           nil
         lsp-java-save-actions-organize-imports     nil
@@ -151,7 +151,6 @@
 
 (set-company-backend! 'prog-mode
   '(:separate company-capf company-yasnippet company-dabbrev company-ispell))
-
 
 ;; almost key set
 (map! :nve "; g"    'evil-last-non-blank                       )
@@ -217,7 +216,6 @@
 (map! :ne "SPC i t" 'marco-insert-java-return                  )
 (map! :ne "SPC d d" 'kill-other-buffer                         )
 (map! :ne "SPC d q" 'ejc-table-queryvis                        )
-
 
 ;; 断词设置，设置以后断词更长
 (global-set-key (kbd "<RET>") 'evil-ret                        )
