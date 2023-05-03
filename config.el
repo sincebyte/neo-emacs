@@ -36,7 +36,6 @@
       undo-tree-history-directory-alist          '(("." . "~/.emacs.d/undo"))
       dired-dwim-target t
       frame-title-format                         " "
-      gc-cons-threshold                          (* 2 1000 1000)
       auto-save-visited-mode                     nil
       auto-save-default                          nil
       neo-window-width                           35
@@ -129,7 +128,7 @@
 ;; (add-hook 'java-mode-hook 'vimish-fold-mode)
 (add-hook 'java-mode-hook
        (setq
-        lsp-idle-delay                             0.01
+        lsp-idle-delay                             0.1
         lsp-eldoc-enable-hover                     t
         lsp-java-format-comments-enabled           nil
         lsp-java-save-actions-organize-imports     nil
