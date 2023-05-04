@@ -61,12 +61,13 @@
 (set-keyboard-coding-system 'utf-8)
 
 ;; lsp face
-(custom-set-faces '(lsp-face-highlight-read  ((t (:foreground "#57a6db" :background "#292C33" :underline nil)))))
-(custom-set-faces '(lsp-face-highlight-write ((t (:foreground "#57a6db" :background "#292C33" :underline nil)))))
-(custom-set-faces '(tide-hl-identifier-face  ((t (:foreground "#57a6db" :background "#292C33")))))
+(custom-set-faces `(lsp-face-highlight-read  ((t (:foreground "#57a6db" :background "#292C33" :weight bold :underline nil)))))
+(custom-set-faces `(lsp-face-highlight-write ((t (:foreground "#57a6db" :background "#292C33" :weight bold :underline nil)))))
+(custom-set-faces `(tide-hl-identifier-face  ((t (:foreground "#57a6db" :background "#292C33")))))
 (custom-set-faces `(avy-lead-face   ((t (:foreground "#00dfff" :background nil :weight bold)))))
-(custom-set-faces `(avy-lead-face-1 ((t (:foreground "#2b8db3" :background nil :weight bold)))))
 (custom-set-faces `(avy-lead-face-0 ((t (:foreground "#2b8db3" :background nil :weight bold)))))
+(custom-set-faces `(avy-lead-face-1 ((t (:foreground "#104E8B" :background nil :weight bold)))))
+(custom-set-faces `(avy-lead-face-2 ((t (:foreground "#104E8B" :background nil :weight bold)))))
 
 
 ;; common setting

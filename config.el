@@ -52,7 +52,6 @@
       doom-modeline-modal                        t
       doom-modeline-vcs-max-length               200
       doom-modeline-buffer-file-name-style       'buffer-name
-      doom-neotree-enable-variable-pitch         t
       frame-resize-pixelwise                     nil
       evil-emacs-state-tag                       "E"
       evil-insert-state-tag                      "INSERT"

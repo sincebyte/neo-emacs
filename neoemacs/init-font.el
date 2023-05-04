@@ -102,6 +102,9 @@
   ;; Setup font size based on emacs-font-size-pair
   (set-font emacs-english-font emacs-cjk-font emacs-font-size-pair))
 
+(after! doom-themes
+  (setq doom-neotree-enable-variable-pitch nil))
+(setq doom-variable-pitch-font (font-spec :family "victor Mono"))
 
 (provide 'init-font)
 ;;; init-font.el ends here
