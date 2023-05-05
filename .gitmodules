@@ -1,0 +1,3 @@
+[submodule "neoemacs/wraplish"]
+	path = neoemacs/wraplish
+	url = git@github.com:manateelazycat/wraplish.git

@@ -91,3 +91,21 @@
           ;; temp files
           "~$"
           "^#.*#$"))
+
+;; close the modeline default
+(add-hook 'buffer-list-update-hook (lambda ()
+                                     (unless (active-minibuffer-window)
+                                       (hide-mode-line-mode))))
+;; make emacs auto save buffer
+(custom-set-variables
+  '(auto-save-visited-mode t))
+(setq auto-save-visited-interval 5)
+(setq auto-save-visited-predicate
+        (lambda () (or (eq major-mode 'java-mode)
+                       (eq major-mode 'org-mode))))
+
+;; when close windows close neotree neither
+(defun zygospore-toggle-delete-other-windows@around (fn)
+  (if (> (count-windows) 1) (neotree-hide))
+  (funcall fn))
+(advice-add 'zygospore-toggle-delete-other-windows :around 'zygospore-toggle-delete-other-windows@around)

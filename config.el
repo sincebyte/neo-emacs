@@ -436,4 +436,12 @@
   :config
   (require 'shrface))
 
+(setq frame-title-format '("%b"))
+
+;; insert one space char between chinese and english automatically. I like 中文 more.
+(add-to-list 'load-path "/Users/van/.doom.d/neoemacs/wraplish")
+(require 'wraplish)
+(dolist (hook (list 'markdown-mode-hook))
+  (add-hook hook #'(lambda () (wraplish-mode 1))))
+
 (yas-global-mode 1)
