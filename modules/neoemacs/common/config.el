@@ -1,11 +1,18 @@
-;;; private/common/config.el -*- lexical-binding: t; -*-
+;;; neoemacs/common/config.el -*- lexical-binding: t; -*-
 (blink-cursor-mode   0             )
 (tool-bar-mode       0             )
 (menu-bar-mode       0             )
 (scroll-bar-mode     0             )
-(set-default 'truncate-lines nil  )
-(setq-default treemacs-width 175  )
+(yas-global-mode     1             )
+(set-default 'truncate-lines nil   )
+(setq-default treemacs-width 175   )
+(setq-default indent-tabs-mode nil )
+
 (custom-set-variables '(x-select-enable-clipboard t))
+
+(after! warnings (add-to-list 'warning-suppress-types '(yasnippet backquote-change tree-sitter org org-loaddefs)))
+(setq byte-compile-warnings '(cl-functions)
+      frame-title-format    '("%b"))
 
 ;;; doom welcome
 (defun doom-dashboard-widget-banner ()
@@ -40,20 +47,6 @@
 (add-hook 'ea-popup-hook 'popup-handler)
 (add-hook 'after-make-frame-functions 'my/disable-scroll-bars)
 
-;; set the alpha background
-;; (setq-default alpha-list '((99 100) (100 100)))
-;; (defun loop-alpha ()
-;;   ;;doc
-;;   (interactive)
-;;   (let ((h (car alpha-list)))
-;;     ((lambda (a ab)
-;;        (set-frame-parameter (selected-frame) 'alpha (list a ab))
-;;        (add-to-list 'default-frame-alist (cons 'alpha (list a ab)))
-;;        ) (car h) (car (cdr h)))
-;;     (setq alpha-list (cdr (append alpha-list (list h))))
-;;     )
-;; )
-;; (loop-alpha)
 
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
@@ -70,27 +63,6 @@
 (custom-set-faces `(avy-lead-face-2 ((t (:foreground "#104E8B" :background nil :weight bold)))))
 
 
-;; common setting
-(setq org-html-mathjax-options  '((path "https://cdn.bootcss.com/mathjax/3.0.5/es5/tex-mml-chtml.js"))
-      gc-cons-threshold         (* 2 1000 1000)
-      neo-show-updir-line       t
-      neo-show-hidden-files     nil
-      neo-hidden-regexp-list    '(
-          ;; vcs folders
-          "^\\.\\(?:git\\|hg\\|svn\\)$"
-          ;; eclipse
-          "\\.\\(settings\\|classpath\\|factorypath\\)$"
-          ;; store
-          "^\\.DS_Store$"
-          ;; compiled files
-          "\\.\\(?:pyc\\|o\\|elc\\|lock\\|css.map\\|class\\)$"
-          ;; generated files, caches or local pkgs
-          "^\\(?:node_modules\\|vendor\\|.\\(project\\|cask\\|yardoc\\|sass-cache\\)\\)$"
-          ;; org-mode folders
-          "^\\.\\(?:sync\\|export\\|attach\\)$"
-          ;; temp files
-          "~$"
-          "^#.*#$"))
 
 ;; close the modeline default
 (add-hook 'buffer-list-update-hook (lambda ()

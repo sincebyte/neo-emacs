@@ -181,5 +181,15 @@
        ;;literate
        (default +bindings +smartparens)
 
-       :private
-       common)
+       :neoemacs
+       alpha               ; make emacs background transparent
+       common              ; neoemacs common setting
+       java                ; lsp java setting
+       modeline            ; neoemacs modeline setting
+       org                 ; neoemacs org setting
+       rime                ; neoemacs rime setting
+       sql                 ; ejc sql setting
+       translate           ; translate setting
+
+
+)

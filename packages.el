@@ -51,6 +51,7 @@
 ;(package! builtin-package :recipe (:branch "develop"))
 (add-to-list 'load-path "/usr/local/bin")
 (after! warnings(add-to-list 'warning-suppress-types '(yasnippet backquote-change)))
+(unpin!   lsp-mode lsp-java )
 (unpin!   org-roam          )
 (package! org-roam          )
 (package! org-roam-ui       )
@@ -77,6 +78,7 @@
 (package! string-inflection )
 (package! tree-sitter-langs )
 (package! auto-complete     )
+;; (package! awesome-tray      )
 
 ;; (package! ejc-sql    :recipe (:host github :repo "vanniuner/ejc-sql"         :branch "master" ))
 (package! bookmark+  :recipe (:host github :repo "emacsmirror/bookmark-plus" :branch "master" ))
@@ -89,4 +91,3 @@
 (package! browse-url    :disable t)
 (package! dap-java      :disable t)
 
-(unpin! lsp-mode lsp-java)
