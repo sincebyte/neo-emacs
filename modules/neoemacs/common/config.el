@@ -16,19 +16,21 @@
       display-time-default-load-average nil)
 
 ;;; doom welcome
-(defun doom-dashboard-widget-banner ()
-  "For neoemacs ascii logo."
- (let ((point (point)))
-   (mapc (lambda (line)
-           (insert (propertize (+doom-dashboard--center +doom-dashboard--width line)
-                               'face 'doom-dashboard-banner) " ")
-           (insert "\n"))
-  '("|¯¯\\|¯¯|/¯x¯¯\\ /¯¯¯¯¯\\ /¯x¯¯\\|¯¯\\/¯¯¯| /¯¯¯¯|/¯¯¯¯\\ /¯¯¯¯¯/ "
-    "|     '| (\\__/|| x   || (\\__/|      '|/    !||(\\__/|\\ __¯¯¯\\"
-    "|__|\\__|\\____\\ \\_____/ \\____\\|._|\\/||/__/¯|_|\\____\\ /______/"
-    "                                                         v1.3.1      "
-    "                                                                     "))))
+;; (defun doom-dashboard-widget-banner ()
+;;   "For neoemacs ascii logo."
+;;  (let ((point (point)))
+;;    (mapc (lambda (line)
+;;            (insert (propertize (+doom-dashboard--center +doom-dashboard--width line)
+;;                                'face 'doom-dashboard-banner) " ")
+;;            (insert "\n"))
+;;   '("|¯¯\\|¯¯|/¯x¯¯\\ /¯¯¯¯¯\\ /¯x¯¯\\|¯¯\\/¯¯¯| /¯¯¯¯|/¯¯¯¯\\ /¯¯¯¯¯/ "
+;;     "|     '| (\\__/|| x   || (\\__/|      '|/    !||(\\__/|\\ __¯¯¯\\"
+;;     "|__|\\__|\\____\\ \\_____/ \\____\\|._|\\/||/__/¯|_|\\____\\ /______/"
+;;     "                                                         v1.3.1      "
+;;     "                                                                     "))))
 (defun doom-dashboard-widget-footer () "For empty element." (insert ""))
+(setq fancy-splash-image (concat doom-private-dir "bash.png"))
+
 
 ;; gc setting
 (defmacro k-time (&rest body) `(let ((time (current-time))) ,@body (float-time (time-since time))))
