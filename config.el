@@ -8,11 +8,11 @@
       emacs-module-root              "/Applications/Emacs.app/Contents/Resources/include"     ;; emcas exec path
 )
 ;; default core setting
-(add-to-list 'exec-path          rg-exec-path                     )
-(add-to-list 'exec-path          node-bin-dir                     )
+;; (add-to-list 'exec-path          rg-exec-path                     )
+;; (add-to-list 'exec-path          node-bin-dir                     )
+(add-to-list 'exec-path          "/Users/van/.m2/go/bin"          )
 (add-to-list 'load-path          doom-user-dir                    )
 (add-to-list 'load-path          user-private-dir                 )
-(add-to-list 'exec-path          "/Users/van/.m2/go/bin"          )
 (add-to-list 'load-path          (concat doom-user-dir "neoemacs"))   ;; default setting
 
 (setq default-frame-alist                        '((top . 88) (left . 450) (height . 32) (width . 122))
@@ -58,14 +58,14 @@
 (map! :nve "; a"    'evil-first-non-blank                      )
 (map! :ne "m"       'evil-avy-goto-char                        )
 (map! :ne "f"       'evil-avy-goto-char                        )
-(map! :ne "SPC f w" 'ace-window                                )
 (map! :ne "C-j"     'evil-scroll-down                          )
 (map! :ne "C-k"     'evil-scroll-up                            )
 (map! :ne "SPC z"   'counsel-fzf                               )
+(map! :ne "SPC v c" 'counsel-rg                                )
+(map! :ne "SPC f w" 'ace-window                                )
 (map! :ne "SPC v v" 'projectile-run-vterm                      )
 (map! :ne "SPC v o" 'vterm-send-stop                           )
 (map! :ne "SPC v s" 'vterm-send-start                          )
-(map! :ne "SPC v c" 'counsel-rg                                )
 (map! :ne "M-j"     'drag-stuff-down                           )
 (map! :ne "M-k"     'drag-stuff-up                             )
 (map! :ne "; w"     'save-buffer                               )
@@ -154,7 +154,7 @@
   (require 'shrface))
 
 ;; insert one space char between chinese and english automatically. I like 中文 more.
-(add-to-list 'load-path "/Users/van/.doom.d/neoemacs/wraplish")
+(add-to-list 'load-path (concat doom-user-dir "neoemacs/wraplish"))
 (require 'wraplish)
 (dolist (hook (list 'markdown-mode-hook))
   (add-hook hook #'(lambda () (wraplish-mode 1))))
