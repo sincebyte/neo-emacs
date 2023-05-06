@@ -57,16 +57,25 @@
 (set-keyboard-coding-system 'utf-8)
 
 ;; lsp face
-(custom-set-faces `(lsp-face-highlight-read  ((t (:foreground "#57a6db" :background "#292C33" :weight bold :underline nil)))))
-(custom-set-faces `(lsp-face-highlight-write ((t (:foreground "#57a6db" :background "#292C33" :weight bold :underline nil)))))
-(custom-set-faces `(tide-hl-identifier-face  ((t (:foreground "#57a6db" :background "#292C33")))))
-(custom-set-faces `(avy-lead-face   ((t (:foreground "#00dfff" :background nil :weight bold)))))
-(custom-set-faces `(avy-lead-face-0 ((t (:foreground "#2b8db3" :background nil :weight bold)))))
-(custom-set-faces `(avy-lead-face-1 ((t (:foreground "#104E8B" :background nil :weight bold)))))
-(custom-set-faces `(avy-lead-face-2 ((t (:foreground "#104E8B" :background nil :weight bold)))))
-(custom-set-faces `(line-number     ((t (:inherit 'default :foreground "#3f444a" :background nil :weight normal :slant normal)))))
-(custom-set-faces `(line-number-current-line ((t (:inherit 'default :foreground "#51afef" :background nil :weight normal :slant normal)))))
-(custom-set-faces `(aw-leading-char-face     ((t (:foreground "#FFFFFF" :background "#4EAEEF" :height 300 :weight normal :slant normal)))))
+(custom-set-faces `(lsp-face-highlight-read
+  ((t (:foreground "#57a6db" :background "#292C33" :weight bold :underline nil)))))
+(custom-set-faces `(lsp-face-highlight-write
+  ((t (:foreground "#57a6db" :background "#292C33" :weight bold :underline nil)))))
+(custom-set-faces `(tide-hl-identifier-face
+  ((t (:foreground "#57a6db" :background "#292C33")))))
+(custom-set-faces `(avy-lead-face   ((t (:foreground "#00dfff" :background nil :weight normal)))))
+(custom-set-faces `(avy-lead-face-0 ((t (:foreground "#2b8db3" :background nil :weight normal)))))
+(custom-set-faces `(avy-lead-face-1 ((t (:foreground "#104E8B" :background nil :weight normal)))))
+(custom-set-faces `(avy-lead-face-2 ((t (:foreground "#104E8B" :background nil :weight normal)))))
+(custom-set-faces `(line-number
+  ((t (:inherit 'default :foreground "#3f444a" :background nil :weight normal :slant normal)))))
+(custom-set-faces `(line-number-current-line
+  ((t (:inherit 'default :foreground "#51afef" :background nil :weight normal :slant normal)))))
+(custom-set-faces `(aw-leading-char-face
+  ((t (:foreground "#FFFFFF" :background "#4EAEEF" :height 300 :weight normal :slant normal)))))
+(custom-set-faces `(awesome-tray-module-date-face      ((t (:foreground "#5DADE2" :weight normal )))))
+(custom-set-faces `(awesome-tray-module-file-path-face ((t (:foreground "#3498DB" :weight normal )))))
+(custom-set-faces `(awesome-tray-module-battery-face   ((t (:foreground "#2E86C1" :weight normal )))))
 
 ;; close the modeline default
 (add-hook 'buffer-list-update-hook (lambda ()
@@ -84,4 +93,5 @@
 (defun zygospore-toggle-delete-other-windows@around (fn)
   (if (> (count-windows) 1) (neotree-hide))
   (funcall fn))
-(advice-add 'zygospore-toggle-delete-other-windows :around 'zygospore-toggle-delete-other-windows@around)
+(advice-add 'zygospore-toggle-delete-other-windows
+  :around 'zygospore-toggle-delete-other-windows@around)

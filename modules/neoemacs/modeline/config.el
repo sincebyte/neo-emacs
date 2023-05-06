@@ -28,10 +28,10 @@
          (if (eq (eval buffer-read-only) nil) l-name (concat "% " l-name))))
 
 (defun projectile-project-root-single ()
-  (let ((l-level 5)
+  (let ((l-level 6)
         (l-list  (delete "" (split-string (projectile-project-root) "/" )))
         (l-lenth (length (delete "" (split-string (projectile-project-root) "/" ))))
-        (l-bool  (> (length (delete "" (split-string (projectile-project-root) "/" ))) 5)))
+        (l-bool  (> (length (delete "" (split-string (projectile-project-root) "/" ))) 6)))
         (if l-bool (string-join (nthcdr l-level l-list) "/")
                    (elt l-list (- l-lenth 1)))))
 
