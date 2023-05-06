@@ -114,3 +114,5 @@
   (setq org-appear-autoentities t)
   (setq org-appear-autokeywords t)
   (setq org-appear-inside-latex t))
+
+(map! :ne "; l"     'org-toggle-narrow-to-subtree              )

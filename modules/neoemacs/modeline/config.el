@@ -15,17 +15,6 @@
       doom-modeline-enable-word-count            4
 )
 
-;; git diff line in modeline
-(defadvice vc-git-mode-line-string (after plus-minus (file) compile activate)
-  "Show the information of git diff on modeline."
-(setq ad-return-value
-(concat (propertize ad-return-value 'face '(:foreground "green" :weight light))
-        " "
-        (let ((plus-minus (vc-git--run-command-string file "diff" "--numstat" "--")))
-                (if (and plus-minus
-                (string-match "^\\([0-9]+\\)\t\\([0-9]+\\)\t" plus-minus)) ""
-                (propertize "" 'face '(:foreground "green3" :weight bold)))) "")))
-
 (use-package! awesome-tray
   :config
   (setq awesome-tray-git-show-status t
@@ -46,4 +35,8 @@
     ("mode-name" . (my-awesome-tray-nil-info awesome-tray-module-battery-face))
     ("location"  . (my-awesome-tray-nil-info awesome-tray-module-battery-face))
     ("belong"    . (my-awesome-tray-nil-info awesome-tray-module-battery-face))))
+
+;; (map! :ne "; v"     'vc-refresh-state                          )
+(map! :ne "; ;"     'hide-mode-line-mode                       )
+
 (awesome-tray-enable)

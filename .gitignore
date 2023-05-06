@@ -3,3 +3,4 @@ logs/
 .DS_Store
 .local
 custom.el
+.git

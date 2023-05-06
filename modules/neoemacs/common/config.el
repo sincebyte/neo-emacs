@@ -12,7 +12,8 @@
 
 (after! warnings (add-to-list 'warning-suppress-types '(yasnippet backquote-change tree-sitter org org-loaddefs)))
 (setq byte-compile-warnings '(cl-functions)
-      frame-title-format    '("%b"))
+      frame-title-format    '(" ")
+      display-time-default-load-average nil)
 
 ;;; doom welcome
 (defun doom-dashboard-widget-banner ()
@@ -61,8 +62,9 @@
 (custom-set-faces `(avy-lead-face-0 ((t (:foreground "#2b8db3" :background nil :weight bold)))))
 (custom-set-faces `(avy-lead-face-1 ((t (:foreground "#104E8B" :background nil :weight bold)))))
 (custom-set-faces `(avy-lead-face-2 ((t (:foreground "#104E8B" :background nil :weight bold)))))
-
-
+(custom-set-faces `(line-number     ((t (:inherit 'default :foreground "#3f444a" :background nil :weight normal :slant normal)))))
+(custom-set-faces `(line-number-current-line ((t (:inherit 'default :foreground "#51afef" :background nil :weight normal :slant normal)))))
+(custom-set-faces `(aw-leading-char-face     ((t (:foreground "#FFFFFF" :background "#4EAEEF" :height 300 :weight normal :slant normal)))))
 
 ;; close the modeline default
 (add-hook 'buffer-list-update-hook (lambda ()

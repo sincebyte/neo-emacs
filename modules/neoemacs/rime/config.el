@@ -19,3 +19,6 @@
          rime-predicate-current-uppercase-letter-p
          ;; rime-predicate-space-after-ascii-p
          rime-predicate-space-after-cc-p))
+
+;; 输入法切换按键
+(global-set-key (kbd "C-;"  ) 'toggle-input-method             )
