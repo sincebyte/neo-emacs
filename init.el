@@ -34,7 +34,7 @@
        hl-todo           ; highlight TODO/CANC/NOTE/DEPR/HACK/REVI/DONE
        ;;hydra
        ;; indent-guides     ; highlighted indent columns
-       modeline          ; snazzy, Atom-inspired modeline, plus API
+       ;;modeline          ; snazzy, Atom-inspired modeline, plus API
        nav-flash         ; blink the current line after jumping
        neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
@@ -182,7 +182,7 @@
        (default +bindings +smartparens)
 
        :neoemacs
-       alpha               ; make emacs background transparent
+       ;; alpha               ; make emacs background transparent
        common              ; neoemacs common setting
        java                ; lsp java setting
        modeline            ; neoemacs modeline setting

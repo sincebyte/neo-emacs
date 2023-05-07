@@ -156,5 +156,20 @@
 ;; insert one space char between chinese and english automatically. I like 中文 more.
 (add-to-list 'load-path (concat doom-user-dir "neoemacs/wraplish"))
 (require 'wraplish)
-(dolist (hook (list 'markdown-mode-hook))
+(dolist (hook (list 'org-mode-hook))
   (add-hook hook #'(lambda () (wraplish-mode 1))))
+
+;; for transparent and blur background
+(add-to-list 'default-frame-alist '(nc-appearance . dark))
+(add-to-list 'default-frame-alist '(nc-transparent-titlebar . t))
+(setq ns-use-proxy-icon nil)
+(setq frame-title-format nil)
+
+;; (set-face-background 'default "mac:windowBackgroundColor")
+(set-face-background 'default "#2A2E37")
+(dolist (f (face-list)) (set-face-stipple f "alpha:85%"))
+;; (setq face-remapping-alist (append face-remapping-alist '((default my/default-blurred))))
+;; (defface my/default-blurred
+;;    '((t :inherit 'default :stipple "alpha:99%"))
+;;    "Like 'default but blurred."
+;;    :group 'my)

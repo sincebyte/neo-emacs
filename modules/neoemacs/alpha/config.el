@@ -1,7 +1,7 @@
 ;;; neoemacs/alpha/config.el -*- lexical-binding: t; -*-
 
-;; set the alpha background
-(setq-default alpha-list '((100 100) (100 100)))
+;;set the alpha background
+(setq-default alpha-list '((99 100) (100 100)))
 (defun loop-alpha ()
   ;;doc
   (interactive)
@@ -14,3 +14,4 @@
     )
 )
 (loop-alpha)
+;; (setq default-frame-alist '((alpha-background . 80)))

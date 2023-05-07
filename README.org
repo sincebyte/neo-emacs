@@ -75,6 +75,12 @@ At last run below, this will take few minutes. And it depends on the quality of 
 #+BEGIN_SRC shell
 ~/.emacs.doom/bin/doom install
 #+END_SRC
+** Use EmacsPorts
+#+begin_src shell
+brew install emacs-mac --with-natural-title-bar --with-mac-metal --with-librsvg --with-starter --with-emacs-big-sur-icon --with-native-comp
+defaults write org.gnu.Emacs TransparentTitleBar DARK
+defaults write org.gnu.Emacs HideDocumentIcon YES
+#+end_src
 * How to update
 #+begin_src shell
 export EMACS=/Applications/Emacs.app/Contents/MacOS/EMACS-JAVA-IDE

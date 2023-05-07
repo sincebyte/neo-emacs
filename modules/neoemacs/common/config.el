@@ -12,10 +12,9 @@
 
 (after! warnings (add-to-list 'warning-suppress-types '(yasnippet backquote-change tree-sitter org org-loaddefs)))
 (setq byte-compile-warnings '(cl-functions)
-      frame-title-format    '(" ")
       display-time-default-load-average nil)
 
-;;; doom welcome
+;;doom welcome
 ;; (defun doom-dashboard-widget-banner ()
 ;;   "For neoemacs ascii logo."
 ;;  (let ((point (point)))
