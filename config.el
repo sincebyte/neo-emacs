@@ -160,8 +160,10 @@
   (add-hook hook #'(lambda () (wraplish-mode 1))))
 
 ;; for transparent and blur background
-(add-to-list 'default-frame-alist '(nc-appearance . dark))
+(require 'ns-auto-titlebar)
+(when (eq system-type 'darwin) (ns-auto-titlebar-mode))
 (add-to-list 'default-frame-alist '(nc-transparent-titlebar . t))
+(add-to-list 'default-frame-alist '(nc-appearance . dark))
 (setq ns-use-proxy-icon nil)
 (setq frame-title-format nil)
 
