@@ -182,7 +182,7 @@
        (default +bindings +smartparens)
 
        :neoemacs
-       ;; alpha               ; make emacs background transparent
+       alpha               ; make emacs background transparent
        common              ; neoemacs common setting
        java                ; lsp java setting
        modeline            ; neoemacs modeline setting

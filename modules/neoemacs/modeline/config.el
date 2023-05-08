@@ -34,7 +34,6 @@
         (l-bool  (> (length (delete "" (split-string (projectile-project-root) "/" ))) 6)))
         (if l-bool (string-join (nthcdr l-level l-list) "/")
                    (elt l-list (- l-lenth 1)))))
-
 (setq awesome-tray-module-alist
   '(
     ("date"      . (my-awesome-tray-nil-info awesome-tray-module-date-face))
