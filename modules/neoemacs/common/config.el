@@ -12,7 +12,8 @@
 
 (after! warnings (add-to-list 'warning-suppress-types '(yasnippet backquote-change tree-sitter org org-loaddefs)))
 (setq byte-compile-warnings '(cl-functions)
-      display-time-default-load-average nil)
+      display-time-default-load-average nil
+      emacs-module-root "/Applications/Emacs.app/Contents/Resources/include")
 
 ;;doom welcome
 ;; (defun doom-dashboard-widget-banner ()

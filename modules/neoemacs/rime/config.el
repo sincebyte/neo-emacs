@@ -20,5 +20,11 @@
          ;; rime-predicate-space-after-ascii-p
          rime-predicate-space-after-cc-p))
 
+;; insert one space char between chinese and english automatically. I like 中文 more.
+(add-to-list 'load-path (concat doom-user-dir "neoemacs/wraplish"))
+(require 'wraplish)
+(dolist (hook (list 'org-mode-hook))
+  (add-hook hook #'(lambda () (wraplish-mode 1))))
+
 ;; 输入法切换按键
 (global-set-key (kbd "C-;"  ) 'toggle-input-method             )

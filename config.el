@@ -1,15 +1,9 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
-(setq rg-exec-path                   "/opt/homebrew/bin/rg"                                   ;; rg   exec path
-      fd-exec-path                   "/opt/homebrew/bin/fd"                                   ;; fd   exec path
-      counsel-fzf-cmd                (concat fd-exec-path " -c never --hidden --follow %s .") ;; fd   paramter
-      node-bin-dir                   "~/soft/node-v16.14.0/bin"                               ;; node home
-      user-private-dir               "~/org/org-roam/emacs/command/doom/config/"              ;; user private dir
-      display-line-numbers-type      nil                                                      ;; show line number 'relative
-      emacs-module-root              "/Applications/Emacs.app/Contents/Resources/include"     ;; emcas exec path
-)
-;; default core setting
-;; (add-to-list 'exec-path          rg-exec-path                     )
-;; (add-to-list 'exec-path          node-bin-dir                     )
+(setq rg-exec-path                   "/opt/homebrew/bin/rg"                      ;; rg   exec path
+      node-bin-dir                   "~/soft/node-v16.14.0/bin"                  ;; node home
+      user-private-dir               "~/org/org-roam/emacs/command/doom/config/" ;; user private dir
+      display-line-numbers-type      nil)                                         ;; show line number 'relative
+
 (add-to-list 'exec-path          "/Users/van/.m2/go/bin"          )
 (add-to-list 'load-path          doom-user-dir                    )
 (add-to-list 'load-path          user-private-dir                 )
@@ -20,7 +14,6 @@
       dired-dwim-target                          t
       neo-window-width                           45
       neo-window-fixed-size                      nil
-      treemacs--width-is-locked                  nil
       frame-resize-pixelwise                     nil
       evil-emacs-state-tag                       "E"
       evil-insert-state-tag                      "INSERT"
@@ -30,7 +23,6 @@
       evil-visual-state-tag                      "VISUAL"
       evil-replace-state-tag                     "REPLACE"
       evil-want-Y-yank-to-eol                    t
-      vterm-kill-buffer-on-exit                  t
       read-process-output-max                    (* 1024 1024))
 
 (setq package-archives '(( "gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"   )
@@ -39,7 +31,6 @@
 (package-initialize)
 
 ;; almost package
-;; (require      'disable-mouse      )
 (use-package! init-font                   )
 (use-package! init-benchmarking           )
 (use-package! db-work                     )
@@ -60,8 +51,6 @@
 (map! :ne "f"       'evil-avy-goto-char                        )
 (map! :ne "C-j"     'evil-scroll-down                          )
 (map! :ne "C-k"     'evil-scroll-up                            )
-(map! :ne "SPC z"   'counsel-fzf                               )
-(map! :ne "SPC v c" 'counsel-rg                                )
 (map! :ne "SPC f w" 'ace-window                                )
 (map! :ne "SPC v v" 'projectile-run-vterm                      )
 (map! :ne "SPC v o" 'vterm-send-stop                           )
@@ -77,9 +66,6 @@
 (map! :ne "; o"     'neotree-projectile-action                 )
 (map! :ne "SPC e r" 'neotree-goto-resources-dir                )
 (map! :ne "; j"     '+workspace/swap-left                      )
-;; (map! :n "SPC e p"  'goto-result-detail-prev                   )
-;; (map! :n "SPC e n"  'goto-result-detail-next                   )
-;; (map! :n "SPC e e"  'goto-result-detail                        )
 (map! :ne "; q"     'quit-window                               )
 (map! :ve "; q"     'quit-window                               )
 (map! :nve "; e"    'er/expand-region                          )
@@ -89,11 +75,11 @@
 (map! :nv "s-3"     '+workspace/switch-to-2                    )
 (map! :nv "s-4"     '+workspace/switch-to-3                    )
 (map! :nv "s-5"     '+workspace/switch-to-4                    )
-(map! :n "K"        '+workspace/switch-left                    )
-(map! :n "L"        '+workspace/switch-right                   )
+(map! :n "K"        '+workspace/switch-right                   )
+(map! :n "J"        '+workspace/switch-right                   )
+(map! :n "L"        'evil-join                                 )
 (map! :nve "; c"    'comment-line                              )
 (map! :n "C-."      'next-buffer                               )
-(map! :ie "C-i"     'counsel-yank-pop                          )
 (map! :n "SPC t n"  '+workspace/new                            )
 (map! :n "SPC r r"  'quickrun-shell                            )
 
@@ -105,59 +91,6 @@
 (general-def 'insert vterm-mode-map "C-h" 'vterm-send-C-h      )
 (keyboard-translate ?\C-h ?\C-?)
 
-;; use project root
-(setq counsel-fzf-dir-function
-(lambda ()
-  (let ((d (locate-dominating-file default-directory ".git")))
-    (if (or (null d)
-      (equal (expand-file-name d)
-        (expand-file-name "~/")))
-  default-directory d))))
-
-;; environment variable controls the indentation. The value is 4 spaces
-(setenv "XMLLINT_INDENT" "    ")
-(use-package xml-format
-  :demand t
-  :defer t
-  :after nxml-mode)
-
-(use-package recentf
-  ;; :ensure nil
-  ;; lazy load recentf
-  :defer t
-  :init
-  (add-hook 'after-init-hook #'recentf-mode)
-  (setq recentf-max-saved-items 200)
-  :config
-  (add-to-list 'recentf-exclude (expand-file-name package-user-dir))
-  (add-to-list 'recentf-exclude "\\.emacs\\.d/\\.local/etc/workspaces/autosave"))
-
-(use-package bookmark+
-  :defer t
-  :after bookmark
-  :init (setq-default bookmark-save-flag 1)
-        (setq bookmark-default-file (concat org-roam-directory "/emacs/command/doom/config/bookmark")))
-
-(use-package shrface
-  :defer t
-  :config
-  (shrface-basic)
-  (shrface-trial)
-  (shrface-default-keybindings) ; setup default keybindings
-  (setq shrface-href-versatile t))
-
-(use-package eww
-  :defer t
-  :init
-  (add-hook 'eww-after-render-hook #'shrface-mode)
-  :config
-  (require 'shrface))
-
-;; insert one space char between chinese and english automatically. I like 中文 more.
-(add-to-list 'load-path (concat doom-user-dir "neoemacs/wraplish"))
-(require 'wraplish)
-(dolist (hook (list 'org-mode-hook))
-  (add-hook hook #'(lambda () (wraplish-mode 1))))
 
 ;; for transparent and blur background
 (require 'ns-auto-titlebar)
@@ -167,11 +100,5 @@
 (setq ns-use-proxy-icon nil)
 (setq frame-title-format nil)
 
-;; (set-face-background 'default "mac:windowBackgroundColor")
-(set-face-background 'default "#2A2E37")
-(dolist (f (face-list)) (set-face-stipple f "alpha:85%"))
-;; (setq face-remapping-alist (append face-remapping-alist '((default my/default-blurred))))
-;; (defface my/default-blurred
-;;    '((t :inherit 'default :stipple "alpha:99%"))
-;;    "Like 'default but blurred."
-;;    :group 'my)
+;; (set-face-background 'default "#2A2E37")
+;; (dolist (f (face-list)) (set-face-stipple f "alpha:85%"))

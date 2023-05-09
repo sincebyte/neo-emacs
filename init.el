@@ -190,6 +190,8 @@
        rime                ; neoemacs rime setting
        sql                 ; ejc sql setting
        translate           ; translate setting
-
-
+       xml                 ; xml buffer format
+       bookmark            ; bookmark setting
+       eww                 ; eww config
+       find                ; find file config
 )
