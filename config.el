@@ -76,7 +76,7 @@
 (map! :nv "s-4"     '+workspace/switch-to-3                    )
 (map! :nv "s-5"     '+workspace/switch-to-4                    )
 (map! :n "K"        '+workspace/switch-right                   )
-(map! :n "J"        '+workspace/switch-right                   )
+(map! :n "J"        '+workspace/switch-left                    )
 (map! :n "L"        'evil-join                                 )
 (map! :nve "; c"    'comment-line                              )
 (map! :n "C-."      'next-buffer                               )

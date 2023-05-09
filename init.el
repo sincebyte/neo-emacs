@@ -194,4 +194,5 @@
        bookmark            ; bookmark setting
        eww                 ; eww config
        find                ; find file config
+       eredis              ; a redis client
 )
