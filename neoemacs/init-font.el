@@ -4,8 +4,12 @@
 ;;; base on https://gist.github.com/coldnew/7398835
 
 (setq emacs-font-size-pair '(19 . 20))
-(setq en-font "victor Mono"
+;; (setq en-font "victor Mono"
+;;       cn-font "LXGW WenKai Mono")
+
+(setq en-font "等距更纱黑体 Slab SC"
       cn-font "LXGW WenKai Mono")
+
 (setq en-font-size (car emacs-font-size-pair)
       cn-font-size (cdr emacs-font-size-pair))
 
@@ -104,7 +108,7 @@
 
 (after! doom-themes
   (setq doom-neotree-enable-variable-pitch nil))
-(setq doom-variable-pitch-font (font-spec :family "victor Mono"))
+(setq doom-variable-pitch-font (font-spec :family en-font))
 
 (provide 'init-font)
 ;;; init-font.el ends here

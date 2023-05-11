@@ -11,7 +11,7 @@
 ;; company setting
 (setq company-box-doc-enable                     nil
       company-tooltip-limit                      7
-      company-tooltip-offset-display             'scrollbar
+      ;; company-tooltip-offset-display             'scrollbar
       company-frontends                          '(company-pseudo-tooltip-frontend company-echo-metadata-frontend)
       company-format-margin-function             'company-text-icons-margin
       company-text-icons-format                  " %s "
@@ -55,6 +55,9 @@
       plantuml-default-exec-mode     'jar
       lombok-jar-path                ( expand-file-name (concat doom-user-dir "neoemacs/lombok.jar"))
 )
+(setq lsp-java-configuration-runtimes '[(:name "JavaSE-17"
+                                                :path "/Users/van/soft/jdk-17.0.6.jdk/Contents/Home"
+                                                :default t)])
 
 ;; java key setting
 (map! :ne "SPC v l" 'lsp-java-assign-statement-to-local        )

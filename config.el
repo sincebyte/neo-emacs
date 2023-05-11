@@ -91,7 +91,6 @@
 (general-def 'insert vterm-mode-map "C-h" 'vterm-send-C-h      )
 (keyboard-translate ?\C-h ?\C-?)
 
-
 ;; for transparent and blur background
 (require 'ns-auto-titlebar)
 (when (eq system-type 'darwin) (ns-auto-titlebar-mode))
@@ -102,3 +101,5 @@
 
 ;; (set-face-background 'default "#2A2E37")
 ;; (dolist (f (face-list)) (set-face-stipple f "alpha:85%"))
+
+(load-theme   'doom-one-light t          ) ;; set theme

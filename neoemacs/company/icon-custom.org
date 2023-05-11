@@ -1,12 +1,15 @@
 #+OPTIONS: toc:nil
 #+TITLE: company-icon
+#+author: vanniuner
+#+SETUPFILE: ~/.doom.d/org-head.setup
+
 
 * 自定义图标
 使用 M-x all-the-icons-material 查看图标
 * company-icon 图标配置
 文件路径：~/.emacs.d/modules/completion/company/config.el
 
-#+BEGIN_SRC lisp
+#+BEGIN_SRC lisp -n
 (use-package! company-box
   :when (featurep! +childframe)
   :hook (company-mode . company-box-mode)
