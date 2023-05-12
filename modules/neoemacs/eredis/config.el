@@ -6,9 +6,17 @@
 
 (use-package eredis)
 
-(defun eredis/get (key)
-  (eredis-print-hash (json-parse-string (eredis-get key)))
-  (princ (format "***SUCCESS GET*** %s" key)) (comint-previous-input 1))
+(defun redis/keys (keys)
+  (eredis-keys keys))
+
+(defun redis/get (key)
+  (let ((timebegin (current-time))
+        (redisvalue (eredis-get key)))
+    (if redisvalue
+    (eredis-print-hash (json-parse-string redisvalue))
+    (princ "not exist\n"))
+    (princ (format "***SUCCESS GET*** %s" key))
+    (format "duration %s s" (time-convert (time-subtract (current-time) timebegin) 'integer))))
 
 (defun eredis-print-hash (hashtable)
   "Prints the hashtable, each line is key, val"
