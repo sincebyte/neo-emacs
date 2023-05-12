@@ -102,4 +102,5 @@
 ;; (set-face-background 'default "#2A2E37")
 ;; (dolist (f (face-list)) (set-face-stipple f "alpha:85%"))
 
-(load-theme   'doom-one-light t          ) ;; set theme
+(load-theme   'doom-one t          ) ;; set theme
+;; (load-theme   'apropospriate  t)

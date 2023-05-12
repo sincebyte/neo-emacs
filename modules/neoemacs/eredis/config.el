@@ -7,13 +7,11 @@
 (use-package eredis)
 
 (defun eredis/get (key)
-  (eredis-print-hash (json-parse-string (eredis-get key))))
+  (eredis-print-hash (json-parse-string (eredis-get key)))
+  (princ (format "***SUCCESS GET*** %s" key)) (comint-previous-input 1))
 
 (defun eredis-print-hash (hashtable)
   "Prints the hashtable, each line is key, val"
-  (maphash
-   (lambda (k v)
-     (princ (format "%s: %s" k v))
-     (princ "\n"))
-   hashtable
-   ))
+  (if (typep hashtable 'hash-table)
+    (maphash (lambda (k v) (princ (format "%s: %s\n" k v))) hashtable)
+    (princ hashtable)))

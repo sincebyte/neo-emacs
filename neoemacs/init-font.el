@@ -4,11 +4,11 @@
 ;;; base on https://gist.github.com/coldnew/7398835
 
 (setq emacs-font-size-pair '(19 . 20))
-;; (setq en-font "victor Mono"
-;;       cn-font "LXGW WenKai Mono")
-
-(setq en-font "等距更纱黑体 Slab SC"
+(setq en-font "victor Mono"
       cn-font "LXGW WenKai Mono")
+
+;; (setq en-font "等距更纱黑体 Slab SC"
+;;       cn-font "LXGW WenKai Mono")
 
 (setq en-font-size (car emacs-font-size-pair)
       cn-font-size (cdr emacs-font-size-pair))
