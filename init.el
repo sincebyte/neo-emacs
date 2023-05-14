@@ -182,6 +182,7 @@
        (default +bindings +smartparens)
 
        :neoemacs
+       shell               ; shell config for vterm & eshell
        alpha               ; make emacs background transparent
        common              ; neoemacs common setting
        java                ; lsp java setting
@@ -195,5 +196,5 @@
        eww                 ; eww config
        find                ; find file config
        eredis              ; a redis client
-       shell               ; shell config for vterm & eshell
+       font
 )

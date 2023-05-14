@@ -1,7 +1,4 @@
-;;; init-font.el --- Dired customisations -*- lexical-binding: t -*-
-;;; Commentary:
-;;; Code:
-;;; base on https://gist.github.com/coldnew/7398835
+;;; neoemacs/font/config.el -*- lexical-binding: t; -*-
 
 (setq emacs-font-size-pair '(19 . 20))
 (setq en-font "victor Mono"
@@ -110,5 +107,3 @@
   (setq doom-neotree-enable-variable-pitch nil))
 (setq doom-variable-pitch-font (font-spec :family en-font))
 
-(provide 'init-font)
-;;; init-font.el ends here

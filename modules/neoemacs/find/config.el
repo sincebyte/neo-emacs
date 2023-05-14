@@ -1,5 +1,6 @@
 ;;; neoemacs/find/config.el -*- lexical-binding: t; -*-
-(setq fd-exec-path                   "/opt/homebrew/bin/fd")
+(setq fd-exec-path                   "/opt/homebrew/bin/fd"
+      rg-exec-path                   "/opt/homebrew/bin/rg")
 ;; use project root
 (setq counsel-fzf-dir-function (lambda ()
   (let ((d (locate-dominating-file default-directory ".git")))
