@@ -9,6 +9,7 @@
 ;; (set-company-backend! 'prog-mode
 ;;   '(:separate company-capf company-yasnippet company-dabbrev company-ispell))
 ;; company setting
+
 (setq company-box-doc-enable                     nil
       company-tooltip-limit                      7
       ;; company-tooltip-offset-display             'scrollbar
@@ -47,17 +48,18 @@
   '(:separate company-capf company-yasnippet company-dabbrev company-ispell))
 
 (setq lsp-java-format-settings-url   (expand-file-name (concat doom-user-dir "neoemacs/eclipse-codestyle.xml"))
-      lsp-java-java-path             (concat (getenv "JAVA_HOME") "/bin/java")                ;; java11        exec path
+      lsp-java-java-path             (concat (getenv "JAVA_17_HOME") "/bin/java")             ;; java11        exec path
       lsp-maven-path                 "~/.m2/settings.xml"                                     ;; maven setting path
-      lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.7.0-202112161541.tar.gz"
+      lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.22.0-202304131553.tar.gz"
       lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path )
       plantuml-jar-path              ( expand-file-name (concat doom-user-dir "neoemacs/plantuml.jar"))
       plantuml-default-exec-mode     'jar
+      inferior-lisp-program          "/opt/homebrew/bin//sbcl"
       lombok-jar-path                ( expand-file-name (concat doom-user-dir "neoemacs/lombok.jar"))
 )
-(setq lsp-java-configuration-runtimes '[(:name "JavaSE-17"
-                                                :path "/Users/van/soft/jdk-17.0.6.jdk/Contents/Home"
-                                                :default t)])
+;; (setq lsp-java-configuration-runtimes '[(:name "JavaSE-11"
+;;                                                 :path "/Users/van/soft/jdk-11.0.13.jdk/Contents/Home"
+;;                                                 :default t)])
 
 ;; java key setting
 (map! :ne "SPC v l" 'lsp-java-assign-statement-to-local        )
@@ -71,3 +73,4 @@
 (map! :nve ", f r"  'lsp-format-region                         )
 (map! :ne ", f b"   'lsp-format-buffer                         )
 (map! :ne "SPC v r" 'lsp-rename                                )
+(map! :nve "; c"    'comment-line                              )

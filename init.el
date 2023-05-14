@@ -195,4 +195,5 @@
        eww                 ; eww config
        find                ; find file config
        eredis              ; a redis client
+       shell               ; shell config for vterm & eshell
 )

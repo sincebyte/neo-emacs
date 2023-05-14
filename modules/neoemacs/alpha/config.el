@@ -15,3 +15,5 @@
 )
 (loop-alpha)
 ;; (setq default-frame-alist '((alpha-background . 80)))
+
+(setq frame-title-format nil)

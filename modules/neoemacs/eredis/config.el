@@ -14,8 +14,8 @@
         (redisvalue (eredis-get key)))
     (if redisvalue
     (eredis-print-hash (json-parse-string redisvalue))
-    (princ "not exist\n"))
-    (princ (format "***SUCCESS GET*** %s" key))
+    (princ "not exist"))
+    (princ (format "\n***SUCCESS GET*** %s" key))
     (format "duration %s s" (time-convert (time-subtract (current-time) timebegin) 'integer))))
 
 (defun eredis-print-hash (hashtable)
