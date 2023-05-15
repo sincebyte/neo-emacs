@@ -189,7 +189,6 @@
        modeline            ; neoemacs modeline setting
        org                 ; neoemacs org setting
        rime                ; neoemacs rime setting
-       sql                 ; ejc sql setting
        translate           ; translate setting
        xml                 ; xml buffer format
        bookmark            ; bookmark setting
@@ -197,4 +196,5 @@
        find                ; find file config
        eredis              ; a redis client
        font
+       sql                 ; ejc sql setting
 )

@@ -11,7 +11,7 @@
       doom-modeline-modal                        t
       doom-modeline-vcs-max-length               200
       doom-modeline-buffer-file-name-style       'buffer-name
-      doom-modeline-continuous-word-count-modes '(java-mode)
+      doom-modeline-continuous-word-count-modes  '(java-mode)
       doom-modeline-enable-word-count            4
 )
 
@@ -34,14 +34,26 @@
         (l-bool  (> (length (delete "" (split-string (projectile-project-root) "/" ))) 6)))
         (if l-bool (string-join (nthcdr l-level l-list) "/")
                    (elt l-list (- l-lenth 1)))))
+
+(defun my-awesome-db-info ()
+ (if (eq major-mode 'sql-mode)
+     ejc-connection-name     ))
+
+(defface awesome-tray-module-db-face
+  '((((background light)) :inherit awesome-tray-cyan-face)
+    (t :inherit awesome-tray-cyan-face))
+  "Battery state face."
+  :group 'awesome-tray)
+(custom-set-faces `(awesome-tray-module-db-face  ((t (:foreground "#D98880" :weight normal )))))
+
 (setq awesome-tray-module-alist
   '(
-    ("date"      . (my-awesome-tray-nil-info awesome-tray-module-date-face))
-    ("battery"   . (my-awesome-tray-git-info awesome-tray-module-battery-face))
+    ("location"  . (my-awesome-db-info       awesome-tray-module-db-face             ))
+    ("battery"   . (my-awesome-tray-git-info awesome-tray-module-battery-face        ))
     ("mode-name" . (projectile-project-root-single awesome-tray-module-file-path-face))
-    ("file-path" . (my-awesome-tray-buffername-info awesome-tray-module-date-face))
-    ("location"  . (my-awesome-tray-nil-info awesome-tray-module-battery-face))
-    ("belong"    . (my-awesome-tray-nil-info awesome-tray-module-battery-face))))
+    ("file-path" . (my-awesome-tray-buffername-info awesome-tray-module-date-face    ))
+    ("date"      . (my-awesome-tray-nil-info awesome-tray-module-date-face           ))
+    ("belong"    . (my-awesome-tray-nil-info awesome-tray-module-battery-face        ))))
 
 ;; (map! :ne "; v"     'vc-refresh-state                          )
 (map! :ne "; ;"     'hide-mode-line-mode                       )

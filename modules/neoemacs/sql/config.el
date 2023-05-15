@@ -1,8 +1,8 @@
 ;;; neoemacs/sql/config.el -*- lexical-binding: t; -*-
 
-(use-package! ejc-sql             :defer t
-  :commands ejc-sql-mode ejc-connect      )
-(use-package! ob-sql-mode         :defer t)
+(use-package! ejc-sql     :defer t
+                          :commands ejc-sql-mode ejc-connect      )
+(use-package! ob-sql-mode :defer t)
 
 (setq ejc-result-table-impl                      'ejc-result-mode)
 
