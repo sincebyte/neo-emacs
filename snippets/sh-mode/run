@@ -4,12 +4,9 @@
 # --
 set -e
 mvn clean -T 1C package -f ../pom.xml -Dmaven.test.skip=true dependency:purge-local-repository
-
-if [ $JREBEL_HOME ]; then
-    export JAVA_OPTS="$JAVA_OPTS -noverify -agentpath:$JREBEL_HOME/lib/libjrebel64.dylib"
-    echo "SETTING JREBEL=$JREBEL_HOME/lib/libjrebel64.dylib"
-fi
 java $JAVA_OPTS \
+-XX:HotswapAgent=fatjar \
+-Xlog:redefine+class*=info \
 -Xms1024m -Xmx1024m \
 -Dspring.application.name=your_app_name \
 -Dspring.cloud.nacos.config.file-extension=yml \

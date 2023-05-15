@@ -86,9 +86,8 @@
 
 
 ;; 禁用的包
-(package! mml           :disable t)
-(package! semantic      :disable t)
-(package! log-edit      :disable t)
-(package! browse-url    :disable t)
-(package! dap-java      :disable t)
-
+(package! mml        :disable t)
+(package! semantic   :disable t)
+(package! log-edit   :disable t)
+(package! browse-url :disable t)
+(package! dap-java   :disable t)

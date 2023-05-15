@@ -20,7 +20,7 @@
 (package-initialize)
 
 ;; load package
-(use-package! init-benchmarking              )    ;; load by local, startup and require times
+;; (use-package! init-benchmarking              )    ;; load by local, startup and require times
 (use-package! db-work                        )    ;; load by local, privacy config account or pwd here
 (use-package! magit               :defer t   )    ;; load by doom, load config defer
 (use-package! yaml-mode           :defer t   )    ;; load by doom, format yaml code with correct indentation
