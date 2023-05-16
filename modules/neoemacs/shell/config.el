@@ -10,4 +10,6 @@
 (map! :ne "SPC v v" 'projectile-run-vterm                  )
 (map! :ne "SPC v o" 'vterm-send-stop                       )
 (map! :ne "SPC v s" 'vterm-send-start                      )
+(map! :n  "SPC v e" (lambda () (interactive)
+                (switch-to-buffer "*eshell-quickrun*"))    )
 (general-def 'insert vterm-mode-map "C-h" 'vterm-send-C-h  )
