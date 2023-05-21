@@ -1,6 +1,6 @@
 ;;; neoemacs/translate/config.el -*- lexical-binding: t; -*-
 
-(use-package! go-translate                )
+(use-package! go-translate :defer t               )
 
 (map! :ne "; t"     'gts-do-translate                          )
 (map! :ve "; t"     'gts-do-translate                          )

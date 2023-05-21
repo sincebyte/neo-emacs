@@ -443,6 +443,8 @@ curl https://register.jpy.wang/ReRegister/src/main/java/jrebel/JrebelMain.java -
 jrebel 2023.2.0
 https://www.jrebel.com/products/jrebel/download/prev-releases
 
+* About Logo
+edit with: [[https://ps.gaoding.com/#/][online-ps-editor]], [[./logo.psd][psd file]]
 * Dependencies
 
 https://github.com/hlissner/doom-emacs/blob/master/docs/getting_started.org

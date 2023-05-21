@@ -4,7 +4,7 @@
 ;; (eredis-print-hash (json-parse-string (eredis-get "identity:user:jwt:30400")))
 ;; (json--print (eredis-get "center-identity:user:jwt:30400"))
 
-(use-package eredis)
+(use-package eredis :defer t)
 
 (defun redis/keys (keys)
   (eredis-keys keys))

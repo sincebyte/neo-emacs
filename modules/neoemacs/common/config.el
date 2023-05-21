@@ -29,8 +29,7 @@
 ;;     "                                                         v1.3.1      "
 ;;     "                                                                     "))))
 (defun doom-dashboard-widget-footer () "For empty element." (insert ""))
-(setq fancy-splash-image (concat doom-private-dir "bash.png"))
-
+(setq fancy-splash-image (concat doom-private-dir "logo.png"))
 
 ;; gc setting
 (defmacro k-time (&rest body) `(let ((time (current-time))) ,@body (float-time (time-since time))))

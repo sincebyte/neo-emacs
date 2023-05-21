@@ -59,5 +59,6 @@
 (map! :after lsp-java
       :map java-mode-map
       :ne "; s"  #'lsp-signature-activate
-      :ne "s-p"  #'lsp-signature-previous
-      :ne "s-n"  #'lsp-signature-next)
+      :ne "s-k"  #'lsp-signature-previous
+      :ne "s-n"  #'lsp-signature-next
+      :ne "s-j"  #'lsp-signature-next)

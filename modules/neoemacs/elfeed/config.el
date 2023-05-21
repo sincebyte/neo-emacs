@@ -1,4 +1,5 @@
 (use-package! elfeed
+  :defer t
   :config
   (setq elfeed-feeds
         '(("https://www.archlinux.org/feeds/news/" archlinux)
