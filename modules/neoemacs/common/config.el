@@ -81,14 +81,7 @@
   ((t (:inherit 'default :foreground "#51afef" :background nil :weight normal :slant normal)))))
 (custom-set-faces `(aw-leading-char-face
   ((t (:foreground "#FFFFFF" :background "#4EAEEF" :height 300 :weight normal :slant normal)))))
-(custom-set-faces `(awesome-tray-module-date-face      ((t (:foreground "#5DADE2" :weight normal )))))
-(custom-set-faces `(awesome-tray-module-file-path-face ((t (:foreground "#3498DB" :weight normal )))))
-(custom-set-faces `(awesome-tray-module-battery-face   ((t (:foreground "#2E86C1" :weight normal )))))
 
-;; close the modeline default
-(add-hook 'buffer-list-update-hook (lambda ()
-                                     (unless (active-minibuffer-window)
-                                       (hide-mode-line-mode))))
 ;; make emacs auto save buffer
 (custom-set-variables
   '(auto-save-visited-mode t))

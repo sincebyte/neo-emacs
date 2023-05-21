@@ -1,4 +1,4 @@
-;;; neoemacs/modeline/config.el -*- lexical-binding: t; -*-
+;; neoemacs/modeline/config.el -*- lexical-binding: t; -*-
 (add-to-list 'load-path          (concat doom-user-dir "neoemacs"))   ;; default setting
 (setq
       doom-modeline-height                       10
@@ -46,16 +46,26 @@
   :group 'awesome-tray)
 (custom-set-faces `(awesome-tray-module-db-face  ((t (:foreground "#D98880" :weight normal )))))
 
+(custom-set-faces `(awesome-tray-module-date-face      ((t (:foreground "#5DADE2" :weight normal )))))
+(custom-set-faces `(awesome-tray-module-file-path-face ((t (:foreground "#3498DB" :weight normal )))))
+(custom-set-faces `(awesome-tray-module-battery-face   ((t (:foreground "#2E86C1" :weight normal )))))
+
 (setq awesome-tray-module-alist
   '(
-    ("location"  . (my-awesome-db-info       awesome-tray-module-db-face             ))
-    ("battery"   . (my-awesome-tray-git-info awesome-tray-module-battery-face        ))
-    ("mode-name" . (projectile-project-root-single awesome-tray-module-file-path-face))
-    ("file-path" . (my-awesome-tray-buffername-info awesome-tray-module-date-face    ))
-    ("date"      . (my-awesome-tray-nil-info awesome-tray-module-date-face           ))
-    ("belong"    . (my-awesome-tray-nil-info awesome-tray-module-battery-face        ))))
+    ("word-count" . (awesome-tray-module-word-count-info awesome-tray-module-word-count-face))
+    ("location"   . (my-awesome-db-info       awesome-tray-module-db-face                   ))
+    ("battery"    . (my-awesome-tray-git-info awesome-tray-module-battery-face              ))
+    ("mode-name"  . (projectile-project-root-single awesome-tray-module-file-path-face      ))
+    ("file-path"  . (my-awesome-tray-buffername-info awesome-tray-module-date-face          ))
+    ("date"       . (my-awesome-tray-nil-info awesome-tray-module-date-face                 ))
+    ("belong"     . (my-awesome-tray-nil-info awesome-tray-module-battery-face              ))))
 
 ;; (map! :ne "; v"     'vc-refresh-state                          )
 (map! :ne "; ;"     'hide-mode-line-mode                       )
+
+;; close the modeline default
+(add-hook 'buffer-list-update-hook (lambda ()
+                                     (unless (active-minibuffer-window)
+                                       (hide-mode-line-mode))))
 
 (awesome-tray-enable)

@@ -4,9 +4,7 @@
 # --
 set -e
 mvn clean -T 1C package -f ../pom.xml -Dmaven.test.skip=true dependency:purge-local-repository
-java $JAVA_OPTS \
--XX:HotswapAgent=fatjar \
--Xlog:redefine+class*=info \
+java $HOTSWAP_OPTS \
 -Xms1024m -Xmx1024m \
 -Dspring.application.name=your_app_name \
 -Dspring.cloud.nacos.config.file-extension=yml \
