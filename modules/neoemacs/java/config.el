@@ -15,9 +15,12 @@
        (setq
         lsp-idle-delay                             0.1
         lsp-eldoc-enable-hover                     t
+        lsp-eldoc-render-all                       t
+        lsp-java-format-enabled                    nil
         lsp-java-format-comments-enabled           nil
         lsp-java-format-on-type-enabled            t
         lsp-java-save-actions-organize-imports     nil
+        lsp-java-maven-download-sources            t
         lsp-java-autobuild-enabled                 t
         lsp-inhibit-message                        t
         lsp-completion-show-kind                   nil
@@ -50,3 +53,11 @@
 (map! :nve "; c"     'comment-line                        )
 (map! :ne  "; r"     'string-inflection-java-style-cycle  )
 (map! :ne "SPC c I"  #'lsp-java-open-super-implementation )
+(map! :ne "SPC c I"  #'lsp-java-open-super-implementation )
+(map! :map global-map "s-n" nil)
+
+(map! :after lsp-java
+      :map java-mode-map
+      :ne "; s"  #'lsp-signature-activate
+      :ne "s-p"  #'lsp-signature-previous
+      :ne "s-n"  #'lsp-signature-next)

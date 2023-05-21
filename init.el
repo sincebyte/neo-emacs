@@ -195,6 +195,7 @@
        eww                 ; eww config
        find                ; find file config
        eredis              ; a redis client
-       font
+       font                ; font set
        sql                 ; ejc sql setting
+       elfeed              ; rss reader
 )

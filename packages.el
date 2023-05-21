@@ -51,7 +51,7 @@
 ;(package! builtin-package :recipe (:branch "develop"))
 (add-to-list 'load-path "/usr/local/bin")
 (after! warnings(add-to-list 'warning-suppress-types '(yasnippet backquote-change)))
-(unpin!   lsp-mode lsp-java )
+;; (unpin!   lsp-mode lsp-java )
 (unpin!   org-roam          )
 (package! org-roam          )
 (package! org-roam-ui       )

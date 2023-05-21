@@ -2,6 +2,9 @@
 
 (use-package! go-translate                )
 
+(map! :ne "; t"     'gts-do-translate                          )
+(map! :ve "; t"     'gts-do-translate                          )
+
 (map! :after go-translate
       :map evil-normal-state-map
       "q" nil)
