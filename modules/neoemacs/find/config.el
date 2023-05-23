@@ -25,3 +25,12 @@
 (map! :ne "SPC z"   'counsel-fzf                               )
 (map! :ne "SPC v c" 'counsel-rg                                )
 (map! :ie "C-i"     'counsel-yank-pop                          )
+
+(map! :after dired
+      :map dired-mode-map
+      :ne "J" nil)
+(map! :after dired
+      :map dired-mode-map
+      :ne "J" #'+workspace/switch-left)
+
+(after! tramp (setq tramp-verbose 0))

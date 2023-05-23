@@ -57,8 +57,23 @@
 (map! :map global-map "s-n" nil)
 
 (map! :after lsp-java
-      :map java-mode-map
-      :ne "; s"  #'lsp-signature-activate
-      :ne "s-k"  #'lsp-signature-previous
-      :ne "s-n"  #'lsp-signature-next
-      :ne "s-j"  #'lsp-signature-next)
+      :map lsp-mode-map
+      :n "; s"  #'lsp-signature-activate)
+
+;; (map! :after lsp-mode
+;;       :map lsp-signature-mode-map
+;;       :n "c-k"  nil
+;;       :n "c-n"  nil
+;;       :n "c-j"  nil)
+
+;; (map! :after lsp-mode
+;;       :map lsp-signature-mode-map
+;;       :n "c-k"  #'lsp-signature-previous
+;;       :n "c-n"  #'lsp-signature-previous
+;;       :n "c-j"  #'lsp-signature-next)
+
+;;(evil-define-key* 'normal lsp-signature-mode-map
+;; "C-n" #'lsp-signature-next)
+
+
+

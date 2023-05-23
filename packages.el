@@ -78,6 +78,8 @@
 (package! string-inflection )
 (package! tree-sitter-langs )
 (package! auto-complete     )
+(package! elfeed            )
+
 ;; (package! awesome-tray      )
 
 ;; (package! ejc-sql    :recipe (:host github :repo "vanniuner/ejc-sql"         :branch "master" ))
