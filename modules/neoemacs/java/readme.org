@@ -1,0 +1,25 @@
+#+title: java packcage readme
+#+subtitle:
+#+author: vanniuner
+#+SETUPFILE: ~/.doom.d/org-head.setup
+
+* shotcuts
+| shotcut | desc                      |
+| ; i     | lsp-java-organize-imports |
+| ; s     | show signature            |
+| SPC c d | go to define              |
+| SPC c D | go to define              |
+| SPC c i | go to implements          |
+| SPC c I | super-implementation      |
+| SPC t e | treemacs-java-deps-list   |
+| SPC t s | lsp-restart-workspace     |
+| SPC c f | format                    |
+| SPC c r | lsp rename                |
+
+* TODO most wanted
+** shotcuts
+| shotcut | desc                |
+| ?       | format current line |
+** coding
+1. eldoc [[https://github.com/emacs-lsp/lsp-java/issues/432][lsp-java/issues/432]]
+2. lsp-java-format-on-type-enabled , *need push issue*
