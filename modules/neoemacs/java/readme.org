@@ -8,7 +8,7 @@
 | ; i     | lsp-java-organize-imports |
 | ; s     | show signature            |
 | SPC c d | go to define              |
-| SPC c D | go to define              |
+| SPC c D | +lookup/references        |
 | SPC c i | go to implements          |
 | SPC c I | super-implementation      |
 | SPC t e | treemacs-java-deps-list   |
