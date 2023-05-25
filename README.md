@@ -1,51 +1,52 @@
 
 # Table of Contents
 
-1.  [About](#orgd9dda62)
-2.  [How to install](#orgc38f412)
-    1.  [Install emacs](#orga86b396)
-    2.  [Building Emacs](#org46bc90d)
-    3.  [Clone doom-emacs](#orgd70200e)
-    4.  [Clone neo-emacs](#orgb930d96)
-    5.  [Doom Install](#org3562719)
-    6.  [Use EmacsPorts](#org8f71360)
-3.  [How to update](#orgdecee29)
-4.  [Private setting](#orgedceb52)
-5.  [Lsp-java Usage](#org2dbe7e6)
-6.  [Dap-java Usage](#org5ee068a)
-7.  [Company box customize](#orgc844d57)
-8.  [Ejc-sql Usage](#orge6b4126)
-9.  [Eredis Usage](#org3f280f8)
-    1.  [connect setting](#org6f15183)
-    2.  [send redis command on org mode](#org80afdb4)
-10. [Bookmark](#orge577243)
-11. [Rime Usage](#orgf82af1b)
-12. [Libvterm Usage](#orga3ad191)
-13. [Elpa Offline](#org54be3e0)
-14. [FZF Config](#org9cee617)
-    1.  [fish config](#orga2a70b0)
-    2.  [how to ignore files](#org8e61a8f)
-15. [Latex PDF setting](#orgd4dfff5)
-16. [Alfred](#org9898f06)
-17. [Doom org style](#orgc8c03e2)
-18. [Dot sketchviz](#orgfe4e8c6)
-19. [Questions](#org5066896)
-    1.  [install ffmpeg](#org0f2e33c)
-    2.  [how to install all-the-icons?](#orga7d7b52)
-    3.  [how to install rime ?](#org2a0f44f)
-    4.  [how to install vterm?](#org9f00255)
-    5.  [lsp-springboot](#org9dea041)
-    6.  [useful key setting](#org77b323e)
-    7.  [why message showed could not load undo-tree history](#orgef80292)
-    8.  [File mode specification error: (file-missing Doing vfork No such file or directory)](#org2e931e1)
-    9.  [image dir](#org6440eea)
-20. [Jrebel](#orgd969971)
-21. [Dependencies](#org6e025d1)
+1.  [About](#orgfaae602)
+2.  [How to install](#org4c445f1)
+    1.  [Install emacs](#org374e5cb)
+    2.  [Building Emacs](#orgf923bc8)
+    3.  [Clone doom-emacs](#orgc67de1b)
+    4.  [Clone neo-emacs](#org7a7c1be)
+    5.  [Doom Install](#org0957985)
+    6.  [Use EmacsPorts](#org2d0284e)
+3.  [How to update](#orga12d0ca)
+4.  [Private setting](#org778b8dc)
+5.  [Lsp-java Usage](#org937419b)
+6.  [Dap-java Usage](#org98f3645)
+7.  [Company box customize](#orgfa5a1f6)
+8.  [Ejc-sql Usage](#org176f07b)
+9.  [Eredis Usage](#org1d1bd1f)
+    1.  [connect setting](#org53cf538)
+    2.  [send redis command on org mode](#orged0ffa6)
+10. [Bookmark](#orgc760bb5)
+11. [Rime Usage](#org906d096)
+12. [Libvterm Usage](#org21ed114)
+13. [Elpa Offline](#org319ec37)
+14. [FZF Config](#orgec87e06)
+    1.  [fish config](#org83e43c1)
+    2.  [how to ignore files](#org34b75ea)
+15. [Latex PDF setting](#org17e54cd)
+16. [Alfred](#org9501851)
+17. [Doom org style](#org665c25a)
+18. [Dot sketchviz](#org71cd174)
+19. [Questions](#orgc577b89)
+    1.  [install ffmpeg](#org5f9b9fd)
+    2.  [how to install all-the-icons?](#org7cf971b)
+    3.  [how to install rime ?](#org4680e8f)
+    4.  [how to install vterm?](#orgcc7e604)
+    5.  [lsp-springboot](#orgd68c591)
+    6.  [useful key setting](#orga21be65)
+    7.  [why message showed could not load undo-tree history](#orgb47dfc0)
+    8.  [File mode specification error: (file-missing Doing vfork No such file or directory)](#org86566eb)
+    9.  [image dir](#org462f813)
+20. [Jrebel](#org1d55af9)
+21. [About Logo](#orgb0e46d6)
+22. [Dependencies](#org72b9f3b)
 
 ![img](./image-use.png)  
 
 
-<a id="orgd9dda62"></a>
+<a id="orgfaae602"></a>
 
 # About
 
@@ -61,12 +62,12 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   [onlinedoc](http://1.117.167.195/doc/neo-emacs.html)
 
 
-<a id="orgc38f412"></a>
+<a id="org4c445f1"></a>
 
 # How to install
 
 
-<a id="orga86b396"></a>
+<a id="org374e5cb"></a>
 
 ## Install emacs
 
@@ -77,7 +78,7 @@ Choose your operation system and install it.
 -   export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs, this depends on your installation path.
 
 
-<a id="org46bc90d"></a>
+<a id="orgf923bc8"></a>
 
 ## Building Emacs
 
@@ -92,21 +93,21 @@ Choose your operation system and install it.
     9  open nextstep/Emacs.app
 
 
-<a id="orgd70200e"></a>
+<a id="orgc67de1b"></a>
 
 ## Clone doom-emacs
 
     1  git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.emacs.d
 
 
-<a id="orgb930d96"></a>
+<a id="org7a7c1be"></a>
 
 ## Clone neo-emacs
 
     git clone https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
 
-<a id="org3562719"></a>
+<a id="org0957985"></a>
 
 ## Doom Install
 
@@ -126,7 +127,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     ~/.emacs.doom/bin/doom install
 
 
-<a id="org8f71360"></a>
+<a id="org2d0284e"></a>
 
 ## Use EmacsPorts
 
@@ -135,7 +136,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     defaults write org.gnu.Emacs HideDocumentIcon YES
 
 
-<a id="orgdecee29"></a>
+<a id="orga12d0ca"></a>
 
 # How to update
 
@@ -145,7 +146,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     sh ~/.emacs.d/bin/doom sync
 
 
-<a id="orgedceb52"></a>
+<a id="org778b8dc"></a>
 
 # Private setting
 
@@ -326,7 +327,7 @@ Changing config in the config.el.
 </table>
 
 
-<a id="org2dbe7e6"></a>
+<a id="org937419b"></a>
 
 # Lsp-java Usage
 
@@ -460,7 +461,7 @@ Changing config in the config.el.
             (setq inferior-lisp-program "/opt/homebrew/bin//sbcl")
 
 
-<a id="org5ee068a"></a>
+<a id="org98f3645"></a>
 
 # Dap-java Usage
 
@@ -575,7 +576,7 @@ Changing config in the config.el.
     </table>
 
 
-<a id="orgc844d57"></a>
+<a id="orgfa5a1f6"></a>
 
 # Company box customize
 
@@ -583,7 +584,7 @@ Changing config in the config.el.
 -   company-icon icon config file: ~/.emacs.d/modules/completion/company/config.el
 
 
-<a id="orge6b4126"></a>
+<a id="org176f07b"></a>
 
 # Ejc-sql Usage
 
@@ -658,12 +659,12 @@ Changing config in the config.el.
     </table>
 
 
-<a id="org3f280f8"></a>
+<a id="org1d1bd1f"></a>
 
 # Eredis Usage
 
 
-<a id="org6f15183"></a>
+<a id="org53cf538"></a>
 
 ## connect setting
 
@@ -674,7 +675,7 @@ Changing config in the config.el.
     (eredis-auth "pwd" rp)
 
 
-<a id="org80afdb4"></a>
+<a id="orged0ffa6"></a>
 
 ## send redis command on org mode
 
@@ -714,7 +715,7 @@ key binding C-c C-c
 </table>
 
 
-<a id="orge577243"></a>
+<a id="orgc760bb5"></a>
 
 # Bookmark
 
@@ -723,7 +724,7 @@ key binding C-c C-c
     (setq bookmark-default-file "~/org/org-roam/command/doom/config/bookmark")
 
 
-<a id="orgf82af1b"></a>
+<a id="org906d096"></a>
 
 # Rime Usage
 
@@ -739,10 +740,31 @@ key binding C-c C-c
         cp /opt/homebrew/opt/emacs-plus@29/include/emacs-module.h /Users/van/.doom.d/neoemacs/rime-macos/dist/include
 
 
-<a id="orga3ad191"></a>
+<a id="org21ed114"></a>
 
 # Libvterm Usage
 
+-   Configuration  
+    
+    -   fish shell configuration
+    
+        function vterm_printf;
+            if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end
+                # tell tmux to pass the escape sequences through
+                printf "\ePtmux;\e\e]%s\007\e\\" "$argv"
+            else if string match -q -- "screen*" "$TERM"
+                # GNU screen (screen, screen-256color, screen-256color-bce)
+                printf "\eP\e]%s\007\e\\" "$argv"
+            else
+                printf "\e]%s\e\\" "$argv"
+            end
+        end
+        if [ "$INSIDE_EMACS" = 'vterm' ]
+            function clear
+                vterm_printf "51;Evterm-clear-scrollback";
+                tput clear;
+            end
+        end
 -   Ubuntu  
     
         sudo apt install cmake
@@ -806,7 +828,7 @@ key binding C-c C-c
     </table>
 
 
-<a id="org54be3e0"></a>
+<a id="org319ec37"></a>
 
 # Elpa Offline
 
@@ -819,12 +841,12 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="org9cee617"></a>
+<a id="orgec87e06"></a>
 
 # FZF Config
 
 
-<a id="orga2a70b0"></a>
+<a id="org83e43c1"></a>
 
 ## fish config
 
@@ -842,7 +864,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
         "*.svg" . "*.puml" . "*.orgids" . "*.css" . "*.DS_Store" '
 
 
-<a id="org8e61a8f"></a>
+<a id="org34b75ea"></a>
 
 ## how to ignore files
 
@@ -859,7 +881,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
         crpt
 
 
-<a id="orgd4dfff5"></a>
+<a id="org17e54cd"></a>
 
 # Latex PDF setting
 
@@ -874,7 +896,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
 4.  [more info](https://www.sheerwill.live/posts/main/20220723211325-vanilla_emacs_with_purcell/)
 
 
-<a id="org9898f06"></a>
+<a id="org9501851"></a>
 
 # Alfred
 
@@ -883,7 +905,7 @@ perference -> Advanced -> Rebuild macOS Metadata.
 alfred -> reload  
 
 
-<a id="orgc8c03e2"></a>
+<a id="org665c25a"></a>
 
 # Doom org style
 
@@ -891,7 +913,7 @@ A vairty of template about org mode code which one referenced the doom doc style
 How to use? <https://github.com/vanniuner/doom-org-style>  
 
 
-<a id="orgfe4e8c6"></a>
+<a id="org71cd174"></a>
 
 # Dot sketchviz
 
@@ -904,19 +926,19 @@ How to use? <https://github.com/vanniuner/doom-org-style>
     ![img](dotsk-demo.svg)
 
 
-<a id="org5066896"></a>
+<a id="orgc577b89"></a>
 
 # Questions
 
 
-<a id="org0f2e33c"></a>
+<a id="org5f9b9fd"></a>
 
 ## install ffmpeg
 
 -   brew install ffmpeg
 
 
-<a id="orga7d7b52"></a>
+<a id="org7cf971b"></a>
 
 ## how to install all-the-icons?
 
@@ -924,7 +946,7 @@ How to use? <https://github.com/vanniuner/doom-org-style>
 -   M-x all-the-icons-install-fonts
 
 
-<a id="org2a0f44f"></a>
+<a id="org4680e8f"></a>
 
 ## how to install rime ?
 
@@ -933,7 +955,7 @@ How to use? <https://github.com/vanniuner/doom-org-style>
 unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime  
 
 
-<a id="org9f00255"></a>
+<a id="orgcc7e604"></a>
 
 ## how to install vterm?
 
@@ -947,7 +969,7 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     make
 
 
-<a id="org9dea041"></a>
+<a id="orgd68c591"></a>
 
 ## lsp-springboot
 
@@ -961,7 +983,7 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     jdt-language-server-latest.tar.gz -f lsp-java-server-build.pom
 
 
-<a id="org77b323e"></a>
+<a id="orga21be65"></a>
 
 ## useful key setting
 
@@ -969,14 +991,14 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     ![img](key-change.png)
 
 
-<a id="orgef80292"></a>
+<a id="orgb47dfc0"></a>
 
 ## why message showed could not load undo-tree history
 
     brew install watchexec
 
 
-<a id="org2e931e1"></a>
+<a id="org86566eb"></a>
 
 ## File mode specification error: (file-missing Doing vfork No such file or directory)
 
@@ -996,14 +1018,14 @@ So the solution is change the execution file with the below shell script on MacO
     /Applications/Emacs.app/Contents/MacOS/Emacs.old
 
 
-<a id="org6440eea"></a>
+<a id="org462f813"></a>
 
 ## image dir
 
     ln -s ~/org/org-roam/image any_where/image
 
 
-<a id="orgd969971"></a>
+<a id="org1d55af9"></a>
 
 # Jrebel
 
@@ -1019,7 +1041,14 @@ jrebel 2023.2.0
 <https://www.jrebel.com/products/jrebel/download/prev-releases>  
 
 
-<a id="org6e025d1"></a>
+<a id="orgb0e46d6"></a>
+
+# About Logo
+
+edit with: [online-ps-editor](https://ps.gaoding.com/#/), [psd file](./logo.psd)  
+
+
+<a id="org72b9f3b"></a>
 
 # Dependencies
 

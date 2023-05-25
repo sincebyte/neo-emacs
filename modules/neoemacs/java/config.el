@@ -18,7 +18,6 @@
         lsp-java-references-code-lens-enabled      t
         lsp-java-implementations-code-lens-enabled t
         lsp-enable-on-type-formatting              t
-        lsp-java-format-settings-url               (expand-file-name (concat doom-user-dir "neoemacs/eclipse-codestyle.xml"))
         lsp-java-format-enabled                    t
         lsp-java-format-on-type-enabled            t
         lsp-java-format-comments-enabled           nil
@@ -42,7 +41,8 @@
 ;; (set-company-backend! 'prog-mode
 ;;   '(:separate company-capf company-yasnippet company-dabbrev company-ispell))
 
-(setq lsp-java-java-path             (concat (getenv "JAVA_17_HOME") "/bin/java")
+(setq lsp-java-format-settings-url   (expand-file-name (concat doom-user-dir "neoemacs/eclipse-codestyle.xml"))
+      lsp-java-java-path             (concat (getenv "JAVA_17_HOME") "/bin/java")
       lsp-maven-path                 "~/.m2/settings.xml"
       lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.22.0-202304131553.tar.gz"
       lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path )
@@ -50,8 +50,6 @@
       plantuml-default-exec-mode     'jar
       inferior-lisp-program          "/opt/homebrew/bin//sbcl"
       lombok-jar-path                ( expand-file-name (concat doom-user-dir "neoemacs/lombok.jar")))
-
-(add-hook 'java-mode-hook #'lsp)
 
 ;; ;; ;; java key setting
 (map! :nve "; c"     'comment-line                        )
@@ -61,8 +59,11 @@
 (map! :map global-map "s-n" nil)
 
 (map! :after lsp-java
-      :map lsp-mode-map
-      :n "; s"  #'lsp-signature-activate)
+      :map   lsp-mode-map
+      :n "; i"     #'lsp-java-organize-imports
+      :n "; s"     #'lsp-signature-activate
+      :n "SPC t e" #'lsp-treemacs-java-deps-list
+      :n "SPC t s" #'lsp-restart-workspace)
 
 ;; (map! :after lsp-mode
 ;;       :map lsp-signature-mode-map

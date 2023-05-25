@@ -79,6 +79,8 @@
 (package! tree-sitter-langs )
 (package! auto-complete     )
 (package! elfeed            )
+(package! kaolin-themes     )
+
 
 ;; (package! awesome-tray      )
 

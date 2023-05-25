@@ -278,6 +278,27 @@ key binding C-c C-c
 cp /opt/homebrew/opt/emacs-plus@29/include/emacs-module.h /Users/van/.doom.d/neoemacs/rime-macos/dist/include
  #+end_src
 * Libvterm Usage
+- Configuration
+  - fish shell configuration
+  #+begin_src shell
+  function vterm_printf;
+      if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end
+          # tell tmux to pass the escape sequences through
+          printf "\ePtmux;\e\e]%s\007\e\\" "$argv"
+      else if string match -q -- "screen*" "$TERM"
+          # GNU screen (screen, screen-256color, screen-256color-bce)
+          printf "\eP\e]%s\007\e\\" "$argv"
+      else
+          printf "\e]%s\e\\" "$argv"
+      end
+  end
+  if [ "$INSIDE_EMACS" = 'vterm' ]
+      function clear
+          vterm_printf "51;Evterm-clear-scrollback";
+          tput clear;
+      end
+  end
+  #+end_src
 - Ubuntu
     #+begin_src shell
     sudo apt install cmake
