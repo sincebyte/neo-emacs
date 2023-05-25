@@ -1,5 +1,6 @@
 ;;; neoemacs/shell/config.el -*- lexical-binding: t; -*-
 ;; envirment setting
+(setenv "SHELL"         "/usr/local/bin/fish")
 (setenv "JAVA_8_HOME"   "/Users/van/soft/jdk/zulu8.58.0.13-ca-jdk8.0.312-macosx_aarch64/zulu-8.jdk/Contents/Home" )
 (setenv "JAVA_HOME"     "/Users/van/soft/jdk/jbr/Contents/Home"                                                   )
 (setenv "JAVA_17_HOME"  "/Users/van/soft/jdk/zulu17.40.19-ca-fx-jdk17.0.6-macosx_aarch64"                         )

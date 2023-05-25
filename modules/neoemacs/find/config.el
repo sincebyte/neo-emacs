@@ -33,4 +33,14 @@
       :map dired-mode-map
       :ne "J" #'+workspace/switch-left)
 
-(after! tramp (setq tramp-verbose 0))
+;; (customize-set-variable
+;;  'tramp-ssh-controlmaster-options
+;;  (concat
+;;    "-o ControlPath=~/.ssh/ssh-%%r@%%h:%%p "
+;;    "-o ControlMaster=auto -o ControlPersist=yes"))
+
+;; (after! tramp
+;;   (setenv "SHELL" "/bin/bash")
+;;   (setq tramp-verbose 1
+;;         tramp-completion-reread-directory-timeout nil
+;;         tramp-connection-timeout 60))

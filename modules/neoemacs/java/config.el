@@ -7,22 +7,25 @@
       company-text-icons-format                  " %s "
       company-text-icons-add-background          t
       company-text-face-extra-attributes         '(:weight bold :slant italic)
-      company-dabbrev-ignore-case                nil
+      ;; company-dabbrev-ignore-case                nil
       company-tooltip-flip-when-above            t
       company-show-quick-access                  nil)
 
 (after! lsp-java
-       (setq
-        lsp-idle-delay                             0.1
+  (setq lsp-idle-delay                             0.1
         lsp-eldoc-enable-hover                     t
-        lsp-eldoc-render-all                       t
-        lsp-java-format-enabled                    nil
-        lsp-java-format-comments-enabled           nil
+        lsp-java-signature-help-enabled            t
+        lsp-java-references-code-lens-enabled      t
+        lsp-java-implementations-code-lens-enabled t
+        lsp-enable-on-type-formatting              t
+        lsp-java-format-settings-url               (expand-file-name (concat doom-user-dir "neoemacs/eclipse-codestyle.xml"))
+        lsp-java-format-enabled                    t
         lsp-java-format-on-type-enabled            t
+        lsp-java-format-comments-enabled           nil
         lsp-java-save-actions-organize-imports     nil
         lsp-java-maven-download-sources            t
         lsp-java-autobuild-enabled                 t
-        lsp-inhibit-message                        t
+        lsp-java-inhibit-message                   nil
         lsp-completion-show-kind                   nil
         lsp-completion-sort-initial-results        t
         lsp-completion-show-detail                 nil
@@ -39,8 +42,7 @@
 ;; (set-company-backend! 'prog-mode
 ;;   '(:separate company-capf company-yasnippet company-dabbrev company-ispell))
 
-(setq lsp-java-format-settings-url   (expand-file-name (concat doom-user-dir "neoemacs/eclipse-codestyle.xml"))
-      lsp-java-java-path             (concat (getenv "JAVA_17_HOME") "/bin/java")
+(setq lsp-java-java-path             (concat (getenv "JAVA_17_HOME") "/bin/java")
       lsp-maven-path                 "~/.m2/settings.xml"
       lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.22.0-202304131553.tar.gz"
       lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path )
@@ -48,6 +50,8 @@
       plantuml-default-exec-mode     'jar
       inferior-lisp-program          "/opt/homebrew/bin//sbcl"
       lombok-jar-path                ( expand-file-name (concat doom-user-dir "neoemacs/lombok.jar")))
+
+(add-hook 'java-mode-hook #'lsp)
 
 ;; ;; ;; java key setting
 (map! :nve "; c"     'comment-line                        )
@@ -74,6 +78,3 @@
 
 ;;(evil-define-key* 'normal lsp-signature-mode-map
 ;; "C-n" #'lsp-signature-next)
-
-
-

@@ -7,7 +7,7 @@
       neo-window-width                           45
       neo-window-fixed-size                      nil
       frame-resize-pixelwise                     nil
-      display-line-numbers-type                  nil                   ;; show line number 'relative
+      display-line-numbers-type                  't                   ;; show line number 'relative
       evil-want-Y-yank-to-eol                    t
       read-process-output-max                    (* 1024 1024))
 
@@ -63,4 +63,5 @@
 (general-def 'insert "C-h"    'delete-backward-char                  )
 (keyboard-translate ?\C-h ?\C-?                                      )
 
-(load-theme 'doom-one t) ;; set theme
+;; (load-theme 'kaolin-light t) ;; set theme
+(load-theme 'kaolin-light t) ;; set theme

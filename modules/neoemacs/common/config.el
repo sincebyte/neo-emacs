@@ -74,12 +74,17 @@
 ;; (custom-set-faces `(avy-lead-face-0 ((t (:foreground "#F15A59" :background nil :weight bold)))))
 ;; (custom-set-faces `(avy-lead-face-1 ((t (:foreground "#ED2B2A" :background nil :weight normal)))))
 ;; (custom-set-faces `(avy-lead-face-2 ((t (:foreground "#FFF6C3" :background nil :weight normal)))))
+;; (custom-set-faces `(line-number
+;;   ((t (:inherit 'default :foreground "#3f444a" :background nil :weight normal :slant normal)))))
+;; (custom-set-faces `(line-number-current-line
+;;   ((t (:inherit 'default :foreground "#51afef" :background nil :weight normal :slant normal)))))
+;; (custom-set-faces `(aw-leading-char-face
+;;   ((t (:foreground "#FFFFFF" :background "#4EAEEF" :height 300 :weight normal :slant normal)))))
+
 (custom-set-faces `(line-number
-  ((t (:inherit 'default :foreground "#3f444a" :background nil :weight normal :slant normal)))))
+  ((t (:inherit 'default  :slant normal)))))
 (custom-set-faces `(line-number-current-line
-  ((t (:inherit 'default :foreground "#51afef" :background nil :weight normal :slant normal)))))
-(custom-set-faces `(aw-leading-char-face
-  ((t (:foreground "#FFFFFF" :background "#4EAEEF" :height 300 :weight normal :slant normal)))))
+  ((t (:inherit 'default  :slant normal)))))
 
 ;; make emacs auto save buffer
 (custom-set-variables
