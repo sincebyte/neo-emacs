@@ -7,7 +7,7 @@
       neo-window-width                           45
       neo-window-fixed-size                      nil
       frame-resize-pixelwise                     nil
-      display-line-numbers-type                  'nil                   ;; show line number 'relative
+      display-line-numbers-type                  t                   ;; show line number 'relative
       evil-want-Y-yank-to-eol                    t
       read-process-output-max                    (* 1024 1024))
 
@@ -63,6 +63,8 @@
 (general-def 'insert "C-h"    'delete-backward-char                  )
 (keyboard-translate ?\C-h ?\C-?                                      )
 
+
+(setq kaolin-themes-underline nil)
 (defun synchronize-theme ()
   (setq hour (string-to-number (substring (current-time-string) 11 13)))
   (if (member hour (number-sequence 6 12))

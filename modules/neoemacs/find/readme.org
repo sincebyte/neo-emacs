@@ -1,0 +1,13 @@
+#+title: readme
+#+subtitle: this is subtitle
+#+author: vanniuner
+#+SETUPFILE: ~/.doom.d/org-head.setup
+
+* TODO most wanted
+** code advice
+Automatically to evil normal mode when `J` `K` be clicked.
+It's actually a advice regard to `+workspace/switch-right` and `+workspace/switch-right`.
+#+begin_src lisp
+(map! :n "K"                  '+workspace/switch-right               )
+(map! :n "J"                  '+workspace/switch-left                )
+#+end_src
