@@ -33,7 +33,7 @@
        ;;fill-column       ; a `fill-column' indicator
        hl-todo           ; highlight TODO/CANC/NOTE/DEPR/HACK/REVI/DONE
        ;;hydra
-       ;;indent-guides     ; highlighted indent columns
+       indent-guides     ; highlighted indent columns
        modeline          ; snazzy, Atom-inspired modeline, plus API
        nav-flash         ; blink the current line after jumping
        neotree           ; a project drawer, like NERDTree for vim
@@ -183,7 +183,6 @@
 
        :neoemacs
        shell               ; shell config for vterm & eshell
-       alpha               ; make emacs background transparent
        common              ; neoemacs common setting
        java                ; lsp java setting
        modeline            ; neoemacs modeline setting
@@ -198,4 +197,5 @@
        font                ; font set
        sql                 ; ejc sql setting
        elfeed              ; rss reader
+       alpha               ; make emacs background transparent
 )

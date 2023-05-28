@@ -5,7 +5,7 @@
       cn-font "LXGW WenKai Mono")
 
 ;; (setq en-font "等距更纱黑体 Slab SC"
-;;       cn-font "LXGW WenKai Mono")
+;;       cn-font "等距更纱黑体 Slab SC")
 
 (setq en-font-size (car emacs-font-size-pair)
       cn-font-size (cdr emacs-font-size-pair))

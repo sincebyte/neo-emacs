@@ -1,6 +1,6 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
-(setq default-frame-alist                        '((top . 88) (left . 450) (height . 32) (width . 122))
+(setq default-frame-alist                        '((top . 58) (left . 100) (height . 32) (width . 122))
       undo-tree-history-directory-alist          '(("." . "~/.emacs.d/undo"))
       user-private-dir                           "~/org/org-roam/emacs/command/doom/config/" ;; load your privacy config
       dired-dwim-target                          t
@@ -63,5 +63,37 @@
 (general-def 'insert "C-h"    'delete-backward-char                  )
 (keyboard-translate ?\C-h ?\C-?                                      )
 
-;; (load-theme 'kaolin-light t) ;; set theme
-(load-theme 'kaolin-bubblegum t) ;; set theme
+(defun synchronize-theme ()
+  (setq hour (string-to-number (substring (current-time-string) 11 13)))
+  (if (member hour (number-sequence 6 12))
+    (setq   now '(kaolin-light))
+    (setq   now '(kaolin-bubblegum)))
+  (if (eq now custom-enabled-themes)
+    (print (current-time-string))
+    (setq custom-enabled-themes now)
+    (if (member hour (number-sequence 6 12))
+      (load-theme 'kaolin-light t)
+      (load-theme 'kaolin-bubblegum t))))
+(run-with-timer 0 3600 'synchronize-theme)
+
+
+;; (use-package kaolin-themes
+;;   :config
+;;     (setq kaolin-themes-underline nil
+;;           kaolin-themes-underline-wave 'wave)
+;;     (load-theme 'kaolin-bubblegum t)
+;;     (kaolin-treemacs-theme))
+
+;; for transparent and blur background
+;; (set-face-background 'default "mac:windowBackgroundColor")
+;; (dolist (f (face-list)) (set-face-stipple f "alpha:95%"))
+;; (add-to-list 'default-frame-alist '(nc-appearance . dark))
+;; (add-to-list 'default-frame-alist '(nc-transparent-titlebar . t))
+;; (setq ns-use-proxy-icon nil)
+;; (setq frame-title-format nil)
+;; (setq face-remapping-alist (append face-remapping-alist '((default my/default-blurred))))
+;; (load-theme 'doom-vibrant t) ;; set theme
+;; (defface my/default-blurred
+;;    '((t :inherit 'default :stipple "alpha:90%"))
+;;    "Like 'default but blurred."
+;;    :group 'my)

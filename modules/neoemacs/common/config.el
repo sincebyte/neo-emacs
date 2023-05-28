@@ -57,29 +57,24 @@
 
 ;; lsp face
 
-;; (custom-set-faces `(default ((t (:background "#ecf0f1" )))))
-(custom-set-faces `(lsp-face-highlight-textual ((t (:background nil )))))
-(custom-set-faces `(lsp-face-highlight-read
-  ((t (:foreground "#57a6db" :background nil :weight bold :underline nil)))))
-(custom-set-faces `(lsp-face-highlight-write
-  ((t (:foreground "#57a6db" :background nil :weight bold :underline nil)))))
-(custom-set-faces `(tide-hl-identifier-face
-  ((t (:foreground "#57a6db" :background nil)))))
-(custom-set-faces `(avy-lead-face   ((t (:foreground "#00dfff" :background nil :weight normal)))))
-(custom-set-faces `(avy-lead-face-0 ((t (:foreground "#2b8db3" :background nil :weight normal)))))
-(custom-set-faces `(avy-lead-face-1 ((t (:foreground "#104E8B" :background nil :weight normal)))))
-(custom-set-faces `(avy-lead-face-2 ((t (:foreground "#104E8B" :background nil :weight normal)))))
+(custom-set-faces `(lsp-face-highlight-read ((t (:inherit highlight )))))
+
+;; (custom-set-faces `(lsp-face-highlight-textual ((t (:background nil )))))
+;; (custom-set-faces `(lsp-face-highlight-read
+;;   ((t (:background nil :weight bold :underline nil)))))
+;; (custom-set-faces `(lsp-face-highlight-write
+;;   ((t (:background nil :weight bold :underline nil)))))
+;; (custom-set-faces `(tide-hl-identifier-face
+;;   ((t (:background nil)))))
+;; (custom-set-faces `(avy-lead-face   ((t (:foreground "#00dfff" :background nil :weight normal)))))
+;; (custom-set-faces `(avy-lead-face-0 ((t (:foreground "#2b8db3" :background nil :weight normal)))))
+;; (custom-set-faces `(avy-lead-face-1 ((t (:foreground "#104E8B" :background nil :weight normal)))))
+;; (custom-set-faces `(avy-lead-face-2 ((t (:foreground "#104E8B" :background nil :weight normal)))))
 
 ;; (custom-set-faces `(avy-lead-face   ((t (:foreground "#D21312" :background nil :weight bold)))))
 ;; (custom-set-faces `(avy-lead-face-0 ((t (:foreground "#F15A59" :background nil :weight bold)))))
 ;; (custom-set-faces `(avy-lead-face-1 ((t (:foreground "#ED2B2A" :background nil :weight normal)))))
 ;; (custom-set-faces `(avy-lead-face-2 ((t (:foreground "#FFF6C3" :background nil :weight normal)))))
-;; (custom-set-faces `(line-number
-;;   ((t (:inherit 'default :foreground "#3f444a" :background nil :weight normal :slant normal)))))
-;; (custom-set-faces `(line-number-current-line
-;;   ((t (:inherit 'default :foreground "#51afef" :background nil :weight normal :slant normal)))))
-;; (custom-set-faces `(aw-leading-char-face
-;;   ((t (:foreground "#FFFFFF" :background "#4EAEEF" :height 300 :weight normal :slant normal)))))
 
 (custom-set-faces `(line-number
   ((t (:inherit 'default  :slant normal)))))
