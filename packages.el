@@ -80,6 +80,7 @@
 (package! auto-complete     )
 (package! elfeed            )
 (package! kaolin-themes     )
+(package! disable-mouse     )
 
 
 ;; (package! awesome-tray      )

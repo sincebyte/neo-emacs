@@ -78,24 +78,9 @@
       (load-theme 'kaolin-bubblegum t))))
 (run-with-timer 0 3600 'synchronize-theme)
 
-
-;; (use-package kaolin-themes
-;;   :config
-;;     (setq kaolin-themes-underline nil
-;;           kaolin-themes-underline-wave 'wave)
-;;     (load-theme 'kaolin-bubblegum t)
-;;     (kaolin-treemacs-theme))
-
-;; for transparent and blur background
-;; (set-face-background 'default "mac:windowBackgroundColor")
-;; (dolist (f (face-list)) (set-face-stipple f "alpha:95%"))
-;; (add-to-list 'default-frame-alist '(nc-appearance . dark))
-;; (add-to-list 'default-frame-alist '(nc-transparent-titlebar . t))
-;; (setq ns-use-proxy-icon nil)
-;; (setq frame-title-format nil)
-;; (setq face-remapping-alist (append face-remapping-alist '((default my/default-blurred))))
-;; (load-theme 'doom-vibrant t) ;; set theme
-;; (defface my/default-blurred
-;;    '((t :inherit 'default :stipple "alpha:90%"))
-;;    "Like 'default but blurred."
-;;    :group 'my)
+(use-package! disable-mouse :defer t)
+(mapc #'disable-mouse-in-keymap
+  (list evil-motion-state-map
+        evil-normal-state-map
+        evil-visual-state-map
+        evil-insert-state-map))

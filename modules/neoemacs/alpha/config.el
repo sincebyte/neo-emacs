@@ -1,19 +1,16 @@
 ;;; neoemacs/alpha/config.el -*- lexical-binding: t; -*-
 
-;;set the alpha background
-(setq-default alpha-list '((97 100) (100 100)))
-(defun loop-alpha ()
-  ;;doc
-  (interactive)
-  (let ((h (car alpha-list)))
-    ((lambda (a ab)
-       (set-frame-parameter (selected-frame) 'alpha (list a ab))
-       (add-to-list 'default-frame-alist (cons 'alpha (list a ab)))
-       ) (car h) (car (cdr h)))
-    (setq alpha-list (cdr (append alpha-list (list h))))
-    )
-  )
-(loop-alpha)
+
+(defun set-frame-alpha (arg &optional active)
+  (interactive "nEnter alpha value (1-100): \np")
+  (let* ((elt (assoc 'alpha default-frame-alist))
+         (old (frame-parameter nil 'alpha))
+         (new (cond ((atom old)     `(,arg ,arg))
+                    ((eql 1 active) `(,arg ,(cadr old)))
+                    (t              `(,(car old) ,arg)))))
+    (if elt (setcdr elt new) (push `(alpha ,@new) default-frame-alist))
+    (set-frame-parameter nil 'alpha new)))
+(global-set-key (kbd "C-c t") 'set-frame-alpha)
 
 (setq frame-title-format nil)
-
+(set-frame-alpha 90)

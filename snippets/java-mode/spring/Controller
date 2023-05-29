@@ -1,11 +1,44 @@
 # -*- mode: snippet -*-
-# name: ctlr
-# key: ctlr
+# name: ctl
+# key: ctl
 # --
-	/**
-	 * 健康检查
-	 */
-	@RequestMapping("/healthCheck")
-	public ResponseEntity<String> welcome() {
-		return ResponseEntity.ok("pong");
-	}
+package `(mapconcat 'identity (split-string (replace-regexp-in-string ".*src\\(/\\(main\\|test\\)\\)?\\(/java\\)?" "" default-directory) "/" t) ".")`;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+
+import io.swagger.annotations.Api;
+
+/**
+ * @author `neo-user-name`
+ * @time `(format-time-string "%Y-%m-%d %H:%M:%S")`
+ **/
+@Api("`(file-name-sans-extension (buffer-name))`")
+@RestController
+@RequestMapping("`(file-name-sans-extension (buffer-name))`")
+public class `(file-name-sans-extension (buffer-name))` {
+
+    /**
+     * `(file-name-sans-extension (buffer-name))` post
+     */
+    @PostMapping("/post")
+    public Result<Integer> post(@RequestBody @Valid Object postQo) {
+        return Result.success();
+    }
+
+    /**
+     * `(file-name-sans-extension (buffer-name))` get
+     */
+    @GetMapping("/get")
+    public Result<Integer> get(@Valid Object getQo) {
+        return Result.success();
+    }
+
+}
