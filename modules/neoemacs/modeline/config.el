@@ -21,19 +21,19 @@
         awesome-tray-date-format "%H:%M"ome-tray-file-path-truncate-dirname-levels 10
         awesome-tray-file-path-full-dirname-levels 10))
 (defun my-awesome-tray-nil-info () (concat "" ""))
-(defun my-awesome-tray-git-info () (nth 0 (vc-git-branches)))
+(defun my-awesome-tray-git-info () (concat  "↪Git:" (concat (nth 0 (vc-git-branches)) "")))
 
 (defun my-awesome-tray-buffername-info ()
     (let ((l-name (if (buffer-modified-p) (concat "*" (buffer-name)) (buffer-name))))
-         (if (eq (eval buffer-read-only) nil) l-name (concat "% " l-name))))
+         (concat (if (eq (eval buffer-read-only) nil) l-name (concat "% " l-name)) " ▶")))
 
 (defun projectile-project-root-single ()
   (let ((l-level 6)
         (l-list  (delete "" (split-string (projectile-project-root) "/" )))
         (l-lenth (length (delete "" (split-string (projectile-project-root) "/" ))))
         (l-bool  (> (length (delete "" (split-string (projectile-project-root) "/" ))) 6)))
-        (if l-bool (string-join (nthcdr l-level l-list) "/")
-                   (elt l-list (- l-lenth 1)))))
+        (concat (if l-bool (string-join (nthcdr l-level l-list) "/")
+                   (elt l-list (- l-lenth 1))) " ▶")))
 
 (defun my-awesome-db-info ()
  (if (eq major-mode 'sql-mode)
