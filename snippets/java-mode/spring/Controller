@@ -18,7 +18,7 @@ import io.swagger.annotations.Api;
 
 /**
  * @author `neo-user-name`
- * @time `(format-time-string "%Y-%m-%d %H:%M:%S")`
+ * @since `(format-time-string "%Y-%m-%d %H:%M:%S")`
  **/
 @Api("`(file-name-sans-extension (buffer-name))`")
 @RestController

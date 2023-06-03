@@ -41,7 +41,7 @@
 ;; (set-company-backend! 'prog-mode
 ;;   '(:separate company-capf company-yasnippet company-dabbrev company-ispell))
 
-(setq lsp-java-format-settings-url   (expand-file-name (concat doom-user-dir "neoemacs/eclipse-codestyle.xml"))
+(setq lsp-java-format-settings-url   (expand-file-name (concat doom-user-dir "neoemacs/Intellij_Spring_Boot_Java_Conventions.xml"))
       lsp-java-java-path             (concat (getenv "JAVA_17_HOME") "/bin/java")
       lsp-maven-path                 "~/.m2/settings.xml"
       lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.22.0-202304131553.tar.gz"

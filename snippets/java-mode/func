@@ -2,6 +2,9 @@
 # name:func
 # key:func
 # --
+/**
+ * @since `(format-time-string "%Y-%m-%d")`
+ **/
 public void functiont(){
     $0
 }

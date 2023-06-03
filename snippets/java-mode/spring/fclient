@@ -8,7 +8,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 
 /**
  * @author `neo-user-name`
- * @time `(format-time-string "%Y-%m-%d %H:%M:%S")`
+ * @since `(format-time-string "%Y-%m-%d %H:%M:%S")`
  **/
 @FeignClient(
         contextId = "`(file-name-sans-extension (buffer-name))`-api",

@@ -16,8 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 自定义Advisor
- * @author author
- * @time `(format-time-string "%Y-%m-%d %H:%M:%S")`
+ * @author `neo-user-name`
+ * @since `(format-time-string "%Y-%m-%d %H:%M:%S")`
  **/
 @Slf4j
 @Component
