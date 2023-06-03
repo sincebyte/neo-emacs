@@ -215,23 +215,14 @@ $dcevmjava -jar app.jar
     #+end_src
 - key binding
  | <l> | <l>                     | <l>             |
- +-----+-------------------------+-----------------+
  | KEY | FUNCTION                | DESCRIPTION     |
- +-----+-------------------------+-----------------+
  | , n | dap-next                | Breakpoint next |
- +-----+-------------------------+-----------------+
  | , b | dap-breakpoint-toggle   |                 |
- +-----+-------------------------+-----------------+
  | , c | dap-continue            |                 |
- +-----+-------------------------+-----------------+
  | , r | dap-eval-region         |                 |
- +-----+-------------------------+-----------------+
  | , a | dap-eval-thing-at-point |                 |
- +-----+-------------------------+-----------------+
  | , d | dap-debug               |                 |
- +-----+-------------------------+-----------------+
  | , u | dap-ui-repl             |                 |
- +-----+-------------------------+-----------------+
 ** Company box customize
 - use `M-x all-the-icons-material` for checking icon
 - company-icon icon config file: ~/.emacs.d/modules/completion/company/config.el
@@ -267,13 +258,9 @@ $dcevmjava -jar app.jar
      #+END_SRC
  - key binding
     | <l>     | <l>            | <l>                        |
-    +---------+----------------+----------------------------+
     | KEY     | FUNCTION       | description                |
-    +---------+----------------+----------------------------+
     | SPC e c | ejc-connection | choose connection with ivy |
-    +---------+----------------+----------------------------+
     | C-c C-c | ejc-execute    | execute the sql            |
-    +---------+----------------+----------------------------+
 ** Eredis Usage
 *** connect setting
 *M-x* ielm
@@ -293,7 +280,6 @@ key binding C-c C-c
 #+end_src
 
 | Key                        | Value(s) | Type   |
-|----------------------------+----------+--------|
 | center-bpm:flow-list-count |        1 | string |
 ** Bookmark
 - the bookmark file location :~/.emacs.d/.local/etc/bookmarks
@@ -347,15 +333,10 @@ cp /opt/homebrew/opt/emacs-plus@29/include/emacs-module.h /Users/van/.doom.d/neo
     #+end_src
 - Key Binding
    | <l>     | <l>                  | <l>                                             |
-   +---------+----------------------+-------------------------------------------------+
    | KEY     | FUNCTION             | DESCRIPTION                                     |
-   +---------+----------------------+-------------------------------------------------+
    | SPC v v | projectile-run-vterm | open vterm window base on the project root path |
-   +---------+----------------------+-------------------------------------------------+
    | SPC v p | vterm-send-start     | enable vterm screen roll                        |
-   +---------+----------------------+-------------------------------------------------+
    | SPC v s | vterm-send-stop      | disable vterm screen roll                       |
-   +---------+----------------------+-------------------------------------------------+
 ** Elpa Offline
 rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
 #+begin_src elisp
