@@ -7,7 +7,7 @@
       neo-window-width                           45
       neo-window-fixed-size                      nil
       frame-resize-pixelwise                     nil
-      display-line-numbers-type                  t                   ;; show line number 'relative
+      display-line-numbers-type                  nil                   ;; show line number 'relative
       evil-want-Y-yank-to-eol                    t
       read-process-output-max                    (* 1024 1024))
 
@@ -57,6 +57,8 @@
 (map! :n "SPC t n"            '+workspace/new                        )
 (map! :n "K"                  '+workspace/switch-right               )
 (map! :n "J"                  '+workspace/switch-left                )
+(map! :n "s-k"                '+workspace/swap-right                 )
+(map! :n "s-j"                '+workspace/swap-left                  )
 (global-set-key (kbd "<RET>") 'evil-ret                              )
 (global-set-key (kbd "C-."  ) 'next-buffer                           )
 (global-set-key (kbd "C-,"  ) 'previous-buffer                       )

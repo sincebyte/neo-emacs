@@ -37,7 +37,7 @@
 
 (defun my-awesome-db-info ()
  (if (eq major-mode 'sql-mode)
-     ejc-connection-name     ))
+     (concat ejc-connection-name  " ▶")))
 
 (defface awesome-tray-module-db-face
   '((((background light)) :inherit awesome-tray-cyan-face)
@@ -46,9 +46,9 @@
   :group 'awesome-tray)
 (custom-set-faces `(awesome-tray-module-db-face  ((t (:foreground "#D98880" :weight normal )))))
 
-(custom-set-faces `(awesome-tray-module-date-face      ((t (:foreground "#4D4C4C" :weight normal )))))
-(custom-set-faces `(awesome-tray-module-file-path-face ((t (:foreground "#4D4C4C" :weight normal )))))
-(custom-set-faces `(awesome-tray-module-battery-face   ((t (:foreground "#4D4C4C" :weight normal )))))
+(custom-set-faces `(awesome-tray-module-date-face      ((t (:foreground "#5DADE2" :weight normal )))))
+(custom-set-faces `(awesome-tray-module-file-path-face ((t (:foreground "#3498DB" :weight normal )))))
+(custom-set-faces `(awesome-tray-module-battery-face   ((t (:foreground "#2E86C1" :weight normal )))))
 
 (setq awesome-tray-module-alist
   '(
