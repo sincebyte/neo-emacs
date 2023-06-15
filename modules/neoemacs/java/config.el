@@ -11,8 +11,9 @@
       company-tooltip-flip-when-above            t
       company-show-quick-access                  nil)
 
-(after! lsp-java
-  (setq lsp-idle-delay                             0.1
+(add-hook 'java-mode-hook (lambda ()
+  (setq display-line-numbers                       t
+        lsp-idle-delay                             0.1
         lsp-eldoc-enable-hover                     t
         lsp-java-signature-help-enabled            t
         lsp-java-references-code-lens-enabled      t
@@ -36,7 +37,7 @@
         lsp-modeline-diagnostics-scope             :workspace
         lsp-modeline-code-actions-enable           nil
         lsp-enable-file-watchers                   nil
-        lsp-lens-enable                            t))
+        lsp-lens-enable                            t)))
 
 ;; (set-company-backend! 'prog-mode
 ;;   '(:separate company-capf company-yasnippet company-dabbrev company-ispell))
@@ -65,7 +66,7 @@
       :n "SPC t e" #'lsp-treemacs-java-deps-list
       :n "SPC t s" #'lsp-restart-workspace)
 
-(add-hook 'java-mode-hook (lambda () (setq display-line-numbers t)))
+;; (add-hook 'java-mode-hook (lambda () (setq display-line-numbers t)))
 
 ;; (map! :after lsp-mode
 ;;       :map lsp-signature-mode-map

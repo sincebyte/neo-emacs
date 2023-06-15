@@ -182,9 +182,9 @@
        (default +bindings +smartparens)
 
        :neoemacs
+       java                ; lsp java setting
        shell               ; shell config for vterm & eshell
        common              ; neoemacs common setting
-       java                ; lsp java setting
        modeline            ; neoemacs modeline setting
        org                 ; neoemacs org setting
        rime                ; neoemacs rime setting
