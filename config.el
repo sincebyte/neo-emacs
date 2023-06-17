@@ -9,6 +9,11 @@
       frame-resize-pixelwise                     nil
       display-line-numbers-type                  nil                   ;; show line number 'relative
       evil-want-Y-yank-to-eol                    t
+      plantuml-default-exec-mode                 'jar
+      plantuml-jar-path                          (expand-file-name (concat doom-user-dir "neoemacs/plantuml.jar"))
+      org-plantuml-executable-path               (expand-file-name doom-user-dir )
+      org-plantuml-executable-args               '("-headless")
+      org-plantuml-jar-path                      (expand-file-name (concat doom-user-dir "neoemacs/plantuml.jar"))
       read-process-output-max                    (* 1024 1024))
 
 (add-to-list 'load-path          user-private-dir                 )

@@ -13,6 +13,7 @@
 
 (add-hook 'java-mode-hook (lambda ()
   (setq display-line-numbers                       t
+        lsp-enable-symbol-highlighting             t
         lsp-idle-delay                             0.1
         lsp-eldoc-enable-hover                     t
         lsp-java-signature-help-enabled            t
@@ -43,12 +44,11 @@
 ;;   '(:separate company-capf company-yasnippet company-dabbrev company-ispell))
 
 (setq lsp-java-format-settings-url   (expand-file-name (concat doom-user-dir "neoemacs/Intellij_Spring_Boot_Java_Conventions.xml"))
-      lsp-java-java-path             (concat (getenv "JAVA_17_HOME") "/bin/java")
+      ;; lsp-java-java-path             (concat (getenv "$OJAVA_17_HOME") "/Users/van/soft/jdk/jdk-17.0.6.jdk/Contents/Home/bin/java")
+      lsp-java-java-path             (concat "/Users/van/soft/jdk/jdk-17.0.6.jdk/Contents/Home/bin/java")
       lsp-maven-path                 "~/.m2/settings.xml"
       lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.22.0-202304131553.tar.gz"
       lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path )
-      plantuml-jar-path              ( expand-file-name (concat doom-user-dir "neoemacs/plantuml.jar"))
-      plantuml-default-exec-mode     'jar
       inferior-lisp-program          "/opt/homebrew/bin//sbcl"
       lombok-jar-path                ( expand-file-name (concat doom-user-dir "neoemacs/lombok.jar")))
 

@@ -104,6 +104,27 @@
        ;;tmux              ; an API for interacting with tmux
        ;;upload            ; map local to remote projects via ssh/ftp
 
+       :os
+       (:if IS-MAC macos)  ; improve compatibility with macOS
+
+       :neoemacs
+       java                ; lsp java setting
+       shell               ; shell config for vterm & eshell
+       common              ; neoemacs common setting
+       modeline            ; neoemacs modeline setting
+       org                 ; neoemacs org setting
+       rime                ; neoemacs rime setting
+       translate           ; translate setting
+       xml                 ; xml buffer format
+       bookmark            ; bookmark setting
+       eww                 ; eww config
+       find                ; find file config
+       eredis              ; a redis client
+       font                ; font set
+       sql                 ; ejc sql setting
+       elfeed              ; rss reader
+       alpha               ; make emacs background transparent
+
        :lang
        ;;agda              ; types of types of types of types...
        ;;assembly          ; assembly for fun or debugging
@@ -181,21 +202,4 @@
        ;;literate
        (default +bindings +smartparens)
 
-       :neoemacs
-       java                ; lsp java setting
-       shell               ; shell config for vterm & eshell
-       common              ; neoemacs common setting
-       modeline            ; neoemacs modeline setting
-       org                 ; neoemacs org setting
-       rime                ; neoemacs rime setting
-       translate           ; translate setting
-       xml                 ; xml buffer format
-       bookmark            ; bookmark setting
-       eww                 ; eww config
-       find                ; find file config
-       eredis              ; a redis client
-       font                ; font set
-       sql                 ; ejc sql setting
-       elfeed              ; rss reader
-       alpha               ; make emacs background transparent
 )

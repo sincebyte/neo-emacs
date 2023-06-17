@@ -4,6 +4,8 @@
 (setenv "JAVA_8_HOME"   "/Users/van/soft/jdk/zulu8.58.0.13-ca-jdk8.0.312-macosx_aarch64/zulu-8.jdk/Contents/Home" )
 (setenv "JAVA_HOME"     "/Users/van/soft/jdk/jbr/Contents/Home"                                                   )
 (setenv "JAVA_17_HOME"  "/Users/van/soft/jdk/zulu17.40.19-ca-fx-jdk17.0.6-macosx_aarch64"                         )
+(setenv "OJAVA_17_HOME" "/Users/van/soft/jdk/jdk-17.0.6.jdk/Contents/Home"                                       )
+(setenv "JAVA_19_HOME"  "/Users/van/soft/jdk/zulu19.30.1/zulu-19.jdk/Contents/Home"                               )
 (setenv "HOTSWAP_OPTS"  "-XX:HotswapAgent=fatjar -Xlog:redefine+class*=info"                                      )
 (add-to-list 'exec-path "/opt/homebrew/bin//sbcl"                                                                 )
 
