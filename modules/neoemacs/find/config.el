@@ -32,6 +32,14 @@
 (map! :after dired
       :map dired-mode-map
       :ne "J" #'+workspace/switch-left)
+(map! :after neotree
+      :map neotree-mode-map
+      :ne "J" nil
+      :ne "K" nil)
+(map! :after neotree
+      :map neotree-mode-map
+      :ne "J" #'+workspace/switch-left
+      :ne "K" #'+workspace/switch-right)
 
 ;; (customize-set-variable
 ;;  'tramp-ssh-controlmaster-options
