@@ -50,8 +50,9 @@
 ;; our package manager can't deal with; see raxod502/straight.el#279)
 ;(package! builtin-package :recipe (:branch "develop"))
 (add-to-list 'load-path "/usr/local/bin")
+
 (after! warnings(add-to-list 'warning-suppress-types '(yasnippet backquote-change)))
-;; (unpin!   lsp-mode lsp-java )
+(unpin!   lsp-mode lsp-java )
 (unpin!   org-roam          )
 (package! org-roam          )
 (package! org-roam-ui       )
@@ -83,11 +84,17 @@
 (package! disable-mouse     )
 
 
+
 ;; (package! awesome-tray      )
 
 ;; (package! ejc-sql    :recipe (:host github :repo "vanniuner/ejc-sql"         :branch "master" ))
 (package! bookmark+  :recipe (:host github :repo "emacsmirror/bookmark-plus" :branch "master" ))
 (package! org-appear :recipe (:host github :repo "awth13/org-appear"         :branch "master" ))
+(package! org-transclusion
+  :recipe (:host github
+           :repo "nobiot/org-transclusion"
+           :branch "main"
+           :files ("*.el")))
 
 
 ;; 禁用的包

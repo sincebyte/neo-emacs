@@ -115,4 +115,14 @@
   (setq org-appear-autokeywords t)
   (setq org-appear-inside-latex t))
 
+(use-package! org-transclusion
+  :defer t
+  :after org
+  :init
+  (map!
+   :leader
+   :prefix "n"
+   :desc "Org Transclusion Mode" "t" #'org-transclusion-mode
+   :desc "org-transclusion-refresh" "g" #'org-transclusion-refresh))
+
 (map! :ne "; l"     'org-toggle-narrow-to-subtree              )

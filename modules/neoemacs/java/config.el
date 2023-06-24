@@ -56,7 +56,6 @@
 (map! :nve "; c"     'comment-line                        )
 (map! :ne  "; r"     'string-inflection-java-style-cycle  )
 (map! :ne "SPC c I"  #'lsp-java-open-super-implementation )
-(map! :ne "SPC c I"  #'lsp-java-open-super-implementation )
 (map! :map global-map "s-n" nil)
 
 (map! :after lsp-java

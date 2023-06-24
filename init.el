@@ -24,6 +24,7 @@
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        (ivy)               ; a search engine for love and life
+       ;; vertico             ; the search engine of the future
 
        :ui
        ;;deft              ; notational velocity for Emacs
@@ -38,8 +39,8 @@
        nav-flash         ; blink the current line after jumping
        neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
-       (popup +defaults)   ; tame sudden yet inevitable temporary windows
-       pretty-code       ; ligatures or substitute text with pretty symbols
+       (popup +defaults) ; tame sudden yet inevitable temporary windows
+       ligatures         ; ligatures or substitute text with pretty symbols
        ;;tabs              ; an tab bar for Emacs
        ;; (treemacs +lsp)          ; a project drawer, like neotree but cooler
        ;;unicode           ; extended unicode support for various languages
