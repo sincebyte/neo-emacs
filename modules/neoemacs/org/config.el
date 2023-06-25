@@ -123,6 +123,7 @@
    :leader
    :prefix "n"
    :desc "Org Transclusion Mode" "t" #'org-transclusion-mode
+   "O" #'org-transclusion-move-to-source
    :desc "org-transclusion-refresh" "g" #'org-transclusion-refresh))
 
 (map! :ne "; l"     'org-toggle-narrow-to-subtree              )

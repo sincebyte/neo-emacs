@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: oracle-limit
+# key: rn
+# --
+where 1=1 and rownum=1

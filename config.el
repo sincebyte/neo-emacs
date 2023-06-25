@@ -91,3 +91,19 @@
         evil-normal-state-map
         evil-visual-state-map
         evil-insert-state-map))
+
+;; open map
+;; (defun cc/search-apple-maps (search)
+;;   "Open SEARCH query in Apple Maps"
+;;   (interactive "MMap Search: ")
+;;   (let ((mapURL (concat "maps://?q=" (url-encode-url search))))
+;;     (message "Searching for %s" search)
+;;     (browse-url mapURL)))
+;; (defun cc/open-region-in-apple-maps (&optional start end)
+;;   "Open region from START to END in Apple Maps"
+;;   (interactive "r")
+;;   (let* ((query-buf (buffer-substring start end))
+;;          (mapURL (concat "maps://?q=" (url-encode-url query-buf))))
+;;     (message "Searching for %s" query-buf)
+;;     (browse-url mapURL)))
+

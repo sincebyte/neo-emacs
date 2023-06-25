@@ -82,7 +82,7 @@
 (package! elfeed            )
 (package! kaolin-themes     )
 (package! disable-mouse     )
-
+(package! golden-ratio      )
 
 
 ;; (package! awesome-tray      )

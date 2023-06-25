@@ -52,3 +52,16 @@
 ;;   (setq tramp-verbose 1
 ;;         tramp-completion-reread-directory-timeout nil
 ;;         tramp-connection-timeout 60))
+
+(use-package! golden-ratio
+  :defer t
+  :after-call pre-command-hook
+  :config
+  (golden-ratio-mode +1)
+  ;; (setq golden-ratio-auto-scale          t
+  ;;       golden-ratio-adjust-factor      .2
+  ;;       golden-ratio-wide-adjust-factor .2)
+  ;; Using this hook for resizing windows is less precise than
+  ;; `doom-switch-window-hook'.
+  (remove-hook 'window-configuration-change-hook #'golden-ratio)
+  (add-hook 'doom-switch-window-hook #'golden-ratio))
