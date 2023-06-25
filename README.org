@@ -62,7 +62,6 @@ After emacs installation, set environment variables which names EMACS ,this depe
 export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs,
 #+end_src
 ** Clone project
-
 clone doom-emacs and neo-emacs from github.
 #+BEGIN_SRC shell
 git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.emacs.d
@@ -89,13 +88,13 @@ At last run below, this will take few minutes. And it depends on the quality of 
 #+END_SRC
 * How to update
 #+begin_src shell
-export EMACS=/Applications/Emacs.app/Contents/MacOS/EMACS-JAVA-IDE
+export EMACS=/Applications/Emacs.app/Contents/MacOS/EMACS
 sh ~/.emacs.d/bin/doom upgrade
 sh ~/.emacs.d/bin/doom install
 sh ~/.emacs.d/bin/doom sync
 #+end_src
 * Private setting
-Changing Private setting config in the config.el ;
+Customize your private setting config in the config.el ;
 kse ~setq~
 #+begin_src elisp
 (setq fd-exec-path                   "/opt/homebrew/bin/fd"
@@ -120,147 +119,11 @@ kse ~setq~
 | rime-librime-root         | "~/.doom.d/myconfig/rime-macos/dist"    | emacs-rime/blob/master/ |
 
 * Neoemacs modules
-** Java module
-- generate .project & .classpath files
-    #+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
-  #+BEGIN_SRC shell
-  mvn eclipse:clean eclipse:eclipse
-  #+END_SRC
-- support projectlombok plugin
-
-  There have a default lombok.jar in ~doom-user-dir/neoemacs~ which you could replace by yourself.
-  #+begin_src elisp
-  (setq  lombok-jar-path (expand-file-name (concat doom-user-dir "neoemacs/lombok.jar")
-  #+end_src
-- Key binding
- #+CAPTION: java mode key binding
- | <l>     | <l>                                | <l>                             |
- | KEY     | FUNCTION                           | DESCRIPTION                     |
- | SPC c i | find-implementations               | find where sub class definition |
- | SPC c I | lsp-java-open-super-implementation | find where sub class definition |
- | SPC t e | lsp-treemacs-java-deps-list        | find projects referenced libs   |
- | SPC c f | formart buffer/region              | goto type definition            |
- | SPC c a | lsp-execute-code-action            | code action                     |
- | SPC c d | lsp-jump-definition                | jump to where symbol definition |
- | SPC c D | lsp-jump-reference                 | jump to where symbol referenced |
- | SPC c o | lsp-java-organize-imports          | import require package          |
-- how to upgrade jdtls
-
-  1. download the lastest jdt-language-server from https://download.eclipse.org/jdtls/milestones
-  2. replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls
-- error about vfork
-
-  1. go back for doom emacs
-     git reset --hard c44bc81a05f3758ceaa28921dd9c830b9c571e61
-  2. set the sbcl path
-    #+begin_src lisp
-    (setq inferior-lisp-program "/opt/homebrew/bin//sbcl")
-    #+end_src
-- jrebel
-
- If jrebel not hotload with code change?
-  1. exec ~mvn clean package~, and restart your project
-  2. check project resources/rebel.xml and make sure the code contains in the config
-  3. make sure you have activationed jrebel correctly
-  #+begin_src java
-  curl https://register.jpy.wang/ReRegister/src/main/java/jrebel/JrebelMain.java
-    -o tmp.java && java tmp.java && del tmp.java
-  #+end_src
-
-  jrebel 2023.2.0
-  https://www.jrebel.com/products/jrebel/download/prev-releases
-- HotSwarp
-
- [[http://hotswapagent.org/mydoc_configuration.html][hotswapagent]] ，a relacement of jrebel
-  - DCEVM
-    1. [[https://github.com/JetBrains/JetBrainsRuntime/releases?page=6][download]]  [[https://ssw.jku.at/dcevm/][dcevm]]
-    2. use command run your application ~dcevmjava -jar app.jar~
-  - Hotswapagent
-    1. download lastest hotswapagent [[https://github.com/HotswapProjects/HotswapAgent/releases][here]]
-    2. replace hotswapagent to $DCEVM_HOME/lib/hotswap/hotswap-agent.jar
-  - Startup
-    1. config
-     [[https://github.com/HotswapProjects/HotswapAgent/blob/master/hotswap-agent-core/src/main/resources/hotswap-agent.properties][hotswap-agent.properties]] hotswap-agent.properties place to project's resources directory.
-#+begin_src properties
-extraClasspath=target/classes;../longda-archetype-dao/target/classes
-watchResources=../longda-archetype-dao/src/main/resources
-webappDir=
-disabledPlugins=Hibernate, Hibernate3JPA, Hibernate3, Jersey1, Jersey2, MyFaces,
-Mojarra, Omnifaces, ELResolver, WildFlyELResolver, OsgiEquinox, Owb, Proxy, Weld,
-JBossModules, ResteasyRegistry, Deltaspike, GlassFish, Vaadin, Wicket, CxfJAXRS, FreeMarker, Undertow
-autoHotswap=true
-spring.basePackagePrefix=pkg.
-LOGGER=info
-#+end_src
-    2. add java startup parameters for HotswapAgent
-#+begin_src shell
--XX:HotswapAgent=fatjar -Xlog:redefine+class*=info
-#+end_src
-    3. use $DCEVM_HOME/bin/java run your application
-#+begin_src shell
-$dcevmjava -jar app.jar
-#+end_src
-** Dap-java Usage
-- Config the debug host and port, add file $usr_private_dir/dap-java-config.el.
-- Use `(setq user-private-dir "$usr_private_dir/dap-java-config.el" )` make it effective.
-    #+begin_src lisp -n
-    (dap-register-debug-template
-    "user-service"
-    (list :name "Java Attach"
-            :type "java"
-            :request "attach"
-            :projectName "user-service"
-            :hostName "127.0.0.1"
-            :port 1044))
-    #+end_src
-- key binding
- | <l> | <l>                     | <l>             |
- | KEY | FUNCTION                | DESCRIPTION     |
- | , n | dap-next                | Breakpoint next |
- | , b | dap-breakpoint-toggle   |                 |
- | , c | dap-continue            |                 |
- | , r | dap-eval-region         |                 |
- | , a | dap-eval-thing-at-point |                 |
- | , d | dap-debug               |                 |
- | , u | dap-ui-repl             |                 |
+#+transclude: [[./modules/neoemacs/java/readme.org][java-readme.org]] :level 2
+#+transclude: [[./modules/neoemacs/sql/readme.org][sql-readme.org]] :level 2
 ** Company box customize
 - use `M-x all-the-icons-material` for checking icon
 - company-icon icon config file: ~/.emacs.d/modules/completion/company/config.el
-** Ejc-sql Usage
- - Config your db connection in the $usr_private_dir/db-work.el.
-   #+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
-   #+begin_src lisp
-    (use-package ejc-sql
-    :commands ejc-sql-mode ejc-connect
-    :config
-    (setq clomacs-httpd-default-port 18090)
-    (ejc-create-connection "connection-name"
-            :classpath      "~/.m2/repository/mysql/mysql-connector-java/8.0.17/
-                mysql-connector-java-8.0.17.jar"
-            :connection-uri "jdbc:mysql://localhost/user?useSSL=false&user=root&password=pwd"
-            :separator      "</?\.*>" )
-    )
-    (provide 'db-work)
-   #+end_src
-#+latex:\newpage
- - sql file
-     #+BEGIN_SRC sql -n
-
-     <SELECT>
-     SELECT * FROM TABLE_ORG
-     </SELECT>
-
-     <SELECT>
-     delimiter ;
-     COMMENT ON COLUMN TABLE_ORG.PROJECT_CODE IS '项目编码';
-     COMMENT ON COLUMN TABLE_ORG.PERIOD IS '期间';
-     </SELECT>
-     #+END_SRC
- - key binding
-    | <l>     | <l>            | <l>                        |
-    | KEY     | FUNCTION       | description                |
-    | SPC e c | ejc-connection | choose connection with ivy |
-    | C-c C-c | ejc-execute    | execute the sql            |
 ** Eredis Usage
 *** connect setting
 *M-x* ielm

@@ -3,23 +3,88 @@
 #+author: vanniuner
 #+SETUPFILE: ~/.doom.d/org-head.setup
 
-* shotcuts
-| shotcut | desc                      |
-| ; i     | lsp-java-organize-imports |
-| ; s     | show signature            |
-| SPC c d | go to define              |
-| SPC c D | +lookup/references        |
-| SPC c i | go to implements          |
-| SPC c I | super-implementation      |
-| SPC t e | treemacs-java-deps-list   |
-| SPC t s | lsp-restart-workspace     |
-| SPC c f | format                    |
-| SPC c r | lsp rename                |
-
-* TODO most wanted
-** shotcuts
-| shotcut | desc                |
-| ?       | format current line |
-** coding
+* Java module
+Neo-Emacs will automatically download the jdtls from `lsp-java-jdt-download-url`, and now it's located at [[https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.22.0/jdt-language-server-1.22.0-202304131553.tar.gz][jdt-language-server-1.22.0]].After that you could use all the features powered by eclipse.
+- Generate eclipse files
+  Execute mvn command for generate eclipse .project & .classpath files on your project root path.
+  #+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
+  #+BEGIN_SRC shell
+  mvn eclipse:clean eclipse:eclipse
+  #+END_SRC
+- Support projectlombok plugin
+  There have a default lombok.jar in ~doom-user-dir/neoemacs~ which you could replace by yourself.
+  #+begin_src elisp
+  (setq  lombok-jar-path (expand-file-name (concat doom-user-dir "neoemacs/lombok.jar")
+  #+end_src
+- Shotcuts/Key binding
+ #+CAPTION: java mode key binding
+ | <l>     | <l>                                | <l>                             |
+ | KEY     | FUNCTION                           | DESCRIPTION                     |
+ | SPC c i | find-implementations               | find where sub class definition |
+ | SPC c I | lsp-java-open-super-implementation | find where sub class definition |
+ | SPC t e | lsp-treemacs-java-deps-list        | find projects referenced libs   |
+ | SPC c f | formart buffer/region              | goto type definition            |
+ | SPC c a | lsp-execute-code-action            | code action                     |
+ | SPC c d | lsp-jump-definition                | jump to where symbol definition |
+ | SPC c D | lsp-jump-reference                 | jump to where symbol referenced |
+ | SPC c o | lsp-java-organize-imports          | import require package          |
+- HotSwarp
+ [[http://hotswapagent.org/mydoc_configuration.html][hotswapagent]] ，a relacement of jrebel
+  - DCEVM
+    1. [[https://github.com/JetBrains/JetBrainsRuntime/releases?page=6][download]]  [[https://ssw.jku.at/dcevm/][dcevm]]
+    2. use command run your application ~dcevmjava -jar app.jar~
+  - Hotswapagent
+    1. download lastest hotswapagent [[https://github.com/HotswapProjects/HotswapAgent/releases][here]]
+    2. replace hotswapagent to $DCEVM_HOME/lib/hotswap/hotswap-agent.jar
+  - Startup
+    1. hotswap-agent config.
+     [[https://github.com/HotswapProjects/HotswapAgent/blob/master/hotswap-agent-core/src/main/resources/hotswap-agent.properties][hotswap-agent.properties]] hotswap-agent.properties place to project's resources directory.
+     #+begin_src properties
+     extraClasspath=target/classes;../longda-archetype-dao/target/classes
+     watchResources=../longda-archetype-dao/src/main/resources
+     webappDir=
+     disabledPlugins=Hibernate, Hibernate3JPA, Hibernate3, Jersey1, Jersey2, MyFaces,
+     Mojarra, Omnifaces, ELResolver, WildFlyELResolver, OsgiEquinox, Owb, Proxy, Weld,
+     JBossModules, ResteasyRegistry, Deltaspike, GlassFish, Vaadin, Wicket, CxfJAXRS,
+     FreeMarker, Undertow
+     autoHotswap=true
+     spring.basePackagePrefix=pkg.
+     LOGGER=info
+     #+end_src
+    2. startup with dcevm
+       use dcevm jar run your application which locate at $DCEVM_HOME/bin/java.
+       add java startup parameters for HotswapAgent.
+     #+begin_src shell
+    $dcevmjava -XX:HotswapAgent=fatjar -Xlog:redefine+class*=info -jar app.jar
+     #+end_src
+- How to upgrade jdtls
+  1. Customization your own eclipse jdtls project version by replace it's binary pacage.
+  2. Download the lastest jdt-language-server from https://download.eclipse.org/jdtls/milestones.
+  3. Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
+** TODO most wanted
+*** coding
 1. eldoc [[https://github.com/emacs-lsp/lsp-java/issues/432][lsp-java/issues/432]]
-2. lsp-java-format-on-type-enabled , *need push issue*
+* TODO Dap-java Usage
+ I do not use debug for years. So be careful the documentation maybe outdated.I think you need customization by yourself.
+ - Config the debug host and port, add file $usr_private_dir/dap-java-config.el.
+ - Use `(setq user-private-dir "$usr_private_dir/dap-java-config.el" )` make it effective.
+     #+begin_src lisp -n
+     (dap-register-debug-template
+     "user-service"
+     (list :name "Java Attach"
+             :type "java"
+             :request "attach"
+             :projectName "user-service"
+             :hostName "127.0.0.1"
+             :port 1044))
+     #+end_src
+ - key binding
+  | <l> | <l>                     | <l>             |
+  | KEY | FUNCTION                | DESCRIPTION     |
+  | , n | dap-next                | Breakpoint next |
+  | , b | dap-breakpoint-toggle   |                 |
+  | , c | dap-continue            |                 |
+  | , r | dap-eval-region         |                 |
+  | , a | dap-eval-thing-at-point |                 |
+  | , d | dap-debug               |                 |
+  | , u | dap-ui-repl             |                 |
