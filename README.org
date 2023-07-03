@@ -121,6 +121,30 @@ kse ~setq~
 * Neoemacs modules
 #+transclude: [[./modules/neoemacs/java/readme.org][java-readme.org]] :level 2
 #+transclude: [[./modules/neoemacs/sql/readme.org][sql-readme.org]] :level 2
+** Restclient
+Restclient provide a test suite for HTTP REST in Emacs.The official repository here [[https://github.com/pashky/restclient.el][restclient.el]].
+Yea, a pretty old old project.Fortunately doom emacs have integrated it.We just need open it with ~(rest +jq)~.
+*+jq* makes restclient have the ability to parse a particular response which Content-Type equalable application/json.
+The amazing feature is restclient support set variables or make a part of response being a variables which one could as a request part for another HTTP REST.
+
+Here we take the value from results as a variables which named count.
+#+begin_src restclient
+GET https://www.zhihu.com/api/v3/oauth/sms/supported_countries
+-> jq-set-var :count .count
+#+end_src
+#+begin_quote
+Only *jq-set-var* could works when the content-type equal to application/json MIME type
+#+end_quote
+
+Fortunately we have solution for other mime type, it's restclient-set-var, you could use elisp to parse the response;
+#+begin_src restclient
+GET https://www.baidu.com/sugrec
+-> run-hook (restclient-set-var ":queryid" (cdr (assq 'queryid (json-read))))
+Content-Type: application/x-www-form-urlencoded; charset=utf-8
+#+end_src
+
+About the variables infomation in current buffer, we could use ~C-c Tab~ to show them.
+
 ** Company box customize
 - use `M-x all-the-icons-material` for checking icon
 - company-icon icon config file: ~/.emacs.d/modules/completion/company/config.el
