@@ -30,12 +30,13 @@
 (use-package! magit               :defer t   )    ;; load by doom, load config defer
 (use-package! yaml-mode           :defer t   )    ;; load by doom, format yaml code with correct indentation
 (use-package! expand-region       :defer t   )    ;; load by doom, for select region more intelligent
-(use-package! restclient-jq       :defer t   )    ;; load by local, http client
+;; (use-package! restclient-jq       :defer t   )    ;; load by local, http client
 (use-package! jq-mode             :defer t   )    ;; load by doom, for parse json object
 (use-package! zygospore           :defer t   )    ;; load by doom, toggle window close or open
 (use-package! conf-evil-clipboard :defer t   )    ;; load by local, system and evil clipboard
 (use-package! string-inflection   :defer t   )    ;; load by local, underscore -> UPCASE -> CamelCase -> lowerCamelCase
 (use-package! general             :defer t   )    ;; load by doom, evil package key binding
+
 
 ;; almost key set
 (map! :nv "; x"               'amx                                   )

@@ -54,6 +54,8 @@
 (after! warnings(add-to-list 'warning-suppress-types '(yasnippet backquote-change)))
 (unpin!   lsp-mode lsp-java )
 (unpin!   org-roam          )
+(unpin!   restclient        )
+(unpin!   restclient-jq     )
 (package! org-roam          )
 (package! org-roam-ui       )
 (package! xml-format        )
@@ -95,6 +97,8 @@
            :repo "nobiot/org-transclusion"
            :branch "main"
            :files ("*.el")))
+;; (package! restclient)
+;; (package! restclient-jq)
 
 
 ;; 禁用的包
@@ -103,3 +107,4 @@
 (package! log-edit   :disable t)
 (package! browse-url :disable t)
 (package! dap-java   :disable t)
+
