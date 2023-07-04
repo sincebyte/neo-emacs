@@ -1,47 +1,44 @@
 
 # Table of Contents
 
-1.  [About](#orge6a7e44)
-2.  [How to install](#orgd3f671d)
-    1.  [Install emacs](#org719ed70)
-    2.  [Clone project](#org0cd0a5c)
-    3.  [Doom Install](#org5caec9d)
-3.  [How to update](#org97fbf6b)
-4.  [Private setting](#orgce89573)
-5.  [Neoemacs modules](#org5564a56)
-    1.  [Java module](#orgccd7642)
-    2.  [Dap-java Usage](#orgf3265d4)
-    3.  [Ejc-sql Usage](#org4d0323d)
-    4.  [Restclient](#org69770b9)
-    5.  [Company box customize](#org0b9c3fb)
-    6.  [Eredis Usage](#org5267d97)
-    7.  [Bookmark](#org5c547ce)
-    8.  [Rime Usage](#org40d3c06)
-    9.  [Libvterm Usage](#orgae34c1d)
-    10. [Elpa Offline](#org3bb5f9c)
-    11. [FZF Config](#org4204cd1)
-6.  [Org mode](#orgdf72c02)
-    1.  [Doom org style](#org98a1658)
-    2.  [Dot sketchviz](#org79ff888)
-    3.  [Latex PDF setting](#org89f4883)
-7.  [Alfred](#org5a2a175)
-8.  [Questions](#org4568a8c)
-    1.  [install ffmpeg](#org900f9e2)
-    2.  [how to install all-the-icons?](#org7df5226)
-    3.  [how to install rime ?](#org04ecf37)
-    4.  [how to install vterm?](#org4116cff)
-    5.  [lsp-springboot](#org977a004)
-    6.  [useful key setting](#org455c2fa)
-    7.  [why message showed could not load undo-tree history](#org8493af9)
-    8.  [File mode specification error: (file-missing Doing vfork No such file or directory)](#org39b65f1)
-    9.  [image dir](#orga53bf74)
-9.  [About Logo](#orgb3dcd9b)
-10. [Dependencies](#org63041ed)
+1.  [About](#org1d24651)
+2.  [How to install](#org7a98975)
+    1.  [Install emacs](#orga75b86d)
+    2.  [Clone project](#org04cafb5)
+    3.  [Doom Install](#org28e0753)
+3.  [How to update](#orgecbb0cb)
+4.  [Private setting](#orgecc23b1)
+5.  [Neoemacs modules](#orgf67ea11)
+    1.  [Restclient](#orge4c9e57)
+    2.  [Company box customize](#org100501c)
+    3.  [Eredis Usage](#orga937aa8)
+    4.  [Bookmark](#org8f8027e)
+    5.  [Rime Usage](#org4477c05)
+    6.  [Libvterm Usage](#org37363c3)
+    7.  [Elpa Offline](#orgf037e46)
+    8.  [FZF Config](#orgd2b3802)
+6.  [Org mode](#org30e52f1)
+    1.  [Doom org style](#orgc0df05c)
+    2.  [Dot sketchviz](#orge947ba6)
+    3.  [Latex PDF setting](#org8ec79be)
+7.  [Alfred](#org3e9a547)
+8.  [Questions](#orgfa7d59f)
+    1.  [install ffmpeg](#org71e0208)
+    2.  [how to install all-the-icons?](#org0215e08)
+    3.  [how to install rime ?](#orgf6519af)
+    4.  [how to install vterm?](#org82a786a)
+    5.  [lsp-springboot](#org6c4b2fd)
+    6.  [useful key setting](#org33f689d)
+    7.  [why message showed could not load undo-tree history](#org17b3455)
+    8.  [File mode specification error: (file-missing Doing vfork No such file or directory)](#org888a9ec)
+    9.  [image dir](#org325563b)
+9.  [About Logo](#orgf792baa)
+10. [Dependencies](#org20cf887)
 
 ![img](./image-use.png)  
 
 
-<a id="orge6a7e44"></a>
+<a id="org1d24651"></a>
 
 # About
 
@@ -57,12 +54,12 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   [onlinedoc](http://1.117.167.195/doc/neo-emacs.html)
 
 
-<a id="orgd3f671d"></a>
+<a id="org7a98975"></a>
 
 # How to install
 
 
-<a id="org719ed70"></a>
+<a id="orga75b86d"></a>
 
 ## Install emacs
 
@@ -97,7 +94,7 @@ After emacs installation, set environment variables which names EMACS ,this depe
     export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs,
 
 
-<a id="org0cd0a5c"></a>
+<a id="org04cafb5"></a>
 
 ## Clone project
 
@@ -107,7 +104,7 @@ clone doom-emacs and neo-emacs from github.
     git clone --depth 1 https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
 
-<a id="org5caec9d"></a>
+<a id="org28e0753"></a>
 
 ## Doom Install
 
@@ -125,7 +122,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     ~/.emacs.doom/bin/doom install
 
 
-<a id="org97fbf6b"></a>
+<a id="orgecbb0cb"></a>
 
 # How to update
 
@@ -135,7 +132,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     sh ~/.emacs.d/bin/doom sync
 
 
-<a id="orgce89573"></a>
+<a id="orgecc23b1"></a>
 
 # Private setting
 
@@ -256,301 +253,13 @@ kse `setq`
 </table>
 
 
-<a id="org5564a56"></a>
+<a id="orgf67ea11"></a>
 
 # Neoemacs modules
 
 
 
-<a id="orgccd7642"></a>
-
-## Java module
-
-Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url\`, and now it&rsquo;s located at [jdt-language-server-1.22.0](https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.22.0/jdt-language-server-1.22.0-202304131553.tar.gz).After that you could use all the features powered by eclipse.  
-
--   Generate eclipse files  
-    Execute mvn command for generate eclipse .project & .classpath files on your project root path.  
-    
-        mvn eclipse:clean eclipse:eclipse
--   Support projectlombok plugin  
-    There have a default lombok.jar in `doom-user-dir/neoemacs` which you could replace by yourself.  
-    
-        (setq  lombok-jar-path (expand-file-name (concat doom-user-dir "neoemacs/lombok.jar")
--   Shotcuts/Key binding  
-    
-    <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-    <caption class="t-bottom"><span class="table-number">Table 2:</span> java mode key binding</caption>
-    
-    <colgroup>
-    <col  class="org-left" />
-    
-    <col  class="org-left" />
-    
-    <col  class="org-left" />
-    </colgroup>
-    <tbody>
-    <tr>
-    <td class="org-left">KEY</td>
-    <td class="org-left">FUNCTION</td>
-    <td class="org-left">DESCRIPTION</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">SPC c i</td>
-    <td class="org-left">find-implementations</td>
-    <td class="org-left">find where sub class definition</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">SPC c I</td>
-    <td class="org-left">lsp-java-open-super-implementation</td>
-    <td class="org-left">find where sub class definition</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">SPC t e</td>
-    <td class="org-left">lsp-treemacs-java-deps-list</td>
-    <td class="org-left">find projects referenced libs</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">SPC c f</td>
-    <td class="org-left">formart buffer/region</td>
-    <td class="org-left">goto type definition</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">SPC c a</td>
-    <td class="org-left">lsp-execute-code-action</td>
-    <td class="org-left">code action</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">SPC c d</td>
-    <td class="org-left">lsp-jump-definition</td>
-    <td class="org-left">jump to where symbol definition</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">SPC c D</td>
-    <td class="org-left">lsp-jump-reference</td>
-    <td class="org-left">jump to where symbol referenced</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">SPC c o</td>
-    <td class="org-left">lsp-java-organize-imports</td>
-    <td class="org-left">import require package</td>
-    </tr>
-    </tbody>
-    </table>
--   HotSwarp  
-    [hotswapagent](http://hotswapagent.org/mydoc_configuration.html) ，a relacement of jrebel  
-    -   DCEVM  
-        1.  [download](https://github.com/JetBrains/JetBrainsRuntime/releases?page=6)  [dcevm](https://ssw.jku.at/dcevm/)
-        2.  use command run your application `dcevmjava -jar app.jar`
-    -   Hotswapagent  
-        1.  download lastest hotswapagent [here](https://github.com/HotswapProjects/HotswapAgent/releases)
-        2.  replace hotswapagent to $DCEVM\_HOME/lib/hotswap/hotswap-agent.jar
-    -   Startup  
-        1.  hotswap-agent config.  
-            [hotswap-agent.properties](https://github.com/HotswapProjects/HotswapAgent/blob/master/hotswap-agent-core/src/main/resources/hotswap-agent.properties) hotswap-agent.properties place to project&rsquo;s resources directory.  
-            
-                extraClasspath=target/classes;../longda-archetype-dao/target/classes
-                watchResources=../longda-archetype-dao/src/main/resources
-                webappDir=
-                disabledPlugins=Hibernate, Hibernate3JPA, Hibernate3, Jersey1, Jersey2, MyFaces,
-                Mojarra, Omnifaces, ELResolver, WildFlyELResolver, OsgiEquinox, Owb, Proxy, Weld,
-                JBossModules, ResteasyRegistry, Deltaspike, GlassFish, Vaadin, Wicket, CxfJAXRS,
-                FreeMarker, Undertow
-                autoHotswap=true
-                spring.basePackagePrefix=pkg.
-                LOGGER=info
-        2.  startup with dcevm  
-            use dcevm jar run your application which locate at $DCEVM\_HOME/bin/java.  
-            add java startup parameters for HotswapAgent.  
-            
-                $dcevmjava -XX:HotswapAgent=fatjar -Xlog:redefine+class*=info -jar app.jar
--   How to upgrade jdtls  
-    1.  Customization your own eclipse jdtls project version by replace it&rsquo;s binary pacage.
-    2.  Download the lastest jdt-language-server from <https://download.eclipse.org/jdtls/milestones>.
-    3.  Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
-
-1.  TODO most wanted
-
-    1.  coding
-    
-        1.  eldoc [lsp-java/issues/432](https://github.com/emacs-lsp/lsp-java/issues/432)
-
-
-<a id="orgf3265d4"></a>
-
-## TODO Dap-java Usage
-
-I do not use debug for years. So be careful the documentation maybe outdated.I think you need customization by yourself.  
-
--   Config the debug host and port, add file $usr\_private\_dir/dap-java-config.el.
--   Use \`(setq user-private-dir &ldquo;$usr\_private\_dir/dap-java-config.el&rdquo; )\` make it effective.  
-    
-        1  (dap-register-debug-template
-        2   "user-service"
-        3   (list :name "Java Attach"
-        4         :type "java"
-        5         :request "attach"
-        6         :projectName "user-service"
-        7         :hostName "127.0.0.1"
-        8         :port 1044))
--   key binding  
-    
-    <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-    
-    
-    <colgroup>
-    <col  class="org-left" />
-    
-    <col  class="org-left" />
-    
-    <col  class="org-left" />
-    </colgroup>
-    <tbody>
-    <tr>
-    <td class="org-left">KEY</td>
-    <td class="org-left">FUNCTION</td>
-    <td class="org-left">DESCRIPTION</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">, n</td>
-    <td class="org-left">dap-next</td>
-    <td class="org-left">Breakpoint next</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">, b</td>
-    <td class="org-left">dap-breakpoint-toggle</td>
-    <td class="org-left">&#xa0;</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">, c</td>
-    <td class="org-left">dap-continue</td>
-    <td class="org-left">&#xa0;</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">, r</td>
-    <td class="org-left">dap-eval-region</td>
-    <td class="org-left">&#xa0;</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">, a</td>
-    <td class="org-left">dap-eval-thing-at-point</td>
-    <td class="org-left">&#xa0;</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">, d</td>
-    <td class="org-left">dap-debug</td>
-    <td class="org-left">&#xa0;</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">, u</td>
-    <td class="org-left">dap-ui-repl</td>
-    <td class="org-left">&#xa0;</td>
-    </tr>
-    </tbody>
-    </table>
-
-
-<a id="org4d0323d"></a>
-
-## Ejc-sql Usage
-
--   The privacy configuration  
-    In here you could save any connections in your setting config.  
-    But where should the setting located especially for our Emacs config project with a public github repository? There have a privacy path which is excluded in the public repository named **user-private-dir**, You could config your connection&rsquo;s account/password here for safely.
--   Config your particular db connection  
-    
-        (use-package ejc-sql
-            :commands ejc-sql-mode ejc-connect
-            :config
-            (setq clomacs-httpd-default-port 18090)
-            (ejc-create-connection "connection-name"
-                                   :classpath      "~/.m2/repository/mysql/mysql-connector-java/8.0.17/
-                         mysql-connector-java-8.0.17.jar"
-                                   :connection-uri "jdbc:mysql://localhost/user?useSSL=false&user=root&password=pwd"
-                                   :separator      "</?\.*>" )
-            )
-        (provide 'db-work)
--   Write Sql file  
-    Before try to use ejc sql, firstly create a sql file which named with a suffix **.sql**, cause emacs will turn on the sql minor mode so that ejc-sql could works well. And then use `SPC e c` to connect a particular database which you have configurated. Emacs will popup a minibuffer listing candidates which show you the **connection-name**.  
-    Secondarily, write your testing sql content which surrounded by a tag, cause we have configurated **:separator** by a syntax meaning tag in order to execute a single sql rather than to choose it.For sure you could make any comment with the tag&rsquo;s schema.  
-    Further more, you could use delimiter sign for batch execution. the delimiter could customization by any character.  
-    Finnaly, use `C-c C-c` to execute it. It&rsquo;s just execute the content which surrounded by a tag in your cusor.  
-    
-        1  <SELECT name='select all org'>
-        2  SELECT * FROM TABLE_ORG
-        3  </SELECT>
-        4  
-        5  <SELECT>
-        6  delimiter ;
-        7  COMMENT ON COLUMN TABLE_ORG.PROJECT_CODE IS '项目编码';
-        8  COMMENT ON COLUMN TABLE_ORG.PERIOD IS '期间';
-        9  </SELECT>
--   key binding  
-    
-    <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-    
-    
-    <colgroup>
-    <col  class="org-left" />
-    
-    <col  class="org-left" />
-    
-    <col  class="org-left" />
-    </colgroup>
-    <tbody>
-    <tr>
-    <td class="org-left">KEY</td>
-    <td class="org-left">FUNCTION</td>
-    <td class="org-left">description</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">SPC e c</td>
-    <td class="org-left">ejc-connection</td>
-    <td class="org-left">choose connection with ivy</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">C-c C-c</td>
-    <td class="org-left">ejc-execute</td>
-    <td class="org-left">execute the sql</td>
-    </tr>
-    </tbody>
-    </table>
-
-
-<a id="org69770b9"></a>
+<a id="orge4c9e57"></a>
 
 ## Restclient
 
@@ -575,7 +284,7 @@ Fortunately we have solution for other mime type, it&rsquo;s restclient-set-var,
 About the variables infomation in current buffer, we could use `C-c Tab` to show them.  
 
 
-<a id="org0b9c3fb"></a>
+<a id="org100501c"></a>
 
 ## Company box customize
 
@@ -583,17 +292,26 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
 -   company-icon icon config file: ~/.emacs.d/modules/completion/company/config.el
 
 
-<a id="org5267d97"></a>
+<a id="orga937aa8"></a>
 
 ## Eredis Usage
 
-1.  connect setting
+1.  config
 
-    **M-x** ielm  
+    Use eredis firstly we could writen a funtion for a particular redis connection like this.  
     
         (use-package eredis)
-        (setq rp (eredis-connect "your redis ip" 6379))
-        (eredis-auth "pwd" rp)
+        (defun redis-tencent-dev (dbnum)
+          (interactive)
+          (setq redis-tencent-dev (eredis-connect "tencent.local" 6379))
+          (eredis-auth "yourpassword" redis-tencent-dev)
+          (eredis-select dbNum)
+        )
+    
+    Then you could use **M-x** ielm execution any redis command.  
+    
+        (redis-tencent-dev 1)
+        (eredis-get "center-bpm:flow-list-count")
 
 2.  send redis command on org mode
 
@@ -632,32 +350,68 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="org5c547ce"></a>
+<a id="org8f8027e"></a>
 
 ## Bookmark
 
--   the bookmark file location :~/.emacs.d/.local/etc/bookmarks
+-   set a particular location for bookmark  
+    
+        (setq bookmark-default-file "~/org/org-roam/command/doom/config/bookmark")
+-   key binding  
+    
+    <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+    
+    
+    <colgroup>
+    <col  class="org-left" />
+    
+    <col  class="org-left" />
+    </colgroup>
+    <tbody>
+    <tr>
+    <td class="org-left">key</td>
+    <td class="org-left">binding</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">Spc-Ent</td>
+    <td class="org-left">select a bookmark</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">Spc b m</td>
+    <td class="org-left">set a bookmark</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">Spc b M</td>
+    <td class="org-left">delete a bookmark</td>
+    </tr>
+    </tbody>
+    </table>
 
-    (setq bookmark-default-file "~/org/org-roam/command/doom/config/bookmark")
 
-
-<a id="org40d3c06"></a>
+<a id="org4477c05"></a>
 
 ## Rime Usage
 
 -   <https://github.com/DogLooksGood/emacs-rime> supply this plugin.
 -   <https://github.com/rime/plum> for more infomation.
--   some rime input method config at .doom.d/myconfig/rime-config.
+-   The config location at ~/Library/Rime/flypy\_sys.txt
+-   Rime input method config at .doom.d/myconfig/rime-config.
 -   &rsquo;emacs-module.h&rsquo; file not found  
     
         lib.c:23:10: fatal error: 'emacs-module.h' file not found
           #include <emacs-module.h>
                   ^~~~~~~~~~~~~~~~
     
-        cp /opt/homebrew/opt/emacs-plus@29/include/emacs-module.h /Users/van/.doom.d/neoemacs/rime-macos/dist/include
+        cp /opt/homebrew/opt/emacs-plus@29/include/emacs-module.h ~/.doom.d/neoemacs/rime-macos/dist/include
 
 
-<a id="orgae34c1d"></a>
+<a id="org37363c3"></a>
 
 ## Libvterm Usage
 
@@ -732,7 +486,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="org3bb5f9c"></a>
+<a id="orgf037e46"></a>
 
 ## Elpa Offline
 
@@ -745,7 +499,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="org4204cd1"></a>
+<a id="orgd2b3802"></a>
 
 ## FZF Config
 
@@ -779,12 +533,12 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             crpt
 
 
-<a id="orgdf72c02"></a>
+<a id="org30e52f1"></a>
 
 # Org mode
 
 
-<a id="org98a1658"></a>
+<a id="orgc0df05c"></a>
 
 ## Doom org style
 
@@ -792,7 +546,7 @@ A vairty of template about org mode code which one referenced the doom doc style
 How to use? <https://github.com/vanniuner/doom-org-style>  
 
 
-<a id="org79ff888"></a>
+<a id="orge947ba6"></a>
 
 ## Dot sketchviz
 
@@ -805,7 +559,7 @@ How to use? <https://github.com/vanniuner/doom-org-style>
     ![img](dotsk-demo.svg)
 
 
-<a id="org89f4883"></a>
+<a id="org8ec79be"></a>
 
 ## Latex PDF setting
 
@@ -820,7 +574,7 @@ How to use? <https://github.com/vanniuner/doom-org-style>
 4.  [more info](https://www.sheerwill.live/posts/main/20220723211325-vanilla_emacs_with_purcell/)
 
 
-<a id="org5a2a175"></a>
+<a id="org3e9a547"></a>
 
 # Alfred
 
@@ -829,19 +583,19 @@ perference -> Advanced -> Rebuild macOS Metadata.
 alfred -> reload  
 
 
-<a id="org4568a8c"></a>
+<a id="orgfa7d59f"></a>
 
 # Questions
 
 
-<a id="org900f9e2"></a>
+<a id="org71e0208"></a>
 
 ## install ffmpeg
 
 -   brew install ffmpeg
 
 
-<a id="org7df5226"></a>
+<a id="org0215e08"></a>
 
 ## how to install all-the-icons?
 
@@ -849,7 +603,7 @@ alfred -> reload
 -   M-x all-the-icons-install-fonts
 
 
-<a id="org04ecf37"></a>
+<a id="orgf6519af"></a>
 
 ## how to install rime ?
 
@@ -858,7 +612,7 @@ alfred -> reload
 unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime  
 
 
-<a id="org4116cff"></a>
+<a id="org82a786a"></a>
 
 ## how to install vterm?
 
@@ -872,7 +626,7 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     make
 
 
-<a id="org977a004"></a>
+<a id="org6c4b2fd"></a>
 
 ## lsp-springboot
 
@@ -886,7 +640,7 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     jdt-language-server-latest.tar.gz -f lsp-java-server-build.pom
 
 
-<a id="org455c2fa"></a>
+<a id="org33f689d"></a>
 
 ## useful key setting
 
@@ -894,14 +648,14 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     ![img](key-change.png)
 
 
-<a id="org8493af9"></a>
+<a id="org17b3455"></a>
 
 ## why message showed could not load undo-tree history
 
     brew install watchexec
 
 
-<a id="org39b65f1"></a>
+<a id="org888a9ec"></a>
 
 ## File mode specification error: (file-missing Doing vfork No such file or directory)
 
@@ -921,21 +675,21 @@ So the solution is change the execution file with the below shell script on MacO
     /Applications/Emacs.app/Contents/MacOS/Emacs.old
 
 
-<a id="orga53bf74"></a>
+<a id="org325563b"></a>
 
 ## image dir
 
     ln -s ~/org/org-roam/image any_where/image
 
 
-<a id="orgb3dcd9b"></a>
+<a id="orgf792baa"></a>
 
 # About Logo
 
 edit with: [online-ps-editor](https://ps.gaoding.com/#/), [psd file](./logo.psd)  
 
 
-<a id="org63041ed"></a>
+<a id="org20cf887"></a>
 
 # Dependencies
 

@@ -149,12 +149,21 @@ About the variables infomation in current buffer, we could use ~C-c Tab~ to show
 - use `M-x all-the-icons-material` for checking icon
 - company-icon icon config file: ~/.emacs.d/modules/completion/company/config.el
 ** Eredis Usage
-*** connect setting
-*M-x* ielm
-#+begin_src lisp
+*** config
+Use eredis firstly we could writen a funtion for a particular redis connection like this.
+#+begin_src elisp
 (use-package eredis)
-(setq rp (eredis-connect "your redis ip" 6379))
-(eredis-auth "pwd" rp)
+(defun redis-tencent-dev (dbnum)
+  (interactive)
+  (setq redis-tencent-dev (eredis-connect "tencent.local" 6379))
+  (eredis-auth "yourpassword" redis-tencent-dev)
+  (eredis-select dbNum)
+)
+#+end_src
+Then you could use *M-x* ielm execution any redis command.
+#+begin_src elisp
+(redis-tencent-dev 1)
+(eredis-get "center-bpm:flow-list-count")
 #+end_src
 *** send redis command on org mode
 key binding C-c C-c
@@ -169,14 +178,20 @@ key binding C-c C-c
 | Key                        | Value(s) | Type   |
 | center-bpm:flow-list-count |        1 | string |
 ** Bookmark
-- the bookmark file location :~/.emacs.d/.local/etc/bookmarks
-#+begin_src lisp
-    (setq bookmark-default-file "~/org/org-roam/command/doom/config/bookmark")
-#+end_src
+- set a particular location for bookmark
+  #+begin_src lisp
+  (setq bookmark-default-file "~/org/org-roam/command/doom/config/bookmark")
+  #+end_src
+- key binding
+  | key     | binding           |
+  | Spc-Ent | select a bookmark |
+  | Spc b m | set a bookmark    |
+  | Spc b M | delete a bookmark |
 ** Rime Usage
 - https://github.com/DogLooksGood/emacs-rime supply this plugin.
 - https://github.com/rime/plum for more infomation.
-- some rime input method config at .doom.d/myconfig/rime-config.
+- The config location at ~/Library/Rime/flypy_sys.txt
+- Rime input method config at .doom.d/myconfig/rime-config.
 - 'emacs-module.h' file not found
  #+begin_src shell
   lib.c:23:10: fatal error: 'emacs-module.h' file not found
@@ -185,7 +200,7 @@ key binding C-c C-c
  #+end_src
 
  #+begin_src shell
-cp /opt/homebrew/opt/emacs-plus@29/include/emacs-module.h /Users/van/.doom.d/neoemacs/rime-macos/dist/include
+ cp /opt/homebrew/opt/emacs-plus@29/include/emacs-module.h ~/.doom.d/neoemacs/rime-macos/dist/include
  #+end_src
 ** Libvterm Usage
 - Configuration
