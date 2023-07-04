@@ -233,6 +233,8 @@ key binding C-c C-c
     #+begin_src shell
     sudo brew install cmake libtool
     #+end_src
+- Being with eshell
+  Eshell have a most wanted feature was *quickrun-eshell* which have a fast reload function after shell is runinng,you just use ~C-c C-c~ to stop it and use *r* to rerun you shell.It's pretty convenient.
 - Key Binding
    | <l>     | <l>                  | <l>                                             |
    | KEY     | FUNCTION             | DESCRIPTION                                     |
