@@ -95,3 +95,9 @@
   (funcall fn))
 (advice-add 'zygospore-toggle-delete-other-windows
   :around 'zygospore-toggle-delete-other-windows@around)
+
+;; run shell script with open dir
+(defun neo/opendir ()
+  (interactive)
+  (shell-command (concat "open " (shell-command-to-string "pwd"))))
+(map! :n "SPC o n" 'neo/opendir)

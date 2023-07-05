@@ -29,3 +29,7 @@
             (ejc-set-column-width-limit 150)
             (ejc-set-fetch-size 120)
             (ejc-set-use-unicode t)))
+
+(defun sql/indent-tabs-mode ()
+  (setq indent-tabs-mode nil))
+(add-hook 'sql-mode-hook #'sql/indent-tabs-mode)

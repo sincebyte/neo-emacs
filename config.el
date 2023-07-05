@@ -93,6 +93,7 @@
         evil-visual-state-map
         evil-insert-state-map))
 
+
 ;; open map
 ;; (defun cc/search-apple-maps (search)
 ;;   "Open SEARCH query in Apple Maps"
