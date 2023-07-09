@@ -118,9 +118,13 @@ kse ~setq~
 
 * Neoemacs modules
 #+transclude: [[./modules/neoemacs/java/readme.org][java-readme.org]] :level 2
+
 #+transclude: [[./modules/neoemacs/sql/readme.org][sql-readme.org]] :level 2
+
 #+transclude: [[./modules/neoemacs/rime/readme.org][emacs-rime.org]] :level 2
+
 #+transclude: [[./modules/neoemacs/org/readme.org][org-mode]] :level 2
+
 ** Restclient
 Restclient provide a test suite for HTTP REST in Emacs.The official repository here [[https://github.com/pashky/restclient.el][restclient.el]].
 Yea, a pretty old old project.Fortunately doom emacs have integrated it.We just need open it with ~(rest +jq)~.

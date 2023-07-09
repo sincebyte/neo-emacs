@@ -1,45 +1,44 @@
 
 # Table of Contents
 
-1.  [About](#org0347b0a)
-2.  [How to install](#org1f68652)
-    1.  [Install emacs](#org72e7fa6)
-    2.  [Clone project](#org6983e9e)
-    3.  [Doom Install](#orgb32893c)
-3.  [How to update](#org6a242fe)
-4.  [Private setting](#org57088c8)
-5.  [Neoemacs modules](#orgfe15198)
-    1.  [Java module](#org612fae2)
-    2.  [Dap-java Usage](#orgf38f1b4)
-    3.  [Ejc-sql Usage](#orgbe2f91d)
-    4.  [Rime Usage](#orgb26599a)
-    5.  [Org mode Usage](#org3c10856)
-    6.  [Restclient](#orgf5bcdcd)
-    7.  [Company box customize](#org97ce4bd)
-    8.  [Eredis Usage](#org31a0a63)
-    9.  [Bookmark](#org17580b7)
-    10. [Libvterm Usage](#orge8479a2)
-    11. [Elpa Offline](#org9feca0a)
-    12. [FZF Config](#orgfef1430)
-6.  [Alfred](#orgfccaca6)
-7.  [Questions](#org88f3a4e)
-    1.  [install ffmpeg](#org1623c83)
-    2.  [how to install all-the-icons?](#org71bcf66)
-    3.  [how to install rime ?](#orga30d38e)
-    4.  [how to install vterm?](#org71df509)
-    5.  [lsp-springboot](#org11b31a0)
-    6.  [useful key setting](#org5a41c49)
-    7.  [why message showed could not load undo-tree history](#org7554ff6)
-    8.  [File mode specification error: (file-missing Doing vfork No such file or directory)](#org5f0ab61)
-    9.  [image dir](#org96004b3)
-8.  [About Logo](#org8217aa4)
-9.  [Dependencies](#org93e12d4)
+1.  [About](#org53d4e69)
+2.  [How to install](#org0a86ad4)
+    1.  [Install emacs](#org5661cd7)
+    2.  [Clone project](#org93267a2)
+    3.  [Doom Install](#orgf307d52)
+3.  [How to update](#orgd213c84)
+4.  [Private setting](#org4000398)
+5.  [Neoemacs modules](#orgb3b80cd)
+    1.  [Java module](#org2e9f2a5)
+    2.  [Ejc-sql Usage](#org2a4759b)
+    3.  [Rime Usage](#orgbb902ff)
+    4.  [Org mode Usage](#org1b06ea3)
+    5.  [Restclient](#org2399127)
+    6.  [Company box customize](#org87072a7)
+    7.  [Eredis Usage](#orge21826e)
+    8.  [Bookmark](#org6e16495)
+    9.  [Libvterm Usage](#orgc76c8e2)
+    10. [Elpa Offline](#org236050e)
+    11. [FZF Config](#org7c21b4d)
+6.  [Alfred](#org9d0a316)
+7.  [Questions](#orgc03c5a7)
+    1.  [install ffmpeg](#org0441d5f)
+    2.  [how to install all-the-icons?](#orgf593e45)
+    3.  [how to install rime ?](#orga0b176b)
+    4.  [how to install vterm?](#orga39028d)
+    5.  [lsp-springboot](#orge1efe13)
+    6.  [useful key setting](#org6285d6d)
+    7.  [why message showed could not load undo-tree history](#orgf200814)
+    8.  [File mode specification error: (file-missing Doing vfork No such file or directory)](#org2a7957d)
+    9.  [image dir](#org0c9e637)
+8.  [About Logo](#org0b9c695)
+9.  [Dependencies](#orgb373d95)
 
 ![img](./logo.png)  
 ![img](./image-use.png)  
 
 
-<a id="org0347b0a"></a>
+<a id="org53d4e69"></a>
 
 # About
 
@@ -55,12 +54,12 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   [onlinedoc](http://1.117.167.195/doc/neo-emacs.html)
 
 
-<a id="org1f68652"></a>
+<a id="org0a86ad4"></a>
 
 # How to install
 
 
-<a id="org72e7fa6"></a>
+<a id="org5661cd7"></a>
 
 ## Install emacs
 
@@ -95,7 +94,7 @@ After emacs installation, set environment variables which names EMACS ,this depe
     export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs,
 
 
-<a id="org6983e9e"></a>
+<a id="org93267a2"></a>
 
 ## Clone project
 
@@ -105,7 +104,7 @@ clone doom-emacs and neo-emacs from github.
     git clone --depth 1 https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
 
-<a id="orgb32893c"></a>
+<a id="orgf307d52"></a>
 
 ## Doom Install
 
@@ -123,7 +122,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     ~/.emacs.doom/bin/doom install
 
 
-<a id="org6a242fe"></a>
+<a id="orgd213c84"></a>
 
 # How to update
 
@@ -133,7 +132,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     sh ~/.emacs.d/bin/doom sync
 
 
-<a id="org57088c8"></a>
+<a id="org4000398"></a>
 
 # Private setting
 
@@ -254,13 +253,13 @@ kse `setq`
 </table>
 
 
-<a id="orgfe15198"></a>
+<a id="orgb3b80cd"></a>
 
 # Neoemacs modules
 
 
 
-<a id="org612fae2"></a>
+<a id="org2e9f2a5"></a>
 
 ## Java module
 
@@ -388,96 +387,93 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     
         1.  eldoc [lsp-java/issues/432](https://github.com/emacs-lsp/lsp-java/issues/432)
 
+2.  TODO Dap-java Usage
 
-<a id="orgf38f1b4"></a>
-
-## TODO Dap-java Usage
-
-I do not use debug for years. So be careful the documentation maybe outdated.I think you need customization by yourself.  
-
--   Config the debug host and port, add file $usr\_private\_dir/dap-java-config.el.
--   Use \`(setq user-private-dir &ldquo;$usr\_private\_dir/dap-java-config.el&rdquo; )\` make it effective.  
+    I do not use debug for years. So be careful the documentation maybe outdated.I think you need customization by yourself.  
     
-        1  (dap-register-debug-template
-        2   "user-service"
-        3   (list :name "Java Attach"
-        4         :type "java"
-        5         :request "attach"
-        6         :projectName "user-service"
-        7         :hostName "127.0.0.1"
-        8         :port 1044))
--   key binding  
-    
-    <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-    
-    
-    <colgroup>
-    <col  class="org-left" />
-    
-    <col  class="org-left" />
-    
-    <col  class="org-left" />
-    </colgroup>
-    <tbody>
-    <tr>
-    <td class="org-left">KEY</td>
-    <td class="org-left">FUNCTION</td>
-    <td class="org-left">DESCRIPTION</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">, n</td>
-    <td class="org-left">dap-next</td>
-    <td class="org-left">Breakpoint next</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">, b</td>
-    <td class="org-left">dap-breakpoint-toggle</td>
-    <td class="org-left">&#xa0;</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">, c</td>
-    <td class="org-left">dap-continue</td>
-    <td class="org-left">&#xa0;</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">, r</td>
-    <td class="org-left">dap-eval-region</td>
-    <td class="org-left">&#xa0;</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">, a</td>
-    <td class="org-left">dap-eval-thing-at-point</td>
-    <td class="org-left">&#xa0;</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">, d</td>
-    <td class="org-left">dap-debug</td>
-    <td class="org-left">&#xa0;</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">, u</td>
-    <td class="org-left">dap-ui-repl</td>
-    <td class="org-left">&#xa0;</td>
-    </tr>
-    </tbody>
-    </table>
+    -   Config the debug host and port, add file $usr\_private\_dir/dap-java-config.el.
+    -   Use \`(setq user-private-dir &ldquo;$usr\_private\_dir/dap-java-config.el&rdquo; )\` make it effective.  
+        
+            1  (dap-register-debug-template
+            2   "user-service"
+            3   (list :name "Java Attach"
+            4         :type "java"
+            5         :request "attach"
+            6         :projectName "user-service"
+            7         :hostName "127.0.0.1"
+            8         :port 1044))
+    -   key binding  
+        
+        <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+        
+        
+        <colgroup>
+        <col  class="org-left" />
+        
+        <col  class="org-left" />
+        
+        <col  class="org-left" />
+        </colgroup>
+        <tbody>
+        <tr>
+        <td class="org-left">KEY</td>
+        <td class="org-left">FUNCTION</td>
+        <td class="org-left">DESCRIPTION</td>
+        </tr>
+        
+        
+        <tr>
+        <td class="org-left">, n</td>
+        <td class="org-left">dap-next</td>
+        <td class="org-left">Breakpoint next</td>
+        </tr>
+        
+        
+        <tr>
+        <td class="org-left">, b</td>
+        <td class="org-left">dap-breakpoint-toggle</td>
+        <td class="org-left">&#xa0;</td>
+        </tr>
+        
+        
+        <tr>
+        <td class="org-left">, c</td>
+        <td class="org-left">dap-continue</td>
+        <td class="org-left">&#xa0;</td>
+        </tr>
+        
+        
+        <tr>
+        <td class="org-left">, r</td>
+        <td class="org-left">dap-eval-region</td>
+        <td class="org-left">&#xa0;</td>
+        </tr>
+        
+        
+        <tr>
+        <td class="org-left">, a</td>
+        <td class="org-left">dap-eval-thing-at-point</td>
+        <td class="org-left">&#xa0;</td>
+        </tr>
+        
+        
+        <tr>
+        <td class="org-left">, d</td>
+        <td class="org-left">dap-debug</td>
+        <td class="org-left">&#xa0;</td>
+        </tr>
+        
+        
+        <tr>
+        <td class="org-left">, u</td>
+        <td class="org-left">dap-ui-repl</td>
+        <td class="org-left">&#xa0;</td>
+        </tr>
+        </tbody>
+        </table>
 
 
-<a id="orgbe2f91d"></a>
+<a id="org2a4759b"></a>
 
 ## Ejc-sql Usage
 
@@ -548,7 +544,7 @@ I do not use debug for years. So be careful the documentation maybe outdated.I t
     </table>
 
 
-<a id="orgb26599a"></a>
+<a id="orgbb902ff"></a>
 
 ## Rime Usage
 
@@ -638,7 +634,7 @@ So there have a variable which named `rime-user-data-dir` , And another importan
             cp /opt/homebrew/opt/emacs-plus@29/include/emacs-module.h ~/.doom.d/neoemacs/rime-macos/dist/include
 
 
-<a id="org3c10856"></a>
+<a id="org1b06ea3"></a>
 
 ## Org mode Usage
 
@@ -818,7 +814,7 @@ So there have a variable which named `rime-user-data-dir` , And another importan
 8.  TODO Org Roam UI
 
 
-<a id="orgf5bcdcd"></a>
+<a id="org2399127"></a>
 
 ## Restclient
 
@@ -843,7 +839,7 @@ Fortunately we have solution for other mime type, it&rsquo;s restclient-set-var,
 About the variables infomation in current buffer, we could use `C-c Tab` to show them.  
 
 
-<a id="org97ce4bd"></a>
+<a id="org87072a7"></a>
 
 ## Company box customize
 
@@ -851,7 +847,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
 -   company-icon icon config file: ~/.emacs.d/modules/completion/company/config.el
 
 
-<a id="org31a0a63"></a>
+<a id="orge21826e"></a>
 
 ## Eredis Usage
 
@@ -909,7 +905,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="org17580b7"></a>
+<a id="org6e16495"></a>
 
 ## Bookmark
 
@@ -953,7 +949,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="orge8479a2"></a>
+<a id="orgc76c8e2"></a>
 
 ## Libvterm Usage
 
@@ -1030,7 +1026,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="org9feca0a"></a>
+<a id="org236050e"></a>
 
 ## Elpa Offline
 
@@ -1043,7 +1039,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="orgfef1430"></a>
+<a id="org7c21b4d"></a>
 
 ## FZF Config
 
@@ -1077,7 +1073,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             crpt
 
 
-<a id="orgfccaca6"></a>
+<a id="org9d0a316"></a>
 
 # Alfred
 
@@ -1086,19 +1082,19 @@ perference -> Advanced -> Rebuild macOS Metadata.
 alfred -> reload  
 
 
-<a id="org88f3a4e"></a>
+<a id="orgc03c5a7"></a>
 
 # Questions
 
 
-<a id="org1623c83"></a>
+<a id="org0441d5f"></a>
 
 ## install ffmpeg
 
 -   brew install ffmpeg
 
 
-<a id="org71bcf66"></a>
+<a id="orgf593e45"></a>
 
 ## how to install all-the-icons?
 
@@ -1106,7 +1102,7 @@ alfred -> reload
 -   M-x all-the-icons-install-fonts
 
 
-<a id="orga30d38e"></a>
+<a id="orga0b176b"></a>
 
 ## how to install rime ?
 
@@ -1115,7 +1111,7 @@ alfred -> reload
 unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime  
 
 
-<a id="org71df509"></a>
+<a id="orga39028d"></a>
 
 ## how to install vterm?
 
@@ -1129,7 +1125,7 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     make
 
 
-<a id="org11b31a0"></a>
+<a id="orge1efe13"></a>
 
 ## lsp-springboot
 
@@ -1143,7 +1139,7 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     jdt-language-server-latest.tar.gz -f lsp-java-server-build.pom
 
 
-<a id="org5a41c49"></a>
+<a id="org6285d6d"></a>
 
 ## useful key setting
 
@@ -1151,14 +1147,14 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     ![img](key-change.png)
 
 
-<a id="org7554ff6"></a>
+<a id="orgf200814"></a>
 
 ## why message showed could not load undo-tree history
 
     brew install watchexec
 
 
-<a id="org5f0ab61"></a>
+<a id="org2a7957d"></a>
 
 ## File mode specification error: (file-missing Doing vfork No such file or directory)
 
@@ -1178,21 +1174,21 @@ So the solution is change the execution file with the below shell script on MacO
     /Applications/Emacs.app/Contents/MacOS/Emacs.old
 
 
-<a id="org96004b3"></a>
+<a id="org0c9e637"></a>
 
 ## image dir
 
     ln -s ~/org/org-roam/image any_where/image
 
 
-<a id="org8217aa4"></a>
+<a id="org0b9c695"></a>
 
 # About Logo
 
 edit with: [online-ps-editor](https://ps.gaoding.com/#/), [psd file](./logo.psd)  
 
 
-<a id="org93e12d4"></a>
+<a id="orgb373d95"></a>
 
 # Dependencies
 

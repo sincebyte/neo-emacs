@@ -64,7 +64,7 @@ Neo-Emacs will automatically download the jdtls from `lsp-java-jdt-download-url`
 ** TODO most wanted
 *** coding
 1. eldoc [[https://github.com/emacs-lsp/lsp-java/issues/432][lsp-java/issues/432]]
-* TODO Dap-java Usage
+** TODO Dap-java Usage
  I do not use debug for years. So be careful the documentation maybe outdated.I think you need customization by yourself.
  - Config the debug host and port, add file $usr_private_dir/dap-java-config.el.
  - Use `(setq user-private-dir "$usr_private_dir/dap-java-config.el" )` make it effective.

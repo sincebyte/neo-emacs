@@ -1,0 +1,115 @@
+#+title: org mode readme
+#+author: vanniuner
+#+SETUPFILE: ~/.doom.d/org-head.setup
+
+* Org mode Usage
+** Basic usage
+Most of the basic useage reference to [[https://github.com/vanniuner/doom-org-style][doom-org-style]]
+** Org template
+For classify noter better,we need a method to make different kinds of org note into an associated directory.
+Firstly,define your classify and their directory and a key of select the particular classification.
+The select interface will popup when you use ~SPC n r i~ to create a new note, of course your chooise determined it's classification.
+In here,I use org-head.setup for default html export setting. the template ultimate effect like this.
+
+#+begin_src org
+:PROPERTIES:
+:ID:       22f46285-bbe0-4916-9df4-380688b2793b
+:END:
+#+title: test-org
+#+subtitle:
+#+author: vanniuner
+#+SETUPFILE: ~/.doom.d/org-head.setup
+#+end_src
+
+#+begin_src elisp
+(setq org-roam-capture-templates
+'(("d" "default" plain "%?"
+        :if-new  (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+subtitle: \n#+author: vanniuner\n#+SETUPFILE: ~/.doom.d/org-head.setup")
+        :unnarrowed t)
+  ("j" "java" plain "%?"
+        :if-new (file+head "java/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+subtitle: \n#+author: vanniuner\n#+SETUPFILE: ~/.doom.d/org-head.setup")
+        :unnarrowed t)
+  ("e" "emacs" plain "%?"
+        :target (file+head "emacs/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+subtitle: \n#+author: vanniuner\n#+SETUPFILE: ~/.doom.d/org-head.setup")
+        :unnarrowed t)
+  ("p" "speech" plain "%?"
+        :target (file+head "speech/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+subtitle: \n#+author: vanniuner\n#+SETUPFILE: ~/.doom.d/org-head.setup")
+        :unnarrowed t)
+))
+#+end_src
+** Org transclusion
+[[https://github.com/nobiot/org-transclusion][org-transclusion]] lets you insert a copy of text content via a file link or ID link within an Org file, The usage case here below.
+There have a little conflict with org appear,[[https://github.com/nobiot/org-transclusion/issues/194][The incompatible with org appear]] we are waiting for the author's repsonse.
+#+begin_src org
+#+transclude: [[anyfile][shortname]] :level 2 :lines 1-2 :src java
+#+end_src
+
+| key     | binding                       |
+| SPC n t | open transclusion             |
+| SPC n g | open transclusion refresh     |
+| SPC n O | open transclusion source file |
+** Org remark
+[[https://github.com/nobiot/org-remark][org-remark]] lets you highlight and annotate text files and websites with using Org mode.
+You could customize faces of the note.
+#+begin_src elisp
+(custom-set-faces `(org-remark-highlighter ((t (:underline (:color "#1B4F72" :style line) :background "#57a6db")))))
+#+end_src
+
+| key     | binding              | describe                                           |
+| SPC r m | org-remark-mark      | make a note                                        |
+| SPC r o | org-remark-open      | open a note and cursor location at the note butter |
+| SPC r n | org-remark-view-next |                                                    |
+| SPC r p | org-remark-view-prev |                                                    |
+** Org appear
+[[https://github.com/awth13/org-appear][org-appear]] make invisible parts of Org elements appear visible.
+No key-binding here,because it automatic trigger when your cursor on it.
+
+#+begin_src text
+[[https://github.com/nobiot/org-transclusion][org-transclusion]] lets
+org-transclusion lets
+# org-transclusion -> [[https://github.com/nobiot/org-transclusion][org-transclusion]]
+#+end_src
+** Org to Html
+*** Image to base64
+No need to send images files of the source.
+The embedded base64 image make to distribute your html documentation more easy.
+*** dotgraphviz of hand painted style
+Use dotgraphviz of hand painted style you need make sure the step here below.
+
+#+begin_src shell
+    cd ~/.doom.d/neoemacs/sketchviz/sketch.js
+    npm install --save roughjs
+    npm i jsdom
+#+end_src
+
+#+begin_src org
+#+BEGIN_SRC dotsk :file dotsk-demo.svg
+    digraph G {
+        bgcolor="transparent"
+        rankdir = LR
+        a -> b [minlen=2,label="ϟ"]
+    }
+#+end_src
+
+#+BEGIN_SRC dotsk :file dotsk-demo.svg
+    digraph G {
+        bgcolor="transparent"
+        rankdir = LR
+        a -> b [minlen=2,label="ϟ"]
+    }
+#+END_SRC
+
+#+RESULTS:
+[[file:dotsk-demo.svg]]
+
+** Latex PDF setting
+1. install [[https://tug.org/mactex/][mactex]]
+2. put [[https://github.com/ElegantLaTeX/ElegantPaper/blob/master/elegantpaper.cls][elegantpaper.cls]] under the org file dir
+3. add the code in the head of your org mode file
+   #+begin_src org
+    #+LATEX_COMPILER: xelatex
+    #+LATEX_CLASS: elegantpaper
+    #+OPTIONS: prop:t
+   #+end_src
+4. [[https://www.sheerwill.live/posts/main/20220723211325-vanilla_emacs_with_purcell/][more info]]
+** TODO Org Roam UI
