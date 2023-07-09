@@ -61,7 +61,8 @@
 (package! xml-format        )
 (package! org-fragtog       )
 (package! org-appear        )
-(package! tree-sitter       )
+;; (package! tree-sitter       )
+;; (package! tree-sitter-langs )
 (package! eredis            )
 (package! shrface           )
 (package! lsp-java          )
@@ -79,12 +80,12 @@
 (package! go-translate      )
 (package! ob-sql-mode       )
 (package! string-inflection )
-(package! tree-sitter-langs )
 (package! auto-complete     )
 (package! elfeed            )
 (package! kaolin-themes     )
 (package! disable-mouse     )
 (package! golden-ratio      )
+(package! org-remark        )
 
 
 ;; (package! awesome-tray      )

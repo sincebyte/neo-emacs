@@ -1,47 +1,45 @@
 
 # Table of Contents
 
-1.  [About](#org31c07aa)
-2.  [How to install](#orgb0830f9)
-    1.  [Install emacs](#orgaf3208c)
-    2.  [Clone project](#org2cfae48)
-    3.  [Doom Install](#org8d0d2c6)
-3.  [How to update](#orgf6f2bab)
-4.  [Private setting](#org8cd34b9)
-5.  [Neoemacs modules](#org3dfcb51)
-    1.  [Java module](#org943c66f)
-    2.  [Dap-java Usage](#orgb37d2de)
-    3.  [Rime Usage](#org338f360)
-    4.  [Restclient](#org6ebf3e9)
-    5.  [Company box customize](#orga2218a2)
-    6.  [Eredis Usage](#org2ee8f7e)
-    7.  [Bookmark](#orgf80775f)
-    8.  [Libvterm Usage](#orga72cb6d)
-    9.  [Elpa Offline](#org0925d2f)
-    10. [FZF Config](#orgf379377)
-6.  [Org mode](#orgf0e53b1)
-    1.  [Doom org style](#org3c0bcea)
-    2.  [Dot sketchviz](#org374a50c)
-    3.  [Latex PDF setting](#org2c96649)
-7.  [Alfred](#orgc00cc58)
-8.  [Questions](#orgdf28f3f)
-    1.  [install ffmpeg](#org601a8ff)
-    2.  [how to install all-the-icons?](#org3ca27f3)
-    3.  [how to install rime ?](#org40fbcd4)
-    4.  [how to install vterm?](#org50b9f53)
-    5.  [lsp-springboot](#org977e3fd)
-    6.  [useful key setting](#org1bb6ddd)
-    7.  [why message showed could not load undo-tree history](#org7e4beb8)
-    8.  [File mode specification error: (file-missing Doing vfork No such file or directory)](#org57b6ce0)
-    9.  [image dir](#org59aed1b)
-9.  [About Logo](#org9e50585)
-10. [Dependencies](#org745914f)
+1.  [About](#org0347b0a)
+2.  [How to install](#org1f68652)
+    1.  [Install emacs](#org72e7fa6)
+    2.  [Clone project](#org6983e9e)
+    3.  [Doom Install](#orgb32893c)
+3.  [How to update](#org6a242fe)
+4.  [Private setting](#org57088c8)
+5.  [Neoemacs modules](#orgfe15198)
+    1.  [Java module](#org612fae2)
+    2.  [Dap-java Usage](#orgf38f1b4)
+    3.  [Ejc-sql Usage](#orgbe2f91d)
+    4.  [Rime Usage](#orgb26599a)
+    5.  [Org mode Usage](#org3c10856)
+    6.  [Restclient](#orgf5bcdcd)
+    7.  [Company box customize](#org97ce4bd)
+    8.  [Eredis Usage](#org31a0a63)
+    9.  [Bookmark](#org17580b7)
+    10. [Libvterm Usage](#orge8479a2)
+    11. [Elpa Offline](#org9feca0a)
+    12. [FZF Config](#orgfef1430)
+6.  [Alfred](#orgfccaca6)
+7.  [Questions](#org88f3a4e)
+    1.  [install ffmpeg](#org1623c83)
+    2.  [how to install all-the-icons?](#org71bcf66)
+    3.  [how to install rime ?](#orga30d38e)
+    4.  [how to install vterm?](#org71df509)
+    5.  [lsp-springboot](#org11b31a0)
+    6.  [useful key setting](#org5a41c49)
+    7.  [why message showed could not load undo-tree history](#org7554ff6)
+    8.  [File mode specification error: (file-missing Doing vfork No such file or directory)](#org5f0ab61)
+    9.  [image dir](#org96004b3)
+8.  [About Logo](#org8217aa4)
+9.  [Dependencies](#org93e12d4)
 
 ![img](./logo.png)  
 ![img](./image-use.png)  
 
 
-<a id="org31c07aa"></a>
+<a id="org0347b0a"></a>
 
 # About
 
@@ -57,12 +55,12 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   [onlinedoc](http://1.117.167.195/doc/neo-emacs.html)
 
 
-<a id="orgb0830f9"></a>
+<a id="org1f68652"></a>
 
 # How to install
 
 
-<a id="orgaf3208c"></a>
+<a id="org72e7fa6"></a>
 
 ## Install emacs
 
@@ -97,7 +95,7 @@ After emacs installation, set environment variables which names EMACS ,this depe
     export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs,
 
 
-<a id="org2cfae48"></a>
+<a id="org6983e9e"></a>
 
 ## Clone project
 
@@ -107,7 +105,7 @@ clone doom-emacs and neo-emacs from github.
     git clone --depth 1 https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
 
-<a id="org8d0d2c6"></a>
+<a id="orgb32893c"></a>
 
 ## Doom Install
 
@@ -125,7 +123,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     ~/.emacs.doom/bin/doom install
 
 
-<a id="orgf6f2bab"></a>
+<a id="org6a242fe"></a>
 
 # How to update
 
@@ -135,7 +133,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     sh ~/.emacs.d/bin/doom sync
 
 
-<a id="org8cd34b9"></a>
+<a id="org57088c8"></a>
 
 # Private setting
 
@@ -256,13 +254,13 @@ kse `setq`
 </table>
 
 
-<a id="org3dfcb51"></a>
+<a id="orgfe15198"></a>
 
 # Neoemacs modules
 
 
 
-<a id="org943c66f"></a>
+<a id="org612fae2"></a>
 
 ## Java module
 
@@ -391,7 +389,7 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
         1.  eldoc [lsp-java/issues/432](https://github.com/emacs-lsp/lsp-java/issues/432)
 
 
-<a id="orgb37d2de"></a>
+<a id="orgf38f1b4"></a>
 
 ## TODO Dap-java Usage
 
@@ -479,7 +477,78 @@ I do not use debug for years. So be careful the documentation maybe outdated.I t
     </table>
 
 
-<a id="org338f360"></a>
+<a id="orgbe2f91d"></a>
+
+## Ejc-sql Usage
+
+-   The privacy configuration  
+    In here you could save any connections in your setting config.  
+    But where should the setting located especially for our Emacs config project with a public github repository? There have a privacy path which is excluded in the public repository named **user-private-dir**, You could config your connection&rsquo;s account/password here for safely.
+-   Config your particular db connection  
+    
+        (use-package ejc-sql
+            :commands ejc-sql-mode ejc-connect
+            :config
+            (setq clomacs-httpd-default-port 18090)
+            (ejc-create-connection "connection-name"
+                                   :classpath      "~/.m2/repository/mysql/mysql-connector-java/8.0.17/
+                         mysql-connector-java-8.0.17.jar"
+                                   :connection-uri "jdbc:mysql://localhost/user?useSSL=false&user=root&password=pwd"
+                                   :separator      "</?\.*>" )
+            )
+        (provide 'db-work)
+-   Write Sql file  
+    Before try to use ejc sql, firstly create a sql file which named with a suffix **.sql**, cause emacs will turn on the sql minor mode so that ejc-sql could works well. And then use `SPC e c` to connect a particular database which you have configurated. Emacs will popup a minibuffer listing candidates which show you the **connection-name**.  
+    Secondarily, write your testing sql content which surrounded by a tag, cause we have configurated **:separator** by a syntax meaning tag in order to execute a single sql rather than to choose it.For sure you could make any comment with the tag&rsquo;s schema.  
+    Further more, you could use delimiter sign for batch execution. the delimiter could customization by any character.  
+    Finnaly, use `C-c C-c` to execute it. It&rsquo;s just execute the content which surrounded by a tag in your cusor.  
+    
+        1  <SELECT name='select all org'>
+        2  SELECT * FROM TABLE_ORG
+        3  </SELECT>
+        4  
+        5  <SELECT>
+        6  delimiter ;
+        7  COMMENT ON COLUMN TABLE_ORG.PROJECT_CODE IS '项目编码';
+        8  COMMENT ON COLUMN TABLE_ORG.PERIOD IS '期间';
+        9  </SELECT>
+-   key binding  
+    
+    <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+    
+    
+    <colgroup>
+    <col  class="org-left" />
+    
+    <col  class="org-left" />
+    
+    <col  class="org-left" />
+    </colgroup>
+    <tbody>
+    <tr>
+    <td class="org-left">KEY</td>
+    <td class="org-left">FUNCTION</td>
+    <td class="org-left">description</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">SPC e c</td>
+    <td class="org-left">ejc-connection</td>
+    <td class="org-left">choose connection with ivy</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">C-c C-c</td>
+    <td class="org-left">ejc-execute</td>
+    <td class="org-left">execute the sql</td>
+    </tr>
+    </tbody>
+    </table>
+
+
+<a id="orgb26599a"></a>
 
 ## Rime Usage
 
@@ -569,7 +638,187 @@ So there have a variable which named `rime-user-data-dir` , And another importan
             cp /opt/homebrew/opt/emacs-plus@29/include/emacs-module.h ~/.doom.d/neoemacs/rime-macos/dist/include
 
 
-<a id="org6ebf3e9"></a>
+<a id="org3c10856"></a>
+
+## Org mode Usage
+
+1.  Basic usage
+
+    Most of the basic useage reference to [doom-org-style](https://github.com/vanniuner/doom-org-style)  
+
+2.  Org template
+
+    For classify noter better,we need a method to make different kinds of org note into an associated directory.  
+    Firstly,define your classify and their directory and a key of select the particular classification.  
+    The select interface will popup when you use `SPC n r i` to create a new note, of course your chooise determined it&rsquo;s classification.  
+    In here,I use org-head.setup for default html export setting. the template ultimate effect like this.  
+    
+        :PROPERTIES:
+        :ID:       22f46285-bbe0-4916-9df4-380688b2793b
+        :END:
+        #+title: test-org
+        #+subtitle:
+        #+author: vanniuner
+        #+SETUPFILE: ~/.doom.d/org-head.setup
+    
+        (setq org-roam-capture-templates
+              '(("d" "default" plain "%?"
+                 :if-new  (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+subtitle: \n#+author: vanniuner\n#+SETUPFILE: ~/.doom.d/org-head.setup")
+                 :unnarrowed t)
+                ("j" "java" plain "%?"
+                 :if-new (file+head "java/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+subtitle: \n#+author: vanniuner\n#+SETUPFILE: ~/.doom.d/org-head.setup")
+                 :unnarrowed t)
+                ("e" "emacs" plain "%?"
+                 :target (file+head "emacs/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+subtitle: \n#+author: vanniuner\n#+SETUPFILE: ~/.doom.d/org-head.setup")
+                 :unnarrowed t)
+                ("p" "speech" plain "%?"
+                 :target (file+head "speech/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+subtitle: \n#+author: vanniuner\n#+SETUPFILE: ~/.doom.d/org-head.setup")
+                 :unnarrowed t)
+                ))
+
+3.  Org transclusion
+
+    [org-transclusion](https://github.com/nobiot/org-transclusion) lets you insert a copy of text content via a file link or ID link within an Org file, The usage case here below.  
+    There have a little conflict with org appear,[The incompatible with org appear](https://github.com/nobiot/org-transclusion/issues/194) we are waiting for the author&rsquo;s repsonse.  
+    
+        #+transclude: [[anyfile][shortname]] :level 2 :lines 1-2 :src java
+    
+    <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+    
+    
+    <colgroup>
+    <col  class="org-left" />
+    
+    <col  class="org-left" />
+    </colgroup>
+    <tbody>
+    <tr>
+    <td class="org-left">key</td>
+    <td class="org-left">binding</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">SPC n t</td>
+    <td class="org-left">open transclusion</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">SPC n g</td>
+    <td class="org-left">open transclusion refresh</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">SPC n O</td>
+    <td class="org-left">open transclusion source file</td>
+    </tr>
+    </tbody>
+    </table>
+
+4.  Org remark
+
+    [org-remark](https://github.com/nobiot/org-remark) lets you highlight and annotate text files and websites with using Org mode.  
+    You could customize faces of the note.  
+    
+        (custom-set-faces `(org-remark-highlighter ((t (:underline (:color "#1B4F72" :style line) :background "#57a6db")))))
+    
+    <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+    
+    
+    <colgroup>
+    <col  class="org-left" />
+    
+    <col  class="org-left" />
+    
+    <col  class="org-left" />
+    </colgroup>
+    <tbody>
+    <tr>
+    <td class="org-left">key</td>
+    <td class="org-left">binding</td>
+    <td class="org-left">describe</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">SPC r m</td>
+    <td class="org-left">org-remark-mark</td>
+    <td class="org-left">make a note</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">SPC r o</td>
+    <td class="org-left">org-remark-open</td>
+    <td class="org-left">open a note and cursor location at the note butter</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">SPC r n</td>
+    <td class="org-left">org-remark-view-next</td>
+    <td class="org-left">&#xa0;</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">SPC r p</td>
+    <td class="org-left">org-remark-view-prev</td>
+    <td class="org-left">&#xa0;</td>
+    </tr>
+    </tbody>
+    </table>
+
+5.  Org appear
+
+    [org-appear](https://github.com/awth13/org-appear) make invisible parts of Org elements appear visible.  
+    No key-binding here,because it automatic trigger when your cursor on it.  
+    
+        [[https://github.com/nobiot/org-transclusion][org-transclusion]] lets
+        org-transclusion lets
+        # org-transclusion -> [[https://github.com/nobiot/org-transclusion][org-transclusion]]
+
+6.  Org to Html
+
+    1.  Image to base64
+    
+        No need to send images files of the source.  
+        The embedded base64 image make to distribute your html documentation more easy.  
+    
+    2.  dotgraphviz of hand painted style
+    
+        Use dotgraphviz of hand painted style you need make sure the step here below.  
+        
+            cd ~/.doom.d/neoemacs/sketchviz/sketch.js
+            npm install --save roughjs
+            npm i jsdom
+        
+            #+BEGIN_SRC dotsk :file dotsk-demo.svg
+            digraph G {
+            bgcolor="transparent"
+            rankdir = LR
+            a -> b [minlen=2,label="ϟ"]
+            }
+        
+        ![img](dotsk-demo.svg)  
+
+7.  Latex PDF setting
+
+    1.  install [mactex](https://tug.org/mactex/)
+    2.  put [elegantpaper.cls](https://github.com/ElegantLaTeX/ElegantPaper/blob/master/elegantpaper.cls) under the org file dir
+    3.  add the code in the head of your org mode file  
+        
+            #+LATEX_COMPILER: xelatex
+            #+LATEX_CLASS: elegantpaper
+            #+OPTIONS: prop:t
+    4.  [more info](https://www.sheerwill.live/posts/main/20220723211325-vanilla_emacs_with_purcell/)
+
+8.  TODO Org Roam UI
+
+
+<a id="orgf5bcdcd"></a>
 
 ## Restclient
 
@@ -594,7 +843,7 @@ Fortunately we have solution for other mime type, it&rsquo;s restclient-set-var,
 About the variables infomation in current buffer, we could use `C-c Tab` to show them.  
 
 
-<a id="orga2218a2"></a>
+<a id="org97ce4bd"></a>
 
 ## Company box customize
 
@@ -602,7 +851,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
 -   company-icon icon config file: ~/.emacs.d/modules/completion/company/config.el
 
 
-<a id="org2ee8f7e"></a>
+<a id="org31a0a63"></a>
 
 ## Eredis Usage
 
@@ -660,7 +909,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="orgf80775f"></a>
+<a id="org17580b7"></a>
 
 ## Bookmark
 
@@ -704,7 +953,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="orga72cb6d"></a>
+<a id="orge8479a2"></a>
 
 ## Libvterm Usage
 
@@ -781,7 +1030,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="org0925d2f"></a>
+<a id="org9feca0a"></a>
 
 ## Elpa Offline
 
@@ -794,7 +1043,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="orgf379377"></a>
+<a id="orgfef1430"></a>
 
 ## FZF Config
 
@@ -828,48 +1077,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             crpt
 
 
-<a id="orgf0e53b1"></a>
-
-# Org mode
-
-
-<a id="org3c0bcea"></a>
-
-## Doom org style
-
-A vairty of template about org mode code which one referenced the doom doc style [Preview](http://1.117.167.195/doc/doomorgstyle.html)  
-How to use? <https://github.com/vanniuner/doom-org-style>  
-
-
-<a id="org374a50c"></a>
-
-## Dot sketchviz
-
-    cd ~/.doom.d/neoemacs/sketchviz/sketch.js
-    npm install --save roughjs
-    npm i jsdom
-
--   usage  
-    
-    ![img](dotsk-demo.svg)
-
-
-<a id="org2c96649"></a>
-
-## Latex PDF setting
-
-1.  install [mactex](https://tug.org/mactex/)
-2.  put [elegantpaper.cls](https://github.com/ElegantLaTeX/ElegantPaper/blob/master/elegantpaper.cls) under the org file dir
-3.  add the code in the head of your org mode file  
-    
-        #+LATEX_COMPILER: xelatex
-        #+LATEX_CLASS: elegantpaper
-        #+OPTIONS: prop:t
-
-4.  [more info](https://www.sheerwill.live/posts/main/20220723211325-vanilla_emacs_with_purcell/)
-
-
-<a id="orgc00cc58"></a>
+<a id="orgfccaca6"></a>
 
 # Alfred
 
@@ -878,19 +1086,19 @@ perference -> Advanced -> Rebuild macOS Metadata.
 alfred -> reload  
 
 
-<a id="orgdf28f3f"></a>
+<a id="org88f3a4e"></a>
 
 # Questions
 
 
-<a id="org601a8ff"></a>
+<a id="org1623c83"></a>
 
 ## install ffmpeg
 
 -   brew install ffmpeg
 
 
-<a id="org3ca27f3"></a>
+<a id="org71bcf66"></a>
 
 ## how to install all-the-icons?
 
@@ -898,7 +1106,7 @@ alfred -> reload
 -   M-x all-the-icons-install-fonts
 
 
-<a id="org40fbcd4"></a>
+<a id="orga30d38e"></a>
 
 ## how to install rime ?
 
@@ -907,7 +1115,7 @@ alfred -> reload
 unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime  
 
 
-<a id="org50b9f53"></a>
+<a id="org71df509"></a>
 
 ## how to install vterm?
 
@@ -921,7 +1129,7 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     make
 
 
-<a id="org977e3fd"></a>
+<a id="org11b31a0"></a>
 
 ## lsp-springboot
 
@@ -935,7 +1143,7 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     jdt-language-server-latest.tar.gz -f lsp-java-server-build.pom
 
 
-<a id="org1bb6ddd"></a>
+<a id="org5a41c49"></a>
 
 ## useful key setting
 
@@ -943,14 +1151,14 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     ![img](key-change.png)
 
 
-<a id="org7e4beb8"></a>
+<a id="org7554ff6"></a>
 
 ## why message showed could not load undo-tree history
 
     brew install watchexec
 
 
-<a id="org57b6ce0"></a>
+<a id="org5f0ab61"></a>
 
 ## File mode specification error: (file-missing Doing vfork No such file or directory)
 
@@ -970,21 +1178,21 @@ So the solution is change the execution file with the below shell script on MacO
     /Applications/Emacs.app/Contents/MacOS/Emacs.old
 
 
-<a id="org59aed1b"></a>
+<a id="org96004b3"></a>
 
 ## image dir
 
     ln -s ~/org/org-roam/image any_where/image
 
 
-<a id="org9e50585"></a>
+<a id="org8217aa4"></a>
 
 # About Logo
 
 edit with: [online-ps-editor](https://ps.gaoding.com/#/), [psd file](./logo.psd)  
 
 
-<a id="org745914f"></a>
+<a id="org93e12d4"></a>
 
 # Dependencies
 

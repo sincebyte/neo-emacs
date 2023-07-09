@@ -128,3 +128,27 @@
    :desc "org-transclusion-refresh" "g" #'org-transclusion-refresh))
 
 (map! :ne "; l"     'org-toggle-narrow-to-subtree              )
+
+(org-remark-global-tracking-mode +1)
+(map! :after org
+      :map general-override-mode-map
+      :nv "SPC r r" nil)
+(map! :after org-remark
+      :map general-override-mode-map
+      :nv "q" #'quit-window
+      :nv "SPC r m" #'org-remark-mark
+      :nv "SPC r o" #'org-remark-open
+      :nv "SPC r n" #'org-remark-view-next
+      :nv "SPC r p" #'org-remark-view-prev
+      ;; :nv "SPC r d" #'org-remark-remove
+)
+(custom-set-faces `(org-remark-highlighter ((t (:underline (:color "#1B4F72" :style line) :background "#57a6db")))))
+
+;;(define-key global-map (kbd "SPC n b") #'org-remark-mark)
+
+;; ;; The rest of keybidings are done only on loading `org-remark'
+;; (with-eval-after-load 'org-remark
+;;   (define-key org-remark-mode-map (kbd "C-c n o") #'org-remark-open)
+;;   (define-key org-remark-mode-map (kbd "C-c n ]") #'org-remark-view-next)
+;;   (define-key org-remark-mode-map (kbd "C-c n [") #'org-remark-view-prev)
+;;   (define-key org-remark-mode-map (kbd "C-c n r") #'org-remark-remove))

@@ -33,8 +33,7 @@
       :map  eshell-prompt-mode-map
       :nv "C-k" nil
       :nv "C-j" nil)
-
 (map! :after eshell
       :map  eshell-prompt-mode-map
-      :nv "C-k" #'evil-scroll-up
-      :nv "C-j" #'evil-scroll-down )
+      :nv "C-k"     #'evil-scroll-up
+      :nv "C-j"     #'evil-scroll-down )
