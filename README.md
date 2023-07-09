@@ -1,47 +1,47 @@
 
 # Table of Contents
 
-1.  [About](#org3a4166c)
-2.  [How to install](#org47a4ca6)
-    1.  [Install emacs](#org1d7ccbd)
-    2.  [Clone project](#orgdb97007)
-    3.  [Doom Install](#orgd428715)
-3.  [How to update](#org1f18df8)
-4.  [Private setting](#orgfa98ac6)
-5.  [Neoemacs modules](#org9fff171)
-    1.  [Java module](#orga426c18)
-    2.  [Dap-java Usage](#orgd9dce39)
-    3.  [Ejc-sql Usage](#orgd9bd1de)
-    4.  [Rime Usage](#org646e3b7)
-    5.  [Restclient](#orgba8ea7b)
-    6.  [Company box customize](#orgd57e23c)
-    7.  [Eredis Usage](#orga8fa4dd)
-    8.  [Bookmark](#org88fc2d9)
-    9.  [Libvterm Usage](#org3d5666b)
-    10. [Elpa Offline](#org0bac5c8)
-    11. [FZF Config](#orgdeb3fb6)
-6.  [Org mode](#org9cfcaec)
-    1.  [Doom org style](#orgf741198)
-    2.  [Dot sketchviz](#org66e9860)
-    3.  [Latex PDF setting](#org4f59b05)
-7.  [Alfred](#orgabed6e9)
-8.  [Questions](#orgd3290cb)
-    1.  [install ffmpeg](#orgdfe83b8)
-    2.  [how to install all-the-icons?](#orge73cc18)
-    3.  [how to install rime ?](#org3c43314)
-    4.  [how to install vterm?](#orgffb33d2)
-    5.  [lsp-springboot](#orgf471a61)
-    6.  [useful key setting](#org841b1c5)
-    7.  [why message showed could not load undo-tree history](#orgfb5617c)
-    8.  [File mode specification error: (file-missing Doing vfork No such file or directory)](#orga3793bb)
-    9.  [image dir](#org46afe18)
-9.  [About Logo](#org32bcedd)
-10. [Dependencies](#org368c27e)
+1.  [About](#orge56dc67)
+2.  [How to install](#org7648777)
+    1.  [Install emacs](#org0693f45)
+    2.  [Clone project](#org872f444)
+    3.  [Doom Install](#orge99db13)
+3.  [How to update](#orgb389349)
+4.  [Private setting](#org116533c)
+5.  [Neoemacs modules](#orgffd8a49)
+    1.  [Java module](#orgcc262f0)
+    2.  [Dap-java Usage](#org11c4c72)
+    3.  [Ejc-sql Usage](#orgcda86e5)
+    4.  [Rime Usage](#orgd7d260a)
+    5.  [Restclient](#org985ed9b)
+    6.  [Company box customize](#org154a1eb)
+    7.  [Eredis Usage](#org3967566)
+    8.  [Bookmark](#org19c322f)
+    9.  [Libvterm Usage](#orgcd55177)
+    10. [Elpa Offline](#orga146167)
+    11. [FZF Config](#org96daf36)
+6.  [Org mode](#org04ad15f)
+    1.  [Doom org style](#orgcca522a)
+    2.  [Dot sketchviz](#orgab6b3c4)
+    3.  [Latex PDF setting](#orgc14fbff)
+7.  [Alfred](#org10b2067)
+8.  [Questions](#org8342d21)
+    1.  [install ffmpeg](#orgb814aaf)
+    2.  [how to install all-the-icons?](#orge46cbd8)
+    3.  [how to install rime ?](#org47fab82)
+    4.  [how to install vterm?](#org93d05ec)
+    5.  [lsp-springboot](#org27eb904)
+    6.  [useful key setting](#org4b15263)
+    7.  [why message showed could not load undo-tree history](#org2411ad3)
+    8.  [File mode specification error: (file-missing Doing vfork No such file or directory)](#org28a93c2)
+    9.  [image dir](#orgbb32ab0)
+9.  [About Logo](#org1e8e1e9)
+10. [Dependencies](#org243c59d)
 
 ![img](./image-use.png)  
 
 
-<a id="org3a4166c"></a>
+<a id="orge56dc67"></a>
 
 # About
 
@@ -57,12 +57,12 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   [onlinedoc](http://1.117.167.195/doc/neo-emacs.html)
 
 
-<a id="org47a4ca6"></a>
+<a id="org7648777"></a>
 
 # How to install
 
 
-<a id="org1d7ccbd"></a>
+<a id="org0693f45"></a>
 
 ## Install emacs
 
@@ -97,7 +97,7 @@ After emacs installation, set environment variables which names EMACS ,this depe
     export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs,
 
 
-<a id="orgdb97007"></a>
+<a id="org872f444"></a>
 
 ## Clone project
 
@@ -107,7 +107,7 @@ clone doom-emacs and neo-emacs from github.
     git clone --depth 1 https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
 
-<a id="orgd428715"></a>
+<a id="orge99db13"></a>
 
 ## Doom Install
 
@@ -125,7 +125,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     ~/.emacs.doom/bin/doom install
 
 
-<a id="org1f18df8"></a>
+<a id="orgb389349"></a>
 
 # How to update
 
@@ -135,7 +135,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     sh ~/.emacs.d/bin/doom sync
 
 
-<a id="orgfa98ac6"></a>
+<a id="org116533c"></a>
 
 # Private setting
 
@@ -256,13 +256,13 @@ kse `setq`
 </table>
 
 
-<a id="org9fff171"></a>
+<a id="orgffd8a49"></a>
 
 # Neoemacs modules
 
 
 
-<a id="orga426c18"></a>
+<a id="orgcc262f0"></a>
 
 ## Java module
 
@@ -391,7 +391,7 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
         1.  eldoc [lsp-java/issues/432](https://github.com/emacs-lsp/lsp-java/issues/432)
 
 
-<a id="orgd9dce39"></a>
+<a id="org11c4c72"></a>
 
 ## TODO Dap-java Usage
 
@@ -479,7 +479,7 @@ I do not use debug for years. So be careful the documentation maybe outdated.I t
     </table>
 
 
-<a id="orgd9bd1de"></a>
+<a id="orgcda86e5"></a>
 
 ## Ejc-sql Usage
 
@@ -550,12 +550,14 @@ I do not use debug for years. So be careful the documentation maybe outdated.I t
     </table>
 
 
-<a id="org646e3b7"></a>
+<a id="orgd7d260a"></a>
 
 ## Rime Usage
 
 [Emacs Rime](https://github.com/DogLooksGood/emacs-rime) which makes to embedding an input method be possible whthin the emacs.Emacs could benefit form the flexible configuration of [rime](https://rime.im/).  
-On macos it&rsquo;s required to install **Squirrel** which is one of rime&rsquo;s distribution. **Squirrel** is installed in your os system as a input method. Note that the configuration of rime located at home/Library/Rime/. We want to sharing this configuration between Eamcs rime and os rime. So there have a variable which named `rime-user-data-dir` , And another important variable is `rime-librime-root` which configed the librime location.  
+On macos it&rsquo;s required to install **Squirrel** which is one of rime&rsquo;s distribution. **Squirrel** is installed in your os system as a input method.  
+Note that the configuration of rime located at home/Library/Rime/. We want to sharing this configuration between Eamcs rime and os rime.  
+So there have a variable which named `rime-user-data-dir` , And another important variable is `rime-librime-root` which configed the librime location.  
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -568,7 +570,7 @@ On macos it&rsquo;s required to install **Squirrel** which is one of rime&rsquo;
 <tbody>
 <tr>
 <td class="org-left">variable</td>
-<td class="org-left">require</td>
+<td class="org-left">required</td>
 </tr>
 
 
@@ -587,7 +589,7 @@ On macos it&rsquo;s required to install **Squirrel** which is one of rime&rsquo;
 
 1.  小鹤音形
 
-    [小鹤音形](https://www.flypy.com/) was a wonderful input method, with it ew could touch typing totally. The config file located here [flypy-rime-config](https://github.com/vanniuner/neo-emacs/tree/master/neoemacs/rime-config) provided two input method configuration. You need unzip them to `rime-user-data-dir` , and config the priority for candidate by `flypy_top.txt` .  
+    [小鹤音形](https://www.flypy.com/) was a wonderful input method, with it we could touch typing totally. The config file located here [flypy-rime-config](https://github.com/vanniuner/neo-emacs/tree/master/neoemacs/rime-config) provided two input method configuration. You need unzip them to `rime-user-data-dir` , and config the priority for candidate by `flypy_top.txt` .  
 
 2.  Key-binding
 
@@ -638,7 +640,7 @@ On macos it&rsquo;s required to install **Squirrel** which is one of rime&rsquo;
             cp /opt/homebrew/opt/emacs-plus@29/include/emacs-module.h ~/.doom.d/neoemacs/rime-macos/dist/include
 
 
-<a id="orgba8ea7b"></a>
+<a id="org985ed9b"></a>
 
 ## Restclient
 
@@ -663,7 +665,7 @@ Fortunately we have solution for other mime type, it&rsquo;s restclient-set-var,
 About the variables infomation in current buffer, we could use `C-c Tab` to show them.  
 
 
-<a id="orgd57e23c"></a>
+<a id="org154a1eb"></a>
 
 ## Company box customize
 
@@ -671,7 +673,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
 -   company-icon icon config file: ~/.emacs.d/modules/completion/company/config.el
 
 
-<a id="orga8fa4dd"></a>
+<a id="org3967566"></a>
 
 ## Eredis Usage
 
@@ -729,7 +731,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="org88fc2d9"></a>
+<a id="org19c322f"></a>
 
 ## Bookmark
 
@@ -773,7 +775,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="org3d5666b"></a>
+<a id="orgcd55177"></a>
 
 ## Libvterm Usage
 
@@ -850,7 +852,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="org0bac5c8"></a>
+<a id="orga146167"></a>
 
 ## Elpa Offline
 
@@ -863,7 +865,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="orgdeb3fb6"></a>
+<a id="org96daf36"></a>
 
 ## FZF Config
 
@@ -897,12 +899,12 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             crpt
 
 
-<a id="org9cfcaec"></a>
+<a id="org04ad15f"></a>
 
 # Org mode
 
 
-<a id="orgf741198"></a>
+<a id="orgcca522a"></a>
 
 ## Doom org style
 
@@ -910,7 +912,7 @@ A vairty of template about org mode code which one referenced the doom doc style
 How to use? <https://github.com/vanniuner/doom-org-style>  
 
 
-<a id="org66e9860"></a>
+<a id="orgab6b3c4"></a>
 
 ## Dot sketchviz
 
@@ -923,7 +925,7 @@ How to use? <https://github.com/vanniuner/doom-org-style>
     ![img](dotsk-demo.svg)
 
 
-<a id="org4f59b05"></a>
+<a id="orgc14fbff"></a>
 
 ## Latex PDF setting
 
@@ -938,7 +940,7 @@ How to use? <https://github.com/vanniuner/doom-org-style>
 4.  [more info](https://www.sheerwill.live/posts/main/20220723211325-vanilla_emacs_with_purcell/)
 
 
-<a id="orgabed6e9"></a>
+<a id="org10b2067"></a>
 
 # Alfred
 
@@ -947,19 +949,19 @@ perference -> Advanced -> Rebuild macOS Metadata.
 alfred -> reload  
 
 
-<a id="orgd3290cb"></a>
+<a id="org8342d21"></a>
 
 # Questions
 
 
-<a id="orgdfe83b8"></a>
+<a id="orgb814aaf"></a>
 
 ## install ffmpeg
 
 -   brew install ffmpeg
 
 
-<a id="orge73cc18"></a>
+<a id="orge46cbd8"></a>
 
 ## how to install all-the-icons?
 
@@ -967,7 +969,7 @@ alfred -> reload
 -   M-x all-the-icons-install-fonts
 
 
-<a id="org3c43314"></a>
+<a id="org47fab82"></a>
 
 ## how to install rime ?
 
@@ -976,7 +978,7 @@ alfred -> reload
 unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime  
 
 
-<a id="orgffb33d2"></a>
+<a id="org93d05ec"></a>
 
 ## how to install vterm?
 
@@ -990,7 +992,7 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     make
 
 
-<a id="orgf471a61"></a>
+<a id="org27eb904"></a>
 
 ## lsp-springboot
 
@@ -1004,7 +1006,7 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     jdt-language-server-latest.tar.gz -f lsp-java-server-build.pom
 
 
-<a id="org841b1c5"></a>
+<a id="org4b15263"></a>
 
 ## useful key setting
 
@@ -1012,14 +1014,14 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     ![img](key-change.png)
 
 
-<a id="orgfb5617c"></a>
+<a id="org2411ad3"></a>
 
 ## why message showed could not load undo-tree history
 
     brew install watchexec
 
 
-<a id="orga3793bb"></a>
+<a id="org28a93c2"></a>
 
 ## File mode specification error: (file-missing Doing vfork No such file or directory)
 
@@ -1039,21 +1041,21 @@ So the solution is change the execution file with the below shell script on MacO
     /Applications/Emacs.app/Contents/MacOS/Emacs.old
 
 
-<a id="org46afe18"></a>
+<a id="orgbb32ab0"></a>
 
 ## image dir
 
     ln -s ~/org/org-roam/image any_where/image
 
 
-<a id="org32bcedd"></a>
+<a id="org1e8e1e9"></a>
 
 # About Logo
 
 edit with: [online-ps-editor](https://ps.gaoding.com/#/), [psd file](./logo.psd)  
 
 
-<a id="org368c27e"></a>
+<a id="org243c59d"></a>
 
 # Dependencies
 

@@ -4,12 +4,14 @@
 
 * Rime Usage
 [[https://github.com/DogLooksGood/emacs-rime][Emacs Rime]] which makes to embedding an input method be possible whthin the emacs.Emacs could benefit form the flexible configuration of [[https://rime.im/][rime]].
-On macos it's required to install *Squirrel* which is one of rime's distribution. *Squirrel* is installed in your os system as a input method. Note that the configuration of rime located at home/Library/Rime/. We want to sharing this configuration between Eamcs rime and os rime. So there have a variable which named ~rime-user-data-dir~ , And another important variable is ~rime-librime-root~ which configed the librime location.
-| variable           | require |
-| rime-user-data-dir | true    |
-| rime-librime-root  | true    |
+On macos it's required to install *Squirrel* which is one of rime's distribution. *Squirrel* is installed in your os system as a input method.
+Note that the configuration of rime located at home/Library/Rime/. We want to sharing this configuration between Eamcs rime and os rime.
+So there have a variable which named ~rime-user-data-dir~ , And another important variable is ~rime-librime-root~ which configed the librime location.
+| variable           | required |
+| rime-user-data-dir | true     |
+| rime-librime-root  | true     |
 ** 小鹤音形
-[[https://www.flypy.com/][小鹤音形]] was a wonderful input method, with it ew could touch typing totally. The config file located here [[https://github.com/vanniuner/neo-emacs/tree/master/neoemacs/rime-config][flypy-rime-config]] provided two input method configuration. You need unzip them to ~rime-user-data-dir~ , and config the priority for candidate by ~flypy_top.txt~ .
+[[https://www.flypy.com/][小鹤音形]] was a wonderful input method, with it we could touch typing totally. The config file located here [[https://github.com/vanniuner/neo-emacs/tree/master/neoemacs/rime-config][flypy-rime-config]] provided two input method configuration. You need unzip them to ~rime-user-data-dir~ , and config the priority for candidate by ~flypy_top.txt~ .
 ** Key-binding
 | key | binding             |
 | C-; | toggle-input-method |
