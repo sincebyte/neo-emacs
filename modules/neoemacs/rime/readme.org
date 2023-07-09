@@ -1,0 +1,24 @@
+#+title: rime package readme
+#+author: vanniuner
+#+SETUPFILE: ~/.doom.d/org-head.setup
+
+* Rime Usage
+[[https://github.com/DogLooksGood/emacs-rime][Emacs Rime]] which makes to embedding an input method be possible whthin the emacs.You could benefit form the flexible configuration of [[https://rime.im/][rime]].On macos you shoud install *Squirrel* which is one of rime's distribution. *Squirrel* installed in your os system as a input method. Note that the configuration of rime located at home/Library/Rime/. We want to sharing this configuration between Eamcs rime and os rime. So there have a variable which named ~rime-user-data-dir~ to config it, And another important variable is ~rime-librime-root~ which configed the librime location.
+| variable           | require |
+| rime-user-data-dir | true    |
+| rime-librime-root  | true    |
+** 小鹤音形
+[[https://www.flypy.com/][小鹤音形]] was an wonderful input method, with it you could touch typing totally. The config file located here [[https://github.com/vanniuner/neo-emacs/tree/master/neoemacs/rime-config][flypy-rime-config]] provided two input method configuration. You need unzip them to ~rime-user-data-dir~. You could make a priority by ~flypy_top.txt~.
+** Q/A
+- https://github.com/DogLooksGood/emacs-rime supply this plugin.
+- https://github.com/rime/plum for more infomation.
+- 'emacs-module.h' file not found
+ #+begin_src shell
+  lib.c:23:10: fatal error: 'emacs-module.h' file not found
+    #include <emacs-module.h>
+            ^~~~~~~~~~~~~~~~
+ #+end_src
+
+ #+begin_src shell
+ cp /opt/homebrew/opt/emacs-plus@29/include/emacs-module.h ~/.doom.d/neoemacs/rime-macos/dist/include
+ #+end_src

@@ -121,6 +121,7 @@ kse ~setq~
 * Neoemacs modules
 #+transclude: [[./modules/neoemacs/java/readme.org][java-readme.org]] :level 2
 #+transclude: [[./modules/neoemacs/sql/readme.org][sql-readme.org]] :level 2
+#+transclude: [[./modules/neoemacs/rime/readme.org][emacs-rime.org]] :level 2
 ** Restclient
 Restclient provide a test suite for HTTP REST in Emacs.The official repository here [[https://github.com/pashky/restclient.el][restclient.el]].
 Yea, a pretty old old project.Fortunately doom emacs have integrated it.We just need open it with ~(rest +jq)~.
@@ -187,21 +188,6 @@ key binding C-c C-c
   | Spc-Ent | select a bookmark |
   | Spc b m | set a bookmark    |
   | Spc b M | delete a bookmark |
-** Rime Usage
-- https://github.com/DogLooksGood/emacs-rime supply this plugin.
-- https://github.com/rime/plum for more infomation.
-- The config location at ~/Library/Rime/flypy_sys.txt
-- Rime input method config at .doom.d/myconfig/rime-config.
-- 'emacs-module.h' file not found
- #+begin_src shell
-  lib.c:23:10: fatal error: 'emacs-module.h' file not found
-    #include <emacs-module.h>
-            ^~~~~~~~~~~~~~~~
- #+end_src
-
- #+begin_src shell
- cp /opt/homebrew/opt/emacs-plus@29/include/emacs-module.h ~/.doom.d/neoemacs/rime-macos/dist/include
- #+end_src
 ** Libvterm Usage
 - Configuration
   - fish shell configuration

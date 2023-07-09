@@ -15,19 +15,6 @@
       display-time-default-load-average nil
       emacs-module-root "/Applications/Emacs.app/Contents/Resources/include")
 
-;;doom welcome
-;; (defun doom-dashboard-widget-banner ()
-;;   "For neoemacs ascii logo."
-;;  (let ((point (point)))
-;;    (mapc (lambda (line)
-;;            (insert (propertize (+doom-dashboard--center +doom-dashboard--width line)
-;;                                'face 'doom-dashboard-banner) " ")
-;;            (insert "\n"))
-;;   '("|¯¯\\|¯¯|/¯x¯¯\\ /¯¯¯¯¯\\ /¯x¯¯\\|¯¯\\/¯¯¯| /¯¯¯¯|/¯¯¯¯\\ /¯¯¯¯¯/ "
-;;     "|     '| (\\__/|| x   || (\\__/|      '|/    !||(\\__/|\\ __¯¯¯\\"
-;;     "|__|\\__|\\____\\ \\_____/ \\____\\|._|\\/||/__/¯|_|\\____\\ /______/"
-;;     "                                                         v1.3.1      "
-;;     "                                                                     "))))
 (defun doom-dashboard-widget-footer () "For empty element." (insert ""))
 (setq fancy-splash-image (concat doom-private-dir "logo.png"))
 
@@ -60,12 +47,9 @@
 ;; (custom-set-faces `(lsp-face-highlight-read ((t (:inherit highlight )))))
 
 (custom-set-faces `(lsp-face-highlight-textual ((t (:background nil )))))
-(custom-set-faces `(lsp-face-highlight-read
-  ((t (:foreground "#57a6db" :background nil :weight bold :underline nil)))))
-(custom-set-faces `(lsp-face-highlight-write
-  ((t (:foreground "#57a6db" :background nil :weight bold :underline nil)))))
-(custom-set-faces `(tide-hl-identifier-face
-  ((t (:foreground "#57a6db" :background nil)))))
+(custom-set-faces `(lsp-face-highlight-read ((t (:foreground "#57a6db" :background nil :weight bold :underline nil)))))
+(custom-set-faces `(lsp-face-highlight-write ((t (:foreground "#57a6db" :background nil :weight bold :underline nil)))))
+(custom-set-faces `(tide-hl-identifier-face ((t (:foreground "#57a6db" :background nil)))))
 ;; (custom-set-faces `(avy-lead-face   ((t (:foreground "#00dfff" :background nil :weight normal)))))
 ;; (custom-set-faces `(avy-lead-face-0 ((t (:foreground "#2b8db3" :background nil :weight normal)))))
 ;; (custom-set-faces `(avy-lead-face-1 ((t (:foreground "#104E8B" :background nil :weight normal)))))
@@ -76,10 +60,8 @@
 (custom-set-faces `(avy-lead-face-1 ((t (:foreground "#ED2B2A" :background nil :weight normal)))))
 (custom-set-faces `(avy-lead-face-2 ((t (:foreground "#FFF6C3" :background nil :weight normal)))))
 
-(custom-set-faces `(line-number
-  ((t (:inherit 'default  :slant normal)))))
-(custom-set-faces `(line-number-current-line
-  ((t (:inherit 'default  :slant normal)))))
+(custom-set-faces `(line-number ((t (:inherit 'default  :slant normal)))))
+(custom-set-faces `(line-number-current-line ((t (:inherit 'default  :slant normal)))))
 
 ;; make emacs auto save buffer
 (custom-set-variables
@@ -96,7 +78,7 @@
 (advice-add 'zygospore-toggle-delete-other-windows
   :around 'zygospore-toggle-delete-other-windows@around)
 
-;; run shell script with open dir
+;; run shell script with open dir file window
 (defun neo/opendir ()
   (interactive)
   (shell-command (concat "open " (shell-command-to-string "pwd"))))

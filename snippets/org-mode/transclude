@@ -2,4 +2,4 @@
 # name: tr
 # key: tr
 # --
-#+transclude: $0
+#+transclude: [[][]] :level 2 :lines 1-2 :src java

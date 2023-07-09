@@ -105,6 +105,7 @@
       (file-name-nondirectory source))))
 (advice-add #'org-html--format-image :override #'org-org-html--format-image)
 
+;; expand your latex
 (use-package org-appear
   :defer t
   :hook (org-mode . org-appear-mode)
