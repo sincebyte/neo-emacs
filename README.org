@@ -16,7 +16,7 @@
 
 
 [[file:./image-use.png]]
-
+[[./logo.png]]
 * About
 Neo emacs is a configuration framework for GNU Emacs which is based on doom emacs and focuses on the java web application coding environment. Neo emacs has the following features:
 - Code completion: Lsp-java supports maven and gradle project.
@@ -120,7 +120,6 @@ kse ~setq~
 
 * Neoemacs modules
 #+transclude: [[./modules/neoemacs/java/readme.org][java-readme.org]] :level 2
-#+transclude: [[./modules/neoemacs/sql/readme.org][sql-readme.org]] :level 2
 #+transclude: [[./modules/neoemacs/rime/readme.org][emacs-rime.org]] :level 2
 ** Restclient
 Restclient provide a test suite for HTTP REST in Emacs.The official repository here [[https://github.com/pashky/restclient.el][restclient.el]].
