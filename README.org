@@ -13,10 +13,8 @@
 #+MACRO: htmlred @@html:<font color="red"></font>@@
 #+MACRO: latexred @@latex:{\color{red}@@@@latex:}@@
 #+latex:\newpage
-
-
-[[file:./image-use.png]]
 [[./logo.png]]
+[[file:./image-use.png]]
 * About
 Neo emacs is a configuration framework for GNU Emacs which is based on doom emacs and focuses on the java web application coding environment. Neo emacs has the following features:
 - Code completion: Lsp-java supports maven and gradle project.
