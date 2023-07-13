@@ -65,7 +65,7 @@
       :n "SPC t e" #'lsp-treemacs-java-deps-list
       :n "SPC t s" #'lsp-restart-workspace)
 
-;; (add-hook 'java-mode-hook (lambda () (setq display-line-numbers t)))
+(add-hook 'java-mode-hook (lambda () (tree-sitter-hl-mode)))
 
 ;; (map! :after lsp-mode
 ;;       :map lsp-signature-mode-map
