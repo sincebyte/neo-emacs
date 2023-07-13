@@ -113,7 +113,7 @@
        shell               ; shell config for vterm & eshell
        common              ; neoemacs common setting
        modeline            ; neoemacs modeline setting
-       org                 ; neoemacs org setting
+       (org +gnuplot)      ; neoemacs org setting
        rime                ; neoemacs rime setting
        translate           ; translate setting
        xml                 ; xml buffer format

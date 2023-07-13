@@ -96,13 +96,14 @@
   ;; doc
   (if (string-match "http" source)
     (org-html--format-image-old source attributes info)
-    (format "<img src=\"data:image/%s+xml;base64,%s\"%s />"
+    (format "<img src=\"data:image/%s+xml;base64,%s\"%s width=%s />"
       (or (file-name-extension source) "")
       (base64-encode-string
        (with-temp-buffer
         (insert-file-contents-literally source)
         (buffer-string)))
-      (file-name-nondirectory source))))
+      (file-name-nondirectory source)
+      "100%")))
 (advice-add #'org-html--format-image :override #'org-org-html--format-image)
 
 ;; expand your latex
@@ -143,6 +144,8 @@
       ;; :nv "SPC r d" #'org-remark-remove
 )
 (custom-set-faces `(org-remark-highlighter ((t (:underline (:color "#1B4F72" :style line) :background "#57a6db")))))
+(setq org-image-actual-width nil)
+
 
 ;;(define-key global-map (kbd "SPC n b") #'org-remark-mark)
 
