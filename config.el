@@ -109,3 +109,6 @@
 ;;     (message "Searching for %s" query-buf)
 ;;     (browse-url mapURL)))
 
+(add-hook 'vue-mode-hook #'lsp!)
+(add-hook 'js-mode-hook #'lsp!)
+(setq read-process-output-max (* 3 (* 1024 1024))) ;; 1mb

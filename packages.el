@@ -66,6 +66,7 @@
 (package! eredis            )
 (package! shrface           )
 (package! lsp-java          )
+(package! vue-mode          )
 (package! rime              )
 (package! jq-mode           )
 (package! zygospore         )
