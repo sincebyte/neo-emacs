@@ -66,7 +66,7 @@
 (package! eredis            )
 (package! shrface           )
 (package! lsp-java          )
-(package! vue-mode          )
+;; (package! vue-mode          )
 (package! rime              )
 (package! jq-mode           )
 (package! zygospore         )
@@ -87,6 +87,8 @@
 (package! disable-mouse     )
 (package! golden-ratio      )
 (package! org-remark        )
+;; (web +lsp)
+;; (javascript +lsp)
 
 
 ;; (package! awesome-tray      )

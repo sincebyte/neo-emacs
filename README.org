@@ -330,6 +330,9 @@ So the solution is change the execution file with the below shell script on MacO
 #+begin_src shell
 ln -s ~/org/org-roam/image any_where/image
 #+end_src
+** vue lsp server startup failed
+[[https://github.com/neoclide/coc-vetur/issues/28][isuue]]
+const rawData = require('vscode-css-languageservice/lib/umd/data/webCustomData').cssData;
 * About Logo
 edit with: [[https://ps.gaoding.com/#/][online-ps-editor]], [[./logo.psd][psd file]]
 * Dependencies
