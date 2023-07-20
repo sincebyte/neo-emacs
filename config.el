@@ -110,9 +110,7 @@
 ;;     (browse-url mapURL)))
 
 (add-hook 'vue-mode-hook #'web-mode)
-;; (add-hook 'js-mode-hook #'lsp!)
 (setq read-process-output-max (* 3 (* 1024 1024))) ;; 1mb
-
-;; (use-package! ob-d2 :defer t)
-
-;;(use-package! d2-mode :defer t)
+(setq-hook! 'web-mode-hook +format-with 'prettier-prettify)
+(add-hook 'web-mode-hook (lambda ()
+  (setq display-line-numbers  t )))
