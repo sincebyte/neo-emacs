@@ -34,13 +34,13 @@
        ;;fill-column       ; a `fill-column' indicator
        hl-todo           ; highlight TODO/CANC/NOTE/DEPR/HACK/REVI/DONE
        ;;hydra
-       indent-guides     ; highlighted indent columns
+       ;indent-guides     ; highlighted indent columns
        modeline          ; snazzy, Atom-inspired modeline, plus API
        nav-flash         ; blink the current line after jumping
        neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
        (popup +defaults) ; tame sudden yet inevitable temporary windows
-       ligatures         ; ligatures or substitute text with pretty symbols
+       ;;ligatures         ; ligatures or substitute text with pretty symbols
        ;;tabs              ; an tab bar for Emacs
        ;; (treemacs +lsp)          ; a project drawer, like neotree but cooler
        ;;unicode           ; extended unicode support for various languages

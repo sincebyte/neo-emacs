@@ -155,3 +155,7 @@
 ;;   (define-key org-remark-mode-map (kbd "C-c n ]") #'org-remark-view-next)
 ;;   (define-key org-remark-mode-map (kbd "C-c n [") #'org-remark-view-prev)
 ;;   (define-key org-remark-mode-map (kbd "C-c n r") #'org-remark-remove))
+;;(org-babel-do-load-languages
+;;    'org-babel-load-languages
+;;    '((d2 . t)
+;;      (scheme . t)))

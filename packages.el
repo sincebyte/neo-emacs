@@ -87,13 +87,14 @@
 (package! disable-mouse     )
 (package! golden-ratio      )
 (package! org-remark        )
+(package! d2-mode           )
 ;; (web +lsp)
 ;; (javascript +lsp)
-
 
 ;; (package! awesome-tray      )
 
 ;; (package! ejc-sql    :recipe (:host github :repo "vanniuner/ejc-sql"         :branch "master" ))
+;; (package! ob-d2      :recipe (:host github :repo "dmacvicar/ob-d2"           :branch "main"   ))
 (package! bookmark+  :recipe (:host github :repo "emacsmirror/bookmark-plus" :branch "master" ))
 (package! org-appear :recipe (:host github :repo "awth13/org-appear"         :branch "master" ))
 (package! org-transclusion
