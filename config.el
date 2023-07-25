@@ -86,12 +86,12 @@
       (load-theme 'kaolin-bubblegum t))))
 (run-with-timer 0 3600 'synchronize-theme)
 
-(use-package! disable-mouse :defer t)
-(mapc #'disable-mouse-in-keymap
-  (list evil-motion-state-map
-        evil-normal-state-map
-        evil-visual-state-map
-        evil-insert-state-map))
+;; (use-package! disable-mouse :defer t)
+;; (mapc #'disable-mouse-in-keymap
+;;   (list evil-motion-state-map
+;;         evil-normal-state-map
+;;         evil-visual-state-map
+;;         evil-insert-state-map))
 
 
 ;; open map
@@ -114,3 +114,4 @@
 (setq-hook! 'web-mode-hook +format-with 'prettier-prettify)
 (add-hook 'web-mode-hook (lambda ()
   (setq display-line-numbers  t )))
+

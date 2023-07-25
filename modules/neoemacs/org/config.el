@@ -1,6 +1,7 @@
 ;;; neoemacs/org/config.el -*- lexical-binding: t; -*-
 
-(use-package! dotsk               :defer t)
+(use-package! dotsk :defer t)
+(use-package! ds2   :defer t)
 ;; common setting
 (setq
       dot-exec-path                 "/opt/homebrew/bin/dot"                                  ;; dot           exec path
@@ -101,7 +102,8 @@
       (base64-encode-string
        (with-temp-buffer
         (insert-file-contents-literally source)
-        (buffer-string)))
+        (string-replace "UNLICENSED COPY" " "
+        (buffer-string))))
       (file-name-nondirectory source)
       "100%")))
 (advice-add #'org-html--format-image :override #'org-org-html--format-image)
