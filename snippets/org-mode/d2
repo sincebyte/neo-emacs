@@ -1,0 +1,120 @@
+# -*- mode: snippet -*-
+# name: d2
+# key: d2
+# --
+#+begin_src d2 :file devflow.svg
+direction: right
+"禅道需求": "需求-PRD"{
+  shape: image
+  icon: https://pp.myapp.com/ma_icon/0/icon_54212284_1655281546/256
+  width: 60
+  height: 60
+}
+产品经理: "产品" {
+  shape: person
+  width: 52
+  height: 54
+  style.fill: "#85929E"
+  style.stroke: "#01020d"
+  style.stroke-width: 1
+}
+
+产品经理 -> 禅道需求 : 创建  {
+  #style.animated: true
+  style.stroke-width: 3
+  style.stroke: "#F4D03F"
+}
+
+禅道需求 -> development : 负责人分配  {
+  #style.animated: true
+  style.stroke-width: 3
+  style.stroke: "#F4D03F"
+}
+
+development: "研发" {
+  shape: person
+  width: 52
+  height: 54
+  style.fill: "#4b9ae5"
+  style.stroke-width: 1
+}
+概要设计: "DOC\n概要设计" {
+  shape: page
+  width: 59
+  height: 94
+  style.fill: transparent
+  style.fill: "gray"
+  style.stroke-width: 1
+}
+development -> 概要设计 : output  {
+  #style.animated: true
+}
+方案评审: "评审会议" {
+  icon: https://cdn-icons-png.flaticon.com/512/1324/1324843.png
+  shape: image
+  height: 124
+  height: 124
+}
+概要设计 -> 方案评审
+# development -> 方案评审 : Meeting  {
+#   #style.animated: true
+#   # style.stroke-width: 3
+#   style.stroke: "#F4D03F"
+# }
+排期表 : "排期表"{
+  icon: https://icons.terrastruct.com/essentials/092-graph%20bar.svg
+  shape: image
+}
+方案评审 -> 排期表 : output{
+}
+
+研发迭代 <- 排期表 : development {
+  #style.animated: true
+  style.stroke-width: 3
+}
+测试: "测试" {
+  shape: person
+  width: 52
+  height: 54
+  style.fill: "#EB984E"
+  style.stroke: "#01020d"
+  style.stroke-width: 1
+}
+
+测试 <- 研发迭代 : 提测{
+   style.stroke-width: 3
+}
+dev : "dev 环境"{
+  shape: cloud
+  style.fill: "#58D68D"
+  style.stroke: "#2ECC71"
+  style.font-color: "white"
+
+}
+研发迭代 : "研发迭代" {
+   style.3d: true
+}
+
+研发迭代 -> dev : 自测
+
+
+禅道缺陷 : "BUG"{
+  shape: image
+  icon: https://pp.myapp.com/ma_icon/0/icon_54212284_1655281546/256
+  width: 60
+  height: 60
+}
+测试 -> 禅道缺陷 : 提交bug {
+  style.animated: true
+  style.stroke-width: 3
+  style.stroke: "red"
+}
+禅道缺陷 -> development : 分配 {
+  style.animated: true
+  style.stroke-width: 3
+}
+development -> 测试 : 解决bug{
+  style.animated: true
+  style.stroke-width: 3
+}
+#+end_src
