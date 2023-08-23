@@ -13,4 +13,4 @@
 (global-set-key (kbd "C-c t") 'set-frame-alpha)
 
 (setq frame-title-format nil)
-(set-frame-alpha 99)
+(set-frame-alpha 97)
