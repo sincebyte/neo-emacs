@@ -9,6 +9,8 @@
       org-directory                 "~/org/"
       org-roam-directory            "~/org/org-roam"
       org-confirm-babel-evaluate    nil
+      yas-indent-line               'fixed
+      yas-also-auto-indent-first-line t
       org-roam-v2-ack               t
       org-agenda-files              (list (concat org-roam-directory "/agenda/GTD.org"))
       org-image-actual-width        '(300)

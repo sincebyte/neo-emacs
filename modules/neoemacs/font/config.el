@@ -2,6 +2,7 @@
 
 (setq emacs-font-size-pair '(19 . 20))
 (setq en-font "victor Mono"
+;; (setq en-font "Sarasa Mono Slab SC"
       cn-font "LXGW WenKai Mono")
 
 ;; (setq en-font "等距更纱黑体 Slab SC"
