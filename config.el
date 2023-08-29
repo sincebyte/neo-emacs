@@ -114,4 +114,9 @@
 (setq-hook! 'web-mode-hook +format-with 'prettier-prettify)
 (add-hook 'web-mode-hook (lambda ()
   (setq display-line-numbers  t )))
-
+;; (modify-coding-system-alist ‘file "\.git/COMMIT_EDITMSG\’" 'utf-8)
+(add-hook 'pre-command-hook (lambda ()
+  ;;; let 变量
+  (if (or (eq (buffer-name) (+workspace-current-name))
+          (string-match "*Minibuf" (buffer-name)) )
+  nil (progn (+workspace/rename (buffer-name))))))
