@@ -1,6 +1,9 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-(setq default-frame-alist                        '((top . 58) (left . 100) (height . 32) (width . 122))
+(setq
+;; default-frame-alist                        '((top . 0) (left . 0) (height . 100%) (width . 122))
+      ;; default-frame-alist '(fullscreen . maximized)
       undo-tree-history-directory-alist          '(("." . "~/.emacs.d/undo"))
       user-private-dir                           "~/org/org-roam/emacs/command/doom/config/" ;; load your privacy config
       dired-dwim-target                          t

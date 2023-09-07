@@ -44,3 +44,6 @@
     | KEY     | FUNCTION       | description                |
     | SPC e c | ejc-connection | choose connection with ivy |
     | C-c C-c | ejc-execute    | execute the sql            |
+
+* Sqlserver
+Maybe you need this post for `The server selected protocol version TLS10 is not accepted by client preferences` : https://blog.csdn.net/w605283073/article/details/126755540
