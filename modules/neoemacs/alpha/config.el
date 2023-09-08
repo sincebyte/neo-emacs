@@ -14,3 +14,18 @@
 
 (setq frame-title-format nil)
 (set-frame-alpha 97)
+
+(setq kaolin-themes-underline nil)
+(defun synchronize-theme ()
+  (setq hour (string-to-number (substring (current-time-string) 11 13)))
+  (if (member hour (number-sequence 0 0))
+    (setq   now '(kaolin-light))
+    (setq   now '(kaolin-bubblegum)))
+  (if (eq now custom-enabled-themes)
+    (print (current-time-string))
+    (setq custom-enabled-themes now)
+    (if (member hour (number-sequence 0 0))
+      (load-theme 'kaolin-light t)
+      (load-theme 'kaolin-bubblegum t))))
+;; (run-with-timer 0 3600 'synchronize-theme)
+(load-theme 'kaolin-light t)

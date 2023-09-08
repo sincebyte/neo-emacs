@@ -75,26 +75,12 @@
 (keyboard-translate ?\C-h ?\C-?                                      )
 
 
-(setq kaolin-themes-underline nil)
-(defun synchronize-theme ()
-  (setq hour (string-to-number (substring (current-time-string) 11 13)))
-  (if (member hour (number-sequence 0 0))
-    (setq   now '(kaolin-light))
-    (setq   now '(kaolin-bubblegum)))
-  (if (eq now custom-enabled-themes)
-    (print (current-time-string))
-    (setq custom-enabled-themes now)
-    (if (member hour (number-sequence 0 0))
-      (load-theme 'kaolin-light t)
-      (load-theme 'kaolin-bubblegum t))))
-(run-with-timer 0 3600 'synchronize-theme)
-
-;; (use-package! disable-mouse :defer t)
-;; (mapc #'disable-mouse-in-keymap
-;;   (list evil-motion-state-map
-;;         evil-normal-state-map
-;;         evil-visual-state-map
-;;         evil-insert-state-map))
+(use-package! disable-mouse :defer t)
+(mapc #'disable-mouse-in-keymap
+  (list evil-motion-state-map
+        evil-normal-state-map
+        evil-visual-state-map
+        evil-insert-state-map))
 
 
 ;; open map

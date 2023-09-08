@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: entityt
+# key: ent
+# --
+entity $0 {
+ID
+--
+,* Name
+}
+note left #5DADE2 : comment
