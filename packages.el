@@ -52,7 +52,7 @@
 (add-to-list 'load-path "/usr/local/bin")
 
 (after! warnings(add-to-list 'warning-suppress-types '(yasnippet backquote-change)))
-(unpin!   lsp-mode lsp-java )
+;; (unpin!   lsp-mode lsp-java )
 (unpin!   org-roam          )
 (unpin!   restclient        )
 (unpin!   restclient-jq     )
@@ -86,7 +86,7 @@
 (package! kaolin-themes     )
 (package! disable-mouse     )
 (package! golden-ratio      )
-(package! org-remark        )
+;; (package! org-remark        )
 (package! d2-mode           )
 ;; (web +lsp)
 ;; (javascript +lsp)
@@ -97,11 +97,11 @@
 ;; (package! ob-d2      :recipe (:host github :repo "dmacvicar/ob-d2"           :branch "main"   ))
 (package! bookmark+  :recipe (:host github :repo "emacsmirror/bookmark-plus" :branch "master" ))
 (package! org-appear :recipe (:host github :repo "awth13/org-appear"         :branch "master" ))
-(package! org-transclusion
-  :recipe (:host github
-           :repo "nobiot/org-transclusion"
-           :branch "main"
-           :files ("*.el")))
+;; (package! org-transclusion
+;;   :recipe (:host github
+;;            :repo "nobiot/org-transclusion"
+;;            :branch "main"
+;;            :files ("*.el")))
 ;; (package! restclient)
 ;; (package! restclient-jq)
 
@@ -115,9 +115,9 @@
 
 
 ;; 禁用的包
-(package! mml        :disable t)
-(package! semantic   :disable t)
-(package! log-edit   :disable t)
-(package! browse-url :disable t)
+;; (package! mml        :disable t)
+;; (package! semantic   :disable t)
+;; (package! log-edit   :disable t)
+;; (package! browse-url :disable t)
 (package! dap-java   :disable t)
 

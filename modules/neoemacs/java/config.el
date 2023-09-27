@@ -11,10 +11,14 @@
       company-tooltip-flip-when-above            t
       company-show-quick-access                  nil)
 
+(setq lsp-eldoc-enable-hover                     t)
+(setq lsp-eldoc-render-all                     t)
 (add-hook 'java-mode-hook (lambda ()
   (setq display-line-numbers                       t
         lsp-enable-symbol-highlighting             t
         lsp-idle-delay                             0.1
+        lsp-signature-auto-activate                t
+        lsp-signature-doc-lines                    10
         lsp-eldoc-enable-hover                     t
         lsp-java-signature-help-enabled            t
         lsp-java-references-code-lens-enabled      t
@@ -24,7 +28,7 @@
         lsp-java-format-on-type-enabled            t
         lsp-java-format-comments-enabled           nil
         lsp-java-save-actions-organize-imports     nil
-        lsp-java-maven-download-sources            t
+        lsp-java-maven-download-sources            "true"
         lsp-java-autobuild-enabled                 t
         lsp-java-inhibit-message                   nil
         lsp-completion-show-kind                   nil
@@ -81,3 +85,5 @@
 
 ;;(evil-define-key* 'normal lsp-signature-mode-map
 ;; "C-n" #'lsp-signature-next)
+;; (add-hook 'java-mode-hook #'aggressive-indent-mode)
+;; (add-hook 'lsp-save)

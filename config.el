@@ -5,6 +5,7 @@
 ;; default-frame-alist                        '((top . 0) (left . 0) (height . 100%) (width . 122))
       ;; default-frame-alist '(fullscreen . maximized)
       undo-tree-history-directory-alist          '(("." . "~/.emacs.d/undo"))
+      undo-tree-enable-undo-in-region            nil
       user-private-dir                           "~/org/org-roam/emacs/command/doom/config/" ;; load your privacy config
       dired-dwim-target                          t
       neo-window-width                           45
@@ -104,8 +105,9 @@
 (add-hook 'web-mode-hook (lambda ()
   (setq display-line-numbers  t )))
 ;; (modify-coding-system-alist ‘file "\.git/COMMIT_EDITMSG\’" 'utf-8)
-(add-hook 'pre-command-hook (lambda ()
-  ;;; let 变量
-  (if (or (eq (buffer-name) (+workspace-current-name))
-          (string-match "*Minibuf" (buffer-name)) )
-  nil (progn (+workspace/rename (buffer-name))))))
+
+;; (add-hook 'pre-command-hook (lambda ()
+;;   ;;; let 变量
+;;   (if (or (eq (buffer-name) (+workspace-current-name))
+;;           (string-match "*Minibuf" (buffer-name)) )
+;;   nil (progn (+workspace/rename (buffer-name))))))

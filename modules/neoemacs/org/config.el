@@ -121,33 +121,33 @@
   (setq org-appear-autokeywords t)
   (setq org-appear-inside-latex t))
 
-(use-package! org-transclusion
-  :defer t
-  :after org
-  :init
-  (map!
-   :leader
-   :prefix "n"
-   :desc "Org Transclusion Mode" "t" #'org-transclusion-mode
-   "O" #'org-transclusion-move-to-source
-   :desc "org-transclusion-refresh" "g" #'org-transclusion-refresh))
+;; (use-package! org-transclusion
+;;   :defer t
+;;   :after org
+;;   :init
+;;   (map!
+;;    :leader
+;;    :prefix "n"
+;;    :desc "Org Transclusion Mode" "t" #'org-transclusion-mode
+;;    "O" #'org-transclusion-move-to-source
+;;    :desc "org-transclusion-refresh" "g" #'org-transclusion-refresh))
 
 (map! :ne "; l"     'org-toggle-narrow-to-subtree              )
 
-(org-remark-global-tracking-mode +1)
-(map! :after org
-      :map general-override-mode-map
-      :nv "SPC r r" nil)
-(map! :after org-remark
-      :map general-override-mode-map
-      :nv "q" #'quit-window
-      :nv "SPC r m" #'org-remark-mark
-      :nv "SPC r o" #'org-remark-open
-      :nv "SPC r n" #'org-remark-view-next
-      :nv "SPC r p" #'org-remark-view-prev
-      ;; :nv "SPC r d" #'org-remark-remove
-)
-(custom-set-faces `(org-remark-highlighter ((t (:underline (:color "#1B4F72" :style line) :background "#57a6db")))))
+;;(org-remark-global-tracking-mode +1)
+;; (map! :after org
+;;       :map general-override-mode-map
+;;       :nv "SPC r r" nil)
+;; (map! :after org-remark
+;;       :map general-override-mode-map
+;;       :nv "q" #'quit-window
+;;       :nv "SPC r m" #'org-remark-mark
+;;       :nv "SPC r o" #'org-remark-open
+;;       :nv "SPC r n" #'org-remark-view-next
+;;       :nv "SPC r p" #'org-remark-view-prev
+;;       ;; :nv "SPC r d" #'org-remark-remove
+;; )
+;; (custom-set-faces `(org-remark-highlighter ((t (:underline (:color "#1B4F72" :style line) :background "#57a6db")))))
 (setq org-image-actual-width nil)
 
 

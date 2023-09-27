@@ -3,7 +3,10 @@
 (setq emacs-font-size-pair '(19 . 20))
 (setq en-font "victor Mono"
 ;; (setq en-font "Sarasa Mono Slab SC"
-      cn-font "LXGW WenKai Mono")
+      ;; cn-font "LXGW WenKai Mono")
+      cn-font "HYXinRenWenSongW")
+;; (setq en-font "Latin Modern Mono Light"
+;;       cn-font "FZJuZhenXinFangS-R-GB")
 
 ;; (setq en-font "等距更纱黑体 Slab SC"
 ;;       cn-font "等距更纱黑体 Slab SC")
