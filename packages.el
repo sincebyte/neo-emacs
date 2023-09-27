@@ -52,7 +52,7 @@
 (add-to-list 'load-path "/usr/local/bin")
 
 (after! warnings(add-to-list 'warning-suppress-types '(yasnippet backquote-change)))
-;; (unpin!   lsp-mode lsp-java )
+(unpin!   lsp-mode lsp-java )
 (unpin!   org-roam          )
 (unpin!   restclient        )
 (unpin!   restclient-jq     )
@@ -88,6 +88,7 @@
 (package! golden-ratio      )
 ;; (package! org-remark        )
 (package! d2-mode           )
+(package! gnuplot        )
 ;; (web +lsp)
 ;; (javascript +lsp)
 
@@ -115,9 +116,9 @@
 
 
 ;; 禁用的包
-;; (package! mml        :disable t)
-;; (package! semantic   :disable t)
-;; (package! log-edit   :disable t)
-;; (package! browse-url :disable t)
+(package! mml        :disable t)
+(package! semantic   :disable t)
+(package! log-edit   :disable t)
+(package! browse-url :disable t)
 (package! dap-java   :disable t)
 

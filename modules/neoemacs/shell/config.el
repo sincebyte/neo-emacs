@@ -7,7 +7,7 @@
 (setenv "OJAVA_17_HOME" "/Users/van/soft/jdk/jdk-17.0.6.jdk/Contents/Home"                                       )
 (setenv "JAVA_19_HOME"  "/Users/van/soft/jdk/zulu19.30.1/zulu-19.jdk/Contents/Home"                               )
 (setenv "HOTSWAP_OPTS"  "-XX:HotswapAgent=fatjar -Xlog:redefine+class*=info"                                      )
-(add-to-list 'exec-path "/opt/homebrew/bin//sbcl"                                                                 )
+(add-to-list 'exec-path "/opt/homebrew/bin//"                                                                 )
 
 ;; key map
 (map! :n  "SPC r r"  'quickrun-shell      )
