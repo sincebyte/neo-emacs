@@ -59,6 +59,7 @@ After emacs installation, set environment variables which names EMACS ,this depe
 #+begin_src shell
 export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs,
 #+end_src
+
 ** Clone project
 clone doom-emacs and neo-emacs from github.
 #+BEGIN_SRC shell
@@ -84,6 +85,10 @@ At last run below, this will take few minutes. And it depends on the quality of 
 #+BEGIN_SRC shell
 ~/.emacs.doom/bin/doom install
 #+END_SRC
+
+#+begin_quote
+Most of the time, for safety you should install emacs by brew or complie it from source ,that will give you a better compatibility.
+#+end_quote
 * How to update
 #+begin_src shell
 export EMACS=/Applications/Emacs.app/Contents/MacOS/EMACS
