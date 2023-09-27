@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: test
+# uuid: test
+# key: test
+# condition: t
+# --
+// Emacs invoke "SPC m t t"
+func TestHelloEmpty(t *testing.T) {
+	fmt.Println("this is demo")
+	t.Fatal("this is an error")
+}

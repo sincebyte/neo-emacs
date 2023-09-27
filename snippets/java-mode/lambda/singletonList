@@ -1,0 +1,6 @@
+
+# -*- mode: snippet -*-
+# name: singletonList
+# key: sl
+# --
+Collections.singletonList(null);

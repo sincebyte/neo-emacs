@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: tr
+# key: tr
+# --
+#+transclude: [[][]] :level 2 :lines 1-2 :src java :rest "-n"

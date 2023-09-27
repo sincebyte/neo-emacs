@@ -1,0 +1,29 @@
+# -*- mode: snippet -*-
+# name: dot
+# key: dot
+# --
+#+BEGIN_SRC DOT :file image/dotgra.svg
+    digraph G {
+        node [shape="box",fontcolor="0xfffff"]
+        bgcolor="transparent"
+        node [shape="box",fontcolor="#c475db"]
+        edge [color="#a69fe0",fontcolor=white]
+        rankdir = TD
+         NC -> SlaughterServer1 [dir=both,minlen=2,label="ϟ"]
+         NC -> SlaughterServer2 [dir=both,minlen=2,label="ϟ"]
+
+        subgraph clusterD {
+            label = "Local";
+            SlaughterServer2 -> LocalDB2 [splines=ortho]
+            SlaughterServer2 -> SlaughterClient2 [minlen=1]
+            {rank=same;  SlaughterServer2 , LocalDB2 }
+        }
+
+        subgraph clusterM {
+            label = "Local";
+            SlaughterServer1 -> LocalDB1 [splines=ortho]
+            SlaughterServer1 -> SlaughterClient1 [minlen=1]
+            {rank=same;  SlaughterServer1 , LocalDB1 }
+        }
+    }
+#+END_SRC

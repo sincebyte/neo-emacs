@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: author
+# key: aut
+# --
+
+/**
+ * @author `neo-user-name`
+ * @since `(format-time-string "%Y-%m-%d")`
+ **/

@@ -1,0 +1,24 @@
+# -*- mode: snippet -*-
+# name: fclient
+# key: fclient
+# --
+package `(mapconcat 'identity (split-string (replace-regexp-in-string ".*src\\(/\\(main\\|test\\)\\)?\\(/java\\)?" "" default-directory) "/" t) ".")`;
+
+import org.springframework.cloud.openfeign.FeignClient;
+
+/**
+ * @author `neo-user-name`
+ * @since `(format-time-string "%Y-%m-%d %H:%M:%S")`
+ **/
+@FeignClient(
+        contextId = "`(file-name-sans-extension (buffer-name))`-api",
+        name = "${com.center.`(file-name-sans-extension (buffer-name))`:default-name}",
+        url = "${com.center.`(file-name-sans-extension (buffer-name))`.url:}"
+)
+public interface `(file-name-sans-extension (buffer-name))` {
+
+    /**
+     * `(file-name-sans-extension (buffer-name))` api interface
+     */
+    void api();
+}

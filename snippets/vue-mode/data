@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: data
+# key: data
+# --
+data() {
+  return {
+    msg: "data",
+    ok: true
+  }
+}

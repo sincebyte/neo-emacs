@@ -1,0 +1,23 @@
+# -*- mode: snippet -*-
+# name: threadlocal class
+# key: patl
+# --
+package `(mapconcat 'identity (split-string (replace-regexp-in-string ".*src\\(/\\(main\\|test\\)\\)?\\(/java\\)?" "" default-directory) "/" t) ".")`;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * @author `neo-user-name`
+ * @time `(format-time-string "%Y-%m-%d %H:%M:%S")`
+ **/
+@Data
+@Slf4j
+@NoArgsConstructor
+public class `(file-name-sans-extension (buffer-name))` {
+
+    public static final ThreadLocal<String> YOUR_THD = ThreadLocal.withInitial(() -> {
+        return null;
+    });
+}

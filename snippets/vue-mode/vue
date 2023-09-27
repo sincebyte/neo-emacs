@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: vue
+# key: vue
+# --
+<template>
+  <p>{{ msg }}</p>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      msg: "magic sytax",
+      ok: true,
+    }
+  }
+}
+</script>

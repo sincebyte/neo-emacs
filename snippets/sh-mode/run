@@ -1,0 +1,22 @@
+# -*- mode: snippet -*-
+# name: run
+# key: run
+# --
+set -e
+mvn clean -T 1C package -f ../pom.xml -Dmaven.test.skip=true dependency:purge-local-repository
+java $HOTSWAP_OPTS \
+-Xms1024m -Xmx1024m \
+-Dspring.application.name=your_app_name \
+-Dspring.cloud.nacos.config.file-extension=yml \
+-Dspring.cloud.nacos.config.server-addr=nacos:8848 \
+-Dspring.cloud.nacos.config.namespace=0318af8a-cd8f-4554-92ab \
+-Dspring.cloud.nacos.discovery.server-addr=nacos:8848 \
+-Dspring.cloud.nacos.discovery.namespace=0318af8a-cd8f-4554-92ab \
+-Dspring.config.import[0]=nacos:longda-center-common \
+-Dspring.config.import[1]=nacos:longda-archetype \
+-Dlogging.config=/var/pb/logback-spring.xml \
+-Dspring.cloud.nacos.discovery.register-enabled=false \
+-Dlogging.level.com.baomidou.mybatisplus=DEBUG \
+-Dmybatis-plus.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl \
+-Duser.timezone=GMT+08 \
+-jar jar.jar

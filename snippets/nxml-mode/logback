@@ -1,0 +1,77 @@
+# -*- mode: snippet -*-
+# name: logback
+# key: logback
+# --
+<?xml version="1.0" encoding="utf-8"?>
+
+<configuration>
+    <property name="LOG_PATTERN" value="%date %-5level --- [%thread] %class.%method:%line : %msg%n"/>
+    <property name="LOG_PATTERN_COLOURS" value="%green(%date) %highlight(%-5level) --- [%thread] %cyan(%class.%method:%blue(%line)) : %msg%n"/>
+    <springProperty scope="context" name="logger.stdfilepath" source="logger.stdfilepath" defaultValue="./logs/info.log"/>
+    <springProperty scope="context" name="logger.errorfilepath" source="logger.errorfilepath" defaultValue="./logs/error.log"/>
+    <springProperty scope="context" name="logger.zipfilepath" source="logger.zipfilepath" defaultValue="./logs/info_%d{yyyy-MM-dd}_%i.zip"/>
+    <springProperty scope="context" name="logger.errorzipfilepath" source="logger.errorzipfilepath" defaultValue="./logs/error_%d{yyyy-MM-dd}_%i.zip"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN_COLOURS}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="STD-ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${logger.stdfilepath}</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${logger.zipfilepath}</fileNamePattern>
+            <maxFileSize>50MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="ERROR-ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${logger.errorfilepath}</File>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${logger.errorzipfilepath}</fileNamePattern>
+            <maxFileSize>50MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <logger name="com.alibaba.nacos" level="error"/>
+
+    <springProfile name="!prod">
+        <root level="info">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="STD-ROLLING"/>
+            <appender-ref ref="ERROR-ROLLING"/>
+        </root>
+        <logger name="jdbc.sqltiming"             level="debug"/>
+        <logger name="java.sql.Connection"        level="debug"/>
+        <logger name="java.sql.Statement"         level="debug"/>
+        <logger name="java.sql.PreparedStatement" level="debug"/>
+        <logger name="com.ibatis"                 level="debug"/>
+    </springProfile>
+
+    <springProfile name="prod">
+        <root level="info">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="STD-ROLLING"/>
+            <appender-ref ref="ERROR-ROLLING"/>
+        </root>
+    </springProfile>
+
+</configuration>

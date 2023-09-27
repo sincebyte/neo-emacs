@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: DateStr
+# key: datestr
+# --
+String dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+log.info("\n==== [log]: {}", dateStr);

@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: tables
+# key: tables
+# --
+<select name='搜索表名'>
+SELECT TABLE_NAME
+FROM  INFORMATION_SCHEMA.TABLES
+WHERE TABLE_SCHEMA = ':CHEMA_NAME'
+AND TABLE_NAME LIKE  '%:TABLE_NAME%'
+LIMIT 0,10
+</select>

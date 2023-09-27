@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: create
+# key: c2
+# --
+<select name='create_table'>
+ CREATE TABLE table (
+  id      BIGINT        PRIMARY KEY,
+  name    VARCHAR(64)   DEFAULT NULL COMMENT '名称',
+  code    VARCHAR(64)   DEFAULT NULL COMMENT '编码',
+  typec   TINYINT       DEFAULT NULL COMMENT '类型',
+  UNIQUE KEY            IDX_UNQ     (code, typec),
+  KEY                   IDX_TYPEC   (typec)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='TABLE'
+</select>

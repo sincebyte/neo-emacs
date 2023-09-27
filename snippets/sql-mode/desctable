@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: dc
+# key: dc
+# --
+<select name='表结构查询'>
+SELECT DISTINCT c.column_name , c.is_nullable,
+c.column_default, c.column_type,
+CASE c.column_name
+WHEN 'id' THEN concat('〖',t.table_name,'〗=〖',table_comment, '〗\t',c.column_comment)
+ELSE c.column_comment END AS column_comment
+FROM      information_schema.TABLES  t
+LEFT JOIN information_schema.COLUMNS c
+ON      t.TABLE_NAME = c.TABLE_NAME
+WHERE c.table_name   = '$0:TABLE_NAME'
+AND   t.TABLE_SCHEMA = '$1:SCHEMA_NAME'
+</select>

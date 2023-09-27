@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: CompletableFuture
+# key: cf
+# --
+CompletableFuture.supplyAsync(() -> {
+    try {
+        //TODO your thing
+        return true;
+    } catch (Exception e) {
+        log.error("{}", e);
+        return false;
+    }
+});

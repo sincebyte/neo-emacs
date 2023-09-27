@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: thread
+# key: thread
+# --
+Thread t = new Thread($1) {
+    public void run() {
+        try {Thread.sleep(new Random().nextInt(10) * 1000L + 1000L);}
+        catch (InterruptedException e) {e.printStackTrace();}
+        $0
+    }
+};
+t.start();

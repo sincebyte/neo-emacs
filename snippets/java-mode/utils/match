@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: match
+# key: match
+# --
+Pattern pattern = Pattern.compile("<MessageBody>([\\s\\S]*)</MessageBody>");
+Matcher matcher = pattern.matcher(str);
+if (matcher.find()) {
+    String group = matcher.group(1);
+    int start = group.indexOf("{");
+    int end = group.lastIndexOf("}");
+    if (start > -1 && end > -1) {
+        str = str.replaceFirst(Pattern.quote(group), group.substring(start, end + 1));
+    }
+}

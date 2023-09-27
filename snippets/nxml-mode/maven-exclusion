@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: mvnex
+# key:  mvnex
+# --
+<exclusions>
+    <exclusion>
+        <groupId></groupId>
+        <artifactId></artifactId>
+    </exclusion>
+</exclusions>

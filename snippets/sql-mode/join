@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: join
+# key: join
+# --
+<select name='select_join'>
+    SELECT * FROM ${1:table_a} $1
+    LEFT     JOIN ${2:table_b} $2
+    ON       $1.id = $2.id
+    WHERE    $1.id IS NOT NULL
+    ORDER BY $1.id DESC
+    LIMIT 1
+</select>

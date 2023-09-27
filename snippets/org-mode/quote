@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: qu
+# key: qu
+# --
+#+begin_quote
+注意：这是一个特殊的说明
+#+end_quote

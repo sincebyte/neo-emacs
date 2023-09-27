@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: tc
+# key: tc
+# --
+Access-Token: :Authorization
+Content-Type: application/json

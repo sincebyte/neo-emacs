@@ -69,4 +69,7 @@
       :n "SPC t e" #'lsp-treemacs-java-deps-list
       :n "SPC t s" #'lsp-workspace-restart)
 
-;;(add-hook 'java-mode-hook (lambda () (tree-sitter-hl-mode)))
+(custom-set-faces `(lsp-face-highlight-textual ((t (:background nil )))))
+(custom-set-faces `(lsp-face-highlight-read ((t (:foreground "#57a6db" :background nil :weight bold :underline nil)))))
+(custom-set-faces `(lsp-face-highlight-write ((t (:foreground "#57a6db" :background nil :weight bold :underline nil)))))
+(custom-set-faces `(tide-hl-identifier-face ((t (:foreground "#57a6db" :background nil)))))

@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: lombok
+# key: lombok
+# --
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <version>${1.18.16}</version>
+    <scope>provided</scope>
+</dependency>

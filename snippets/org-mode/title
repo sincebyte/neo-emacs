@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: title
+# key: tt
+# --
+#+title: `(file-name-sans-extension (buffer-name))`
+#+subtitle: this is subtitle
+#+author: vanniuner
+#+SETUPFILE: ~/.doom.d/org-head.setup

@@ -1,0 +1,42 @@
+# -*- mode: snippet -*-
+# name: d2
+# key: d2
+# --
+#+begin_src d2 :file demo.svg
+direction  : right
+style.fill : transparent
+vars: {
+  nodecolor          : "#E67E22"
+  style-stroke       : "#17202A"
+  style-stroke-width : 2
+  style-fill-pattern : dots
+  style-shadow       : true
+  line-style-fill    : "#884EA0"
+}
+
+classes: {
+    2dn: {
+        style.multiple     : true
+    }
+    3dn: {
+        style.3d           : true
+    }
+    2de: {
+        style.animated     : true
+        style.stroke-width : \${style-stroke-width}
+        style.stroke       : \${line-style-fill}
+    }
+}
+
+
+A :    { class : 2dn }
+B :    { class : 3dn }
+A -> B { class : 2de }
+
+*.style.fill         : \${nodecolor}
+*.style.stroke       : \${style-stroke}
+*.style.stroke-width : \${style-stroke-width}
+*.style.fill-pattern : \${style-fill-pattern}
+*.style.shadow       : \${style-shadow}
+
+#+end_src

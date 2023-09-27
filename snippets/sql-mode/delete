@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: delete
+# key: delete
+# warning-suppress-types: (yasnippet backquote-change)
+# --
+
+<select name='delete'>
+ DELETE * FROM $0`(yank)` LIMIT 1
+</select>

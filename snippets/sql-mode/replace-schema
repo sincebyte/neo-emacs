@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: schemarp
+# key: schemarp
+# --
+-- <Waring message="不同库之间进行库名的切换">
+-- dev: dbA
+-- 替换方式 4,$s/dbA/dbB/g
