@@ -4,6 +4,9 @@
 (map! :ne "SPC v c" 'consult-git-grep    )
 (map! :ie "C-i"     'consult-yank-pop   )
 
+;; disable short-cut, C-; need chage file here
+;; ~/.emacs.d/modules/completion/vertico/config.el
+
 (map! :after dired
       :map dired-mode-map
       :ne "J" nil)

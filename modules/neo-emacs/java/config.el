@@ -67,6 +67,8 @@
 
 (map! :after lsp-java
       :map   lsp-mode-map
+      :n "SPC f b" #'lsp-format-buffer
+      :v "SPC f g" #'lsp-format-region
       :n "; i"     #'lsp-java-organize-imports
       :n "; s"     #'lsp-signature-activate
       :n "SPC t e" #'lsp-treemacs-java-deps-list
