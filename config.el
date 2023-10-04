@@ -134,6 +134,9 @@
       doom-modeline-enable-word-count            4
       user-private-dir                           "~/org/org-roam/emacs/command/doom/config/" ;; load your privacy config
 )
+(setq byte-compile-warnings '(cl-functions)
+      display-time-default-load-average nil
+      emacs-module-root "/Applications/Emacs.app/Contents/Resources/include")
 
 (add-to-list 'load-path          user-private-dir )
 (use-package! db-work                             )    ;; load by local, privacy config account or pwd here

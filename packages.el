@@ -51,6 +51,8 @@
 
 (unpin!   restclient        )
 (unpin!   restclient-jq     )
+(package! org-appear        )
+(package! org-roam-ui       )
 (package! rime              )
 (package! go-translate      )
 (package! d2-mode           )
