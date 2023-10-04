@@ -1,41 +1,43 @@
 
 # Table of Contents
 
-1.  [About](#org433ecbc)
-2.  [How to install](#org2df9af3)
-    1.  [Install emacs](#orgdc077d1)
-    2.  [Clone project](#org0713a5a)
-    3.  [Doom Install](#org23b23d5)
-3.  [How to update](#orgffd7c9c)
-4.  [Private setting](#org779654b)
-5.  [Neoemacs modules](#orge701bc1)
-    1.  [Restclient](#org3f5567d)
-    2.  [Company box customize](#org4f1e31f)
-    3.  [Eredis Usage](#org50d0747)
-    4.  [Bookmark](#orgc676c0e)
-    5.  [Libvterm Usage](#org9fe02ff)
-    6.  [Elpa Offline](#org9a1c0e4)
-    7.  [FZF Config](#org8d3a646)
-6.  [Alfred](#org1bb96a7)
-7.  [Questions](#org9deb1b2)
-    1.  [install ffmpeg](#orge17ddd5)
-    2.  [how to install all-the-icons?](#orgb76b87a)
-    3.  [how to install rime ?](#org782a8a7)
-    4.  [how to install vterm?](#orgcb4ab81)
-    5.  [lsp-springboot](#orgeeb21ef)
-    6.  [useful key setting](#org7bd73a7)
-    7.  [why message showed could not load undo-tree history](#orgf6204f3)
-    8.  [File mode specification error: (file-missing Doing vfork No such file or directory)](#orgd090401)
-    9.  [image dir](#org8181582)
-    10. [vue lsp server startup failed](#org0d380bd)
-8.  [About Logo](#org78fc72e)
-9.  [Dependencies](#org90dd82b)
+1.  [About](#org63181d9)
+2.  [How to install](#orgb2bfa15)
+    1.  [Install emacs](#org4a50003)
+    2.  [Clone project](#org82fcb28)
+    3.  [Doom Install](#orgbfa1dfe)
+3.  [How to update](#org144a961)
+4.  [Private setting](#orga552500)
+5.  [Neoemacs modules](#org276f4a5)
+    1.  [Restclient](#org5ad09ea)
+    2.  [Company box customize](#org7b54b51)
+    3.  [Eredis Usage](#orgc2c5291)
+    4.  [Bookmark](#orgaf745f8)
+    5.  [Libvterm Usage](#orga63690a)
+    6.  [Elpa Offline](#orgd354615)
+    7.  [FZF Config](#org435a317)
+6.  [Alfred](#orgc39c557)
+7.  [Questions](#org4016fbe)
+    1.  [install ffmpeg](#org2b2820c)
+    2.  [how to install all-the-icons?](#org534662f)
+    3.  [how to install rime ?](#org6762515)
+    4.  [how to install vterm?](#orga2782d6)
+    5.  [lsp-springboot](#org354906b)
+    6.  [useful key setting](#orga132a5e)
+    7.  [why message showed could not load undo-tree history](#orge1ac8b7)
+    8.  [File mode specification error: (file-missing Doing vfork No such file or directory)](#org00165f0)
+    9.  [image dir](#orgf7047bb)
+    10. [vue lsp server startup failed](#orgb407d4d)
+8.  [About Logo](#org8ccce6f)
+9.  [Dependencies](#org0cd0e57)
+
+![img](https://img.shields.io/badge/neo_emacs-v3.0-green.svg)  ![img](https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0)  ![img](https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1) ![img](https://img.shields.io/badge/supports-Emacs_27.1_to_29.1-red.svg?logo=gnuemacs&color=7F5AB6)  
 
 ![img](./logo.png)  
 ![img](./image-use.png)  
 
 
-<a id="org433ecbc"></a>
+<a id="org63181d9"></a>
 
 # About
 
@@ -51,12 +53,12 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   [onlinedoc](http://1.117.167.195/doc/neo-emacs.html)
 
 
-<a id="org2df9af3"></a>
+<a id="orgb2bfa15"></a>
 
 # How to install
 
 
-<a id="orgdc077d1"></a>
+<a id="org4a50003"></a>
 
 ## Install emacs
 
@@ -91,7 +93,7 @@ After emacs installation, set environment variables which names EMACS ,this depe
     export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs,
 
 
-<a id="org0713a5a"></a>
+<a id="org82fcb28"></a>
 
 ## Clone project
 
@@ -101,7 +103,7 @@ clone doom-emacs and neo-emacs from github.
     git clone --depth 1 https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
 
-<a id="org23b23d5"></a>
+<a id="orgbfa1dfe"></a>
 
 ## Doom Install
 
@@ -121,7 +123,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
 > Most of the time, for safety you should install emacs by brew or complie it from source ,that will give you a better compatibility.  
 
 
-<a id="orgffd7c9c"></a>
+<a id="org144a961"></a>
 
 # How to update
 
@@ -131,7 +133,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     sh ~/.emacs.d/bin/doom sync
 
 
-<a id="org779654b"></a>
+<a id="orga552500"></a>
 
 # Private setting
 
@@ -252,13 +254,13 @@ kse `setq`
 </table>
 
 
-<a id="orge701bc1"></a>
+<a id="org276f4a5"></a>
 
 # Neoemacs modules
 
 
 
-<a id="org3f5567d"></a>
+<a id="org5ad09ea"></a>
 
 ## Restclient
 
@@ -283,7 +285,7 @@ Fortunately we have solution for other mime type, it&rsquo;s restclient-set-var,
 About the variables infomation in current buffer, we could use `C-c Tab` to show them.  
 
 
-<a id="org4f1e31f"></a>
+<a id="org7b54b51"></a>
 
 ## Company box customize
 
@@ -291,7 +293,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
 -   company-icon icon config file: ~/.emacs.d/modules/completion/company/config.el
 
 
-<a id="org50d0747"></a>
+<a id="orgc2c5291"></a>
 
 ## Eredis Usage
 
@@ -349,7 +351,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="orgc676c0e"></a>
+<a id="orgaf745f8"></a>
 
 ## Bookmark
 
@@ -393,7 +395,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="org9fe02ff"></a>
+<a id="orga63690a"></a>
 
 ## Libvterm Usage
 
@@ -470,7 +472,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="org9a1c0e4"></a>
+<a id="orgd354615"></a>
 
 ## Elpa Offline
 
@@ -483,7 +485,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="org8d3a646"></a>
+<a id="org435a317"></a>
 
 ## FZF Config
 
@@ -517,7 +519,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             crpt
 
 
-<a id="org1bb96a7"></a>
+<a id="orgc39c557"></a>
 
 # Alfred
 
@@ -526,19 +528,19 @@ perference -> Advanced -> Rebuild macOS Metadata.
 alfred -> reload  
 
 
-<a id="org9deb1b2"></a>
+<a id="org4016fbe"></a>
 
 # Questions
 
 
-<a id="orge17ddd5"></a>
+<a id="org2b2820c"></a>
 
 ## install ffmpeg
 
 -   brew install ffmpeg
 
 
-<a id="orgb76b87a"></a>
+<a id="org534662f"></a>
 
 ## how to install all-the-icons?
 
@@ -546,7 +548,7 @@ alfred -> reload
 -   M-x all-the-icons-install-fonts
 
 
-<a id="org782a8a7"></a>
+<a id="org6762515"></a>
 
 ## how to install rime ?
 
@@ -555,7 +557,7 @@ alfred -> reload
 unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime  
 
 
-<a id="orgcb4ab81"></a>
+<a id="orga2782d6"></a>
 
 ## how to install vterm?
 
@@ -569,7 +571,7 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     make
 
 
-<a id="orgeeb21ef"></a>
+<a id="org354906b"></a>
 
 ## lsp-springboot
 
@@ -583,7 +585,7 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     jdt-language-server-latest.tar.gz -f lsp-java-server-build.pom
 
 
-<a id="org7bd73a7"></a>
+<a id="orga132a5e"></a>
 
 ## useful key setting
 
@@ -591,14 +593,14 @@ unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
     ![img](key-change.png)
 
 
-<a id="orgf6204f3"></a>
+<a id="orge1ac8b7"></a>
 
 ## why message showed could not load undo-tree history
 
     brew install watchexec
 
 
-<a id="orgd090401"></a>
+<a id="org00165f0"></a>
 
 ## File mode specification error: (file-missing Doing vfork No such file or directory)
 
@@ -618,14 +620,14 @@ So the solution is change the execution file with the below shell script on MacO
     /Applications/Emacs.app/Contents/MacOS/Emacs.old
 
 
-<a id="org8181582"></a>
+<a id="orgf7047bb"></a>
 
 ## image dir
 
     ln -s ~/org/org-roam/image any_where/image
 
 
-<a id="org0d380bd"></a>
+<a id="orgb407d4d"></a>
 
 ## vue lsp server startup failed
 
@@ -633,14 +635,14 @@ So the solution is change the execution file with the below shell script on MacO
 const rawData = require(&rsquo;vscode-css-languageservice/lib/umd/data/webCustomData&rsquo;).cssData;  
 
 
-<a id="org78fc72e"></a>
+<a id="org8ccce6f"></a>
 
 # About Logo
 
 edit with: [online-ps-editor](https://ps.gaoding.com/#/), [psd file](./logo.psd)  
 
 
-<a id="org90dd82b"></a>
+<a id="org0cd0e57"></a>
 
 # Dependencies
 
