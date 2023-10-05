@@ -12,7 +12,7 @@
       org-roam-directory            "~/org/org-roam"
       org-confirm-babel-evaluate    nil
       yas-indent-line               'fixed
-      yas-also-auto-indent-first-line t
+    yas-also-auto-indent-first-line t
       org-roam-v2-ack               t
       org-agenda-files              (list (concat org-roam-directory "/agenda/GTD.org"))
       org-image-actual-width        '(300)
@@ -26,24 +26,8 @@
       org-html-table-caption-above  nil
       gc-cons-threshold             (* 2 1000 1000)
       neo-show-updir-line           t
-      neo-show-hidden-files         nil
-      neo-hidden-regexp-list        '(
-          ;; vcs folders
-          "^\\.\\(?:git\\|hg\\|svn\\)$"
-          ;; eclipse
-          "\\.\\(settings\\|classpath\\|factorypath\\)$"
-          ;; store
-          "^\\.DS_Store$"
-          ;; compiled files
-          "\\.\\(?:pyc\\|o\\|elc\\|lock\\|css.map\\|class\\)$"
-          ;; generated files, caches or local pkgs
-          "^\\(?:node_modules\\|vendor\\|.\\(project\\|cask\\|yardoc\\|sass-cache\\)\\)$"
-          ;; org-mode folders
-          "^\\.\\(?:sync\\|export\\|attach\\)$"
-          ;; temp files
-          "~$"
-          "^#.*#$"))
-(add-to-list 'exec-path          pdflatex-exec-path               )
+      neo-show-hidden-files         nil)
+(add-to-list 'exec-path             pdflatex-exec-path )
 
 ;; org roam ui
 ;; (use-package! websocket
@@ -117,11 +101,11 @@
   :defer t
   :hook (org-mode . org-appear-mode)
   :config
-  (setq org-appear-autolinks t)
-  (setq org-appear-autosubmarkers t)
-  (setq org-appear-autoentities t)
-  (setq org-appear-autokeywords t)
-  (setq org-appear-inside-latex t))
+  (setq org-appear-autolinks       t )
+  (setq org-appear-autosubmarkers  t )
+  (setq org-appear-autoentities    t )
+  (setq org-appear-autokeywords    t )
+  (setq org-appear-inside-latex    t ))
 
 (map! :after org
       :map org-mode-map
