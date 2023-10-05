@@ -122,4 +122,10 @@
   (setq org-appear-autoentities t)
   (setq org-appear-autokeywords t)
   (setq org-appear-inside-latex t))
-(map! :ne "; l"     'org-toggle-narrow-to-subtree              )
+
+(map! :after org
+      :map org-mode-map
+      :ne "; l" #'org-toggle-narrow-to-subtree)
+
+(set-company-backend! 'org-mode
+    'company-ispell 'company-yasnippet)
