@@ -13,6 +13,8 @@
 ;;
 ;; - `doom-font' -- the primary font to use
 ;; (setq doom-font (font-spec :family "等距更纱黑体 Slab SC" :size 18.0))
+(setq doom-font (font-spec :family "victor Mono" :size 19 )
+      doom-unicode-font (font-spec :family "HYXinRenWenSongW"))
 
 ;; - `doom-variable-pitch-font' -- a non-monospace font (where applicable)
 ;; - `doom-big-font' -- used for `doom-big-font-mode'; use this for

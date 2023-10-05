@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: badge
+# key: bd
+# --
+[[https://img.shields.io/badge/supports-Emacs_27.1_to_29.1-red.svg?logo=gnuemacs&color=7F5AB6]]

@@ -194,7 +194,6 @@
        java                ; lsp java setting
        shell               ; shell config for vterm & eshell
        common               ; neoemacs common setting
-       ;modeline            ; neoemacs modeline setting
        org                  ; neoemacs org setting
        rime                ; neoemacs rime setting
        translate           ; translate setting
@@ -203,7 +202,6 @@
        ;eww                 ; eww config
        find                ; find file config
        eredis              ; a redis client
-       font                ; font set
        sql                 ; ejc sql setting
        ;elfeed              ; rss reader
        alpha               ; make emacs background transparent
