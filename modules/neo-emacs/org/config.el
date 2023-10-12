@@ -113,3 +113,5 @@
 
 (set-company-backend! 'org-mode
     'company-ispell 'company-yasnippet)
+
+(setq system-time-locale "C")

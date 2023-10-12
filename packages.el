@@ -54,6 +54,7 @@
 (package! org-appear        )
 (package! org-roam-ui       )
 (package! rime              )
+(package! liberime          )
 (package! go-translate      )
 (package! d2-mode           )
 (package! gnuplot           )

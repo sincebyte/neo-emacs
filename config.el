@@ -13,8 +13,17 @@
 ;;
 ;; - `doom-font' -- the primary font to use
 ;; (setq doom-font (font-spec :family "等距更纱黑体 Slab SC" :size 18.0))
-(setq doom-font (font-spec :family "victor Mono" :size 19 )
-      doom-unicode-font (font-spec :family "HYXinRenWenSongW" :size 20))
+(setq doom-font (font-spec :family "victor Mono" :size 19 ))
+(defun init-cjk-fonts()
+  (dolist (charset '(kana han cjk-misc bopomofo))
+    (set-fontset-font (frame-parameter nil 'font)
+      charset (font-spec :family "HYXinRenWenSongW" :size 20))))
+(add-hook 'doom-init-ui-hook 'init-cjk-fonts)
+
+(if (eq system-type 'windows-nt)
+    (progn (set-selection-coding-system 'utf-16le-dos))
+    (set-selection-coding-system 'utf-8))
+
 
 ;; - `doom-variable-pitch-font' -- a non-monospace font (where applicable)
 ;; - `doom-big-font' -- used for `doom-big-font-mode'; use this for
@@ -142,3 +151,4 @@
 
 (add-to-list 'load-path          user-private-dir )
 (use-package! db-work                             )    ;; load by local, privacy config account or pwd here
+
