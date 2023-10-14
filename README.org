@@ -273,6 +273,11 @@ end
 - The privacy configuration
    In here you could save any connections in your setting config.
    But where should the setting located especially for our Emacs config project with a public github repository? There have a privacy path which is excluded in the public repository named *user-private-dir*, You could config your connection's account/password here for safely.
+   There default load a db-work module which having your privacy config .
+   #+begin_src elisp
+    (add-to-list 'load-path user-private-dir )
+    (use-package! db-work                    )
+   #+end_src
 - Config your particular db connection
    #+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
    #+begin_src lisp

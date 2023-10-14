@@ -541,6 +541,11 @@ Thus windows user have to use eshell as a downgrade plan.<br />
 -   The privacy configuration  
     In here you could save any connections in your setting config.  
     But where should the setting located especially for our Emacs config project with a public github repository? There have a privacy path which is excluded in the public repository named **user-private-dir**, You could config your connection&rsquo;s account/password here for safely.
+    There default load a db-work module which having your privacy config .  
+    
+        (add-to-list 'load-path user-private-dir )
+        (use-package! db-work                    )
+
 -   Config your particular db connection  
     
         (use-package ejc-sql
