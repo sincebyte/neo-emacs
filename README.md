@@ -1,5 +1,27 @@
+<div align="center">
+
+[Install](#orgc9a7981) 
+
+# Neo Emacs
+
 ![img](https://img.shields.io/badge/neo_emacs-v3.0-green.svg)  ![img](https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0)  ![img](https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1) ![img](https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&color=3498DB)  
 ![img](https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&color=2C2255) ![img](https://img.shields.io/badge/supports-Emacs_27.1_to_29.1-red.svg?logo=gnuemacs&color=7F5AB6)  
+
+![img](./image-use.png)  
+</div>
+
+
+# Table of Contents
+
+1.  [About](#orgc519aa6)
+2.  [How to install](#org0e7e5de)
+3.  [How to update](#org42016bc)
+4.  [Private setting](#orgdc6d69e)
+5.  [Neoemacs modules](#org4bf51f6)
+6.  [Customize Farther](#org530738c)
+
+
+# About
 
 Neo emacs is a configuration framework for GNU Emacs which is based on doom emacs and focuses on the java web application coding environment. Neo emacs has the following features:  
 
@@ -10,9 +32,6 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   Redis client: Eredis Non-blocking Redis client with focus on performance and robustness.
 -   Terminal emulator: Emacs-libvterm (vterm) is fully-fledged terminal emulator inside GNU Emacs based on libvterm.
 -   Knowledge management system: Org-roam borrows principles from the Zettelkasten method, providing a solution for non-hierarchical note-taking.
--   [onlinedoc](http://1.117.167.195/doc/neo-emacs.html)
-
-![img](./image-use.png)  
 
 <a id="org0e7e5de"></a>
 
