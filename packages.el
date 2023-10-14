@@ -60,6 +60,7 @@
 (package! gnuplot           )
 (package! string-inflection )
 (package! ejc-sql           )
+(package! kaolin-themes     )
 (package! eredis            ) ;; need install  alone
 (package! bookmark+  :recipe (:host github :repo "emacsmirror/bookmark-plus" :branch "master" ))
 

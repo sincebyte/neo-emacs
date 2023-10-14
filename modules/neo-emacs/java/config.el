@@ -11,8 +11,7 @@
       company-tooltip-flip-when-above            t
       company-show-quick-access                  nil)
 
-(after! lsp-ui
-:config
+(add-hook 'java-mode-hook (lambda ()
   (setq display-line-numbers                       t
         lsp-enable-symbol-highlighting             t
         lsp-idle-delay                             0.1
@@ -43,7 +42,7 @@
         lsp-modeline-diagnostics-scope             :workspace
         lsp-modeline-code-actions-enable           nil
         lsp-enable-file-watchers                   nil
-        lsp-lens-enable                            t))
+        lsp-lens-enable                            t)))
 
 (setq lsp-java-format-settings-url   (expand-file-name (concat doom-user-dir "neoemacs/Intellij_Spring_Boot_Java_Conventions.xml"))
       lsp-java-java-path             "/Users/van/soft/jdk/jdk-17.0.6.jdk/Contents/Home/bin/java"
