@@ -1,43 +1,36 @@
 
 # Table of Contents
 
-1.  [About](#org63181d9)
-2.  [How to install](#orgb2bfa15)
-    1.  [Install emacs](#org4a50003)
-    2.  [Clone project](#org82fcb28)
-    3.  [Doom Install](#orgbfa1dfe)
-3.  [How to update](#org144a961)
-4.  [Private setting](#orga552500)
-5.  [Neoemacs modules](#org276f4a5)
-    1.  [Restclient](#org5ad09ea)
-    2.  [Company box customize](#org7b54b51)
-    3.  [Eredis Usage](#orgc2c5291)
-    4.  [Bookmark](#orgaf745f8)
-    5.  [Libvterm Usage](#orga63690a)
-    6.  [Elpa Offline](#orgd354615)
-    7.  [FZF Config](#org435a317)
-6.  [Alfred](#orgc39c557)
-7.  [Questions](#org4016fbe)
-    1.  [install ffmpeg](#org2b2820c)
-    2.  [how to install all-the-icons?](#org534662f)
-    3.  [how to install rime ?](#org6762515)
-    4.  [how to install vterm?](#orga2782d6)
-    5.  [lsp-springboot](#org354906b)
-    6.  [useful key setting](#orga132a5e)
-    7.  [why message showed could not load undo-tree history](#orge1ac8b7)
-    8.  [File mode specification error: (file-missing Doing vfork No such file or directory)](#org00165f0)
-    9.  [image dir](#orgf7047bb)
-    10. [vue lsp server startup failed](#orgb407d4d)
-8.  [About Logo](#org8ccce6f)
-9.  [Dependencies](#org0cd0e57)
+1.  [About](#orgc519aa6)
+2.  [How to install](#org0e7e5de)
+    1.  [Install emacs](#orgc9a7981)
+    2.  [Clone project](#org659cdbf)
+    3.  [Doom Install](#org0e9b0df)
+3.  [How to update](#org42016bc)
+    1.  [For brew](#org9d2ac8d)
+    2.  [For doom project](#org734259a)
+4.  [Private setting](#orgdc6d69e)
+    1.  [Font setting](#org12a9a78)
+    2.  [Basic setting](#org72fad08)
+5.  [Neoemacs modules](#org4bf51f6)
+    1.  [Lsp Java](#org17d72c0)
+    2.  [Vterm Shell](#org9675163)
+    3.  [Ejc Sql](#orge08c3e0)
+    4.  [Emacs Rime](#org2adc762)
+    5.  [Org mode](#org4aedcc3)
+    6.  [Restclient](#org321d5a5)
+    7.  [Eredis Usage](#orgd0769e5)
+    8.  [Bookmark](#org2a06eac)
+    9.  [Elpa Offline](#org222afce)
+6.  [Customize Farther](#org530738c)
 
-![img](https://img.shields.io/badge/neo_emacs-v3.0-green.svg)  ![img](https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0)  ![img](https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1) ![img](https://img.shields.io/badge/supports-Emacs_27.1_to_29.1-red.svg?logo=gnuemacs&color=7F5AB6)  
+![img](https://img.shields.io/badge/neo_emacs-v3.0-green.svg)  ![img](https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0)  ![img](https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1) ![img](https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&color=3498DB)  
+![img](https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&color=2C2255) ![img](https://img.shields.io/badge/supports-Emacs_27.1_to_29.1-red.svg?logo=gnuemacs&color=7F5AB6)  
 
-![img](./logo.png)  
 ![img](./image-use.png)  
 
 
-<a id="org63181d9"></a>
+<a id="orgc519aa6"></a>
 
 # About
 
@@ -53,21 +46,35 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   [onlinedoc](http://1.117.167.195/doc/neo-emacs.html)
 
 
-<a id="orgb2bfa15"></a>
+<a id="org0e7e5de"></a>
 
 # How to install
 
 
-<a id="org4a50003"></a>
+<a id="orgc9a7981"></a>
 
 ## Install emacs
 
+> Most of the time, for safety you should install emacs by brew or complie it from source ,that will give you a better compatibility.  
+> In other words, try not to install emacs throuht Free installation package like Gnu Emacs below.  
+
 There have many emacs distribution,just choose one and install it.  
 
--   [gnu-emacs](https://www.gnu.org/software/emacs/) is the official emacs client.
--   [emacs-plus](https://github.com/d12frosted/homebrew-emacs-plus) which I used for a long time.
--   Building Emacs form source  
+-   [EmacsPorts](https://github.com/railwaycat/homebrew-emacsmacport) is the best choice to run NeoEmcas on macos now.  
     
+        brew tap railwaycat/emacsmacport
+        brew install emacs-mac --with-natural-title-bar --with-mac-metal \
+        --with-librsvg --with-starter --with-emacs-big-sur-icon --with-native-comp \
+        defaults write org.gnu.Emacs TransparentTitleBar DARK \
+        defaults write org.gnu.Emacs HideDocumentIcon kES
+-   [Emacs-plus](https://github.com/d12frosted/homebrew-emacs-plus) which I used for a long time once.  
+    
+        brew tap d12frosted/emacs-plus
+        brew install emacs-mac --with-natural-title-bar \
+        --with-mac-metal --with-librsvg --with-starter \
+        --with-emacs-big-sur-icon --
+-   [Gnu-Emacs](https://www.gnu.org/software/emacs/) is the official emacs client which I used for windows platform.
+-   [Source Code](https://git.savannah.gnu.org/cgit/emacs.git) Building form source which I use rarely.  
     building emacs with with source code  
     
         1    git clone git://git.savannah.gnu.org/emacs.git
@@ -79,21 +86,13 @@ There have many emacs distribution,just choose one and install it.
         7    make -j4
         8    make install
         9    open nextstep/Emacs.app
--   EmacsPorts  
-    
-    EmacsPorts is the best choice to run NeoEmcas on macos.  
-    
-        brew install emacs-mac --with-natural-title-bar --with-mac-metal
-        --with-librsvg --with-starter --with-emacs-big-sur-icon --with-native-comp
-        defaults write org.gnu.Emacs TransparentTitleBar DARK
-        defaults write org.gnu.Emacs HideDocumentIcon kES
 
 After emacs installation, set environment variables which names EMACS ,this depends on your emacs exec path.  
 
-    export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs,
+    export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs
 
 
-<a id="org82fcb28"></a>
+<a id="org659cdbf"></a>
 
 ## Clone project
 
@@ -103,7 +102,7 @@ clone doom-emacs and neo-emacs from github.
     git clone --depth 1 https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
 
-<a id="orgbfa1dfe"></a>
+<a id="org0e9b0df"></a>
 
 ## Doom Install
 
@@ -116,16 +115,38 @@ Set your emacs cmd for doom install.
 
     export EMACS= $YOUR EMACS CMD PATH$
 
+Make sure there have Cmake lib or install it.  
+
+-   Ubuntu  
+    
+        sudo apt install cmake
+        sudo apt install libtool-bin
+-   MacOs  
+    
+        sudo brew install cmake libtool
+
 At last run below, this will take few minutes. And it depends on the quality of your network.  
 
     ~/.emacs.doom/bin/doom install
+    ~/.emacs.doom/bin/doom.cmd install
 
-> Most of the time, for safety you should install emacs by brew or complie it from source ,that will give you a better compatibility.  
 
-
-<a id="org144a961"></a>
+<a id="org42016bc"></a>
 
 # How to update
+
+
+<a id="org9d2ac8d"></a>
+
+## For brew
+
+    brew upgrade
+    brew update && brew upgrade emacs-mac && brew cleanup emacs-mac
+
+
+<a id="org734259a"></a>
+
+## For doom project
 
     export EMACS=/Applications/Emacs.app/Contents/MacOS/EMACS
     sh ~/.emacs.d/bin/doom upgrade
@@ -133,15 +154,50 @@ At last run below, this will take few minutes. And it depends on the quality of 
     sh ~/.emacs.d/bin/doom sync
 
 
-<a id="orga552500"></a>
+<a id="orgdc6d69e"></a>
 
 # Private setting
 
-Customize your private setting config in the config.el ;  
-kse `setq`  
+Customize your private setting config in the config.el ; use `setq`  
 
-    (setq fd-exec-path                   "/opt/homebrew/bin/fd"
-          rg-exec-path                   "/opt/homebrew/bin/rg")
+
+<a id="org12a9a78"></a>
+
+## Font setting
+
+Before start up,install fonts in the <./neoemacs/font> directory firstly.  
+Cause different platform have different font name,after font installed there need a adjustment based on the fact.  
+
+1.  setting on macos
+
+        (setq doom-font (font-spec :family "victor Mono" :size 19 ))
+        (defun init-cjk-fonts()
+          (dolist (charset '(kana han cjk-misc bopomofo))
+            (set-fontset-font (frame-parameter nil 'font)
+              charset (font-spec :family "HYXinRenWenSongW" :size 20))))
+        (add-hook 'doom-init-ui-hook 'init-cjk-fonts)
+
+2.  setting on windows
+
+        (setq doom-font (font-spec :family "victor Mono Medium" :size 24))
+        (defun init-cjk-fonts()
+          (dolist (charset '(kana han cjk-misc bopomofo))
+            (set-fontset-font (frame-parameter nil 'font)
+              charset (font-spec :family "汉仪新人文宋W" :size 26))))
+        (add-hook 'doom-init-ui-hook 'init-cjk-fonts)
+
+3.  install all-the-icons
+
+    For the icons font, we need do below  
+    
+    -   M-x install-package all-the-icons
+    -   M-x all-the-icons-install-fonts
+    -   M-x nerd-icons-install-fonts
+
+
+<a id="org72fad08"></a>
+
+## Basic setting
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 <caption class="t-bottom"><span class="table-number">Table 1:</span> neo-emacs basic setting</caption>
@@ -152,53 +208,86 @@ kse `setq`
 <col  class="org-left" />
 
 <col  class="org-left" />
+
+<col  class="org-left" />
 </colgroup>
 <tbody>
 <tr>
+<td class="org-left">variable</td>
+<td class="org-left">default value</td>
+<td class="org-left">config location</td>
+<td class="org-left">description</td>
+</tr>
+
+
+<tr>
 <td class="org-left">emacs-module-root</td>
 <td class="org-left">/opt/homebrew/opt/emacs-plus@28/include</td>
+<td class="org-left">config.el</td>
 <td class="org-left">emcas module root</td>
 </tr>
 
 
 <tr>
+<td class="org-left">display-line-numbers-type</td>
+<td class="org-left">nil</td>
+<td class="org-left">config.el</td>
+<td class="org-left">show line number</td>
+</tr>
+
+
+<tr>
+<td class="org-left">org-directory</td>
+<td class="org-left">~/org/</td>
+<td class="org-left">config.el</td>
+<td class="org-left">org           root path</td>
+</tr>
+
+
+<tr>
 <td class="org-left">rg-exec-path</td>
-<td class="org-left">&ldquo;/opt/homebrew/bin/rg&rdquo;</td>
-<td class="org-left">rg            exec path</td>
+<td class="org-left">system path</td>
+<td class="org-left">-</td>
+<td class="org-left">-</td>
 </tr>
 
 
 <tr>
 <td class="org-left">fd-exec-path</td>
-<td class="org-left">&ldquo;/opt/homebrew/bin/fd&rdquo;</td>
-<td class="org-left">fd            exec path</td>
+<td class="org-left">system path</td>
+<td class="org-left">-</td>
+<td class="org-left">-</td>
 </tr>
 
 
 <tr>
 <td class="org-left">dot-exec-path</td>
-<td class="org-left">&ldquo;/opt/homebrew/bin/dot&rdquo;</td>
+<td class="org-left">/opt/homebrew/bin/dot</td>
+<td class="org-left">modules/neo-emacs/org/config.el</td>
 <td class="org-left">dot           exec path</td>
 </tr>
 
 
 <tr>
 <td class="org-left">pdflatex-exec-path</td>
-<td class="org-left">&ldquo;/Library/TeX/texbin/pdflatex&rdquo;</td>
+<td class="org-left">/Library/TeX/texbin/pdflatex</td>
+<td class="org-left">modules/neo-emacs/org/config.el</td>
 <td class="org-left">pdflatex      exec path</td>
 </tr>
 
 
 <tr>
-<td class="org-left">node-bin-dir</td>
-<td class="org-left">&ldquo;~/node-v16.14.0/bin&rdquo;</td>
-<td class="org-left">node exec path</td>
+<td class="org-left">org-roam-directory</td>
+<td class="org-left">~/org/org-roam</td>
+<td class="org-left">modules/neo-emacs/org/config.el</td>
+<td class="org-left">org roam      root path</td>
 </tr>
 
 
 <tr>
 <td class="org-left">lsp-java-jdt-download-url</td>
 <td class="org-left"><a href="http://1.117.167.195/download">http://1.117.167.195/download</a></td>
+<td class="org-left">modules/neo-emacs/java/config.el</td>
 <td class="org-left">jdt-server URL</td>
 </tr>
 
@@ -206,61 +295,417 @@ kse `setq`
 <tr>
 <td class="org-left">lsp-java-java-path</td>
 <td class="org-left">&#xa0;</td>
+<td class="org-left">modules/neo-emacs/java/config.el</td>
 <td class="org-left">java11        exec path</td>
 </tr>
 
 
 <tr>
 <td class="org-left">lsp-maven-path</td>
-<td class="org-left">&ldquo;~/.m2/settings.xml&rdquo;</td>
+<td class="org-left">~/.m2/settings.xml</td>
+<td class="org-left">modules/neo-emacs/java/config.el</td>
 <td class="org-left">maven setting path</td>
 </tr>
 
 
 <tr>
-<td class="org-left">org-directory</td>
-<td class="org-left">&ldquo;~/org/&rdquo;</td>
-<td class="org-left">org           root path</td>
-</tr>
-
-
-<tr>
-<td class="org-left">org-roam-directory</td>
-<td class="org-left">&ldquo;~/org/org-roam&rdquo;</td>
-<td class="org-left">org roam      root path</td>
-</tr>
-
-
-<tr>
-<td class="org-left">display-line-numbers-type</td>
-<td class="org-left">nil</td>
-<td class="org-left">show line number</td>
-</tr>
-
-
-<tr>
 <td class="org-left">rime-user-data-dir</td>
-<td class="org-left">&ldquo;~/Library/Rime/&rdquo;</td>
+<td class="org-left">~/Library/Rime/</td>
+<td class="org-left">modules/neo-emacs/rime/config.el</td>
 <td class="org-left">rime config input</td>
 </tr>
 
 
 <tr>
 <td class="org-left">rime-librime-root</td>
-<td class="org-left">&ldquo;~/.doom.d/myconfig/rime-macos/dist&rdquo;</td>
+<td class="org-left">~/.doom.d/myconfig/rime-macos/dist</td>
+<td class="org-left">modules/neo-emacs/rime/config.el</td>
 <td class="org-left">emacs-rime/blob/master/</td>
 </tr>
 </tbody>
 </table>
 
 
-<a id="org276f4a5"></a>
+<a id="org4bf51f6"></a>
 
 # Neoemacs modules
 
 
+<a id="org17d72c0"></a>
 
-<a id="org5ad09ea"></a>
+## Lsp Java
+
+[futher more java readme](./modules/neo-emacs/java/readme.md)  
+Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url\`, and now it&rsquo;s located at [jdt-language-server-1.22.0](https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.22.0/jdt-language-server-1.22.0-202304131553.tar.gz).After that you could use all the features powered by eclipse.  
+
+-   Generate eclipse files  
+    Execute mvn command for generate eclipse .project & .classpath files on your project root path.  
+    
+        mvn eclipse:clean eclipse:eclipse
+-   Support projectlombok plugin  
+    There have a default lombok.jar in `doom-user-dir/neoemacs` which you could replace by yourself.  
+    
+        (setq  lombok-jar-path (expand-file-name (concat doom-user-dir "neoemacs/lombok.jar")
+-   Shotcuts/Key binding  
+    
+    <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+    <caption class="t-bottom"><span class="table-number">Table 2:</span> java mode key binding</caption>
+    
+    <colgroup>
+    <col  class="org-left" />
+    
+    <col  class="org-left" />
+    
+    <col  class="org-left" />
+    </colgroup>
+    <tbody>
+    <tr>
+    <td class="org-left">KEY</td>
+    <td class="org-left">FUNCTION</td>
+    <td class="org-left">DESCRIPTION</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">SPC c i</td>
+    <td class="org-left">find-implementations</td>
+    <td class="org-left">find where sub class definition</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">SPC c I</td>
+    <td class="org-left">lsp-java-open-super-implementation</td>
+    <td class="org-left">find where sub class definition</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">SPC t e</td>
+    <td class="org-left">lsp-treemacs-java-deps-list</td>
+    <td class="org-left">find projects referenced libs</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">SPC c f</td>
+    <td class="org-left">formart buffer/region</td>
+    <td class="org-left">goto type definition</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">SPC c a</td>
+    <td class="org-left">lsp-execute-code-action</td>
+    <td class="org-left">code action</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">SPC c d</td>
+    <td class="org-left">lsp-jump-definition</td>
+    <td class="org-left">jump to where symbol definition</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">SPC c D</td>
+    <td class="org-left">lsp-jump-reference</td>
+    <td class="org-left">jump to where symbol referenced</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">SPC c o</td>
+    <td class="org-left">lsp-java-organize-imports</td>
+    <td class="org-left">import require package</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">SPC t s</td>
+    <td class="org-left">lsp-workspace-restart</td>
+    <td class="org-left">restart lsp server</td>
+    </tr>
+    </tbody>
+    </table>
+-   How to upgrade jdtls  
+    1.  Customization your own eclipse jdtls project version by replace it&rsquo;s binary pacage.
+    2.  Download the lastest jdt-language-server from <https://download.eclipse.org/jdtls/milestones>.
+    3.  Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
+
+
+<a id="org9675163"></a>
+
+## Vterm Shell
+
+<div class="notice-warning" id="org71c4dbe">
+<p>
+Vterm is not available on windows.<br />
+Thus windows user have to use eshell as a downgrade plan.<br />
+</p>
+
+</div>
+
+1.  Install vterm
+
+    If vterm complie failed in emacs, we could complie it manually.  
+    
+        cd .emacs.d/.local/straight/build/vterm/
+        mkdir -p build
+        # install cmake and libtool-bin
+        brew install cmake, brew install libtool
+        mkdir -p build
+        cd build
+        cmake ..
+        make
+
+2.  Fish shell optimize
+
+    If you are using fish shell ,fortunately there have some optimize config prepared for you.  
+    
+    -   feature:  
+        -   use fish shell on emacs vterm.
+        -   use command \`ff\` %anyfile% on vterm will open %anyfile% in a new emacs buffer.It&rsquo;s very useful.
+    
+        function vterm_printf;
+            if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end
+                # tell tmux to pass the escape sequences through
+                printf "\ePtmux;\e\e]%s\007\e\\" "$argv"
+            else if string match -q -- "screen*" "$TERM"
+                # GNU screen (screen, screen-256color, screen-256color-bce)
+                printf "\eP\e]%s\007\e\\" "$argv"
+            else
+                printf "\e]%s\e\\" "$argv"
+            end
+        end
+        if [ "$INSIDE_EMACS" = 'vterm' ]
+            function clear
+                vterm_printf "51;Evterm-clear-scrollback";
+                tput clear;
+            end
+        end
+        
+        
+        function vterm_cmd --description 'Run an Emacs command among the ones been defined in vterm-eval-cmds.'
+            set -l vterm_elisp ()
+            for arg in $argv
+                set -a vterm_elisp (printf '"%s" ' (string replace -a -r '([\\\\"])' '\\\\\\\\$1' $arg))
+            end
+            vterm_printf '51;E'(string join '' $vterm_elisp)
+        end
+        function ff
+            set -q argv[1]; or set argv[1] "."
+            vterm_cmd find-file (realpath "$argv")
+        end
+
+3.  Usage
+
+    -   Being with eshell  
+        Eshell have a most wanted feature was **quickrun-eshell** which have a fast reload function after shell is runinng,you just use `C-c C-c` to stop it and use **r** to return you shell script file.It&rsquo;s pretty convenient.
+    -   Key Binding  
+        
+        <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+        
+        
+        <colgroup>
+        <col  class="org-left" />
+        
+        <col  class="org-left" />
+        
+        <col  class="org-left" />
+        </colgroup>
+        <tbody>
+        <tr>
+        <td class="org-left">KEY</td>
+        <td class="org-left">FUNCTION</td>
+        <td class="org-left">DESCRIPTION</td>
+        </tr>
+        
+        
+        <tr>
+        <td class="org-left">SPC v v</td>
+        <td class="org-left">projectile-run-vterm</td>
+        <td class="org-left">open vterm window base on the project root path</td>
+        </tr>
+        
+        
+        <tr>
+        <td class="org-left">SPC v p</td>
+        <td class="org-left">vterm-send-start</td>
+        <td class="org-left">enable vterm screen roll</td>
+        </tr>
+        
+        
+        <tr>
+        <td class="org-left">SPC v s</td>
+        <td class="org-left">vterm-send-stop</td>
+        <td class="org-left">disable vterm screen roll</td>
+        </tr>
+        </tbody>
+        </table>
+
+
+<a id="orge08c3e0"></a>
+
+## Ejc Sql
+
+-   The privacy configuration  
+    In here you could save any connections in your setting config.  
+    But where should the setting located especially for our Emacs config project with a public github repository? There have a privacy path which is excluded in the public repository named **user-private-dir**, You could config your connection&rsquo;s account/password here for safely.
+-   Config your particular db connection  
+    
+        (use-package ejc-sql
+        :commands ejc-sql-mode ejc-connect
+        :config
+        (setq clomacs-httpd-default-port 18090)
+        (ejc-create-connection "connection-name"
+                :classpath      "~/.m2/repository/mysql/mysql-connector-java/8.0.17/
+                    mysql-connector-java-8.0.17.jar"
+                :connection-uri "jdbc:mysql://localhost/user?useSSL=false&user=root&password=pwd"
+                :separator      "</?\.*>" )
+        )
+        (provide 'db-work)
+-   Write Sql file  
+    Before try to use ejc sql, firstly create a sql file which named with a suffix **.sql**, cause emacs will turn on the sql minor mode so that ejc-sql could works well. And then use `SPC e c` to connect a particular database which you have configurated. Emacs will popup a minibuffer listing candidates which show you the **connection-name**.  
+    Secondarily, write your testing sql content which surrounded by a tag, cause we have configurated **:separator** by a syntax meaning tag in order to execute a single sql rather than to choose it.For sure you could make any comment with the tag&rsquo;s schema.  
+    Further more, you could use delimiter sign for batch execution. the delimiter could customization by any character.  
+    Finnaly, use `C-c C-c` to execute it. It&rsquo;s just execute the content which surrounded by a tag in your cusor.  
+    
+        1     <SELECT name='select all org'>
+        2     SELECT * FROM TABLE_ORG
+        3     </SELECT>
+        4  
+        5     <SELECT>
+        6     delimiter ;
+        7     COMMENT ON COLUMN TABLE_ORG.PROJECT_CODE IS '项目编码';
+        8     COMMENT ON COLUMN TABLE_ORG.PERIOD IS '期间';
+        9     </SELECT>
+-   key binding  
+    
+    <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+    
+    
+    <colgroup>
+    <col  class="org-left" />
+    
+    <col  class="org-left" />
+    
+    <col  class="org-left" />
+    </colgroup>
+    <tbody>
+    <tr>
+    <td class="org-left">KEY</td>
+    <td class="org-left">FUNCTION</td>
+    <td class="org-left">description</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">SPC e c</td>
+    <td class="org-left">ejc-connection</td>
+    <td class="org-left">choose connection with ivy</td>
+    </tr>
+    
+    
+    <tr>
+    <td class="org-left">C-c C-c</td>
+    <td class="org-left">ejc-execute</td>
+    <td class="org-left">execute the sql</td>
+    </tr>
+    </tbody>
+    </table>
+
+
+<a id="org2adc762"></a>
+
+## Emacs Rime
+
+[Emacs Rime](https://github.com/DogLooksGood/emacs-rime) which makes to embedding an input method be possible whthin the emacs.Emacs could benefit form the flexible configuration of [rime](https://rime.im/).  
+On macos it&rsquo;s required to install **Squirrel** which is one of rime&rsquo;s distribution. **Squirrel** is installed in your os system as a input method.  
+Note that the configuration of rime located at home/Library/Rime/. We want to sharing this configuration between Eamcs rime and os rime.  
+So there have a variable which named `rime-user-data-dir` , And another important variable is `rime-librime-root` which configed the librime location.  
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">variable</td>
+<td class="org-left">required</td>
+</tr>
+
+
+<tr>
+<td class="org-left">rime-user-data-dir</td>
+<td class="org-left">true</td>
+</tr>
+
+
+<tr>
+<td class="org-left">rime-librime-root</td>
+<td class="org-left">true</td>
+</tr>
+</tbody>
+</table>
+
+[futher more rime readme](./modules/neo-emacs/rime/readme.md)  
+
+
+<a id="org4aedcc3"></a>
+
+## Org mode
+
+[futher more org readme](./modules/neo-emacs/org/readme.md)  
+
+1.  Install Dependency
+
+    There have some third party lib we need prepare.  
+    
+    1.  dot graphviz
+    
+            brew install graphviz
+    
+    2.  d2 diagram
+    
+        [d2 installation](https://github.com/terrastruct/d2/blob/master/docs/INSTALL.md)  
+
+2.  Image to base64
+
+    No need to sent images files of the source.  
+    The embedded base64 image make to distribute your html documentation more easily.  
+
+3.  Optimize Line Number
+
+    Just hidden the colon after line number character.  
+    Modify \`~/.emacs.d/.local/straight/repos/org/lisp/ox-html.el\`.  
+    
+        1  (let* ((code-lines (split-string code "\n"))
+        2     (code-length (length code-lines))
+        3     (num-fmt
+        4  	(and num-start
+        5  	     (format "%%%ds "
+        6  	     (format "%(add-hook 'code-review-mode-hook
+        7          (lambda ()
+        8            ;; include *Code-Review* buffer into current workspace
+        9            (persp-add-buffer (current-buffer))))%%ds: "
+
+4.  Image Directory
+
+    Cause org mode html export program  need a image directory locate at org root directory.  
+    Highly recommended:  
+    Use `ln` making an mirror of the directory.  
+    Make the image directory as your screenshot file&rsquo;s saving location.  
+    
+        ln -s ~/org/org-roam/image any_where/image
+
+
+<a id="org321d5a5"></a>
 
 ## Restclient
 
@@ -285,15 +730,7 @@ Fortunately we have solution for other mime type, it&rsquo;s restclient-set-var,
 About the variables infomation in current buffer, we could use `C-c Tab` to show them.  
 
 
-<a id="org7b54b51"></a>
-
-## Company box customize
-
--   use \`M-x all-the-icons-material\` for checking icon
--   company-icon icon config file: ~/.emacs.d/modules/completion/company/config.el
-
-
-<a id="orgc2c5291"></a>
+<a id="orgd0769e5"></a>
 
 ## Eredis Usage
 
@@ -351,7 +788,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="orgaf745f8"></a>
+<a id="org2a06eac"></a>
 
 ## Bookmark
 
@@ -395,84 +832,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="orga63690a"></a>
-
-## Libvterm Usage
-
--   Configuration  
-    
-    -   fish shell configuration
-    
-        function vterm_printf;
-            if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end
-                # tell tmux to pass the escape sequences through
-                printf "\ePtmux;\e\e]%s\007\e\\" "$argv"
-            else if string match -q -- "screen*" "$TERM"
-                # GNU screen (screen, screen-256color, screen-256color-bce)
-                printf "\eP\e]%s\007\e\\" "$argv"
-            else
-                printf "\e]%s\e\\" "$argv"
-            end
-        end
-        if [ "$INSIDE_EMACS" = 'vterm' ]
-            function clear
-                vterm_printf "51;Evterm-clear-scrollback";
-                tput clear;
-            end
-        end
--   Ubuntu  
-    
-        sudo apt install cmake
-        sudo apt install libtool-bin
--   MacOs  
-    
-        sudo brew install cmake libtool
--   Being with eshell  
-    Eshell have a most wanted feature was **quickrun-eshell** which have a fast reload function after shell is runinng,you just use `C-c C-c` to stop it and use **r** to rerun you shell.It&rsquo;s pretty convenient.
--   Key Binding  
-    
-    <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-    
-    
-    <colgroup>
-    <col  class="org-left" />
-    
-    <col  class="org-left" />
-    
-    <col  class="org-left" />
-    </colgroup>
-    <tbody>
-    <tr>
-    <td class="org-left">KEY</td>
-    <td class="org-left">FUNCTION</td>
-    <td class="org-left">DESCRIPTION</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">SPC v v</td>
-    <td class="org-left">projectile-run-vterm</td>
-    <td class="org-left">open vterm window base on the project root path</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">SPC v p</td>
-    <td class="org-left">vterm-send-start</td>
-    <td class="org-left">enable vterm screen roll</td>
-    </tr>
-    
-    
-    <tr>
-    <td class="org-left">SPC v s</td>
-    <td class="org-left">vterm-send-stop</td>
-    <td class="org-left">disable vterm screen roll</td>
-    </tr>
-    </tbody>
-    </table>
-
-
-<a id="orgd354615"></a>
+<a id="org222afce"></a>
 
 ## Elpa Offline
 
@@ -485,190 +845,22 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="org435a317"></a>
+<a id="org530738c"></a>
 
-## FZF Config
+# Customize Farther
 
-1.  fish config
-
-        set -x FZF_DEFAULT_OPTS "--preview-window 'right:57%'
-            --preview 'bat --style=numbers --line-range :300 {}'
-            --bind ctrl-y:preview-up,ctrl-e:preview-down,ctrl-b:preview
-            -page-up,ctrl-f:preview-page-down,ctrl-u:preview-half-page-
-            up,ctrl-d:preview-half-page-down,shift-up:preview-top,shift
-            -down:preview-bottom,alt-up:half-page-up,
-            alt-down:half-page-down"
-        set -x FZF_DEFAULT_COMMAND  'fd --type f --hidden --follow
-            --exclude ".git" .
-            ".idea" . ".vscode" . "node_modules" .
-            "build" . "target" . "classes" . "out" . "class" .
-            "*.svg" . "*.puml" . "*.orgids" . "*.css" . "*.DS_Store" '
-
-2.  how to ignore files
-
-    -   add ~/.fdignore  
-        
-            .DS_Store
-            .orgids
-            *.svg
-            *.puml
-            *.css
-            *.class
-            *.attach
-            *.~undo-tree~
-            crpt
-
-
-<a id="orgc39c557"></a>
-
-# Alfred
-
-Alfred repeat item  
-perference -> Advanced -> Rebuild macOS Metadata.  
-alfred -> reload  
-
-
-<a id="org4016fbe"></a>
-
-# Questions
-
-
-<a id="org2b2820c"></a>
-
-## install ffmpeg
-
--   brew install ffmpeg
-
-
-<a id="org534662f"></a>
-
-## how to install all-the-icons?
-
--   M-x install-package all-the-icons
--   M-x all-the-icons-install-fonts
-
-
-<a id="org6762515"></a>
-
-## how to install rime ?
-
--   M-x install-package rime
-
-unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime  
-
-
-<a id="orga2782d6"></a>
-
-## how to install vterm?
-
-    cd .emacs.d/.local/straight/build/vterm/
-    mkdir -p build
-    # install cmake and libtool-bin
-    brew install cmake, brew install libtool
-    mkdir -p build
-    cd build
-    cmake ..
-    make
-
-
-<a id="org354906b"></a>
-
-## lsp-springboot
-
-    mvn -Djdt.js.server.root=/Users/van/.emacs.d/.local/etc/.cache/
-    lsp/eclipse.jdt.ls/server/ -Djunit.runner.root=
-    /Users/van/.emacs.d/.local/etc/eclipse.jdt.ls/test-runner/
-    -Djunit.runner.fileName=junit-platform-console-standalone.jar
-    -Djava.debug.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/
-    eclipse.jdt.ls/server/bundles clean package
-    -Djdt.download.url=http://download.eclipse.org/jdtls/snapshots/
-    jdt-language-server-latest.tar.gz -f lsp-java-server-build.pom
-
-
-<a id="orga132a5e"></a>
-
-## useful key setting
-
--   Change caps\_lock to control if pressed with other keys, to escape if pressed alone.  
-    ![img](key-change.png)
-
-
-<a id="orge1ac8b7"></a>
-
-## why message showed could not load undo-tree history
-
-    brew install watchexec
-
-
-<a id="org00165f0"></a>
-
-## File mode specification error: (file-missing Doing vfork No such file or directory)
-
-When open a Java file this error happen.  
-It&rsquo;s because the environment do not content on your GUI Emacs.  
-It works well on your termianl environment with start Emacs by Emacs -nw.  
-So the solution is change the execution file with the below shell script on MacOs  
-
--   emacs-plus cp to application dir
-
-    cp -rf /opt/homebrew/opt/emacs-plus@28/Emacs.app/ /Applications/
-    mv /Applications/Emacs.app/Contents/MacOS/Emacs Emacs.old
-
--   /Applications/Emacs.app/Contents/MacOS/Emacs
-
-    #!/usr/local/bin/fish
-    /Applications/Emacs.app/Contents/MacOS/Emacs.old
-
-
-<a id="orgf7047bb"></a>
-
-## image dir
-
-    ln -s ~/org/org-roam/image any_where/image
-
-
-<a id="orgb407d4d"></a>
-
-## vue lsp server startup failed
-
-[isuue](https://github.com/neoclide/coc-vetur/issues/28)  
-const rawData = require(&rsquo;vscode-css-languageservice/lib/umd/data/webCustomData&rsquo;).cssData;  
-
-
-<a id="org8ccce6f"></a>
-
-# About Logo
-
-edit with: [online-ps-editor](https://ps.gaoding.com/#/), [psd file](./logo.psd)  
-
-
-<a id="org0cd0e57"></a>
-
-# Dependencies
-
+For customize farther, there have some documentation you need read.  
 <https://github.com/hlissner/doom-emacs/blob/master/docs/getting_started.org>  
-
 <https://github.com/BurntSushi/ripgrep>  
-
 <https://github.com/junegunn/fzf>  
-
 <https://github.com/kostafey/ejc-sql>  
-
 <https://leiningen.org/>  
-
 <https://plantuml.com/>  
-
 <https://github.com/emacs-lsp/lsp-java>  
-
 <https://projectlombok.org/>  
-
 <https://github.com/DogLooksGood/emacs-rime>  
-
 <https://github.com/be5invis/Sarasa-Gothic>  
-
 <https://github.com/akicho8/string-inflection>  
-
 <https://raw.githubusercontent.com/alibaba/p3c/master/p3c-formatter/eclipse-codestyle.xml>  
-
 <https://www.tug.org/mactex/>  
 
