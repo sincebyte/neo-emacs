@@ -1,39 +1,9 @@
 ![img](https://img.shields.io/badge/neo_emacs-v3.0-green.svg)  ![img](https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0)  ![img](https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1) ![img](https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&color=3498DB)  
 ![img](https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&color=2C2255) ![img](https://img.shields.io/badge/supports-Emacs_27.1_to_29.1-red.svg?logo=gnuemacs&color=7F5AB6)  
 
-![img](./image-use.png)  
-
-
-<a id="orgc519aa6"></a>
-
-# Table of Contents
-
-1.  [About](#orgc519aa6)
-2.  [How to install](#org0e7e5de)
-    1.  [Install emacs](#orgc9a7981)
-    2.  [Clone project](#org659cdbf)
-    3.  [Doom Install](#org0e9b0df)
-3.  [How to update](#org42016bc)
-    1.  [For brew](#org9d2ac8d)
-    2.  [For doom project](#org734259a)
-4.  [Private setting](#orgdc6d69e)
-    1.  [Font setting](#org12a9a78)
-    2.  [Basic setting](#org72fad08)
-5.  [Neoemacs modules](#org4bf51f6)
-    1.  [Lsp Java](#org17d72c0)
-    2.  [Vterm Shell](#org9675163)
-    3.  [Ejc Sql](#orge08c3e0)
-    4.  [Emacs Rime](#org2adc762)
-    5.  [Org mode](#org4aedcc3)
-    6.  [Restclient](#org321d5a5)
-    7.  [Eredis Usage](#orgd0769e5)
-    8.  [Bookmark](#org2a06eac)
-    9.  [Elpa Offline](#org222afce)
-6.  [Customize Farther](#org530738c)
-
-
 # About
 
+![img](./image-use.png)  
 Neo emacs is a configuration framework for GNU Emacs which is based on doom emacs and focuses on the java web application coding environment. Neo emacs has the following features:  
 
 -   Code completion: Lsp-java supports maven and gradle project.
