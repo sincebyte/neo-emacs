@@ -1,0 +1,39 @@
+#+title: rime package readme
+#+author: vanniuner
+#+SETUPFILE: ~/.doom.d/org-head.setup
+
+
+* Install Librime
+** how to get librime on mac?
+- M-x install-package rime
+unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
+** how to get librime on windows?
+on window we need [[https://scoop.sh/]].After that [[https://github.com/DogLooksGood/emacs-rime/blob/master/INSTALLATION.org][install librime]]
+* Rime Usage
+[[https://github.com/DogLooksGood/emacs-rime][Emacs Rime]] which makes to embedding an input method be possible whthin the emacs.Emacs could benefit form the flexible configuration of [[https://rime.im/][rime]].
+On macos it's required to install *Squirrel* which is one of rime's distribution. *Squirrel* is installed in your os system as a input method.
+Note that the configuration of rime located at home/Library/Rime/. We want to sharing this configuration between Eamcs rime and os rime.
+So there have a variable which named ~rime-user-data-dir~ , And another important variable is ~rime-librime-root~ which configed the librime location.
+| variable           | required |
+| rime-user-data-dir | true     |
+| rime-librime-root  | true     |
+** 小鹤音形
+[[https://www.flypy.com/][小鹤音形]] was a wonderful input method, with it we could touch typing totally. The config file located here [[https://github.com/vanniuner/neo-emacs/tree/master/neoemacs/rime-config][flypy-rime-config]] provided two input method configuration. You need unzip them to ~rime-user-data-dir~ , and config the priority for candidate by ~flypy_top.txt~ .
+** Key-binding
+| key | binding             |
+| C-; | toggle-input-method |
+|     | rime-sync           |
+|     | rime-deploy         |
+** Q/A
+- https://github.com/DogLooksGood/emacs-rime supply this plugin.
+- https://github.com/rime/plum for more infomation.
+- 'emacs-module.h' file not found
+ #+begin_src shell
+  lib.c:23:10: fatal error: 'emacs-module.h' file not found
+    #include <emacs-module.h>
+            ^~~~~~~~~~~~~~~~
+ #+end_src
+
+ #+begin_src shell
+ cp /opt/homebrew/opt/emacs-plus@29/include/emacs-module.h ~/.doom.d/neoemacs/rime-macos/dist/include
+ #+end_src

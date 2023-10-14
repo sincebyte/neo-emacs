@@ -1,0 +1,88 @@
+#+title: question
+#+subtitle: this is subtitle
+#+author: vanniuner
+#+SETUPFILE: ~/.doom.d/org-head.setup
+
+
+* Questions
+** how to install all-the-icons?
+- M-x install-package all-the-icons
+- M-x all-the-icons-install-fonts
+- M-x nerd-icons-install-fonts
+** useful key setting
+- Change caps_lock to control if pressed with other keys, to escape if pressed alone.
+  [[file:key-change.png]]
+
+** TODO why message showed could not load undo-tree history
+not working but remaing
+#+begin_src shell
+brew install watchexec
+#+end_src
+** HOLD File mode specification error: (file-missing Doing vfork No such file or directory)
+When open a Java file this error happen.
+It's because the environment do not content on your GUI Emacs.
+It works well on your termianl environment with start Emacs by Emacs -nw.
+So the solution is change the execution file with the below shell script on MacOs
+- emacs-plus cp to application dir
+#+begin_src shell
+    cp -rf /opt/homebrew/opt/emacs-plus@28/Emacs.app/ /Applications/
+    mv /Applications/Emacs.app/Contents/MacOS/Emacs Emacs.old
+#+end_src
+- /Applications/Emacs.app/Contents/MacOS/Emacs
+#+begin_src shell
+    #!/usr/local/bin/fish
+    /Applications/Emacs.app/Contents/MacOS/Emacs.old
+#+end_src
+** HOLD vue lsp server startup failed
+[[https://github.com/neoclide/coc-vetur/issues/28][isuue]]
+const rawData = require('vscode-css-languageservice/lib/umd/data/webCustomData').cssData;
+** TODO lsp-springboot
+#+begin_src bash
+mvn -Djdt.js.server.root=/Users/van/.emacs.d/.local/etc/.cache/
+lsp/eclipse.jdt.ls/server/ -Djunit.runner.root=
+/Users/van/.emacs.d/.local/etc/eclipse.jdt.ls/test-runner/
+-Djunit.runner.fileName=junit-platform-console-standalone.jar
+-Djava.debug.root=/Users/van/.emacs.d/.local/etc/.cache/lsp/
+eclipse.jdt.ls/server/bundles clean package
+-Djdt.download.url=http://download.eclipse.org/jdtls/snapshots/
+jdt-language-server-latest.tar.gz -f lsp-java-server-build.pom
+#+end_src
+** HOLD install ffmpeg
+- brew install ffmpeg
+
+** Alfred
+Alfred repeat item
+perference -> Advanced -> Rebuild macOS Metadata.
+alfred -> reload
+
+** About Logo
+edit with: [[https://ps.gaoding.com/#/][online-ps-editor]], [[./logo.psd][psd file]]
+* FZF Config
+*** fish config
+#+begin_src shell
+set -x FZF_DEFAULT_OPTS "--preview-window 'right:57%'
+    --preview 'bat --style=numbers --line-range :300 {}'
+    --bind ctrl-y:preview-up,ctrl-e:preview-down,ctrl-b:preview
+    -page-up,ctrl-f:preview-page-down,ctrl-u:preview-half-page-
+    up,ctrl-d:preview-half-page-down,shift-up:preview-top,shift
+    -down:preview-bottom,alt-up:half-page-up,
+    alt-down:half-page-down"
+set -x FZF_DEFAULT_COMMAND  'fd --type f --hidden --follow
+    --exclude ".git" .
+    ".idea" . ".vscode" . "node_modules" .
+    "build" . "target" . "classes" . "out" . "class" .
+    "*.svg" . "*.puml" . "*.orgids" . "*.css" . "*.DS_Store" '
+#+end_src
+*** how to ignore files
+- add ~/.fdignore
+  #+begin_src txt
+    .DS_Store
+    .orgids
+    *.svg
+    *.puml
+    *.css
+    *.class
+    *.attach
+    *.~undo-tree~
+    crpt
+  #+end_src
