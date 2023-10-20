@@ -61,6 +61,7 @@
 (package! string-inflection )
 (package! ejc-sql           )
 (package! kaolin-themes     )
+(package! company-posframe  )
 (package! eredis            ) ;; need install  alone
 (package! bookmark+  :recipe (:host github :repo "emacsmirror/bookmark-plus" :branch "master" ))
 
