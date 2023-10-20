@@ -13,7 +13,8 @@
  (setq gts-translate-list '(("en" "zh")))
  (setq gts-default-translator
  (gts-translator
- :picker  (gts-prompt-picker)
+ :picker  (gts-noprompt-picker)
  :engines (list (gts-google-engine))
  :render  (gts-buffer-render)))
- :map gts-buffer-local-map "q" #'+popup/quit-window)
+ :map gts-buffer-local-map "q" #'+popup/quit-window
+ :splitter (gts-paragraph-splitter))
