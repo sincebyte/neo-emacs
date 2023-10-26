@@ -11,7 +11,7 @@
       company-tooltip-flip-when-above            t
       company-show-quick-access                  nil)
 
-(add-hook 'java-mode-hook (lambda ()
+(add-hook 'lsp-mode-hook (lambda ()
   (setq display-line-numbers                       t
         lsp-enable-symbol-highlighting             t
         lsp-idle-delay                             0.1

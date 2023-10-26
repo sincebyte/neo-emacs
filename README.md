@@ -1,26 +1,36 @@
-<div align="center">
 
+# Table of Contents
 
-# Neo Emacs
-
-[Install](#orgc9a7981) • [Setting](#org72fad08) • [Modules](#org4bf51f6) • [Customize Farther](#org530738c)
+1.  [About](#org9cfd4d6)
+2.  [How to install](#orgd8545ab)
+    1.  [Install emacs](#orgb80d7f6)
+    2.  [Clone project](#orgcbe87ee)
+    3.  [Doom Install](#org6451a6f)
+3.  [How to update](#org01d7fee)
+    1.  [For brew](#org0a1a421)
+    2.  [For doom project](#orgff6e69f)
+4.  [Private setting](#org8662731)
+    1.  [Font setting](#org9d50adf)
+    2.  [Basic setting](#org338d546)
+5.  [Neoemacs modules](#org96cb95e)
+    1.  [Lsp Java](#orgd5c52e3)
+    2.  [Vterm Shell](#orge4dc15b)
+    3.  [Ejc Sql](#orgc5f7bbb)
+    4.  [Emacs Rime](#org82d01b0)
+    5.  [Org mode](#org9e2fbc1)
+    6.  [Restclient](#orge32517f)
+    7.  [Eredis Usage](#org45515b8)
+    8.  [Bookmark](#orgef9ee09)
+    9.  [Elpa Offline](#orgdc3ff4f)
+6.  [Customize Farther](#orgdf3932b)
 
 ![img](https://img.shields.io/badge/neo_emacs-v3.0-green.svg)  ![img](https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0)  ![img](https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1) ![img](https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&color=3498DB)  
 ![img](https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&color=2C2255) ![img](https://img.shields.io/badge/supports-Emacs_27.1_to_29.1-red.svg?logo=gnuemacs&color=7F5AB6)  
 
 ![img](./image-use.png)  
-</div>
 
 
-# Table of Contents
-
-1.  [About](#orgc519aa6)
-2.  [How to install](#org0e7e5de)
-3.  [How to update](#org42016bc)
-4.  [Private setting](#orgdc6d69e)
-5.  [Neoemacs modules](#org4bf51f6)
-6.  [Customize Farther](#org530738c)
-
+<a id="org9cfd4d6"></a>
 
 # About
 
@@ -33,13 +43,15 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   Redis client: Eredis Non-blocking Redis client with focus on performance and robustness.
 -   Terminal emulator: Emacs-libvterm (vterm) is fully-fledged terminal emulator inside GNU Emacs based on libvterm.
 -   Knowledge management system: Org-roam borrows principles from the Zettelkasten method, providing a solution for non-hierarchical note-taking.
+-   [onlinedoc](http://1.117.167.195/doc/neo-emacs.html)
 
-<a id="org0e7e5de"></a>
+
+<a id="orgd8545ab"></a>
 
 # How to install
 
 
-<a id="orgc9a7981"></a>
+<a id="orgb80d7f6"></a>
 
 ## Install emacs
 
@@ -80,7 +92,7 @@ After emacs installation, set environment variables which names EMACS ,this depe
     export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs
 
 
-<a id="org659cdbf"></a>
+<a id="orgcbe87ee"></a>
 
 ## Clone project
 
@@ -90,7 +102,7 @@ clone doom-emacs and neo-emacs from github.
     git clone --depth 1 https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
 
-<a id="org0e9b0df"></a>
+<a id="org6451a6f"></a>
 
 ## Doom Install
 
@@ -119,12 +131,12 @@ At last run below, this will take few minutes. And it depends on the quality of 
     ~/.emacs.doom/bin/doom.cmd install
 
 
-<a id="org42016bc"></a>
+<a id="org01d7fee"></a>
 
 # How to update
 
 
-<a id="org9d2ac8d"></a>
+<a id="org0a1a421"></a>
 
 ## For brew
 
@@ -132,7 +144,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     brew update && brew upgrade emacs-mac && brew cleanup emacs-mac
 
 
-<a id="org734259a"></a>
+<a id="orgff6e69f"></a>
 
 ## For doom project
 
@@ -142,14 +154,14 @@ At last run below, this will take few minutes. And it depends on the quality of 
     sh ~/.emacs.d/bin/doom sync
 
 
-<a id="orgdc6d69e"></a>
+<a id="org8662731"></a>
 
 # Private setting
 
 Customize your private setting config in the config.el ; use `setq`  
 
 
-<a id="org12a9a78"></a>
+<a id="org9d50adf"></a>
 
 ## Font setting
 
@@ -183,7 +195,7 @@ Cause different platform have different font name,after font installed there nee
     -   M-x nerd-icons-install-fonts
 
 
-<a id="org72fad08"></a>
+<a id="org338d546"></a>
 
 ## Basic setting
 
@@ -314,12 +326,12 @@ Cause different platform have different font name,after font installed there nee
 </table>
 
 
-<a id="org4bf51f6"></a>
+<a id="org96cb95e"></a>
 
 # Neoemacs modules
 
 
-<a id="org17d72c0"></a>
+<a id="orgd5c52e3"></a>
 
 ## Lsp Java
 
@@ -423,11 +435,11 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     3.  Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
 
 
-<a id="org9675163"></a>
+<a id="orge4dc15b"></a>
 
 ## Vterm Shell
 
-<div class="notice-warning" id="org71c4dbe">
+<div class="notice-warning" id="orgc2e5b20">
 <p>
 Vterm is not available on windows.<br />
 Thus windows user have to use eshell as a downgrade plan.<br />
@@ -534,18 +546,17 @@ Thus windows user have to use eshell as a downgrade plan.<br />
         </table>
 
 
-<a id="orge08c3e0"></a>
+<a id="orgc5f7bbb"></a>
 
 ## Ejc Sql
 
 -   The privacy configuration  
     In here you could save any connections in your setting config.  
-    But where should the setting located especially for our Emacs config project with a public github repository? There have a privacy path which is excluded in the public repository named **user-private-dir**, You could config your connection&rsquo;s account/password here for safely.
+    But where should the setting located especially for our Emacs config project with a public github repository? There have a privacy path which is excluded in the public repository named **user-private-dir**, You could config your connection&rsquo;s account/password here for safely.  
     There default load a db-work module which having your privacy config .  
     
         (add-to-list 'load-path user-private-dir )
         (use-package! db-work                    )
-
 -   Config your particular db connection  
     
         (use-package ejc-sql
@@ -610,7 +621,7 @@ Thus windows user have to use eshell as a downgrade plan.<br />
     </table>
 
 
-<a id="org2adc762"></a>
+<a id="org82d01b0"></a>
 
 ## Emacs Rime
 
@@ -650,7 +661,7 @@ So there have a variable which named `rime-user-data-dir` , And another importan
 [futher more rime readme](./modules/neo-emacs/rime/readme.md)  
 
 
-<a id="org4aedcc3"></a>
+<a id="org9e2fbc1"></a>
 
 ## Org mode
 
@@ -698,7 +709,7 @@ So there have a variable which named `rime-user-data-dir` , And another importan
         ln -s ~/org/org-roam/image any_where/image
 
 
-<a id="org321d5a5"></a>
+<a id="orge32517f"></a>
 
 ## Restclient
 
@@ -723,7 +734,7 @@ Fortunately we have solution for other mime type, it&rsquo;s restclient-set-var,
 About the variables infomation in current buffer, we could use `C-c Tab` to show them.  
 
 
-<a id="orgd0769e5"></a>
+<a id="org45515b8"></a>
 
 ## Eredis Usage
 
@@ -781,7 +792,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="org2a06eac"></a>
+<a id="orgef9ee09"></a>
 
 ## Bookmark
 
@@ -825,7 +836,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="org222afce"></a>
+<a id="orgdc3ff4f"></a>
 
 ## Elpa Offline
 
@@ -838,7 +849,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="org530738c"></a>
+<a id="orgdf3932b"></a>
 
 # Customize Farther
 
