@@ -1,4 +1,9 @@
 ;;; neoemacs/java/config.el -*- lexical-binding: t; -*-
+(setenv "XMLLINT_INDENT" "    ")
+(use-package xml-format
+  :demand t
+  :defer t
+  :after nxml-mode)
 
 (setq company-box-doc-enable                     nil
       company-tooltip-limit                      7
