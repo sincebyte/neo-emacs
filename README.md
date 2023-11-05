@@ -1,12 +1,12 @@
 
 # Table of Contents
 
-1.  [About](#org525eab0)
-2.  [How to install](#org74bcaf1)
-3.  [How to update](#org179e151)
-4.  [Private setting](#orgcc02a86)
-5.  [Neoemacs modules](#org76242d7)
-6.  [Customize Farther](#orgf2cd8ed)
+1.  [About](#org2dfc808)
+2.  [How to install](#orgc7dc533)
+3.  [How to update](#org85660c5)
+4.  [Private setting](#org0c8e651)
+5.  [Neoemacs modules](#org076fad0)
+6.  [Customize Farther](#orgaeddc4b)
 
 ![img](https://img.shields.io/badge/neo_emacs-v3.0-green.svg)  ![img](https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0)  ![img](https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1) ![img](https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&color=3498DB)  
 ![img](https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&color=2C2255) ![img](https://img.shields.io/badge/supports-Emacs_27.1_to_29.1-red.svg?logo=gnuemacs&color=7F5AB6)  
@@ -14,7 +14,7 @@
 ![img](./image-use.png)  
 
 
-<a id="org525eab0"></a>
+<a id="org2dfc808"></a>
 
 # About
 
@@ -30,7 +30,7 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   [onlinedoc](http://1.117.167.195/doc/neo-emacs.html)
 
 
-<a id="org74bcaf1"></a>
+<a id="orgc7dc533"></a>
 
 # How to install
 
@@ -98,7 +98,7 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
             sudo apt install libtool-bin
     -   MacOs  
         
-            sudo brew install cmake libtool gnuplot d2 ripgrep fzf
+            sudo brew install cmake libtool gnuplot d2 ripgrep fzf d2 terrastruct/tap/tala
     
     At last run below, this will take few minutes. And it depends on the quality of your network.  
     
@@ -106,7 +106,7 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
         ~/.emacs.doom/bin/doom.cmd install
 
 
-<a id="org179e151"></a>
+<a id="org85660c5"></a>
 
 # How to update
 
@@ -123,7 +123,7 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
         sh ~/.emacs.d/bin/doom sync
 
 
-<a id="orgcc02a86"></a>
+<a id="org0c8e651"></a>
 
 # Private setting
 
@@ -291,7 +291,7 @@ Customize your private setting config in the config.el ; use `setq`
     > recentfile save default dir: ~/.emacs.d/.local/cache/recentf  
 
 
-<a id="org76242d7"></a>
+<a id="org076fad0"></a>
 
 # Neoemacs modules
 
@@ -398,7 +398,7 @@ Customize your private setting config in the config.el ; use `setq`
 
 2.  Vterm Shell
 
-    <div class="notice-warning" id="org9027d89">
+    <div class="notice-warning" id="orge50f52d">
     <p>
     Vterm is not available on windows.<br />
     Thus windows user have to use eshell as a downgrade plan.<br />
@@ -427,25 +427,12 @@ Customize your private setting config in the config.el ; use `setq`
             -   use fish shell on emacs vterm.
             -   use command \`ff\` %anyfile% on vterm will open %anyfile% in a new emacs buffer.It&rsquo;s very useful.
         
-            function vterm_printf;
-                if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end
-                    # tell tmux to pass the escape sequences through
-                    printf "\ePtmux;\e\e]%s\007\e\\" "$argv"
-                else if string match -q -- "screen*" "$TERM"
-                    # GNU screen (screen, screen-256color, screen-256color-bce)
-                    printf "\eP\e]%s\007\e\\" "$argv"
-                else
-                    printf "\e]%s\e\\" "$argv"
-                end
-            end
             if [ "$INSIDE_EMACS" = 'vterm' ]
                 function clear
                     vterm_printf "51;Evterm-clear-scrollback";
                     tput clear;
                 end
             end
-            
-            
             function vterm_cmd --description 'Run an Emacs command among the ones been defined in vterm-eval-cmds.'
                 set -l vterm_elisp ()
                 for arg in $argv
@@ -793,7 +780,7 @@ Customize your private setting config in the config.el ; use `setq`
                 ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="orgf2cd8ed"></a>
+<a id="orgaeddc4b"></a>
 
 # Customize Farther
 
