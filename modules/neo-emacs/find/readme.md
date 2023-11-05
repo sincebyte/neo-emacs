@@ -1,13 +1,13 @@
 
 # Table of Contents
 
-1.  [conflict with toggle-input-method](#org3915be3)
-2.  [most wanted](#org3f6a029)
-    1.  [code advice](#org842f29c)
+1.  [conflict with toggle-input-method](#org53782c2)
+2.  [most wanted](#org98d549a)
+    1.  [code advice](#org0baccd3)
 
 
 
-<a id="org3915be3"></a>
+<a id="org53782c2"></a>
 
 # conflict with toggle-input-method
 
@@ -23,12 +23,12 @@ In the mini search buffer `C-;`  is binding to \`embark-act\`. It&rsquo;s confli
     -   The short cut `C-SPC` seems more popular for \`toogle-input-method\`, cause windows have a default setting for `C-SPC`.So a better way is binding `C-SPC` to \`toogle-input-method\`
 
 
-<a id="org3f6a029"></a>
+<a id="org98d549a"></a>
 
 # TODO most wanted
 
 
-<a id="org842f29c"></a>
+<a id="org0baccd3"></a>
 
 ## code advice
 
