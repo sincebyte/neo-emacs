@@ -7,6 +7,12 @@
 In the mini search buffer ~C-;~  is binding to `embark-act`. It's conflict with [[~/.doom.d/modules/neo-emacs/rime/config.el][toggle-input-method]].
 - There have two solution:
   - Disable short cut ~C-;~ ,we need chage file here in [[~/.emacs.d/modules/completion/vertico/config.el][vertico/config.el]].
+    #+begin_src elisp -n
+   (map! [remap describe-bindings] #'embark-bindings
+        ;; "C-;"               #'embark-act  ; to be moved to :config default if accepted
+        (:map minibuffer-local-map
+         ;; "C-;"               #'embark-act
+    #+end_src
   - The short cut ~C-SPC~ seems more popular for `toogle-input-method`, cause windows have a default setting for ~C-SPC~.So a better way is binding ~C-SPC~ to `toogle-input-method`
 * TODO most wanted
 ** code advice

@@ -1,7 +1,7 @@
 (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
 
 (map! :ne "SPC z"   'consult-find       )
-(map! :ne "SPC v c" 'consult-git-grep    )
+(map! :ne "SPC v c" 'consult-ripgrep    )
 (map! :ie "C-i"     'consult-yank-pop   )
 
 ;; disable short-cut, C-; need chage file here
