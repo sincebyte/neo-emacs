@@ -14,7 +14,7 @@
 (global-set-key (kbd "C-c t") 'set-frame-alpha)
 
 (setq frame-title-format nil)
-(set-frame-alpha 99)
+(set-frame-alpha 100)
 
 (setq kaolin-themes-underline nil)
 (defun synchronize-theme ()

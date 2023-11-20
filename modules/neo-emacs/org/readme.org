@@ -138,7 +138,7 @@ Make the image directory as your screenshot file's saving location.
 ln -s ~/org/org-roam/image any_where/image
 #+end_src
 ** Beautify the code number
-Remove the colon from the line number, `~/.emacs.d/.local/straight/repos/org/lisp/ox-html.el`
+Remove the colon from the line number, [[~/.emacs.d/.local/straight/repos/org/lisp/ox-html.el][ox-html.el]]
 #+begin_src lisp -n 10
   (let* ((code-lines (split-string code "\n"))
 	 (code-length (length code-lines))
