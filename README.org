@@ -58,7 +58,7 @@ There have many emacs distribution,just choose one and install it.
   git clone git://git.savannah.gnu.org/emacs.git
   cd emacs
   git checkout emacs-28
-  brew install  libxml2
+  brew install libxml2
   make configure
   ./configure --with-native-compilation --with-modern-papirus-icon --with-no-titlebar
   make -j4
@@ -99,7 +99,7 @@ Make sure there have Cmake lib or install it.
   #+end_src
 - MacOs
   #+begin_src shell
-  sudo brew install cmake libtool gnuplot d2 ripgrep fzf terrastruct/tap/tala
+  sudo brew install cmake libtool gnuplot d2 ripgrep fzf terrastruct/tap/tala graphviz
   #+end_src
 
 At last run below, this will take few minutes. And it depends on the quality of your network.
@@ -217,7 +217,7 @@ If vterm complie failed in emacs, we could complie it manually.
 cd .emacs.d/.local/straight/build/vterm/
 mkdir -p build
 # install cmake and libtool-bin
-brew install cmake, brew install libtool
+brew install cmake libtool
 mkdir -p build
 cd build
 cmake ..
@@ -317,16 +317,9 @@ So there have a variable which named ~rime-user-data-dir~ , And another importan
 [[./modules/neo-emacs/org/readme.org][futher more org readme]]
 *** Install Dependency
 There have some third party lib we need prepare.
-**** dot graphviz
-#+begin_src shell
-brew install graphviz
-#+end_src
 **** d2 diagram
 [[https://github.com/terrastruct/d2/blob/master/docs/INSTALL.md][d2 installation]]
 #+begin_src shell
-brew install/upgrade d2
-brew install/upgrade terrastruct/tap/tala
-
 alias ds2 "/opt/homebrew/bin//d2 --sketch --animate-interval=1400 -l elk -c --pad 0"
 alias d2 "/opt/homebrew/bin//d2 --pad 0 --layout tala "
 #+end_src
