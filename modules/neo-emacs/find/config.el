@@ -19,3 +19,5 @@
 (map! :after dired
       :map dired-mode-map
       :ne "c" #'dired-create-empty-file)
+
+(setq bookmark-default-file (concat org-roam-directory "/bookmarks"))

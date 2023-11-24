@@ -8,7 +8,7 @@
       org-plantuml-jar-path         (expand-file-name (concat doom-user-dir "neoemacs/plantuml.jar"))
       dot-exec-path                 "/opt/homebrew/bin/dot"                                  ;; dot           exec path
       org-roam-graph-executable     dot-exec-path
-      org-directory                 "~/org/org-roam"
+      org-directory                 "~/org"
       org-roam-directory            "~/org/org-roam"
       org-confirm-babel-evaluate    nil
       yas-indent-line               'fixed
