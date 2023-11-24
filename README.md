@@ -1,12 +1,12 @@
 
 # Table of Contents
 
-1.  [About](#org271556f)
-2.  [How to install](#orgc2ddbc7)
-3.  [How to update](#org52c0503)
-4.  [Private setting](#org1c5868f)
-5.  [Neoemacs modules](#org36952d1)
-6.  [Customize Farther](#orgf2459e0)
+1.  [About](#orgda6cbc1)
+2.  [How to install](#orgd868d7f)
+3.  [How to update](#org093a14e)
+4.  [Private setting](#org9eb24b3)
+5.  [Neoemacs modules](#org8b68c95)
+6.  [Customize Farther](#orgaf32916)
 
 ![img](https://img.shields.io/badge/neo_emacs-v3.0-green.svg)  ![img](https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0)  ![img](https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1) ![img](https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&color=3498DB)  
 ![img](https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&color=2C2255) ![img](https://img.shields.io/badge/supports-Emacs_27.1_to_29.1-red.svg?logo=gnuemacs&color=7F5AB6)  
@@ -14,7 +14,7 @@
 ![img](./image-use.png)  
 
 
-<a id="org271556f"></a>
+<a id="orgda6cbc1"></a>
 
 # About
 
@@ -30,7 +30,7 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   [onlinedoc](http://1.117.167.195/doc/neo-emacs.html)
 
 
-<a id="orgc2ddbc7"></a>
+<a id="orgd868d7f"></a>
 
 # How to install
 
@@ -98,7 +98,7 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
             sudo apt install libtool-bin
     -   MacOs  
         
-            sudo brew install cmake libtool gnuplot d2 ripgrep fzf terrastruct/tap/tala graphviz
+            brew install cmake libtool gnuplot d2 ripgrep fzf terrastruct/tap/tala graphviz
     
     At last run below, this will take few minutes. And it depends on the quality of your network.  
     
@@ -106,7 +106,7 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
         ~/.emacs.doom/bin/doom.cmd install
 
 
-<a id="org52c0503"></a>
+<a id="org093a14e"></a>
 
 # How to update
 
@@ -123,7 +123,7 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
         sh ~/.emacs.d/bin/doom sync
 
 
-<a id="org1c5868f"></a>
+<a id="org9eb24b3"></a>
 
 # Private setting
 
@@ -291,7 +291,7 @@ Customize your private setting config in the config.el ; use `setq`
     > recentfile save default dir: ~/.emacs.d/.local/cache/recentf  
 
 
-<a id="org36952d1"></a>
+<a id="org8b68c95"></a>
 
 # Neoemacs modules
 
@@ -398,7 +398,7 @@ Customize your private setting config in the config.el ; use `setq`
 
 2.  Vterm Shell
 
-    <div class="notice-warning" id="org356b589">
+    <div class="notice-warning" id="org8d8c826">
     <p>
     Vterm is not available on windows.<br />
     Thus windows user have to use eshell as a downgrade plan.<br />
@@ -773,7 +773,7 @@ Customize your private setting config in the config.el ; use `setq`
                 ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="orgf2459e0"></a>
+<a id="orgaf32916"></a>
 
 # Customize Farther
 
