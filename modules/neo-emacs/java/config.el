@@ -51,6 +51,7 @@
 
 (setq lsp-java-format-settings-url   (expand-file-name (concat doom-user-dir "neoemacs/Intellij_Spring_Boot_Java_Conventions.xml"))
       lsp-java-java-path             "/Users/van/soft/jdk/jdk-17.0.6.jdk/Contents/Home/bin/java"
+      lsp-java-server-install-dir    "~/.m2/lsp-java/"
       lsp-maven-path                 "~/.m2/settings.xml"
       lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.27.1-202309140221.tar.gz"
       lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path )
