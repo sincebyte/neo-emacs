@@ -1,12 +1,12 @@
 
 # Table of Contents
 
-1.  [About](#orgda6cbc1)
-2.  [How to install](#orgd868d7f)
-3.  [How to update](#org093a14e)
-4.  [Private setting](#org9eb24b3)
-5.  [Neoemacs modules](#org8b68c95)
-6.  [Customize Farther](#orgaf32916)
+1.  [About](#org92b698a)
+2.  [How to install](#org00b923d)
+3.  [How to update](#orgbef50bc)
+4.  [Private setting](#org94c4f3e)
+5.  [Neoemacs modules](#org290540b)
+6.  [Customize Farther](#orgbb62ced)
 
 ![img](https://img.shields.io/badge/neo_emacs-v3.0-green.svg)  ![img](https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0)  ![img](https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1) ![img](https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&color=3498DB)  
 ![img](https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&color=2C2255) ![img](https://img.shields.io/badge/supports-Emacs_27.1_to_29.1-red.svg?logo=gnuemacs&color=7F5AB6)  
@@ -14,7 +14,7 @@
 ![img](./image-use.png)  
 
 
-<a id="orgda6cbc1"></a>
+<a id="org92b698a"></a>
 
 # About
 
@@ -30,7 +30,7 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   [onlinedoc](http://1.117.167.195/doc/neo-emacs.html)
 
 
-<a id="orgd868d7f"></a>
+<a id="org00b923d"></a>
 
 # How to install
 
@@ -106,7 +106,7 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
         ~/.emacs.doom/bin/doom.cmd install
 
 
-<a id="org093a14e"></a>
+<a id="orgbef50bc"></a>
 
 # How to update
 
@@ -123,7 +123,7 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
         sh ~/.emacs.d/bin/doom sync
 
 
-<a id="org9eb24b3"></a>
+<a id="org94c4f3e"></a>
 
 # Private setting
 
@@ -291,7 +291,7 @@ Customize your private setting config in the config.el ; use `setq`
     > recentfile save default dir: ~/.emacs.d/.local/cache/recentf  
 
 
-<a id="org8b68c95"></a>
+<a id="org290540b"></a>
 
 # Neoemacs modules
 
@@ -398,7 +398,7 @@ Customize your private setting config in the config.el ; use `setq`
 
 2.  Vterm Shell
 
-    <div class="notice-warning" id="org8d8c826">
+    <div class="notice-warning" id="org6693561">
     <p>
     Vterm is not available on windows.<br />
     Thus windows user have to use eshell as a downgrade plan.<br />
@@ -772,8 +772,14 @@ Customize your private setting config in the config.el ; use `setq`
                 ("gnu-cn"   . "/soft/emacs-elpa/gnu/")
                 ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
+10. Vue
 
-<a id="orgaf32916"></a>
+    as a full stack developer u need vue support, so here it comes.  
+    
+        npm install vls -g
+
+
+<a id="orgbb62ced"></a>
 
 # Customize Farther
 

@@ -421,6 +421,11 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
         ("gnu-cn"   . "/soft/emacs-elpa/gnu/")
         ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 #+end_src
+** Vue
+as a full stack developer u need vue support, so here it comes.
+#+begin_src shell
+npm install vls -g
+#+end_src
 * Customize Farther
 For customize farther, there have some documentation you need read.
 https://github.com/hlissner/doom-emacs/blob/master/docs/getting_started.org
