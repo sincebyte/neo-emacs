@@ -1,12 +1,13 @@
 
 # Table of Contents
 
-1.  [About](#org92b698a)
-2.  [How to install](#org00b923d)
-3.  [How to update](#orgbef50bc)
-4.  [Private setting](#org94c4f3e)
-5.  [Neoemacs modules](#org290540b)
-6.  [Customize Farther](#orgbb62ced)
+1.  [About](#orga26d99f)
+2.  [How to install](#orgd6c35b3)
+3.  [How to update](#org9e9e987)
+4.  [Private setting](#org98fc9f3)
+5.  [Neoemacs modules](#org2e3c7af)
+6.  [About the Release](#orgee9d947)
+7.  [Customize Farther](#orgce6730b)
 
 ![img](https://img.shields.io/badge/neo_emacs-v3.0-green.svg)  ![img](https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0)  ![img](https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1) ![img](https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&color=3498DB)  
 ![img](https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&color=2C2255) ![img](https://img.shields.io/badge/supports-Emacs_27.1_to_29.1-red.svg?logo=gnuemacs&color=7F5AB6)  
@@ -14,7 +15,7 @@
 ![img](./image-use.png)  
 
 
-<a id="org92b698a"></a>
+<a id="orga26d99f"></a>
 
 # About
 
@@ -30,7 +31,7 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   [onlinedoc](http://1.117.167.195/doc/neo-emacs.html)
 
 
-<a id="org00b923d"></a>
+<a id="orgd6c35b3"></a>
 
 # How to install
 
@@ -106,7 +107,7 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
         ~/.emacs.doom/bin/doom.cmd install
 
 
-<a id="orgbef50bc"></a>
+<a id="org9e9e987"></a>
 
 # How to update
 
@@ -123,7 +124,7 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
         sh ~/.emacs.d/bin/doom sync
 
 
-<a id="org94c4f3e"></a>
+<a id="org98fc9f3"></a>
 
 # Private setting
 
@@ -291,7 +292,7 @@ Customize your private setting config in the config.el ; use `setq`
     > recentfile save default dir: ~/.emacs.d/.local/cache/recentf  
 
 
-<a id="org290540b"></a>
+<a id="org2e3c7af"></a>
 
 # Neoemacs modules
 
@@ -398,7 +399,7 @@ Customize your private setting config in the config.el ; use `setq`
 
 2.  Vterm Shell
 
-    <div class="notice-warning" id="org6693561">
+    <div class="notice-warning" id="org1c5fc3d">
     <p>
     Vterm is not available on windows.<br />
     Thus windows user have to use eshell as a downgrade plan.<br />
@@ -779,7 +780,16 @@ Customize your private setting config in the config.el ; use `setq`
         npm install vls -g
 
 
-<a id="orgbb62ced"></a>
+<a id="orgee9d947"></a>
+
+# About the Release
+
+This step can help you compile neo emacs faster,It only takes 3 minutes to install using the release package on my Mac laptop. Otherwise it would take me 15 minutes. The release installation package is a better choice for users with unstable networks and those who need to frequently reinstall neoemacs.  
+Release package contains the git repository of related dependencies.The compiled directory files are removed and the .git directory is retained,So that you can perform subsequent upgrades.  
+I will update the Release package once a month, And test them in advance and revise them for compatibility with upstream projects.  
+
+
+<a id="orgce6730b"></a>
 
 # Customize Farther
 

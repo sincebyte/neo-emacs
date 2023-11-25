@@ -426,6 +426,10 @@ as a full stack developer u need vue support, so here it comes.
 #+begin_src shell
 npm install vls -g
 #+end_src
+* About the Release
+This step can help you compile neo emacs faster,It only takes 3 minutes to install using the release package on my Mac laptop. Otherwise it would take me 15 minutes. The release installation package is a better choice for users with unstable networks and those who need to frequently reinstall neoemacs.
+Release package contains the git repository of related dependencies.The compiled directory files are removed and the .git directory is retained,So that you can perform subsequent upgrades.
+I will update the Release package once a month, And test them in advance and revise them for compatibility with upstream projects.
 * Customize Farther
 For customize farther, there have some documentation you need read.
 https://github.com/hlissner/doom-emacs/blob/master/docs/getting_started.org
