@@ -1,34 +1,34 @@
 
 # Table of Contents
 
-1.  [Org mode Usage](#org09058d1)
-    1.  [Basic usage](#org5d481d9)
-    2.  [Org template](#org50624fc)
-    3.  [Org transclusion](#org23ee8c5)
-    4.  [Org remark](#org18ffe71)
-    5.  [Org appear](#org4eb78c1)
-    6.  [Org to Html](#orgfcd24fb)
-    7.  [Latex PDF setting](#org0311ff0)
-    8.  [Optimize Line Number](#org43d3742)
-    9.  [Org Roam UI](#org3b4fd02)
-    10. [Image Directory](#orge055eb9)
-    11. [Beautify the code number](#orgc76f454)
+1.  [Org mode Usage](#org59ee55e)
+    1.  [Basic usage](#org2fc9aba)
+    2.  [Org template](#org377a00a)
+    3.  [Org transclusion](#org05fb91f)
+    4.  [Org remark](#org49fdef6)
+    5.  [Org appear](#org0f6353f)
+    6.  [Org to Html](#orgea2177f)
+    7.  [Latex PDF setting](#orge58027f)
+    8.  [Optimize Line Number](#orga0ee432)
+    9.  [Org Roam UI](#orga9871ce)
+    10. [Image Directory](#org1a29b90)
+    11. [Beautify the code number](#org175dbb2)
 
 
 
-<a id="org09058d1"></a>
+<a id="org59ee55e"></a>
 
 # Org mode Usage
 
 
-<a id="org5d481d9"></a>
+<a id="org2fc9aba"></a>
 
 ## Basic usage
 
 Most of the basic useage reference to [doom-org-style](https://github.com/vanniuner/doom-org-style)  
 
 
-<a id="org50624fc"></a>
+<a id="org377a00a"></a>
 
 ## Org template
 
@@ -61,7 +61,7 @@ In here,I use org-head.setup for default html export setting. the template ultim
     ))
 
 
-<a id="org23ee8c5"></a>
+<a id="org05fb91f"></a>
 
 ## Org transclusion
 
@@ -105,7 +105,7 @@ There have a little conflict with org appear,[The incompatible with org appear](
 </table>
 
 
-<a id="org18ffe71"></a>
+<a id="org49fdef6"></a>
 
 ## Org remark
 
@@ -162,7 +162,7 @@ You could customize faces of the note.
 </table>
 
 
-<a id="org4eb78c1"></a>
+<a id="org0f6353f"></a>
 
 ## HOLD Org appear
 
@@ -174,7 +174,7 @@ No key-binding here,because it automatic trigger when your cursor on it.
     # org-transclusion -> [[https://github.com/nobiot/org-transclusion][org-transclusion]]
 
 
-<a id="orgfcd24fb"></a>
+<a id="orgea2177f"></a>
 
 ## Org to Html
 
@@ -205,7 +205,7 @@ No key-binding here,because it automatic trigger when your cursor on it.
         }
 
 
-<a id="org0311ff0"></a>
+<a id="orge58027f"></a>
 
 ## Latex PDF setting
 
@@ -219,12 +219,12 @@ No key-binding here,because it automatic trigger when your cursor on it.
 4.  [more info](https://www.sheerwill.live/posts/main/20220723211325-vanilla_emacs_with_purcell/)
 
 
-<a id="org43d3742"></a>
+<a id="orga0ee432"></a>
 
 ## Optimize Line Number
 
 Just hidden the colon after line number character.  
-Modify \`~/.emacs.d/.local/straight/repos/org/lisp/ox-html.el\`.  
+Modify [ox-html.el](file:///Users/van/.emacs.d/.local/straight/repos/org/lisp/ox-html.el)  
 
     1  (let* ((code-lines (split-string code "\n"))
     2     (code-length (length code-lines))
@@ -237,7 +237,7 @@ Modify \`~/.emacs.d/.local/straight/repos/org/lisp/ox-html.el\`.
     9            (persp-add-buffer (current-buffer))))%%ds: "
 
 
-<a id="org3b4fd02"></a>
+<a id="orga9871ce"></a>
 
 ## Org Roam UI
 
@@ -258,7 +258,7 @@ Modify \`~/.emacs.d/.local/straight/repos/org/lisp/ox-html.el\`.
 </table>
 
 
-<a id="orge055eb9"></a>
+<a id="org1a29b90"></a>
 
 ## Image Directory
 
@@ -270,11 +270,11 @@ Make the image directory as your screenshot file&rsquo;s saving location.
     ln -s ~/org/org-roam/image any_where/image
 
 
-<a id="orgc76f454"></a>
+<a id="org175dbb2"></a>
 
 ## Beautify the code number
 
-Remove the colon from the line number, \`~/.emacs.d/.local/straight/repos/org/lisp/ox-html.el\`  
+Remove the colon from the line number, [ox-html.el](file:///Users/van/.emacs.d/.local/straight/repos/org/lisp/ox-html.el)  
 
     10    (let* ((code-lines (split-string code "\n"))
     11  	 (code-length (length code-lines))

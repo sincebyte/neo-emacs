@@ -114,7 +114,7 @@ Use dotgraphviz of hand painted style you need make sure the step here below.
 4. [[https://www.sheerwill.live/posts/main/20220723211325-vanilla_emacs_with_purcell/][more info]]
 ** Optimize Line Number
 Just hidden the colon after line number character.
-Modify `~/.emacs.d/.local/straight/repos/org/lisp/ox-html.el`.
+Modify [[~/.emacs.d/.local/straight/repos/org/lisp/ox-html.el][ox-html.el]]
 
 #+begin_src elisp -n
 (let* ((code-lines (split-string code "\n"))
