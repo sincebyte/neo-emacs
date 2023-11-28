@@ -5,26 +5,29 @@
   :defer t
   :after nxml-mode)
 
-(setq company-box-doc-enable                     nil
+(setq ;;company-box-doc-enable                   nil
       company-tooltip-limit                      7
-      ;; company-frontends                          '(company-pseudo-tooltip-frontend company-echo-metadata-frontend)
+      company-auto-update-doc                    nil
+      ;; company-frontends                       '(company-pseudo-tooltip-frontend company-echo-metadata-frontend)
       company-format-margin-function             'company-text-icons-margin
       company-text-icons-format                  " %s "
       company-text-icons-add-background          t
       company-text-face-extra-attributes         '(:weight bold :slant italic)
-      ;; company-dabbrev-ignore-case                nil
+      ;; company-dabbrev-ignore-case             nil
       company-tooltip-flip-when-above            t
       company-show-quick-access                  nil)
 
 (add-hook 'lsp-mode-hook (lambda ()
   (setq display-line-numbers                       t
         lsp-enable-symbol-highlighting             t
+        company-auto-update-doc                    nil
+        ;; lsp-ui-doc-show-with-cursor                t
         lsp-idle-delay                             0.1
-        lsp-signature-render-documentation t
-        lsp-eldoc-render-all t
+        lsp-signature-render-documentation         nil
+        lsp-eldoc-render-all                       t
         lsp-signature-auto-activate                t
-        lsp-signature-doc-lines 1
-        lsp-eldoc-enable-hover                     t
+        lsp-signature-doc-lines                    1
+        lsp-eldoc-enable-hover                     nil
         lsp-java-signature-help-enabled            t
         lsp-java-references-code-lens-enabled      t
         lsp-java-implementations-code-lens-enabled t

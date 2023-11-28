@@ -115,3 +115,25 @@
     'company-ispell 'company-yasnippet)
 
 (setq system-time-locale "C")
+
+(use-package! org-modern
+  :custom
+  (org-modern-star '("⁞" "⁞⁞" "⁞⁞⁞" "⁞⁞⁞⁞" "⁞⁞⁞⁞⁞"))
+  (org-modern-list '((43 . "•") (45 . "◦")))
+  (org-modern-block-fringe t)
+  (org-pretty-entities t)
+  (org-ellipsis " ⇲")
+  :config
+  (setq org-modern-keyword
+        '((t . t)
+          ("caption" . "☰"))
+        org-modern-block-fringe t
+        org-pretty-entities t
+        org-modern-block-name
+        '((t . t)
+          ("src" "»" "«")
+          ("example" "»–" "–«")
+          ("quote" "⌜" "⌞")))
+  (global-org-modern-mode 1))
+;; (custom-set-faces `(org-block-begin-line ((t (:foreground "#008ED1" :background "#EAEAFF")))))
+;; (custom-set-faces `(org-block-end-line   ((t (:foreground "#008ED1" :background "#EAEAFF")))))

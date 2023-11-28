@@ -64,6 +64,7 @@
 (package! company-posframe  )
 (package! xml-format        )
 (package! eredis            ) ;; need install alone
+(package! org-modern        ) ;; need install alone
 (package! bookmark+  :recipe (:host github :repo "emacsmirror/bookmark-plus" :branch "master" ))
 
 
