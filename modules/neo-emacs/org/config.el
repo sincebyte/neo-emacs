@@ -132,7 +132,6 @@
         org-modern-block-name
         '((t . t)
           ("src" "»" "«")
-          ("example" "»–" "–«")
           ("quote" "⌜" "⌞")))
   (global-org-modern-mode 1))
 ;; (custom-set-faces `(org-block-begin-line ((t (:foreground "#008ED1" :background "#EAEAFF")))))

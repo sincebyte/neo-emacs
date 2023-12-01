@@ -88,3 +88,5 @@
 (custom-set-faces `(tide-hl-identifier-face ((t (:foreground "#57a6db" :background nil)))))
 
 (company-posframe-mode 1)
+
+(setq-hook! 'web-mode-hook indent-tabs-mode nil)
