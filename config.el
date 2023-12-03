@@ -17,12 +17,12 @@
 (defun init-cjk-fonts()
   (dolist (charset '(kana han cjk-misc bopomofo))
     (set-fontset-font (frame-parameter nil 'font)
-      charset (font-spec :family "HYXinRenWenSongW" :size 20))))
+                      charset (font-spec :family "HYXinRenWenSongW" :size 20))))
 (add-hook 'doom-init-ui-hook 'init-cjk-fonts)
 
 (if (eq system-type 'windows-nt)
     (progn (set-selection-coding-system 'utf-16le-dos))
-    (set-selection-coding-system 'utf-8))
+  (set-selection-coding-system 'utf-8))
 
 
 ;; - `doom-variable-pitch-font' -- a non-monospace font (where applicable)
@@ -88,7 +88,6 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-
 (setq package-archives '(( "gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"   )
                          ( "org-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/"   )
                          ( "melpa"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/" )))
@@ -123,28 +122,28 @@
 
 
 (setq
-      kill-do-not-save-duplicates                t  ;不向kill-ring中加入重复内容
-      save-interprogram-paste-before-kill        t  ;将系统剪切板的内容放一份到kill-ring中，
-      evil-emacs-state-tag                       "EMACS"
-      evil-insert-state-tag                      "INSERT"
-      evil-motion-state-tag                      "MOTION"
-      evil-normal-state-tag                      "NORMAL"
-      evil-operator-state-tag                    "OPERATOR"
-      evil-visual-state-tag                      "VISUAL"
-      doom-modeline-height                       10
-      doom-modeline-bar-width                    2
-      doom-modeline-modal-icon                   nil
-      doom-modeline-icon                         nil
-      doom-modeline-major-mode-icon              nil
-      doom-modeline-buffer-encoding              t
-      doom-modeline-lsp                          nil
-      doom-modeline-modal                        t
-      doom-modeline-vcs-max-length               200
-      doom-modeline-buffer-file-name-style       'buffer-name
-      doom-modeline-continuous-word-count-modes  '(java-mode)
-      doom-modeline-enable-word-count            4
-      user-private-dir                           "~/org/org-roam/emacs/command/doom/config/" ;; load your privacy config
-)
+ kill-do-not-save-duplicates                t  ;不向kill-ring中加入重复内容
+ save-interprogram-paste-before-kill        t  ;将系统剪切板的内容放一份到kill-ring中，
+ evil-emacs-state-tag                       "EMACS"
+ evil-insert-state-tag                      "INSERT"
+ evil-motion-state-tag                      "MOTION"
+ evil-normal-state-tag                      "NORMAL"
+ evil-operator-state-tag                    "OPERATOR"
+ evil-visual-state-tag                      "VISUAL"
+ doom-modeline-height                       10
+ doom-modeline-bar-width                    2
+ doom-modeline-modal-icon                   nil
+ doom-modeline-icon                         nil
+ doom-modeline-major-mode-icon              nil
+ doom-modeline-buffer-encoding              t
+ doom-modeline-lsp                          nil
+ doom-modeline-modal                        t
+ doom-modeline-vcs-max-length               200
+ doom-modeline-buffer-file-name-style       'buffer-name
+ doom-modeline-continuous-word-count-modes  '(java-mode)
+ doom-modeline-enable-word-count            4
+ user-private-dir                           "~/org/org-roam/emacs/command/doom/config/" ;; load your privacy config
+ )
 (setq byte-compile-warnings '(cl-functions)
       display-time-default-load-average nil
       emacs-module-root "/Applications/Emacs.app/Contents/Resources/include")
