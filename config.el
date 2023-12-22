@@ -46,6 +46,8 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'kaolin-dark)
+(add-to-list 'default-frame-alist '(width.700))
+(add-to-list 'default-frame-alist '(height.303))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -142,7 +144,10 @@
  doom-modeline-buffer-file-name-style       'buffer-name
  doom-modeline-continuous-word-count-modes  '(java-mode)
  doom-modeline-enable-word-count            4
- user-private-dir                           "~/org/org-roam/emacs/command/doom/config/" ;; load your privacy config
+ ;; user-private-dir                           "~/org/org-roam/emacs/command/doom/config/" ;; load your privacy config
+ user-private-dir                           "~/.doom.d/neoemacs/" ;; load your privacy config
+ ;;
+
  )
 (setq byte-compile-warnings '(cl-functions)
       display-time-default-load-average nil
@@ -150,4 +155,3 @@
 
 (add-to-list 'load-path          user-private-dir )
 (use-package! db-work                             )    ;; load by local, privacy config account or pwd here
-

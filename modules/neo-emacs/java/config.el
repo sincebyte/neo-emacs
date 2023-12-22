@@ -18,6 +18,7 @@
  company-show-quick-access                  nil)
 
 (add-hook 'lsp-mode-hook (lambda ()
+                           (tree-sitter-hl-mode)
                            (setq display-line-numbers                       t
                                  lsp-enable-symbol-highlighting             t
                                  company-auto-update-doc                    nil

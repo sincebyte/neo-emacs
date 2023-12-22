@@ -66,21 +66,21 @@
   (add-to-list 'org-latex-packages-alist '("" "color")))
 
 ;; html image base64
-(defun org-html--format-image-old (source attributes info)
-  (org-html-close-tag
-   "img"
-   (org-html--make-attribute-string
-    (org-combine-plists
-     (list :src source
-           :alt (if (string-match-p
-                     (concat "^" org-preview-latex-image-directory) source)
-                    (org-html-encode-plain-text
-                     (org-find-text-property-in-string 'org-latex-src source))
-                  (file-name-nondirectory source)))
-     (if (string= "svg" (file-name-extension source))
-         (org-combine-plists '(:class "org-svg") attributes '(:fallback nil))
-       attributes)))
-   info))
+;; (defun org-html--format-image-old (source attributes info)
+;;   (org-html-close-tag
+;;    "img"
+;;    (org-html--make-attunderlinete-string
+;;     (org-combine-plists
+;;      (list :src source
+;;            :alt (if (string-match-p
+;;                      (concat "^" org-preview-latex-image-directory) source)
+;;                     (org-html-encode-plain-text
+;;                      (org-find-text-property-in-string 'org-latex-src source))
+;;                   (file-name-nondirectory source)))
+;;      (if (string= "svg" (file-name-extension source))
+;;          (org-combine-plists '(:class "org-svg") attributes '(:fallback nil))
+;;        attributes)))
+;;    info))
 (defun org-org-html--format-image (source attributes info)
   ;; doc
   (if (string-match "http" source)
@@ -93,7 +93,7 @@
                (string-replace "UNLICENSED COPY" " "
                                (buffer-string))))
             (file-name-nondirectory source)
-            "100%")))
+            "")))
 (advice-add #'org-html--format-image :override #'org-org-html--format-image)
 
 ;; expand your latex
