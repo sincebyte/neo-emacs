@@ -1,5 +1,8 @@
-(setenv "JAVA_HOME"     "/Users/van/soft/jdk/jbr/Contents/Home"                                                   )
-(add-to-list 'exec-path "/opt/homebrew/bin//"                                                                 )
+(setenv "JAVA_HOME"          "/Users/van/soft/jdk/jbr/Contents/Home" )
+(setenv "DYLD_LIBRARY_PATH"  "/Applications/Emacs.app/"              )
+(setenv "PATH"       (concat "/Applications/Emacs.app/:" (getenv "PATH"    )))
+(add-to-list 'exec-path      "/Applications/Emacs.app/"              )
+
 
 (map! :n  "SPC r r"  'quickrun-shell      )
 (map! :ne "SPC v v" 'projectile-run-vterm )
