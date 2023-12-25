@@ -4,4 +4,4 @@
 # --
 #DARKORANGE/LIGHTORANGE/DARKBLUE/LIGHTBLUE/DARKRED/LIGHTRED/DARKGREEN/LIGHTGREEN
 !define DARKBLUE
-!includeurl /Users/van/org/org-roam/emacs/C4-PlantUML/juststyle.puml
+!includeurl ~/org/org-roam/emacs/C4-PlantUML/juststyle.puml
