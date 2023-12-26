@@ -19,9 +19,9 @@
  org-id-track-globally         t   ;; M-x org-id-update-id-locations , org-roam-update-org-id-locations
  org-html-mathjax-options      '((path "https://cdn.bootcss.com/mathjax/3.0.5/es5/tex-mml-chtml.js"))
  pdflatex-exec-path             "/Library/TeX/texbin/pdflatex"
- org-html-preamble-format      '(("en" "<p class=\"author\">Made ✐︎ by Neo Emacser <a href=\"https://github.com/sincebyte\">sincebyte</a></p>"))
+ org-html-preamble-format      '(("en" "<p>Made ✐︎ by " (getenv "USER") "</p>"))
  org-roam-capture-templates    '(("d" "default" plain "%?"
-                                  :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+subtitle: \n#+author: vanniuner\n#+SETUPFILE: ~/.doom.d/org-head.setup")
+                                  :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+subtitle: \n#+author: \n#+SETUPFILE: ~/.doom.d/org-head.setup")
                                   :unnarrowed t))
  org-html-table-caption-above  nil
  gc-cons-threshold             (* 2 1000 1000)
