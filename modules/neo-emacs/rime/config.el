@@ -1,6 +1,6 @@
 ;;; neoemacs/rime/config.el -*- lexical-binding: t; -*-
 
-(setq rime-user-data-dir             "/Applications/Emacs.app"                          ;; rime config input method setting
+(setq rime-user-data-dir             "/Applications/Emacs.app/rime"                     ;; rime config input method setting
       ;; rime-user-data-dir             "~/Library/Rime/"                               ;; rime config input method setting
       rime-librime-root              (concat doom-user-dir "neoemacs/rime-macos/dist")  ;; emacs-rime/blob/master/INSTALLATION.org
       ;; rime-emacs-module-header-root  "/opt/homebrew/opt/emacs-mac/include"           ;; for emacs rime, brew do not needed
