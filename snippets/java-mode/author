@@ -4,6 +4,6 @@
 # --
 
 /**
- * @author `neo-user-name`
+ * @author `(getenv "USER")`
  * @since `(format-time-string "%Y-%m-%d")`
  **/

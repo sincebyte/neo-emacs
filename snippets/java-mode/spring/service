@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author `neo-user-name`
+ * @author `(getenv "USER")`
  * @since `(format-time-string "%Y-%m-%d %H:%M:%S")`
  **/
 @Data

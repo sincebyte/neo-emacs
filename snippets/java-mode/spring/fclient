@@ -7,7 +7,7 @@ package `(mapconcat 'identity (split-string (replace-regexp-in-string ".*src\\(/
 import org.springframework.cloud.openfeign.FeignClient;
 
 /**
- * @author `neo-user-name`
+ * @author `(getenv "USER")`
  * @since `(format-time-string "%Y-%m-%d %H:%M:%S")`
  **/
 @FeignClient(
