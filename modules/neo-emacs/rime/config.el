@@ -2,8 +2,9 @@
 
 (setq rime-user-data-dir             "~/Library/Rime/"                                        ;; rime config input method setting
       rime-librime-root              (concat doom-user-dir "neoemacs/rime-macos/dist")        ;; emacs-rime/blob/master/INSTALLATION.org
-      rime-emacs-module-header-root  "/opt/homebrew/opt/emacs-mac/include"              ;; for emacs rime, brew do not needed
-)
+      ;; rime-emacs-module-header-root  "/opt/homebrew/opt/emacs-mac/include"              ;; for emacs rime, brew do not needed
+      rime-emacs-module-header-root  "/Applications/Emacs.app"              ;; for emacs rime, brew do not needed
+      )
 ;; just install emacs first https://rime.im
 (use-package! rime
   :defer t
@@ -15,8 +16,8 @@
 (setq mode-line-mule-info   '((:eval (rime-lighter)))
       rime-inline-ascii-trigger 'shift-l
       rime-disable-predicates '(
-         rime-predicate-current-uppercase-letter-p
-         rime-predicate-space-after-cc-p))
+                                rime-predicate-current-uppercase-letter-p
+                                rime-predicate-space-after-cc-p))
 
 
 ;; 输入法切换按键
