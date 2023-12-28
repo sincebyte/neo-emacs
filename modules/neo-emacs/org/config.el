@@ -81,20 +81,20 @@
 ;;          (org-combine-plists '(:class "org-svg") attributes '(:fallback nil))
 ;;        attributes)))
 ;;    info))
-(defun org-org-html--format-image (source attributes info)
-  ;; doc
-  (if (string-match "http" source)
-      (org-html--format-image-old source attributes info)
-    (format "<img src=\"data:image/%s+xml;base64,%s\"%s width=%s />"
-            (or (file-name-extension source) "")
-            (base64-encode-string
-             (with-temp-buffer
-               (insert-file-contents-literally source)
-               (string-replace "UNLICENSED COPY" " "
-                               (buffer-string))))
-            (file-name-nondirectory source)
-            "")))
-(advice-add #'org-html--format-image :override #'org-org-html--format-image)
+;; (defun org-org-html--format-image (source attributes info)
+;;   ;; doc
+;;   (if (string-match "http" source)
+;;       (org-html--format-image-old source attributes info)
+;;     (format "<img src=\"data:image/%s+xml;base64,%s\"%s width=%s />"
+;;             (or (file-name-extension source) "")
+;;             (base64-encode-string
+;;              (with-temp-buffer
+;;                (insert-file-contents-literally source)
+;;                (string-replace "UNLICENSED COPY" " "
+;;                                (buffer-string))))
+;;             (file-name-nondirectory source)
+;;             "")))
+;; (advice-add #'org-html--format-image :override #'org-org-html--format-image)
 
 ;; expand your latex
 (use-package org-appear
