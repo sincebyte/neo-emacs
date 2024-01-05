@@ -13,11 +13,12 @@
 ;;
 ;; - `doom-font' -- the primary font to use
 ;; (setq doom-font (font-spec :family "等距更纱黑体 Slab SC" :size 18.0))
-(setq doom-font (font-spec :family "victor Mono" :size 19 ))
+(setq doom-font (font-spec :family "victor Mono" :size 17 ))
 (defun init-cjk-fonts()
   (dolist (charset '(kana han cjk-misc bopomofo))
     (set-fontset-font (frame-parameter nil 'font)
-                      charset (font-spec :family "HYXinRenWenSongW" :size 20))))
+                      charset (font-spec :family "HYXinRenWenSongW" :size 18))))
+
 (add-hook 'doom-init-ui-hook 'init-cjk-fonts)
 
 (if (eq system-type 'windows-nt)
@@ -132,8 +133,6 @@
  evil-normal-state-tag                      "NORMAL"
  evil-operator-state-tag                    "OPERATOR"
  evil-visual-state-tag                      "VISUAL"
- doom-modeline-height                       10
- doom-modeline-bar-width                    2
  doom-modeline-modal-icon                   nil
  doom-modeline-icon                         nil
  doom-modeline-major-mode-icon              nil
@@ -143,12 +142,15 @@
  doom-modeline-vcs-max-length               200
  doom-modeline-buffer-file-name-style       'buffer-name
  doom-modeline-continuous-word-count-modes  '(java-mode)
- doom-modeline-enable-word-count            4
- ;; user-private-dir                           "~/org/org-roam/emacs/command/doom/config/" ;; load your privacy config
- user-private-dir                           "~/.doom.d/neoemacs/" ;; load your privacy config
- ;;
-
+ doom-modeline-enable-word-count            t
+ user-private-dir                           "~/org/org-roam/emacs/command/doom/config/" ;; load your privacy config
+ ;; user-private-dir                           "~/.doom.d/neoemacs/" ;; load your privacy config
  )
+
+(set-face-attribute 'mode-line-active nil :box nil ) ; For 29+
+(set-face-attribute 'mode-line-inactive nil :box nil ) ; For 29+
+(set-face-attribute 'mode-line nil :box nil ) ; For 29+
+
 (setq byte-compile-warnings '(cl-functions)
       display-time-default-load-average nil
       emacs-module-root "/Applications/Emacs.app/Contents/Resources/include")

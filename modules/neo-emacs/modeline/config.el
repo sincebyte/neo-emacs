@@ -1,7 +1,7 @@
 ;; close the modeline default
-(add-hook 'buffer-list-update-hook (lambda ()
-                                     (unless (active-minibuffer-window)
-                                       (hide-mode-line-mode))))
+;; (add-hook 'buffer-list-update-hook (lambda ()
+;;                                      (unless (active-minibuffer-window)
+;;                                        (hide-mode-line-mode))))
 (use-package! awesome-tray
   :config
   (setq awesome-tray-git-show-status t

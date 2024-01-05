@@ -38,7 +38,7 @@
        indent-guides     ; highlighted indent columns
        ;;ligatures         ; ligatures and symbols to make your code pretty again
        ;;minimap           ; show a map of the code on the side
-       ;; modeline          ; snazzy, Atom-inspired modeline, plus API
+       modeline          ; snazzy, Atom-inspired modeline, plus API
        ;;nav-flash         ; blink cursor line after big motions
        ;; neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
@@ -203,7 +203,7 @@
        find                ; find file config
        eredis              ; a redis client
        sql                 ; ejc sql setting
-       modeline            ;modeline
+       ;; modeline            ;modeline
                                         ;elfeed              ; rss reader
        alpha               ; make emacs background transparent
        :config
