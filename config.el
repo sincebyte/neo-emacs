@@ -13,11 +13,11 @@
 ;;
 ;; - `doom-font' -- the primary font to use
 ;; (setq doom-font (font-spec :family "等距更纱黑体 Slab SC" :size 18.0))
-(setq doom-font (font-spec :family "victor Mono" :size 17 ))
+(setq doom-font (font-spec :family "victor Mono" :size 19 ))
 (defun init-cjk-fonts()
   (dolist (charset '(kana han cjk-misc bopomofo))
     (set-fontset-font (frame-parameter nil 'font)
-                      charset (font-spec :family "HYXinRenWenSongW" :size 18))))
+                      charset (font-spec :family "HYXinRenWenSongW" :size 20))))
 
 (add-hook 'doom-init-ui-hook 'init-cjk-fonts)
 
@@ -128,14 +128,6 @@
  kill-do-not-save-duplicates                t  ;不向kill-ring中加入重复内容
  save-interprogram-paste-before-kill        t  ;将系统剪切板的内容放一份到kill-ring中，
  doom-modeline-height                       1
- ;; doom-modeline-bar-width                    2
- ;; evil-emacs-state-tag                       "󰬌󰬔󰬈󰬊󰬚"
- ;; evil-insert-state-tag                      "󰬐󰬕󰬚󰬌󰬙󰬛"
- ;; evil-motion-state-tag                      "󰬔󰬖󰬛󰬐󰬖󰬕"
- ;; evil-normal-state-tag                      "󰬕󰬖󰬙󰬔󰬈󰬓"
- ;; evil-operator-state-tag                    "󰬖󰬗󰬌󰬙󰬈󰬛󰬖󰬙"
- ;; evil-visual-state-tag                      "󰬝󰬐󰬚󰬜󰬈󰬓"
- ;; evil-replace-state-tag                     "󰬙󰬌󰬗󰬓󰬈󰬊󰬌"
  evil-emacs-state-tag                       "󰬌"
  evil-insert-state-tag                      "󰬐"
  evil-motion-state-tag                      "󰬔"
@@ -158,6 +150,36 @@
  )
 
 (after! doom-modeline
+  (doom-modeline-def-segment my-major-mode
+    "The major mode, including environment and text-scale info."
+    (propertize
+     (replace-regexp-in-string
+      "/+l"
+      ""
+      (concat
+       (doom-modeline-spc)
+       (propertize (format-mode-line
+                    (or (and (boundp 'delighted-modes)
+                             (cadr (assq major-mode delighted-modes)))
+                        mode-name))
+                   'help-echo "Major mode\n\
+  mouse-1: Display major mode menu\n\
+  mouse-2: Show help for major mode\n\
+  mouse-3: Toggle minor modes"
+                   'mouse-face 'doom-modeline-highlight
+                   'local-map mode-line-major-mode-keymap)
+       (when (and doom-modeline-env-version doom-modeline-env--version)
+         (format "%s%s" (doom-modeline-vspc) doom-modeline-env--version))
+       (and (boundp 'text-scale-mode-amount)
+            (/= text-scale-mode-amount 0)
+            (format
+             (if (> text-scale-mode-amount 0)
+                 " (%+d)"
+               " (%-d)")
+             text-scale-mode-amount))
+       (doom-modeline-spc)))
+     'face (doom-modeline-face 'doom-modeline-buffer-major-mode)))
+
   (doom-modeline-def-segment my-segment
     "My custom segment "
     (let ((face
@@ -168,14 +190,24 @@
                    (if (eq evil-state 'replace) 'doom-modeline-evil-replace-state
                      (if (eq evil-state 'emacs) 'doom-modeline-emacs-visual-state
                        (if (eq evil-state 'motion) 'doom-modeline-motion-visual-state)
-                       'doom-modeline-evil-normal-state))))))))
+                       'doom-modeline-evil-normal-state)))))))
+          (charc
+           (if (eq evil-state 'normal) "󰬕"
+             (if (eq evil-state 'insert) "󰬐"
+               (if (eq evil-state 'visual) "󰬝"
+                 (if (eq evil-state 'replace) "󰬙"
+                   (if (eq evil-state 'emacs) "󰬌"
+                     (if (eq evil-state 'motion) "󰬔")
+                     "󰬌")))))))
       (concat
-       (propertize " 󰍻 " 'face face))))
-  ;; (set-face-attribute 'doom-modeline-evil-normal-state nil :background "#4d9391") ; For 29+
-
+       (propertize (concat "" charc " ") 'face face))))
+  (doom-modeline-def-segment my-custom-segment
+    (my-add-x-to-segment 'doom-modeline--major-mode-segment))
+  ;; (display-battery-mode 1)
+  ;; (display-time-mode 1)
   (doom-modeline-def-modeline 'main
-    '(modals matches buffer-info remote-host buffer-position parrot selection-info)
-    '(misc-info minor-modes checker input-method buffer-encoding major-mode process  vcs my-segment ) ))
+    '(modals matches buffer-info buffer-position parrot selection-info)
+    '(misc-info minor-modes input-method buffer-encoding my-major-mode process vcs battery time my-segment) ))
 
 (setq byte-compile-warnings '(cl-functions)
       display-time-default-load-average nil

@@ -50,3 +50,4 @@
 ;; (map! :ne "; v"     'vc-refresh-state                          )
 (map! :ne "; ;"     'hide-mode-line-mode                       )
 (awesome-tray-mode 1)
+
