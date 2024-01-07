@@ -46,7 +46,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'kaolin-dark)
+(setq doom-theme 'doom-one)
 (add-to-list 'default-frame-alist '(width.700))
 (add-to-list 'default-frame-alist '(height.303))
 
@@ -127,12 +127,22 @@
 (setq
  kill-do-not-save-duplicates                t  ;不向kill-ring中加入重复内容
  save-interprogram-paste-before-kill        t  ;将系统剪切板的内容放一份到kill-ring中，
- evil-emacs-state-tag                       "EMACS"
- evil-insert-state-tag                      "INSERT"
- evil-motion-state-tag                      "MOTION"
- evil-normal-state-tag                      "NORMAL"
- evil-operator-state-tag                    "OPERATOR"
- evil-visual-state-tag                      "VISUAL"
+ doom-modeline-height                       1
+ ;; doom-modeline-bar-width                    2
+ ;; evil-emacs-state-tag                       "󰬌󰬔󰬈󰬊󰬚"
+ ;; evil-insert-state-tag                      "󰬐󰬕󰬚󰬌󰬙󰬛"
+ ;; evil-motion-state-tag                      "󰬔󰬖󰬛󰬐󰬖󰬕"
+ ;; evil-normal-state-tag                      "󰬕󰬖󰬙󰬔󰬈󰬓"
+ ;; evil-operator-state-tag                    "󰬖󰬗󰬌󰬙󰬈󰬛󰬖󰬙"
+ ;; evil-visual-state-tag                      "󰬝󰬐󰬚󰬜󰬈󰬓"
+ ;; evil-replace-state-tag                     "󰬙󰬌󰬗󰬓󰬈󰬊󰬌"
+ evil-emacs-state-tag                       "󰬌"
+ evil-insert-state-tag                      "󰬐"
+ evil-motion-state-tag                      "󰬔"
+ evil-normal-state-tag                      "󰬕"
+ evil-operator-state-tag                    "󰬖"
+ evil-visual-state-tag                      "󰬝"
+ evil-replace-state-tag                     "󰬙"
  doom-modeline-modal-icon                   nil
  doom-modeline-icon                         nil
  doom-modeline-major-mode-icon              nil
@@ -147,9 +157,25 @@
  ;; user-private-dir                           "~/.doom.d/neoemacs/" ;; load your privacy config
  )
 
-(set-face-attribute 'mode-line-active nil :box nil ) ; For 29+
-(set-face-attribute 'mode-line-inactive nil :box nil ) ; For 29+
-(set-face-attribute 'mode-line nil :box nil ) ; For 29+
+(after! doom-modeline
+  (doom-modeline-def-segment my-segment
+    "My custom segment "
+    (let ((face
+           (when (doom-modeline--active)
+             (if (eq evil-state 'normal) 'doom-modeline-evil-normal-state
+               (if (eq evil-state 'insert) 'doom-modeline-evil-insert-state
+                 (if (eq evil-state 'visual) 'doom-modeline-evil-visual-state
+                   (if (eq evil-state 'replace) 'doom-modeline-evil-replace-state
+                     (if (eq evil-state 'emacs) 'doom-modeline-emacs-visual-state
+                       (if (eq evil-state 'motion) 'doom-modeline-motion-visual-state)
+                       'doom-modeline-evil-normal-state))))))))
+      (concat
+       (propertize " 󰍻 " 'face face))))
+  ;; (set-face-attribute 'doom-modeline-evil-normal-state nil :background "#4d9391") ; For 29+
+
+  (doom-modeline-def-modeline 'main
+    '(modals matches buffer-info remote-host buffer-position parrot selection-info)
+    '(misc-info minor-modes checker input-method buffer-encoding major-mode process  vcs my-segment ) ))
 
 (setq byte-compile-warnings '(cl-functions)
       display-time-default-load-average nil

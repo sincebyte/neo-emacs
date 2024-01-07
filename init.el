@@ -197,14 +197,14 @@
        org                  ; neoemacs org setting
        rime                ; neoemacs rime setting
        translate           ; translate setting
-                                        ;xml                 ; xml buffer format
-                                        ;bookmark            ; bookmark setting
-                                        ;eww                 ; eww config
+       ;; xml                 ; xml buffer format
+       ;; bookmark            ; bookmark setting
+       ;; eww                 ; eww config
        find                ; find file config
        eredis              ; a redis client
        sql                 ; ejc sql setting
        ;; modeline            ;modeline
-                                        ;elfeed              ; rss reader
+       elfeed              ; rss reader
        alpha               ; make emacs background transparent
        :config
        ;;literate

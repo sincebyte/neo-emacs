@@ -63,6 +63,7 @@
 (package! kaolin-themes     )
 (package! company-posframe  )
 (package! xml-format        )
+(package! elfeed            )
 (package! eredis            ) ;; need install alone
 (package! org-modern        ) ;; need install alone
 (package! awesome-tray :recipe (:host github :repo "manateelazycat/awesome-tray"         :branch "master" ))
