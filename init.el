@@ -204,6 +204,7 @@
        eredis              ; a redis client
        sql                 ; ejc sql setting
        ;; modeline            ;modeline
+       modelinexp          ; Expand doom doom modeline
        elfeed              ; rss reader
        alpha               ; make emacs background transparent
        :config
