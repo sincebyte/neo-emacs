@@ -84,7 +84,7 @@
     '(misc-info minor-modes input-method buffer-encoding my-major-mode process vcs my-segment))
   (doom-modeline-def-modeline 'vcs
     '(" 󰬎"  matches buffer-info remote-host buffer-position parrot selection-info)
-    '(compilation misc-info battery irc mu4e gnus github debug minor-modes buffer-encoding major-mode process time "󰬎  "))
+    '(compilation misc-info battery irc mu4e gnus github debug minor-modes buffer-encoding major-mode process time "󰬎 "))
   (doom-modeline-def-modeline 'dashboard
     '(modals buffer-default-directory-simple remote-host)
     '(my-segment)))
