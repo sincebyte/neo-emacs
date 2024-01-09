@@ -17,6 +17,12 @@
  company-tooltip-flip-when-above            t
  company-show-quick-access                  nil)
 
+(add-hook 'web-mode-hook (lambda ()
+                           (setq display-line-numbers                       t)))
+(add-hook 'js-mode-hook (lambda ()
+                          (setq display-line-numbers                       t)))
+(add-hook 'lisp-mode-hook (lambda ()
+                            (setq display-line-numbers                       t)))
 (add-hook 'lsp-mode-hook (lambda ()
                            (tree-sitter-hl-mode)
                            (setq display-line-numbers                       t
