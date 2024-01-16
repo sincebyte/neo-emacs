@@ -13,17 +13,23 @@
 ;;
 ;; - `doom-font' -- the primary font to use
 ;; (setq doom-font (font-spec :family "等距更纱黑体 Slab SC" :size 18.0))
-(setq doom-font (font-spec :family "victor Mono" :size 17 ))
+(if (eq system-type 'windows-nt)
+  (progn (set-selection-coding-system 'utf-8)
+         (setq doom-font (font-spec :family "victor Mono Medium" :size 24)
+               cjk-font "汉仪新人文宋W"
+               cjk-font-size 26))
+    (progn (set-selection-coding-system 'utf-16le-dos)
+           (setq doom-font (font-spec :family "victor Mono" :size 17 )
+                 cjk-font "HYXinRenWenSongW"
+                 cjk-font-size 18)))
+
 (defun init-cjk-fonts()
   (dolist (charset '(kana han cjk-misc bopomofo))
     (set-fontset-font (frame-parameter nil 'font)
-                      charset (font-spec :family "HYXinRenWenSongW" :size 18))))
+                      charset (font-spec :family cjk-font :size cjk-font-size))))
 
 (add-hook 'doom-init-ui-hook 'init-cjk-fonts)
 
-(if (eq system-type 'windows-nt)
-    (progn (set-selection-coding-system 'utf-16le-dos))
-  (set-selection-coding-system 'utf-8))
 
 
 ;; - `doom-variable-pitch-font' -- a non-monospace font (where applicable)
