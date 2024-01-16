@@ -1,6 +1,12 @@
 ;;; module/alpha/config.el -*- lexical-binding: t; -*-
 
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(setq default-frame-alist
+      '((vertical-scroll-bars)
+        (top . 25)
+        (left . 45)
+        (width . 130)
+        (height . 30)))
 
 (defun set-frame-alpha (arg &optional active)
   (interactive "nEnter alpha value (1-100): \np")
