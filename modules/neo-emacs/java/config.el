@@ -61,9 +61,9 @@
                                  lsp-lens-enable                            t)))
 (setq lsp-java-format-settings-url   (expand-file-name (concat doom-user-dir "neoemacs/Intellij_Spring_Boot_Java_Conventions.xml"))
       lsp-java-java-path             (concat (getenv "JAVA_17_HOME") "/bin/java")
-      lsp-java-server-install-dir    "~/.m2/lsp-java/"
-      lsp-maven-path                 "~/.m2/settings.xml"
-      lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.27.1-202309140221.tar.gz"
+      lsp-java-server-install-dir    "~/lsp-java/"
+      lsp-maven-path                 (concat (getenv "MAVEN_HOME") "/conf/settings.xml")
+      lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.31.0-202401111522.tar.gz"
       lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path )
       lsp-java-vmargs                `("-XX:+UseParallelGC"
                                        "-XX:GCTimeRatio=4"

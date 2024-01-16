@@ -1,13 +1,14 @@
 
 # Table of Contents
 
-1.  [Java module](#orgda9ac7c)
-    1.  [most wanted](#org5237b9d)
-    2.  [Dap-java Usage](#org4c32883)
+1.  [Java module](#org0c9e7a7)
+    1.  [most wanted](#org4566092)
+    2.  [Dap-java Usage](#orgd57ca3d)
+    3.  [build handle](#org011f1d2)
 
 
 
-<a id="orgda9ac7c"></a>
+<a id="org0c9e7a7"></a>
 
 # Java module
 
@@ -130,7 +131,7 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     3.  Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
 
 
-<a id="org5237b9d"></a>
+<a id="org4566092"></a>
 
 ## TODO most wanted
 
@@ -139,7 +140,7 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     1.  eldoc [lsp-java/issues/432](https://github.com/emacs-lsp/lsp-java/issues/432)
 
 
-<a id="org4c32883"></a>
+<a id="orgd57ca3d"></a>
 
 ## TODO Dap-java Usage
 
@@ -225,4 +226,13 @@ I do not use debug for years. So be careful the documentation maybe outdated.I t
     </tr>
     </tbody>
     </table>
+
+
+<a id="org011f1d2"></a>
+
+## build handle
+
+because of the isuue <https://github.com/emacs-lsp/lsp-java/issues/465>  
+
+    /Users/van/soft/apache-maven-3.6.1/bin/mvn -Djdt.js.server.root\=/Users/van/lsp-java/ -Djunit.runner.root\=/Users/van/.emacs.d/.local/cache/eclipse.jdt.ls/test-runner/ -Djunit.runner.fileName\=junit-platform-console-standalone.jar -Djava.debug.root\=/Users/van/lsp-java/bundles clean package -Djdt.download.url\=http\://1.117.167.195/download/jdt-language-server-1.31.0-202401111522.tar.gz -f ~/.doom.d/modules/neo-emacs/java/pom.xml
 

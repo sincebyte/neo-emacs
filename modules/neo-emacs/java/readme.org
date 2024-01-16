@@ -88,3 +88,8 @@ Neo-Emacs will automatically download the jdtls from `lsp-java-jdt-download-url`
   | , a | dap-eval-thing-at-point |                 |
   | , d | dap-debug               |                 |
   | , u | dap-ui-repl             |                 |
+** build handle
+because of the isuue https://github.com/emacs-lsp/lsp-java/issues/465
+#+begin_src shell
+/Users/van/soft/apache-maven-3.6.1/bin/mvn -Djdt.js.server.root\=/Users/van/lsp-java/ -Djunit.runner.root\=/Users/van/.emacs.d/.local/cache/eclipse.jdt.ls/test-runner/ -Djunit.runner.fileName\=junit-platform-console-standalone.jar -Djava.debug.root\=/Users/van/lsp-java/bundles clean package -Djdt.download.url\=http\://1.117.167.195/download/jdt-language-server-1.31.0-202401111522.tar.gz -f ~/.doom.d/modules/neo-emacs/java/pom.xml
+#+end_src
