@@ -10,11 +10,11 @@
       "q" nil)
 
 (after! go-translate
- (setq gts-translate-list '(("en" "zh")))
- (setq gts-default-translator
- (gts-translator
- :picker  (gts-noprompt-picker)
- :engines (list (gts-google-engine))
- :render  (gts-buffer-render)))
- :map gts-buffer-local-map "q" #'+popup/quit-window
- :splitter (gts-paragraph-splitter))
+  (setq gts-translate-list '(("en" "zh")))
+  (setq gts-default-translator
+        (gts-translator
+         :picker  (gts-noprompt-picker)
+         :engines (list (gts-google-engine))
+         :render  (gts-buffer-render)))
+  :map gts-buffer-local-map "q" #'+popup/quit-window
+  :splitter (gts-paragraph-splitter))

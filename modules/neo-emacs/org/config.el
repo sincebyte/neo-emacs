@@ -66,35 +66,35 @@
   (add-to-list 'org-latex-packages-alist '("" "color")))
 
 ;; html image base64
-;; (defun org-html--format-image-old (source attributes info)
-;;   (org-html-close-tag
-;;    "img"
-;;    (org-html--make-attunderlinete-string
-;;     (org-combine-plists
-;;      (list :src source
-;;            :alt (if (string-match-p
-;;                      (concat "^" org-preview-latex-image-directory) source)
-;;                     (org-html-encode-plain-text
-;;                      (org-find-text-property-in-string 'org-latex-src source))
-;;                   (file-name-nondirectory source)))
-;;      (if (string= "svg" (file-name-extension source))
-;;          (org-combine-plists '(:class "org-svg") attributes '(:fallback nil))
-;;        attributes)))
-;;    info))
-;; (defun org-org-html--format-image (source attributes info)
-;;   ;; doc
-;;   (if (string-match "http" source)
-;;       (org-html--format-image-old source attributes info)
-;;     (format "<img src=\"data:image/%s+xml;base64,%s\"%s width=%s />"
-;;             (or (file-name-extension source) "")
-;;             (base64-encode-string
-;;              (with-temp-buffer
-;;                (insert-file-contents-literally source)
-;;                (string-replace "UNLICENSED COPY" " "
-;;                                (buffer-string))))
-;;             (file-name-nondirectory source)
-;;             "")))
-;; (advice-add #'org-html--format-image :override #'org-org-html--format-image)
+(defun org-html--format-image-old (source attributes info)
+  (org-html-close-tag
+   "img"
+   (org-html--make-attunderlinete-string
+    (org-combine-plists
+     (list :src source
+           :alt (if (string-match-p
+                     (concat "^" org-preview-latex-image-directory) source)
+                    (org-html-encode-plain-text
+                     (org-find-text-property-in-string 'org-latex-src source))
+                  (file-name-nondirectory source)))
+     (if (string= "svg" (file-name-extension source))
+         (org-combine-plists '(:class "org-svg") attributes '(:fallback nil))
+       attributes)))
+   info))
+(defun org-org-html--format-image (source attributes info)
+  ;; doc
+  (if (string-match "http" source)
+      (org-html--format-image-old source attributes info)
+    (format "<img src=\"data:image/%s+xml;base64,%s\"%s width=%s />"
+            (or (file-name-extension source) "")
+            (base64-encode-string
+             (with-temp-buffer
+               (insert-file-contents-literally source)
+               (string-replace "UNLICENSED COPY" " "
+                               (buffer-string))))
+            (file-name-nondirectory source)
+            "")))
+(advice-add #'org-html--format-image :override #'org-org-html--format-image)
 
 ;; expand your latex
 (use-package org-appear

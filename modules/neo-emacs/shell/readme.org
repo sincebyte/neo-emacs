@@ -57,3 +57,9 @@ function ff
     vterm_cmd find-file (realpath "$argv")
 end
 #+end_src
+** git push for proxy
+https://juejin.cn/post/7095575058705285151
+#+begin_src ssh
+Host github.com
+    ProxyCommand nc -x 127.0.0.1:1089 %h %p
+#+end_src
