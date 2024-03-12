@@ -23,3 +23,6 @@
 
 ;; 输入法切换按键
 (global-set-key (kbd "C-;"  ) 'toggle-input-method             )
+
+(map! :map (minibuffer-local-map)
+      "C-;" 'toggle-input-method)

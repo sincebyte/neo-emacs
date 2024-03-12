@@ -14,7 +14,12 @@ In the mini search buffer ~C-;~  is binding to `embark-act`. It's conflict with 
          ;; "C-;"               #'embark-act
     #+end_src
   - The short cut ~C-SPC~ seems more popular for `toogle-input-method`, cause windows have a default setting for ~C-SPC~.So a better way is binding ~C-SPC~ to `toogle-input-method`
-* TODO most wanted
+  - a new method to unbind c-; to embark-act
+    #+begin_src elisp
+    (map! :map (minibuffer-local-map)
+        "C-;" 'toggle-input-method)
+    #+end_src
+* DONE most wanted
 ** code advice
 Automatically to evil normal mode when `J` `K` be clicked.
 It's actually a advice regard to `+workspace/switch-right` and `+workspace/switch-right`.

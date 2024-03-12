@@ -1,13 +1,13 @@
 
 # Table of Contents
 
-1.  [conflict with toggle-input-method](#org53782c2)
-2.  [most wanted](#org98d549a)
-    1.  [code advice](#org0baccd3)
+1.  [conflict with toggle-input-method](#org1f0d019)
+2.  [most wanted](#org5f4a23c)
+    1.  [code advice](#orgbd8a06c)
 
 
 
-<a id="org53782c2"></a>
+<a id="org1f0d019"></a>
 
 # conflict with toggle-input-method
 
@@ -21,14 +21,18 @@ In the mini search buffer `C-;`  is binding to \`embark-act\`. It&rsquo;s confli
             3          (:map minibuffer-local-map
             4           ;; "C-;"               #'embark-act
     -   The short cut `C-SPC` seems more popular for \`toogle-input-method\`, cause windows have a default setting for `C-SPC`.So a better way is binding `C-SPC` to \`toogle-input-method\`
+    -   a new method to unbind c-; to embark-act  
+        
+            (map! :map (minibuffer-local-map)
+                "C-;" 'toggle-input-method)
 
 
-<a id="org98d549a"></a>
+<a id="org5f4a23c"></a>
 
-# TODO most wanted
+# DONE most wanted
 
 
-<a id="org0baccd3"></a>
+<a id="orgbd8a06c"></a>
 
 ## code advice
 
