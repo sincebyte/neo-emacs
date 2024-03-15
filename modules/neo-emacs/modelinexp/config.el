@@ -78,10 +78,10 @@
   (doom-modeline-def-segment my-custom-segment
     (my-add-x-to-segment 'doom-modeline--major-mode-segment))
   ;; (display-battery-mode 1)
-  ;; (display-time-mode 1)
+  (display-time-mode 1)
   (doom-modeline-def-modeline 'main
     '(modals matches buffer-info buffer-position parrot selection-info)
-    '(misc-info minor-modes input-method buffer-encoding my-major-mode process vcs my-segment))
+    '(misc-info minor-modes input-method buffer-encoding my-major-mode process vcs time my-segment))
   (doom-modeline-def-modeline 'vcs
     '(" 󰬎"  matches buffer-info remote-host buffer-position parrot selection-info)
     '(compilation misc-info battery irc mu4e gnus github debug minor-modes buffer-encoding major-mode process time "󰬎 "))
