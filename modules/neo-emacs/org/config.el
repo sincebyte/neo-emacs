@@ -94,7 +94,8 @@
                                (buffer-string))))
             (file-name-nondirectory source)
             "")))
-(advice-add #'org-html--format-image :override #'org-org-html--format-image)
+;; enable image to base64
+;; (advice-add #'org-html--format-image :override #'org-org-html--format-image)
 
 ;; expand your latex
 (use-package org-appear
@@ -136,3 +137,5 @@
   (global-org-modern-mode 1))
 ;; (custom-set-faces `(org-block-begin-line ((t (:foreground "#008ED1" :background "#EAEAFF")))))
 ;; (custom-set-faces `(org-block-end-line   ((t (:foreground "#008ED1" :background "#EAEAFF")))))
+
+(setq org-latex-create-formula-image-program 'dvipng)

@@ -1,31 +1,31 @@
 
 # Table of Contents
 
-1.  [About](#org1d5872b)
-2.  [How to install](#org273c2c5)
-    1.  [Install by Installer](#org30e10bd)
-    2.  [Install emacs](#org9ecbb13)
-    3.  [Clone project](#org1b8c9fc)
-    4.  [Doom Install](#org6f8ef27)
-3.  [How to update](#org32965ab)
-    1.  [For brew](#org754f949)
-    2.  [For doom project](#orgd5d8912)
-4.  [Private setting](#org25433e5)
-    1.  [Font setting](#org08e4e1f)
-    2.  [Basic setting](#orgcfbb22c)
-5.  [Neoemacs modules](#orgddb0923)
-    1.  [Lsp Java](#org92c9878)
-    2.  [Vterm Shell](#org5dd5357)
-    3.  [Ejc Sql](#org7c8d88b)
-    4.  [Emacs Rime](#orgb4ae559)
-    5.  [Org mode](#orgd9adeac)
-    6.  [Restclient](#org14583ee)
-    7.  [Eredis Usage](#orgd57d719)
-    8.  [Bookmark](#org0ceebcb)
-    9.  [Elpa Offline](#org9d428c8)
-    10. [Vue](#org97525ad)
-6.  [About the Release](#org3f92a37)
-7.  [Customize Farther](#org6211dd9)
+1.  [About](#org5e77f13)
+2.  [How to install](#org4efc037)
+    1.  [Install by Installer](#orgb0ed565)
+    2.  [Install emacs](#org10d1c1a)
+    3.  [Clone project](#org343324f)
+    4.  [Doom Install](#orgb69eec3)
+3.  [How to update](#orge792369)
+    1.  [For brew](#orgb5c7737)
+    2.  [For doom project](#org14c8728)
+4.  [Private setting](#org4403561)
+    1.  [Font setting](#orgb1496f4)
+    2.  [Basic setting](#org449ba52)
+5.  [Neoemacs modules](#org87912f4)
+    1.  [Lsp Java](#org329020a)
+    2.  [Vterm Shell](#org56cd2c3)
+    3.  [Ejc Sql](#org7cbd898)
+    4.  [Emacs Rime](#orgcbc10de)
+    5.  [Org mode](#org497a81d)
+    6.  [Restclient](#orgf84e92a)
+    7.  [Eredis Usage](#org1903a0f)
+    8.  [Bookmark](#org4784062)
+    9.  [Elpa Offline](#org69391e0)
+    10. [Vue](#org6e017e8)
+6.  [About the Release](#org159b731)
+7.  [Customize Farther](#orgd40ace6)
 
 ![img](https://img.shields.io/badge/neo_emacs-v3.0-green.svg)  ![img](https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0)  ![img](https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1) ![img](https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&color=3498DB)  
 ![img](https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&color=2C2255) ![img](https://img.shields.io/badge/supports-Emacs_27.1_to_29.1-red.svg?logo=gnuemacs&color=7F5AB6)  
@@ -33,7 +33,7 @@
 ![img](./image-use.png)  
 
 
-<a id="org1d5872b"></a>
+<a id="org5e77f13"></a>
 
 # About
 
@@ -48,19 +48,19 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   Knowledge management system: Org-roam borrows principles from the Zettelkasten method, providing a solution for non-hierarchical note-taking.
 
 
-<a id="org273c2c5"></a>
+<a id="org4efc037"></a>
 
 # How to install
 
 
-<a id="org30e10bd"></a>
+<a id="orgb0ed565"></a>
 
 ## Install by Installer
 
 Hi everyone, the [neoemacs](http://neoemacs.com) website is now online. Here we provide the installation method of neoemacs, which allows you to install it throught a apk installer makes things easier.Currently only supports Apple M chip computers, But it will soon start supporting windows. I hope this installation package can save your time costs when starting to learn emacs, and allow you to start getting deeper into emacs faster.  
 
 
-<a id="org9ecbb13"></a>
+<a id="org10d1c1a"></a>
 
 ## Install emacs
 
@@ -101,7 +101,7 @@ After emacs installation, set environment variables which names EMACS ,this depe
     export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs
 
 
-<a id="org1b8c9fc"></a>
+<a id="org343324f"></a>
 
 ## Clone project
 
@@ -111,7 +111,7 @@ clone doom-emacs and neo-emacs from github.
     git clone --depth 1 https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
 
-<a id="org6f8ef27"></a>
+<a id="orgb69eec3"></a>
 
 ## Doom Install
 
@@ -140,12 +140,12 @@ At last run below, this will take few minutes. And it depends on the quality of 
     ~/.emacs.doom/bin/doom.cmd install
 
 
-<a id="org32965ab"></a>
+<a id="orge792369"></a>
 
 # How to update
 
 
-<a id="org754f949"></a>
+<a id="orgb5c7737"></a>
 
 ## For brew
 
@@ -153,7 +153,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     brew update && brew upgrade emacs-mac && brew cleanup emacs-mac
 
 
-<a id="orgd5d8912"></a>
+<a id="org14c8728"></a>
 
 ## For doom project
 
@@ -163,14 +163,14 @@ At last run below, this will take few minutes. And it depends on the quality of 
     sh ~/.emacs.d/bin/doom sync
 
 
-<a id="org25433e5"></a>
+<a id="org4403561"></a>
 
 # Private setting
 
 Customize your private setting config in the config.el ; use `setq`  
 
 
-<a id="org08e4e1f"></a>
+<a id="orgb1496f4"></a>
 
 ## Font setting
 
@@ -204,7 +204,7 @@ Cause different platform have different font name,after font installed there nee
     -   M-x nerd-icons-install-fonts
 
 
-<a id="orgcfbb22c"></a>
+<a id="org449ba52"></a>
 
 ## Basic setting
 
@@ -337,12 +337,12 @@ Cause different platform have different font name,after font installed there nee
 > recentfile save default dir: ~/.emacs.d/.local/cache/recentf  
 
 
-<a id="orgddb0923"></a>
+<a id="org87912f4"></a>
 
 # Neoemacs modules
 
 
-<a id="org92c9878"></a>
+<a id="org329020a"></a>
 
 ## Lsp Java
 
@@ -446,11 +446,11 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     3.  Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
 
 
-<a id="org5dd5357"></a>
+<a id="org56cd2c3"></a>
 
 ## Vterm Shell
 
-<div class="notice-warning" id="org72adcb8">
+<div class="notice-warning" id="org96e2c05">
 <p>
 Vterm is not available on windows.<br />
 Thus windows user have to use eshell as a downgrade plan.<br />
@@ -496,6 +496,26 @@ Thus windows user have to use eshell as a downgrade plan.<br />
             set -q argv[1]; or set argv[1] "."
             vterm_cmd find-file (realpath "$argv")
         end
+    
+    -   http proxy
+    
+    In fact there have two different config ,first one for vterm and another for emacs inner plugins.  
+    In vterm the http proxy be effected by \`~/.config/fish/config.fish\`,you could config it like this.  
+    
+        set -x http_proxy       http://vpn.local.com:10887
+        set -x https_proxy      http://vpn.local.com:10887
+        set -x no_proxy         ".aliyun.com,192.168.0.0/16,137.239.155.184"
+    
+    When you are using emacs lisp program such as restclient, you could config proxy like this.  
+    The difference is wildcard  
+    
+        (defun convert-to-regex (str)
+          (let* ((joined (replace-regexp-in-string "," "\\\\|" str))
+                 (wrapped (concat "^\\(" joined "\\)")))
+            wrapped))
+        (setq url-proxy-services `(("http" ."vpn.local.com:10887")
+                                   ("https" ."vpn.local.com:10887")
+                                   ("no_proxy" . ,(convert-to-regex ".*aliyun.com,192.168.0.0/16,137.239.155.184"))))
 
 3.  Usage
 
@@ -544,7 +564,7 @@ Thus windows user have to use eshell as a downgrade plan.<br />
         </table>
 
 
-<a id="org7c8d88b"></a>
+<a id="org7cbd898"></a>
 
 ## Ejc Sql
 
@@ -619,7 +639,7 @@ Thus windows user have to use eshell as a downgrade plan.<br />
     </table>
 
 
-<a id="orgb4ae559"></a>
+<a id="orgcbc10de"></a>
 
 ## Emacs Rime
 
@@ -659,7 +679,7 @@ So there have a variable which named `rime-user-data-dir` , And another importan
 [futher more rime readme](./modules/neo-emacs/rime/readme.md)  
 
 
-<a id="orgd9adeac"></a>
+<a id="org497a81d"></a>
 
 ## Org mode
 
@@ -706,7 +726,7 @@ So there have a variable which named `rime-user-data-dir` , And another importan
         ln -s ~/org/org-roam/image any_where/image
 
 
-<a id="org14583ee"></a>
+<a id="orgf84e92a"></a>
 
 ## Restclient
 
@@ -731,7 +751,7 @@ Fortunately we have solution for other mime type, it&rsquo;s restclient-set-var,
 About the variables infomation in current buffer, we could use `C-c Tab` to show them.  
 
 
-<a id="orgd57d719"></a>
+<a id="org1903a0f"></a>
 
 ## Eredis Usage
 
@@ -789,7 +809,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="org0ceebcb"></a>
+<a id="org4784062"></a>
 
 ## Bookmark
 
@@ -833,7 +853,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="org9d428c8"></a>
+<a id="org69391e0"></a>
 
 ## Elpa Offline
 
@@ -846,7 +866,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="org97525ad"></a>
+<a id="org6e017e8"></a>
 
 ## Vue
 
@@ -855,7 +875,7 @@ as a full stack developer u need vue support, so here it comes.
     npm install vls -g
 
 
-<a id="org3f92a37"></a>
+<a id="org159b731"></a>
 
 # About the Release
 
@@ -864,7 +884,7 @@ Release package contains the git repository of related dependencies.The compiled
 I will update the Release package once a month, And test them in advance and revise them for compatibility with upstream projects.  
 
 
-<a id="org6211dd9"></a>
+<a id="orgd40ace6"></a>
 
 # Customize Farther
 
