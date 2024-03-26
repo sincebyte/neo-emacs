@@ -227,7 +227,7 @@ If you are using fish shell ,fortunately there have some optimize config prepare
 - feature:
   - use fish shell on emacs vterm.
   - use command `ff` %anyfile% on vterm will open %anyfile% in a new emacs buffer.It's very useful.
-#+begin_src
+#+begin_src shell
 if [ "$INSIDE_EMACS" = 'vterm' ]
     function clear
         vterm_printf "51;Evterm-clear-scrollback";
