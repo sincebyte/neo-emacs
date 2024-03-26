@@ -1,0 +1,6 @@
+
+* Install
+https://dandavison.github.io/delta/installation.html
+#+begin_src shell
+brew install git-delta
+#+end_src

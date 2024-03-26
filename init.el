@@ -207,6 +207,7 @@
        modelinexp          ; Expand doom doom modeline
        elfeed              ; rss reader
        alpha               ; make emacs background transparent
+       git                 ; magit wit
        :config
        ;;literate
        (default +bindings +smartparens))
