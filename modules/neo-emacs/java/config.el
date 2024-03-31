@@ -18,6 +18,7 @@
  company-tooltip-flip-when-above            t
  company-show-quick-access                  nil)
 
+;;
 (add-hook 'web-mode-hook (lambda ()
                            (setq display-line-numbers                       t)))
 (add-hook 'js-mode-hook (lambda ()
@@ -32,10 +33,11 @@
                                  ;; lsp-ui-doc-show-with-cursor                t
                                  lsp-idle-delay                             0.1
                                  lsp-signature-render-documentation         nil
-                                 lsp-eldoc-render-all                       t
+                                 lsp-signature-auto-activate                t
+                                 lsp-eldoc-render-all                       nil
                                  lsp-signature-auto-activate                t
                                  lsp-signature-doc-lines                    1
-                                 lsp-eldoc-enable-hover                     nil
+                                 lsp-java-eldoc-enable-hover                t
                                  lsp-java-signature-help-enabled            t
                                  lsp-java-references-code-lens-enabled      t
                                  lsp-java-implementations-code-lens-enabled t
@@ -51,6 +53,7 @@
                                  lsp-completion-sort-initial-results        t
                                  lsp-completion-show-detail                 nil
                                  lsp-java-completion-guess-method-arguments t
+                                 company-quickhelp-mode                     nil
                                  lsp-completion-enable-additional-text-edit t
                                  lsp-java-progress-reports-enabled          nil
                                  lsp-completion-show-label-description      nil
@@ -89,11 +92,23 @@
       :n "SPC t e" #'lsp-treemacs-java-deps-list
       :n "SPC t s" #'lsp-workspace-restart)
 
+
+
 (custom-set-faces `(lsp-face-highlight-textual ((t (:background nil )))))
 (custom-set-faces `(lsp-face-highlight-read ((t (:foreground "#57a6db" :background nil :weight bold :underline nil)))))
 (custom-set-faces `(lsp-face-highlight-write ((t (:foreground "#57a6db" :background nil :weight bold :underline nil)))))
 (custom-set-faces `(tide-hl-identifier-face ((t (:foreground "#57a6db" :background nil)))))
 
-(company-posframe-mode 1)
+;; (company-posframe-mode 1)
 
 (setq-hook! 'web-mode-hook indent-tabs-mode nil)
+
+(after! lsp-mode
+  (setq lsp-disabled-clients '(xmlls)))
+
+(add-hook 'java-mode-hook #'(lambda () (add-hook 'post-command-hook #'my-java-hook-function nil t)))
+
+(defun my-java-hook-function ()
+  "My Java mode hook function."
+  ;; 在这里添加你想要执行的代码
+  (lsp-signature-activate))
