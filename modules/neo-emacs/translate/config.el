@@ -18,3 +18,12 @@
          :render  (gts-buffer-render)))
   :map gts-buffer-local-map "q" #'+popup/quit-window
   :splitter (gts-paragraph-splitter))
+
+;; open 4 workspace on startup
+(setq +workspaces-main "SSH")
+(defun open-my-workspaces ()
+  (interactive)
+  (+workspace/new "IDE")
+  (+workspace/new "SQL")
+  (+workspace/new "HTTP"))
+(add-hook 'window-setup-hook #'open-my-workspaces)
