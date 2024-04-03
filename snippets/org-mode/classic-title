@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: ctitle
+# key: ct
+# --
+#+title: `(file-name-sans-extension (buffer-name))`
+#+subtitle: this is subtitle
+#+author: `(getenv "USER")`
+#+SETUPFILE: ~/.doom.d/org-classic-head.setup

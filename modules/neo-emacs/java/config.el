@@ -106,9 +106,5 @@
 (after! lsp-mode
   (setq lsp-disabled-clients '(xmlls)))
 
-(add-hook 'java-mode-hook #'(lambda () (add-hook 'post-command-hook #'my-java-hook-function nil t)))
-
-(defun my-java-hook-function ()
-  "My Java mode hook function."
-  ;; 在这里添加你想要执行的代码
-  (lsp-signature-activate))
+;;(add-hook 'java-mode-hook #'(lambda () (add-hook 'post-command-hook #'my-java-hook-function nil t)))
+;; (defun my-java-hook-function () (lsp-signature-activate))

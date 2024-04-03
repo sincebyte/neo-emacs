@@ -25,5 +25,6 @@
   (interactive)
   (+workspace/new "IDE")
   (+workspace/new "SQL")
-  (+workspace/new "HTTP"))
+  (+workspace/new "HTTP")
+  (+workspace/new "ORG"))
 (add-hook 'window-setup-hook #'open-my-workspaces)
