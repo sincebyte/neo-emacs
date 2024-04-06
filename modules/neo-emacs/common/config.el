@@ -4,3 +4,6 @@
 (setq-default with-editor-emacsclient-executable "emacsclient")
 
 (global-set-key (kbd "<RET>" ) 'evil-ret )
+
+(keyfreq-mode 1)
+(keyfreq-autosave-mode 1)

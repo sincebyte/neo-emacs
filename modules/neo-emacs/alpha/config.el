@@ -35,4 +35,4 @@
         (load-theme 'kaolin-light t)
       (load-theme 'kaolin-bubblegum t))))
 ;; (run-with-timer 0 3600 'synchronize-theme)
-;; (load-theme 'doom-one t)
+;; (load-theme 'kaolin-light t)

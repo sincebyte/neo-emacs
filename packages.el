@@ -69,6 +69,7 @@
 (package! yaml-mode           )
 (package! docker-compose-mode )
 (package! magit-delta         )
+(package! keyfreq      :recipe (:host github :repo "dacap/keyfreq"))
 (package! awesome-tray :recipe (:host github :repo "manateelazycat/awesome-tray"         :branch "master" ))
 (package! bookmark+    :recipe (:host github :repo "emacsmirror/bookmark-plus" :branch "master" ))
 

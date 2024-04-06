@@ -121,19 +121,14 @@
   :custom
   (org-modern-star '("⁞" "⁞⁞" "⁞⁞⁞" "⁞⁞⁞⁞" "⁞⁞⁞⁞⁞"))
   (org-modern-list '((43 . "•") (45 . "◦")))
-  (org-modern-block-fringe t)
+  (org-modern-block-fringe 5)
   (org-pretty-entities t)
   (org-ellipsis " ⇲")
+  (org-modern-table nil)
   :config
   (setq org-modern-keyword
         '((t . t)
-          ("caption" . "☰"))
-        org-modern-block-fringe t
-        org-pretty-entities t
-        org-modern-block-name
-        '((t . t)
-          ("src" "```" "```")
-          ("quote" "⌜" "⌞")))
+          ("caption" . "☰")))
   (global-org-modern-mode 1))
 ;; (custom-set-faces `(org-block-begin-line ((t (:foreground "#008ED1" :background "#EAEAFF")))))
 ;; (custom-set-faces `(org-block-end-line   ((t (:foreground "#008ED1" :background "#EAEAFF")))))
