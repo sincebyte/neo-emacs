@@ -13,6 +13,8 @@
  org-confirm-babel-evaluate    nil
  yas-indent-line               'fixed
  yas-also-auto-indent-first-line t
+ global-auto-revert-mode       1
+ auto-revert-verbose           nil ;; 禁用自动显示 Auto-Revert 的消息
  org-roam-v2-ack               t
  org-agenda-files              (list (concat org-roam-directory "/agenda/GTD.org"))
  org-image-actual-width        '(300)
@@ -120,7 +122,7 @@
 (use-package! org-modern
   :custom
   (org-modern-star '("⁞" "⁞⁞" "⁞⁞⁞" "⁞⁞⁞⁞" "⁞⁞⁞⁞⁞"))
-  (org-modern-list '((43 . "•") (45 . "◦")))
+  (org-modern-list '((43 . "➤") (45 . "➤")))
   (org-modern-block-fringe 5)
   (org-pretty-entities t)
   (org-ellipsis " ⇲")

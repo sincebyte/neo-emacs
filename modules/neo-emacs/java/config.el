@@ -20,11 +20,13 @@
 
 ;;
 (add-hook 'web-mode-hook (lambda ()
-                           (setq display-line-numbers                       t)))
+                           (setq display-line-numbers                       t
+                                 lsp-modeline-code-actions-enable           nil
+                                 doom-modeline-icon                         nil)))
 (add-hook 'js-mode-hook (lambda ()
-                          (setq display-line-numbers                       t)))
+                          (setq display-line-numbers                        t)))
 (add-hook 'lisp-mode-hook (lambda ()
-                            (setq display-line-numbers                       t)))
+                            (setq display-line-numbers                      t)))
 (add-hook 'lsp-mode-hook (lambda ()
                            (tree-sitter-hl-mode)
                            (setq display-line-numbers                       t
@@ -66,7 +68,7 @@
       lsp-java-java-path             (concat (getenv "JAVA_17_HOME") "/bin/java")
       lsp-java-server-install-dir    "~/lsp-java/"
       lsp-maven-path                 (concat (getenv "MAVEN_HOME") "/conf/settings.xml")
-      lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.31.0-202401111522.tar.gz"
+      lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.34.0-202404031240.tar.gz"
       lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path )
       lsp-java-vmargs                `("-XX:+UseParallelGC"
                                        "-XX:GCTimeRatio=4"

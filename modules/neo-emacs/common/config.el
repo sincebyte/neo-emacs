@@ -5,5 +5,6 @@
 
 (global-set-key (kbd "<RET>" ) 'evil-ret )
 
+(menu-bar-mode -1)
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)

@@ -1,5 +1,5 @@
 (setq
- doom-modeline-height                       1
+ ;; doom-modeline-height                       1
  evil-emacs-state-tag                       "󰬌"
  evil-insert-state-tag                      "󰬐"
  evil-motion-state-tag                      "󰬔"
@@ -9,6 +9,8 @@
  evil-replace-state-tag                     "󰬙"
  doom-modeline-modal-icon                   nil
  doom-modeline-icon                         nil
+ doom-modeline-time-icon                    nil
+ doom-modeline-lsp-icon                     nil
  doom-modeline-major-mode-icon              nil
  doom-modeline-buffer-encoding              t
  doom-modeline-lsp                          nil
