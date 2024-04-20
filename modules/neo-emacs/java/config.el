@@ -22,6 +22,7 @@
 (add-hook 'web-mode-hook (lambda ()
                            (setq display-line-numbers                       t
                                  lsp-modeline-code-actions-enable           nil
+                                 +format-on-save-disabled-modes (add-to-list '+format-on-save-disabled-modes 'web-mode)
                                  doom-modeline-icon                         nil)))
 (add-hook 'js-mode-hook (lambda ()
                           (setq display-line-numbers                        t)))

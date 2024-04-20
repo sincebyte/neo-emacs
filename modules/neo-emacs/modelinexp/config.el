@@ -1,12 +1,12 @@
 (setq
  ;; doom-modeline-height                       1
- evil-emacs-state-tag                       "󰬌"
- evil-insert-state-tag                      "󰬐"
- evil-motion-state-tag                      "󰬔"
- evil-normal-state-tag                      "󰬕"
- evil-operator-state-tag                    "󰬖"
- evil-visual-state-tag                      "󰬝"
- evil-replace-state-tag                     "󰬙"
+ evil-emacs-state-tag                       (if (display-graphic-p) "󰬌" "▇▇▇")
+ evil-insert-state-tag                      (if (display-graphic-p) "󰬐" "▇▇▇")
+ evil-motion-state-tag                      (if (display-graphic-p) "󰬔" "▇▇▇")
+ evil-normal-state-tag                      (if (display-graphic-p) "󰬕" "▇▇▇")
+ evil-operator-state-tag                    (if (display-graphic-p) "󰬖" "▇▇▇")
+ evil-visual-state-tag                      (if (display-graphic-p) "󰬝" "▇▇▇")
+ evil-replace-state-tag                     (if (display-graphic-p) "󰬙" "▇▇▇")
  doom-modeline-modal-icon                   nil
  doom-modeline-icon                         nil
  doom-modeline-time-icon                    nil
@@ -68,13 +68,13 @@
                        (if (eq evil-state 'motion) 'doom-modeline-motion-visual-state)
                        'doom-modeline-evil-normal-state)))))))
           (charc
-           (if (eq evil-state 'normal) "󰬕"
-             (if (eq evil-state 'insert) "󰬐"
-               (if (eq evil-state 'visual) "󰬝"
-                 (if (eq evil-state 'replace) "󰬙"
-                   (if (eq evil-state 'emacs) "󰬌"
-                     (if (eq evil-state 'motion) "󰬔")
-                     "󰬌")))))))
+           (if (eq evil-state 'normal) (if (display-graphic-p)           "󰬕" "▇▇▇")
+             (if (eq evil-state 'insert) (if (display-graphic-p)         "󰬐" "▇▇▇")
+               (if (eq evil-state 'visual) (if (display-graphic-p)       "󰬝" "▇▇▇")
+                 (if (eq evil-state 'replace) (if (display-graphic-p)    "󰬙" "▇▇▇")
+                   (if (eq evil-state 'emacs) (if (display-graphic-p)    "󰬌" "▇▇▇")
+                     (if (eq evil-state 'motion) (if (display-graphic-p) "󰬔" "▇▇▇"))
+                     "▇")))))))
       (concat
        (propertize (concat "" charc " ") 'face face))))
   (doom-modeline-def-segment my-custom-segment

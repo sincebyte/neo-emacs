@@ -24,9 +24,10 @@
                cjk-font-size 18)))
 
 (defun init-cjk-fonts()
-  (dolist (charset '(kana han cjk-misc bopomofo))
-    (set-fontset-font (frame-parameter nil 'font)
-                      charset (font-spec :family cjk-font :size cjk-font-size))))
+  (when (display-graphic-p) (eq (framep (selected-frame)) 'x)
+        (dolist (charset '(kana han cjk-misc bopomofo))
+          (set-fontset-font (frame-parameter nil 'font)
+                            charset (font-spec :family cjk-font :size cjk-font-size)))))
 
 (add-hook 'doom-init-ui-hook 'init-cjk-fonts)
 
@@ -52,7 +53,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
+(setq doom-theme 'kaolin-bubblegum)
 (add-to-list 'default-frame-alist '(width.700))
 (add-to-list 'default-frame-alist '(height.303))
 
@@ -140,6 +141,8 @@
 (setq byte-compile-warnings '(cl-functions)
       display-time-default-load-average nil
       emacs-module-root "/Applications/Emacs.app/Contents/Resources/include")
+
+(setq +format-on-save-disabled-modes (add-to-list '+format-on-save-disabled-modes 'web-mode))
 
 (add-to-list 'load-path          user-private-dir )
 (use-package! db-work                             )    ;; load by local, privacy config account or pwd here
