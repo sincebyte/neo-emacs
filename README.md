@@ -1,31 +1,31 @@
 
 # Table of Contents
 
-1.  [About](#orgdce99fb)
-2.  [How to install](#org248af1c)
-    1.  [Install by Installer](#org35f520e)
-    2.  [Install emacs](#orgae63e45)
-    3.  [Clone project](#org524df28)
-    4.  [Doom Install](#org659f013)
-3.  [How to update](#orgea4b256)
-    1.  [For brew](#org1027fe3)
-    2.  [For doom project](#org6ed4432)
-4.  [Private setting](#org3c8b188)
-    1.  [Font setting](#org78ca848)
-    2.  [Basic setting](#org1a26642)
-5.  [Neoemacs modules](#org52d94fa)
-    1.  [Lsp Java](#orgf666209)
-    2.  [Vterm Shell](#org0dd3602)
-    3.  [Ejc Sql](#org92b2bdf)
-    4.  [Emacs Rime](#org31240a8)
-    5.  [Org mode](#org49b13e6)
-    6.  [Restclient](#org01ef33e)
-    7.  [Eredis Usage](#orgdae3b95)
-    8.  [Bookmark](#orga3ad3f2)
-    9.  [Elpa Offline](#org8951b1e)
-    10. [Vue](#org461e08f)
-6.  [About the Release](#orgff71fe2)
-7.  [Customize Farther](#org25d6a14)
+1.  [About](#org41dbea3)
+2.  [How to install](#orgb55897c)
+    1.  [Install by Installer](#org8d69bca)
+    2.  [Install emacs](#org5ae349b)
+    3.  [Clone project](#orge027461)
+    4.  [Doom Install](#orgf41ad0f)
+3.  [How to update](#org99f8408)
+    1.  [For brew](#org546991e)
+    2.  [For doom project](#orged46a62)
+4.  [Private setting](#org9d72c77)
+    1.  [Font setting](#org8597d69)
+    2.  [Basic setting](#org988e99b)
+5.  [Neoemacs modules](#org90c89c9)
+    1.  [Lsp Java](#orgc2fa3a6)
+    2.  [Vterm Shell](#org13d9a22)
+    3.  [Ejc Sql](#org2b32b96)
+    4.  [Emacs Rime](#org879395a)
+    5.  [Org mode](#org5c649f7)
+    6.  [Restclient](#org2a979e5)
+    7.  [Eredis Usage](#orgf18eafc)
+    8.  [Bookmark](#org6defebb)
+    9.  [Elpa Offline](#org8860d6a)
+    10. [Vue](#orga84435f)
+6.  [About the Release](#org68d31ea)
+7.  [Customize Farther](#orgd3a2099)
 
 ![img](https://img.shields.io/badge/neo_emacs-v3.0-green.svg)  ![img](https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0)  ![img](https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1) ![img](https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&color=3498DB)  
 ![img](https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&color=2C2255) ![img](https://img.shields.io/badge/supports-Emacs_27.1_to_29.1-red.svg?logo=gnuemacs&color=7F5AB6)  
@@ -33,7 +33,7 @@
 ![img](./image-use.png)  
 
 
-<a id="orgdce99fb"></a>
+<a id="org41dbea3"></a>
 
 # About
 
@@ -48,19 +48,19 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   Knowledge management system: Org-roam borrows principles from the Zettelkasten method, providing a solution for non-hierarchical note-taking.
 
 
-<a id="org248af1c"></a>
+<a id="orgb55897c"></a>
 
 # How to install
 
 
-<a id="org35f520e"></a>
+<a id="org8d69bca"></a>
 
 ## Install by Installer
 
-Hi everyone, the [neoemacs](http://neoemacs.com) website is now online. Here we provide the installation method of neoemacs, which allows you to install it throught a apk installer makes things easier.Currently only supports Apple M chip computers, But it will soon start supporting windows. I hope this installation package can save your time costs when starting to learn emacs, and allow you to start getting deeper into emacs faster.  
+Hi everyone, the [neoemacs](http://neoemacs.com/dev) website is now online.Here we have a community online to discuss neo emacs which maybe allow you to start getting deeper into neo emacs faster.  
 
 
-<a id="orgae63e45"></a>
+<a id="org5ae349b"></a>
 
 ## Install emacs
 
@@ -101,7 +101,7 @@ After emacs installation, set environment variables which names EMACS ,this depe
     export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs
 
 
-<a id="org524df28"></a>
+<a id="orge027461"></a>
 
 ## Clone project
 
@@ -111,7 +111,7 @@ clone doom-emacs and neo-emacs from github.
     git clone --depth 1 https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
 
-<a id="org659f013"></a>
+<a id="orgf41ad0f"></a>
 
 ## Doom Install
 
@@ -140,12 +140,12 @@ At last run below, this will take few minutes. And it depends on the quality of 
     ~/.emacs.doom/bin/doom.cmd install
 
 
-<a id="orgea4b256"></a>
+<a id="org99f8408"></a>
 
 # How to update
 
 
-<a id="org1027fe3"></a>
+<a id="org546991e"></a>
 
 ## For brew
 
@@ -153,7 +153,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     brew update && brew upgrade emacs-mac && brew cleanup emacs-mac
 
 
-<a id="org6ed4432"></a>
+<a id="orged46a62"></a>
 
 ## For doom project
 
@@ -163,14 +163,14 @@ At last run below, this will take few minutes. And it depends on the quality of 
     sh ~/.emacs.d/bin/doom sync
 
 
-<a id="org3c8b188"></a>
+<a id="org9d72c77"></a>
 
 # Private setting
 
 Customize your private setting config in the config.el ; use `setq`  
 
 
-<a id="org78ca848"></a>
+<a id="org8597d69"></a>
 
 ## Font setting
 
@@ -204,7 +204,7 @@ Cause different platform have different font name,after font installed there nee
     -   M-x nerd-icons-install-fonts
 
 
-<a id="org1a26642"></a>
+<a id="org988e99b"></a>
 
 ## Basic setting
 
@@ -228,14 +228,12 @@ Cause different platform have different font name,after font installed there nee
 <td class="org-left">description</td>
 </tr>
 
-
 <tr>
 <td class="org-left">emacs-module-root</td>
 <td class="org-left">/opt/homebrew/opt/emacs-plus@28/include</td>
 <td class="org-left">config.el</td>
 <td class="org-left">emcas module root</td>
 </tr>
-
 
 <tr>
 <td class="org-left">display-line-numbers-type</td>
@@ -244,14 +242,12 @@ Cause different platform have different font name,after font installed there nee
 <td class="org-left">show line number</td>
 </tr>
 
-
 <tr>
 <td class="org-left">org-directory</td>
 <td class="org-left">~/org/</td>
 <td class="org-left">config.el</td>
 <td class="org-left">org           root path</td>
 </tr>
-
 
 <tr>
 <td class="org-left">rg-exec-path</td>
@@ -260,14 +256,12 @@ Cause different platform have different font name,after font installed there nee
 <td class="org-left">-</td>
 </tr>
 
-
 <tr>
 <td class="org-left">fd-exec-path</td>
 <td class="org-left">system path</td>
 <td class="org-left">-</td>
 <td class="org-left">-</td>
 </tr>
-
 
 <tr>
 <td class="org-left">dot-exec-path</td>
@@ -276,14 +270,12 @@ Cause different platform have different font name,after font installed there nee
 <td class="org-left">dot           exec path</td>
 </tr>
 
-
 <tr>
 <td class="org-left">pdflatex-exec-path</td>
 <td class="org-left">/Library/TeX/texbin/pdflatex</td>
 <td class="org-left">modules/neo-emacs/org/config.el</td>
 <td class="org-left">pdflatex      exec path</td>
 </tr>
-
 
 <tr>
 <td class="org-left">org-roam-directory</td>
@@ -292,14 +284,12 @@ Cause different platform have different font name,after font installed there nee
 <td class="org-left">org roam      root path</td>
 </tr>
 
-
 <tr>
 <td class="org-left">lsp-java-jdt-download-url</td>
 <td class="org-left"><a href="http://1.117.167.195/download">http://1.117.167.195/download</a></td>
 <td class="org-left">modules/neo-emacs/java/config.el</td>
 <td class="org-left">jdt-server URL</td>
 </tr>
-
 
 <tr>
 <td class="org-left">lsp-java-java-path</td>
@@ -308,7 +298,6 @@ Cause different platform have different font name,after font installed there nee
 <td class="org-left">java11        exec path</td>
 </tr>
 
-
 <tr>
 <td class="org-left">lsp-maven-path</td>
 <td class="org-left">~/.m2/settings.xml</td>
@@ -316,14 +305,12 @@ Cause different platform have different font name,after font installed there nee
 <td class="org-left">maven setting path</td>
 </tr>
 
-
 <tr>
 <td class="org-left">rime-user-data-dir</td>
 <td class="org-left">~/Library/Rime/</td>
 <td class="org-left">modules/neo-emacs/rime/config.el</td>
 <td class="org-left">rime config input</td>
 </tr>
-
 
 <tr>
 <td class="org-left">rime-librime-root</td>
@@ -337,12 +324,12 @@ Cause different platform have different font name,after font installed there nee
 > recentfile save default dir: ~/.emacs.d/.local/cache/recentf  
 
 
-<a id="org52d94fa"></a>
+<a id="org90c89c9"></a>
 
 # Neoemacs modules
 
 
-<a id="orgf666209"></a>
+<a id="orgc2fa3a6"></a>
 
 ## Lsp Java
 
@@ -376,13 +363,11 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     <td class="org-left">DESCRIPTION</td>
     </tr>
     
-    
     <tr>
     <td class="org-left">SPC c i</td>
     <td class="org-left">find-implementations</td>
     <td class="org-left">find where sub class definition</td>
     </tr>
-    
     
     <tr>
     <td class="org-left">SPC c I</td>
@@ -390,13 +375,11 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     <td class="org-left">find where sub class definition</td>
     </tr>
     
-    
     <tr>
     <td class="org-left">SPC t e</td>
     <td class="org-left">lsp-treemacs-java-deps-list</td>
     <td class="org-left">find projects referenced libs</td>
     </tr>
-    
     
     <tr>
     <td class="org-left">SPC c f</td>
@@ -404,13 +387,11 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     <td class="org-left">goto type definition</td>
     </tr>
     
-    
     <tr>
     <td class="org-left">SPC c a</td>
     <td class="org-left">lsp-execute-code-action</td>
     <td class="org-left">code action</td>
     </tr>
-    
     
     <tr>
     <td class="org-left">SPC c d</td>
@@ -418,20 +399,17 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     <td class="org-left">jump to where symbol definition</td>
     </tr>
     
-    
     <tr>
     <td class="org-left">SPC c D</td>
     <td class="org-left">lsp-jump-reference</td>
     <td class="org-left">jump to where symbol referenced</td>
     </tr>
     
-    
     <tr>
     <td class="org-left">SPC c o</td>
     <td class="org-left">lsp-java-organize-imports</td>
     <td class="org-left">import require package</td>
     </tr>
-    
     
     <tr>
     <td class="org-left">SPC t s</td>
@@ -446,11 +424,11 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     3.  Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
 
 
-<a id="org0dd3602"></a>
+<a id="org13d9a22"></a>
 
 ## Vterm Shell
 
-<div class="notice-warning" id="org0e94e44">
+<div class="notice-warning" id="orgd1ba4fe">
 <p>
 Vterm is not available on windows.<br />
 Thus windows user have to use eshell as a downgrade plan.<br />
@@ -539,20 +517,17 @@ Thus windows user have to use eshell as a downgrade plan.<br />
         <td class="org-left">DESCRIPTION</td>
         </tr>
         
-        
         <tr>
         <td class="org-left">SPC v v</td>
         <td class="org-left">projectile-run-vterm</td>
         <td class="org-left">open vterm window base on the project root path</td>
         </tr>
         
-        
         <tr>
         <td class="org-left">SPC v p</td>
         <td class="org-left">vterm-send-start</td>
         <td class="org-left">enable vterm screen roll</td>
         </tr>
-        
         
         <tr>
         <td class="org-left">SPC v s</td>
@@ -563,7 +538,7 @@ Thus windows user have to use eshell as a downgrade plan.<br />
         </table>
 
 
-<a id="org92b2bdf"></a>
+<a id="org2b32b96"></a>
 
 ## Ejc Sql
 
@@ -621,13 +596,11 @@ Thus windows user have to use eshell as a downgrade plan.<br />
     <td class="org-left">description</td>
     </tr>
     
-    
     <tr>
     <td class="org-left">SPC e c</td>
     <td class="org-left">ejc-connection</td>
     <td class="org-left">choose connection with ivy</td>
     </tr>
-    
     
     <tr>
     <td class="org-left">C-c C-c</td>
@@ -638,7 +611,7 @@ Thus windows user have to use eshell as a downgrade plan.<br />
     </table>
 
 
-<a id="org31240a8"></a>
+<a id="org879395a"></a>
 
 ## Emacs Rime
 
@@ -661,12 +634,10 @@ So there have a variable which named `rime-user-data-dir` , And another importan
 <td class="org-left">required</td>
 </tr>
 
-
 <tr>
 <td class="org-left">rime-user-data-dir</td>
 <td class="org-left">true</td>
 </tr>
-
 
 <tr>
 <td class="org-left">rime-librime-root</td>
@@ -678,7 +649,7 @@ So there have a variable which named `rime-user-data-dir` , And another importan
 [futher more rime readme](./modules/neo-emacs/rime/readme.md)  
 
 
-<a id="org49b13e6"></a>
+<a id="org5c649f7"></a>
 
 ## Org mode
 
@@ -725,7 +696,7 @@ So there have a variable which named `rime-user-data-dir` , And another importan
         ln -s ~/org/org-roam/image any_where/image
 
 
-<a id="org01ef33e"></a>
+<a id="org2a979e5"></a>
 
 ## Restclient
 
@@ -750,7 +721,7 @@ Fortunately we have solution for other mime type, it&rsquo;s restclient-set-var,
 About the variables infomation in current buffer, we could use `C-c Tab` to show them.  
 
 
-<a id="orgdae3b95"></a>
+<a id="orgf18eafc"></a>
 
 ## Eredis Usage
 
@@ -798,7 +769,6 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     <td class="org-left">Type</td>
     </tr>
     
-    
     <tr>
     <td class="org-left">center-bpm:flow-list-count</td>
     <td class="org-right">1</td>
@@ -808,7 +778,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="orga3ad3f2"></a>
+<a id="org6defebb"></a>
 
 ## Bookmark
 
@@ -831,18 +801,15 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     <td class="org-left">binding</td>
     </tr>
     
-    
     <tr>
     <td class="org-left">Spc-Ent</td>
     <td class="org-left">select a bookmark</td>
     </tr>
     
-    
     <tr>
     <td class="org-left">Spc b m</td>
     <td class="org-left">set a bookmark</td>
     </tr>
-    
     
     <tr>
     <td class="org-left">Spc b M</td>
@@ -852,7 +819,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="org8951b1e"></a>
+<a id="org8860d6a"></a>
 
 ## Elpa Offline
 
@@ -865,7 +832,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="org461e08f"></a>
+<a id="orga84435f"></a>
 
 ## Vue
 
@@ -874,7 +841,7 @@ as a full stack developer u need vue support, so here it comes.
     npm install vls -g
 
 
-<a id="orgff71fe2"></a>
+<a id="org68d31ea"></a>
 
 # About the Release
 
@@ -883,7 +850,7 @@ Release package contains the git repository of related dependencies.The compiled
 I will update the Release package once a month, And test them in advance and revise them for compatibility with upstream projects.  
 
 
-<a id="org25d6a14"></a>
+<a id="orgd3a2099"></a>
 
 # Customize Farther
 

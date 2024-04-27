@@ -27,7 +27,7 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 - Knowledge management system: Org-roam borrows principles from the Zettelkasten method, providing a solution for non-hierarchical note-taking.
 * How to install
 ** Install by Installer
-Hi everyone, the [[http://neoemacs.com][neoemacs]] website is now online. Here we provide the installation method of neoemacs, which allows you to install it throught a apk installer makes things easier.Currently only supports Apple M chip computers, But it will soon start supporting windows. I hope this installation package can save your time costs when starting to learn emacs, and allow you to start getting deeper into emacs faster.
+Hi everyone, the [[http://neoemacs.com/dev][neoemacs]] website is now online.Here we have a community online to discuss neo emacs which maybe allow you to start getting deeper into neo emacs faster.
 ** Install emacs
 #+begin_quote
 Most of the time, for safety you should install emacs by brew or complie it from source ,that will give you a better compatibility.
