@@ -43,7 +43,15 @@
         org-roam-ui-follow t
         org-roam-ui-update-on-save t
         org-roam-ui-open-on-start t))
-(add-hook 'org-mode-hook '+org/close-all-folds)
+
+;; (add-hook 'org-mode-hook '+org/close-all-folds)
+;; (add-hook 'org-mode-hook
+;;           (lambda ()
+;;             (setq evil-shift-width 2)
+;;             (+org/close-all-folds)))
+(after! org
+  (setq evil-shift-width 2)
+  (+org/close-all-folds))
 
 ;; install mactex https://www.tug.org/mactex/
 (with-eval-after-load 'ox-latex
@@ -127,6 +135,7 @@
   (org-pretty-entities t)
   (org-ellipsis " ⇲")
   (org-modern-table nil)
+  (setq evil-shift-width 2)
   :config
   (setq org-modern-keyword
         '((t . t)

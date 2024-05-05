@@ -53,7 +53,11 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'kaolin-bubblegum)
+;; (load-file "~/.emacs.d/themes/masked-theme-source-code.el")
+;; (load-theme 'color-theme-sanityinc-tomorrow-night t)
+;; (setq doom-theme 'doom-one t)
+;; (color-theme-sanityinc-tomorrow-night)
+
 (add-to-list 'default-frame-alist '(width.700))
 (add-to-list 'default-frame-alist '(height.303))
 
