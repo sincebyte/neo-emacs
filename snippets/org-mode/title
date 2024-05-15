@@ -5,4 +5,4 @@
 #+title: `(file-name-sans-extension (buffer-name))`
 #+subtitle: this is subtitle
 #+author: `(getenv "USER")`
-#+SETUPFILE: ~/.doom.d/org-head.setup
+#+SETUPFILE: ~/.doom.d/org-classic-head.setup

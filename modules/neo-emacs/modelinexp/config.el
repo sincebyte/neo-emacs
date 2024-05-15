@@ -16,7 +16,7 @@
  doom-modeline-lsp                          nil
  doom-modeline-modal                        t
  doom-modeline-vcs-max-length               200
- doom-modeline-buffer-file-name-style       'buffer-name
+ doom-modeline-buffer-file-name-style       'auto
  doom-modeline-continuous-word-count-modes  '(java-mode)
  doom-modeline-enable-word-count            t  )
 

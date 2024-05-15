@@ -15,13 +15,13 @@
 ;; (setq doom-font (font-spec :family "等距更纱黑体 Slab SC" :size 18.0))
 (if (eq system-type 'windows-nt)
     (progn (set-selection-coding-system 'utf-8)
-           (setq doom-font (font-spec :family "victor Mono" :size 24)
+           (setq doom-font (font-spec :family "Kode Mono" :size 24)
                  cjk-font "汉仪新人文宋W"
                  cjk-font-size 26))
   (progn (set-selection-coding-system 'utf-16le-dos)
-         (setq doom-font (font-spec :family "victor Mono" :size 15 )
+         (setq doom-font (font-spec :family "Kode Mono" :size 16 )
                cjk-font "HYXinRenWenSongW"
-               cjk-font-size 18)))
+               cjk-font-size 20)))
 
 (defun init-cjk-fonts()
   (when (display-graphic-p) (eq (framep (selected-frame)) 'x)
@@ -55,8 +55,11 @@
 ;; `load-theme' function. This is the default:
 ;; (load-file "~/.emacs.d/themes/masked-theme-source-code.el")
 ;; (load-theme 'color-theme-sanityinc-tomorrow-night t)
-;; (setq doom-theme 'doom-one t)
+;; (load-theme 'kaolin t)
 ;; (color-theme-sanityinc-tomorrow-night)
+(setq doom-theme 'doom-tokyo-night)
+
+
 
 (add-to-list 'default-frame-alist '(width.700))
 (add-to-list 'default-frame-alist '(height.303))
@@ -150,3 +153,5 @@
 
 (add-to-list 'load-path          user-private-dir )
 (use-package! db-work                             )    ;; load by local, privacy config account or pwd here
+(setq tramp-default-method "ssh")
+(setq tramp-verbose 10)

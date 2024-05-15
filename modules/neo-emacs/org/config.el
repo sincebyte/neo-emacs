@@ -49,9 +49,37 @@
 ;;           (lambda ()
 ;;             (setq evil-shift-width 2)
 ;;             (+org/close-all-folds)))
+
+(setq org-modern-todo nil)
+(defun neo/org-set-todo-keyword-faces ()
+  "Apply custom faces to TODO keywords."
+  (mapc (lambda (face)
+          (add-to-list 'org-todo-keyword-faces face))
+        '(("TODO"      . (:foreground "#f1c40f" :weight bold))
+          ("DOING"     . (:foreground "#00CFFF" :weight bold))
+          ("BLOCK"     . (:foreground "#f39c12" :weight bold))
+          ("TEST"      . (:foreground "#9b59b6" :weight bold))
+          ("DONE"      . (:foreground "#27ae60" :weight bold))
+          ("REPORT"    . (:foreground "#bdc3c7" :weight bold)))))
+
 (after! org
   (setq evil-shift-width 2)
+  (setq org-todo-keywords
+        '((sequence "TODO" "DOING" "BLOCK" "TEST" "DONE" "REPORT")))
   (+org/close-all-folds))
+
+(use-package! hl-todo
+  :config
+  ;; 配置高亮显示的关键字
+  (setq hl-todo-keyword-faces
+        '(("TODO"       . "#f1c40f")
+          ("DOING"      . "#00CFFF")
+          ("BLOCK"      . "#f39c12")
+          ("TEST"       . "#9b59b6")
+          ("DONE"       . "#27ae60")
+          ("REPORT"     . "#bdc3c7")))
+  ;; 启用全局 hl-todo 高亮显示
+  (global-hl-todo-mode))
 
 ;; install mactex https://www.tug.org/mactex/
 (with-eval-after-load 'ox-latex
@@ -129,18 +157,16 @@
 
 (use-package! org-modern
   :custom
-  (org-modern-star '("⁞" "⁞⁞" "⁞⁞⁞" "⁞⁞⁞⁞" "⁞⁞⁞⁞⁞"))
   (org-modern-list '((43 . "➤") (45 . "➤")))
   (org-modern-block-fringe 5)
   (org-pretty-entities t)
   (org-ellipsis " ⇲")
   (org-modern-table nil)
-  (setq evil-shift-width 2)
   :config
-  (setq org-modern-keyword
-        '((t . t)
-          ("caption" . "☰")))
-  (global-org-modern-mode 1))
+  (global-org-modern-mode 1)
+  (neo/org-set-todo-keyword-faces)
+  (setq org-modern-keyword '((t . t) ("caption" . "☰"))
+        org-modern-star    '("⁞" "⁞⁞" "⁞⁞⁞" "⁞⁞⁞⁞" "⁞⁞⁞⁞⁞")))
 ;; (custom-set-faces `(org-block-begin-line ((t (:foreground "#008ED1" :background "#EAEAFF")))))
 ;; (custom-set-faces `(org-block-end-line   ((t (:foreground "#008ED1" :background "#EAEAFF")))))
 
