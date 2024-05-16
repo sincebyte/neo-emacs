@@ -171,3 +171,8 @@
 ;; (custom-set-faces `(org-block-end-line   ((t (:foreground "#008ED1" :background "#EAEAFF")))))
 
 (setq org-latex-create-formula-image-program 'dvipng)
+
+
+(map! :after org
+      :map (org-mode-map)
+      "C-," nil)

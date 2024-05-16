@@ -22,7 +22,9 @@
 
 
 ;; 输入法切换按键
-(global-set-key (kbd "C-;"  ) 'toggle-input-method             )
+(global-set-key (kbd "C-,"  ) 'toggle-input-method             )
+(global-unset-key (kbd "C-;"))
+(global-set-key (kbd "C-;"  ) nil             )
 
 (map! :map (minibuffer-local-map)
-      "C-;" 'toggle-input-method)
+      "C-," 'toggle-input-method)
