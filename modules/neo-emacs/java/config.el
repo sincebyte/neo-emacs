@@ -69,7 +69,7 @@
       lsp-java-java-path             (concat (getenv "JAVA_17_HOME") "/bin/java")
       lsp-java-server-install-dir    "~/lsp-java/"
       lsp-maven-path                 (concat (getenv "MAVEN_HOME") "/conf/settings.xml")
-      lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.34.0-202404031240.tar.gz"
+      lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.35.0-202404251256.tar.gz"
       lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path )
       lsp-java-vmargs                `("-XX:+UseParallelGC"
                                        "-XX:GCTimeRatio=4"

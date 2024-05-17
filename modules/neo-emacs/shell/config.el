@@ -1,7 +1,7 @@
 ;;
 (defun shell/configOnMac()
   (progn
-    (setenv "JAVA_HOME"          "~/soft/jdk/jbr/Contents/Home"                )
+    (setenv "JAVA_HOME"          "~/soft/jdk/zulu8.58.0.13-ca-jdk8.0.312-macosx_aarch64/zulu-8.jdk/Contents/Home/"     )
     (setenv "JAVA_17_HOME"       "~/soft/jdk/jdk-17.0.6.jdk/Contents/Home"     )
     (setenv "MAVEN_HOME"         "~/soft/apache-maven-3.6.1"                   )
     (setenv "DYLD_LIBRARY_PATH"  "/Applications/Emacs.app/"                    ) ;; rime config path
