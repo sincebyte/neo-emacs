@@ -2,29 +2,29 @@
 
 (use-package! go-translate :defer t               )
 
-(map! :ne "; t"     'gts-do-translate                          )
-(map! :ve "; t"     'gts-do-translate                          )
+(map! :ne "; t"     'gt-do-translate                          )
+(map! :ve "; t"     'gt-do-translate                          )
 
 (map! :after go-translate
       :map evil-normal-state-map
       "q" nil)
 
 (after! go-translate
-  (setq gts-translate-list '(("en" "zh")))
-  (setq gts-default-translator
-        (gts-translator
-         :picker  (gts-noprompt-picker)
-         :engines (list (gts-google-engine))
-         :render  (gts-buffer-render)))
-  :map gts-buffer-local-map "q" #'+popup/quit-window
-  :splitter (gts-paragraph-splitter))
+  (setq gt-langs '(en zh))
+  (setq gt-default-translator
+        (gt-translator
+         :taker   (gt-taker :text 'buffer :pick 'paragraph)
+         :engines (list (gt-google-engine))
+         :render  (gt-buffer-render))))
 
 ;; open 4 workspace on startup
 (setq +workspaces-main "SSH")
 (defun open-my-workspaces ()
   (interactive)
   (+workspace/new "IDE")
+  (+workspace/new "GPT")
   (+workspace/new "SQL")
   (+workspace/new "HTTP")
-  (+workspace/new "ORG"))
+  (+workspace/new "ORG")
+  )
 (add-hook 'window-setup-hook #'open-my-workspaces)
