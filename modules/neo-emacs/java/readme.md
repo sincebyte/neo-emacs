@@ -1,19 +1,22 @@
 
 # Table of Contents
 
-1.  [Java module](#org0c9e7a7)
-    1.  [most wanted](#org4566092)
-    2.  [Dap-java Usage](#orgd57ca3d)
-    3.  [build handle](#org011f1d2)
+1.  [Java module](#org8ebaf3b)
+    1.  [most wanted](#org66adeb4)
+    2.  [Dap-java Usage](#org7e75cad)
+    3.  [build handle](#orgd817d89)
 
 
 
-<a id="org0c9e7a7"></a>
+<a id="org8ebaf3b"></a>
 
 # Java module
 
 Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url\`, and now it&rsquo;s located at [jdt-language-server-1.22.0](https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.22.0/jdt-language-server-1.22.0-202304131553.tar.gz).After that you could use all the features powered by eclipse.  
 
+-   clang-format  
+    Firstly you could check your java env correctly or not. check by doom doctor, a warning showed that  
+    we need \`brew install clang-format\`.
 -   Generate eclipse files  
     Execute mvn command for generate eclipse .project & .classpath files on your project root path.  
     
@@ -41,13 +44,11 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     <td class="org-left">DESCRIPTION</td>
     </tr>
     
-    
     <tr>
     <td class="org-left">SPC c i</td>
     <td class="org-left">find-implementations</td>
     <td class="org-left">find where sub class definition</td>
     </tr>
-    
     
     <tr>
     <td class="org-left">SPC c I</td>
@@ -55,13 +56,11 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     <td class="org-left">find where sub class definition</td>
     </tr>
     
-    
     <tr>
     <td class="org-left">SPC t e</td>
     <td class="org-left">lsp-treemacs-java-deps-list</td>
     <td class="org-left">find projects referenced libs</td>
     </tr>
-    
     
     <tr>
     <td class="org-left">SPC c f</td>
@@ -69,13 +68,11 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     <td class="org-left">goto type definition</td>
     </tr>
     
-    
     <tr>
     <td class="org-left">SPC c a</td>
     <td class="org-left">lsp-execute-code-action</td>
     <td class="org-left">code action</td>
     </tr>
-    
     
     <tr>
     <td class="org-left">SPC c d</td>
@@ -83,13 +80,11 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     <td class="org-left">jump to where symbol definition</td>
     </tr>
     
-    
     <tr>
     <td class="org-left">SPC c D</td>
     <td class="org-left">lsp-jump-reference</td>
     <td class="org-left">jump to where symbol referenced</td>
     </tr>
-    
     
     <tr>
     <td class="org-left">SPC c o</td>
@@ -131,7 +126,7 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     3.  Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
 
 
-<a id="org4566092"></a>
+<a id="org66adeb4"></a>
 
 ## TODO most wanted
 
@@ -140,7 +135,7 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     1.  eldoc [lsp-java/issues/432](https://github.com/emacs-lsp/lsp-java/issues/432)
 
 
-<a id="orgd57ca3d"></a>
+<a id="org7e75cad"></a>
 
 ## TODO Dap-java Usage
 
@@ -176,13 +171,11 @@ I do not use debug for years. So be careful the documentation maybe outdated.I t
     <td class="org-left">DESCRIPTION</td>
     </tr>
     
-    
     <tr>
     <td class="org-left">, n</td>
     <td class="org-left">dap-next</td>
     <td class="org-left">Breakpoint next</td>
     </tr>
-    
     
     <tr>
     <td class="org-left">, b</td>
@@ -190,13 +183,11 @@ I do not use debug for years. So be careful the documentation maybe outdated.I t
     <td class="org-left">&#xa0;</td>
     </tr>
     
-    
     <tr>
     <td class="org-left">, c</td>
     <td class="org-left">dap-continue</td>
     <td class="org-left">&#xa0;</td>
     </tr>
-    
     
     <tr>
     <td class="org-left">, r</td>
@@ -204,20 +195,17 @@ I do not use debug for years. So be careful the documentation maybe outdated.I t
     <td class="org-left">&#xa0;</td>
     </tr>
     
-    
     <tr>
     <td class="org-left">, a</td>
     <td class="org-left">dap-eval-thing-at-point</td>
     <td class="org-left">&#xa0;</td>
     </tr>
     
-    
     <tr>
     <td class="org-left">, d</td>
     <td class="org-left">dap-debug</td>
     <td class="org-left">&#xa0;</td>
     </tr>
-    
     
     <tr>
     <td class="org-left">, u</td>
@@ -228,7 +216,7 @@ I do not use debug for years. So be careful the documentation maybe outdated.I t
     </table>
 
 
-<a id="org011f1d2"></a>
+<a id="orgd817d89"></a>
 
 ## build handle
 

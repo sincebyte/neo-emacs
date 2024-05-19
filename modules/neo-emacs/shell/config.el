@@ -7,6 +7,9 @@
     (setenv "DYLD_LIBRARY_PATH"  "/Applications/Emacs.app/"                    ) ;; rime config path
     (setenv "PATH"       (concat "/Applications/Emacs.app/:" (getenv "PATH" )) ) ;; maven exec, fzf , rg
     (add-to-list 'exec-path      "/Applications/Emacs.app/"                    )
+    (setq shell-file-name        (executable-find "bash")                      )
+    (setq-default vterm-shell (executable-find "fish"))
+    (setq-default explicit-shell-file-name (executable-find "fish"))
     (map! :n  "SPC r r"  'quickrun-shell                                       )
     (map! :ne "SPC v v" 'projectile-run-vterm                                  )))
 
