@@ -10,7 +10,7 @@
  org-roam-graph-executable     dot-exec-path
  org-directory                 "~/org"
  org-roam-directory            "~/org/org-roam"
- org-confirm-babel-evaluate    nil
+ ;; org-confirm-babel-evaluate    nil
  yas-indent-line               'fixed
  yas-also-auto-indent-first-line t
  global-auto-revert-mode       1
@@ -155,24 +155,35 @@
 
 (setq system-time-locale "C")
 
-(use-package! org-modern
+(use-package org-modern
+  :hook (org-mode . org-modern-mode)
   :custom
-  (org-modern-list '((43 . "➤") (45 . "➤")))
-  (org-modern-block-fringe 5)
-  (org-pretty-entities t)
+  (org-modern-list '((43 . "•") (45 . "◦")))
   (org-ellipsis " ⇲")
   (org-modern-table nil)
   :config
-  (global-org-modern-mode 1)
   (neo/org-set-todo-keyword-faces)
   (setq org-modern-keyword '((t . t) ("caption" . "☰"))
-        org-modern-star    '("⁞" "⁞⁞" "⁞⁞⁞" "⁞⁞⁞⁞" "⁞⁞⁞⁞⁞")))
+        org-pretty-entities t
+        org-tags-column 0
+        org-modern-block-fringe 10
+        org-modern-block-name t
+        org-modern-star 'org-modern-replace-stars
+        org-modern-replace-stars    '("⁞" "⁞⁞" "⁞⁞⁞" "⁞⁞⁞⁞" "⁞⁞⁞⁞⁞")))
 ;; (custom-set-faces `(org-block-begin-line ((t (:foreground "#008ED1" :background "#EAEAFF")))))
 ;; (custom-set-faces `(org-block-end-line   ((t (:foreground "#008ED1" :background "#EAEAFF")))))
 
 (setq org-latex-create-formula-image-program 'dvipng)
 
-
 (map! :after org
       :map (org-mode-map)
       "C-," nil)
+
+(use-package org-modern-indent
+  :load-path "~/.doom.d/neoemacs/org-modern-indent/"
+  :config
+  (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
+
+(defconst org-modern-indent-begin (propertize "┌ " 'face 'org-modern-indent-bracket-line))
+(defconst org-modern-indent-guide (propertize "│ " 'face 'org-modern-indent-bracket-line))
+(defconst org-modern-indent-end   (propertize "└ " 'face 'org-modern-indent-bracket-line))

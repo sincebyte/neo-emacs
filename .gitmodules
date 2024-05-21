@@ -1,0 +1,3 @@
+[submodule "neoemacs/org-modern-indent"]
+	path = neoemacs/org-modern-indent
+	url = git@github.com:jdtsmith/org-modern-indent.git
