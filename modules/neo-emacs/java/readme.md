@@ -1,22 +1,25 @@
 
 # Table of Contents
 
-1.  [Java module](#org8ebaf3b)
-    1.  [most wanted](#org66adeb4)
-    2.  [Dap-java Usage](#org7e75cad)
-    3.  [build handle](#orgd817d89)
+1.  [Java module](#org60fd933)
+    1.  [most wanted](#orgb88ab85)
+    2.  [Dap-java Usage](#org579c823)
+    3.  [build handle](#org3678033)
 
 
 
-<a id="org8ebaf3b"></a>
+<a id="org60fd933"></a>
 
 # Java module
 
 Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url\`, and now it&rsquo;s located at [jdt-language-server-1.22.0](https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.22.0/jdt-language-server-1.22.0-202304131553.tar.gz).After that you could use all the features powered by eclipse.  
 
--   clang-format  
+-   code-format  
     Firstly you could check your java env correctly or not. check by doom doctor, a warning showed that  
-    we need \`brew install clang-format\`.
+    we need \`brew install clang-format\`.So here we are.  
+    
+        brew install clang-format
+        brew install semgrep
 -   Generate eclipse files  
     Execute mvn command for generate eclipse .project & .classpath files on your project root path.  
     
@@ -126,7 +129,7 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     3.  Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
 
 
-<a id="org66adeb4"></a>
+<a id="orgb88ab85"></a>
 
 ## TODO most wanted
 
@@ -135,7 +138,7 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     1.  eldoc [lsp-java/issues/432](https://github.com/emacs-lsp/lsp-java/issues/432)
 
 
-<a id="org7e75cad"></a>
+<a id="org579c823"></a>
 
 ## TODO Dap-java Usage
 
@@ -216,7 +219,7 @@ I do not use debug for years. So be careful the documentation maybe outdated.I t
     </table>
 
 
-<a id="orgd817d89"></a>
+<a id="org3678033"></a>
 
 ## build handle
 
