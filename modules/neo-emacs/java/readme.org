@@ -5,9 +5,13 @@
 
 * Java module
 Neo-Emacs will automatically download the jdtls from `lsp-java-jdt-download-url`, and now it's located at [[https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.22.0/jdt-language-server-1.22.0-202304131553.tar.gz][jdt-language-server-1.22.0]].After that you could use all the features powered by eclipse.
-- clang-format
+- code-format
   Firstly you could check your java env correctly or not. check by doom doctor, a warning showed that
-  we need `brew install clang-format`.
+  we need `brew install clang-format`.So here we are.
+  #+begin_src shell
+   brew install clang-format
+   brew install semgrep
+  #+end_src
 - Generate eclipse files
   Execute mvn command for generate eclipse .project & .classpath files on your project root path.
   #+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
