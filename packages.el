@@ -74,6 +74,7 @@
 (package! awesome-tray :recipe (:host github :repo "manateelazycat/awesome-tray"         :branch "master" ))
 (package! bookmark+    :recipe (:host github :repo "emacsmirror/bookmark-plus" :branch "master" ))
 (unpin! consult)
+(unpin! lsp-java)
 (package! copilot
   :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el" "dist")))
 
