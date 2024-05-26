@@ -18,6 +18,8 @@
  company-tooltip-flip-when-above            t
  company-show-quick-access                  nil)
 
+(setq lsp-semgrep-languages '())
+;;(defcustom lsp-semgrep-languages '())
 ;;
 (add-hook 'web-mode-hook (lambda ()
                            (setq display-line-numbers                       t
@@ -33,11 +35,9 @@
                            (setq display-line-numbers                       t
                                  lsp-enable-symbol-highlighting             t
                                  company-auto-update-doc                    nil
-                                 semantic-enable                            nil ; fix el-doc by llama3
                                  ;; lsp-ui-doc-show-with-cursor                t
                                  lsp-idle-delay                             0.1
                                  lsp-signature-render-documentation         nil
-                                 lsp-java-compile-null-analysis-mode        'automatic
                                  lsp-signature-auto-activate                t
                                  lsp-eldoc-render-all                       nil
                                  lsp-signature-auto-activate                t
@@ -64,12 +64,10 @@
                                  lsp-completion-show-label-description      nil
                                  lsp-modeline-diagnostics-enable            t
                                  lsp-modeline-diagnostics-scope             :workspace
-                                 lsp-java-format-settings-url   (expand-file-name (concat doom-user-dir "neoemacs/Intellij_Spring_Boot_Java_Conventions.xml"))
                                  lsp-modeline-code-actions-enable           nil
                                  lsp-enable-file-watchers                   nil
                                  lsp-lens-enable                            t)))
-(setq lsp-java-format-settings-url   (expand-file-name (concat doom-user-dir "neoemacs/eclipse-codestyle.xml"))
-      lsp-java-format-settings-profile "OpenMRS Formatter"
+(setq lsp-java-format-settings-url   (expand-file-name (concat doom-user-dir "neoemacs/Intellij_Spring_Boot_Java_Conventions.xml"))
       lsp-java-java-path             (concat (getenv "JAVA_17_HOME") "/bin/java")
       lsp-java-server-install-dir    "~/lsp-java/"
       lsp-maven-path                 (concat (getenv "MAVEN_HOME") "/conf/settings.xml")
