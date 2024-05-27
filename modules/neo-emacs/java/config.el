@@ -18,9 +18,8 @@
  company-tooltip-flip-when-above            t
  company-show-quick-access                  nil)
 
-(setq lsp-semgrep-languages '())
-;;(defcustom lsp-semgrep-languages '())
-;;
+(setq lsp-semgrep-languages '()
+      lsp-warn-no-matched-clients nil)
 (add-hook 'web-mode-hook (lambda ()
                            (setq display-line-numbers                       t
                                  lsp-modeline-code-actions-enable           nil
@@ -123,3 +122,5 @@
 
 (after! tramp
   (setq explicit-shell-file-name "/bin/bash"))
+(setq tramp-default-method "ssh")
+(setq tramp-verbose 10)

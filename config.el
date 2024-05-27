@@ -153,5 +153,3 @@
 
 (add-to-list 'load-path          user-private-dir )
 (use-package! db-work                             )    ;; load by local, privacy config account or pwd here
-(setq tramp-default-method "ssh")
-(setq tramp-verbose 10)
