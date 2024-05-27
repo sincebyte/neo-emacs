@@ -57,7 +57,7 @@
 ;; (load-theme 'color-theme-sanityinc-tomorrow-night t)
 ;; (load-theme 'kaolin t)
 ;; (color-theme-sanityinc-tomorrow-night)
-(setq doom-theme 'doom-tomorrow-night)
+(setq doom-theme 'doom-one)
 
 
 

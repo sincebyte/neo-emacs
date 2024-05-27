@@ -8,18 +8,22 @@
 
 (setq ;;company-box-doc-enable                   nil
  company-tooltip-limit                      7
- company-auto-update-doc                    nil
+ ;; company-auto-update-doc                    nil
  ;; company-frontends                       '(company-pseudo-tooltip-frontend company-echo-metadata-frontend)
+ ;; company-dabbrev-ignore-case             nil
+ ;; lsp-enable-file-watchers                   t
  company-format-margin-function             'company-text-icons-margin
  company-text-icons-format                  " %s "
  company-text-icons-add-background          t
  company-text-face-extra-attributes         '(:weight bold :slant italic)
- ;; company-dabbrev-ignore-case             nil
  company-tooltip-flip-when-above            t
  company-show-quick-access                  nil)
 
+
 (setq lsp-semgrep-languages '()
+      +tree-sitter-hl-enabled-modes '(java-mode go-mode)
       lsp-warn-no-matched-clients nil)
+(setq-default flymake-no-changes-timeout 30)
 (add-hook 'web-mode-hook (lambda ()
                            (setq display-line-numbers                       t
                                  lsp-modeline-code-actions-enable           nil
@@ -29,43 +33,44 @@
                           (setq display-line-numbers                        t)))
 (add-hook 'lisp-mode-hook (lambda ()
                             (setq display-line-numbers                      t)))
-(add-hook 'lsp-mode-hook (lambda ()
-                           (tree-sitter-hl-mode)
-                           (setq display-line-numbers                       t
-                                 lsp-enable-symbol-highlighting             t
-                                 company-auto-update-doc                    nil
-                                 ;; lsp-ui-doc-show-with-cursor                t
-                                 lsp-idle-delay                             0.1
-                                 lsp-signature-render-documentation         nil
-                                 lsp-signature-auto-activate                t
-                                 lsp-eldoc-render-all                       nil
-                                 lsp-signature-auto-activate                t
-                                 lsp-signature-doc-lines                    1
-                                 lsp-java-eldoc-enable-hover                t
-                                 lsp-java-signature-help-enabled            t
-                                 lsp-java-references-code-lens-enabled      t
-                                 lsp-java-implementations-code-lens-enabled t
-                                 lsp-enable-on-type-formatting              t
-                                 lsp-java-format-enabled                    t
-                                 lsp-java-format-on-type-enabled            t
-                                 lsp-java-format-comments-enabled           nil
-                                 lsp-java-save-actions-organize-imports     nil
-                                 lsp-java-maven-download-sources            "true"
-                                 lsp-java-autobuild-enabled                 t
-                                 lsp-java-inhibit-message                   nil
-                                 lsp-completion-show-kind                   nil
-                                 lsp-completion-sort-initial-results        t
-                                 lsp-completion-show-detail                 nil
-                                 lsp-java-completion-guess-method-arguments t
-                                 company-quickhelp-mode                     nil
-                                 lsp-completion-enable-additional-text-edit t
-                                 lsp-java-progress-reports-enabled          nil
-                                 lsp-completion-show-label-description      nil
-                                 lsp-modeline-diagnostics-enable            t
-                                 lsp-modeline-diagnostics-scope             :workspace
-                                 lsp-modeline-code-actions-enable           nil
-                                 lsp-enable-file-watchers                   nil
-                                 lsp-lens-enable                            t)))
+(add-hook 'java-mode-hook (lambda ()
+                            (setq-local lsp-enable-file-watchers nil)
+                            (tree-sitter-hl-mode)
+                            (setq display-line-numbers                       t
+                                  lsp-java-compile-null-analysis-mode        "automatic"
+                                  company-text-icons-format                  " %s "
+                                  company-text-icons-add-background          t
+                                  lsp-enable-symbol-highlighting             t
+                                  company-auto-update-doc                    nil
+                                  lsp-ui-doc-show-with-cursor                nil
+                                  lsp-idle-delay                             0.1
+                                  lsp-signature-render-documentation         nil
+                                  lsp-signature-auto-activate                t
+                                  lsp-eldoc-render-all                       nil
+                                  lsp-signature-auto-activate                t
+                                  ;; lsp-signature-doc-lines                    1
+                                  lsp-java-signature-help-enabled            t
+                                  lsp-java-references-code-lens-enabled      t
+                                  lsp-java-implementations-code-lens-enabled t
+                                  lsp-enable-on-type-formatting              t
+                                  lsp-java-format-enabled                    t
+                                  lsp-java-format-on-type-enabled            t
+                                  lsp-java-format-comments-enabled           nil
+                                  lsp-java-save-actions-organize-imports     nil
+                                  lsp-java-maven-download-sources            "true"
+                                  lsp-java-autobuild-enabled                 t
+                                  lsp-java-inhibit-message                   nil
+                                  lsp-completion-show-kind                   nil
+                                  lsp-completion-sort-initial-results        t
+                                  lsp-completion-show-detail                 nil
+                                  lsp-java-completion-guess-method-arguments t
+                                  lsp-completion-enable-additional-text-edit t
+                                  lsp-java-progress-reports-enabled          nil
+                                  lsp-completion-show-label-description      nil
+                                  lsp-modeline-diagnostics-enable            t
+                                  lsp-modeline-diagnostics-scope             :workspace
+                                  lsp-modeline-code-actions-enable           nil
+                                  lsp-lens-enable                            t)))
 (setq lsp-java-format-settings-url   (expand-file-name (concat doom-user-dir "neoemacs/eclipse-codestyle.xml"))
       lsp-java-java-path             (concat (getenv "JAVA_17_HOME") "/bin/java")
       lsp-java-server-install-dir    "~/lsp-java/"
