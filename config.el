@@ -61,8 +61,10 @@
 
 
 
-(add-to-list 'default-frame-alist '(width.700))
-(add-to-list 'default-frame-alist '(height.303))
+(add-to-list 'initial-frame-alist '(height . 50))
+(add-to-list 'initial-frame-alist '(top . 0))
+(add-to-list 'initial-frame-alist '(left . 0))
+;; (setq initial-frame-alist '((top . 0) (left . 0) (width . 100) (height . maximized)))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
