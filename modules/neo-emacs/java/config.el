@@ -34,7 +34,7 @@
 (add-hook 'lisp-mode-hook (lambda ()
                             (setq display-line-numbers                      t)))
 (add-hook 'java-mode-hook (lambda ()
-                            (setq-local lsp-enable-file-watchers nil)
+                            (setq-local lsp-enable-file-watchers t)
                             (tree-sitter-hl-mode)
                             (setq display-line-numbers                       t
                                   lsp-java-compile-null-analysis-mode        "automatic"
