@@ -23,7 +23,7 @@
  pdflatex-exec-path             "/Library/TeX/texbin/pdflatex"
  org-html-preamble-format      '(("en" "<p>Made ✐︎ by " (getenv "USER") "</p>"))
  org-roam-capture-templates    '(("d" "default" plain "%?"
-                                  :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+subtitle: \n#+author: \n#+SETUPFILE: ~/.doom.d/org-head.setup")
+                                  :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+subtitle: \n#+author: \n#+SETUPFILE: ~/.doom.d/org-classic-head.setup")
                                   :unnarrowed t))
  org-html-table-caption-above  nil
  gc-cons-threshold             (* 2 1000 1000)
@@ -159,7 +159,7 @@
   :hook (org-mode . org-modern-mode)
   :custom
   (org-modern-list '((43 . "•") (45 . "◦")))
-  (org-ellipsis " ⇲")
+  (org-ellipsis " ")
   (org-modern-table nil)
   :config
   (neo/org-set-todo-keyword-faces)
