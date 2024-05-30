@@ -443,6 +443,25 @@ as a full stack developer u need vue support, so here it comes.
 #+begin_src shell
 npm install vls -g
 #+end_src
+** startup workspace
+You could customization startup inital workspace and their buffer.No need to open it every time.
+#+begin_src elisp
+(setq +workspaces-main " SSH")
+(defun open-my-workspaces ()
+  (interactive)
+  (+workspace/new " IDE")
+  (find-file "yourexpect.java")
+  (+workspace/new " GPT")
+  (gptel "wangshenzhi/llama3-8b-chinese-chat-ollama-q8")
+  (switch-to-buffer "wangshenzhi/llama3-8b-chinese-chat-ollama-q8")
+  (+workspace/new " SQL")
+  (find-file "yourexpect.sql")
+  (+workspace/new " HTTP")
+  (find-file "yourexpect.http")
+  (+workspace/new "󱗃 ORG")
+  (find-file "yourexpect.org"))
+(add-hook 'window-setup-hook #'open-my-workspaces)
+#+end_src
 * About the Release
 This step can help you compile neo emacs faster,It only takes 3 minutes to install using the release package on my Mac laptop. Otherwise it would take me 15 minutes. The release installation package is a better choice for users with unstable networks and those who need to frequently reinstall neoemacs.
 Release package contains the git repository of related dependencies.The compiled directory files are removed and the .git directory is retained,So that you can perform subsequent upgrades.
