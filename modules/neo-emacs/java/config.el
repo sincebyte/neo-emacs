@@ -129,3 +129,7 @@
   (setq explicit-shell-file-name "/bin/bash"))
 (setq tramp-default-method "ssh")
 (setq tramp-verbose 10)
+
+(defun org-babel-edit-prep:java (babel-info)
+  (setq-local buffer-file-name (->> babel-info caddr (alist-get :tangle)))
+  (lsp))

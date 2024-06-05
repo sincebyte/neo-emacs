@@ -20,6 +20,8 @@
                  cjk-font-size 26))
   (progn (set-selection-coding-system 'utf-16le-dos)
          (setq doom-font (font-spec :family "Kode Mono" :size 16 )
+               doom-variable-pitch-font "Kode Mono"
+               doom-unicode-font "Kode Mono"
                cjk-font "HYXinRenWenSongW"
                cjk-font-size 20)))
 
@@ -30,8 +32,6 @@
                             charset (font-spec :family cjk-font :size cjk-font-size)))))
 
 (add-hook 'doom-init-ui-hook 'init-cjk-fonts)
-
-
 
 ;; - `doom-variable-pitch-font' -- a non-monospace font (where applicable)
 ;; - `doom-big-font' -- used for `doom-big-font-mode'; use this for
@@ -61,9 +61,10 @@
 
 
 
-(add-to-list 'initial-frame-alist '(height . 50))
+(setq initial-frame-alist '((height . 50)))
 (add-to-list 'initial-frame-alist '(top . 0))
 (add-to-list 'initial-frame-alist '(left . 0))
+;; (set-frame-size (selected-frame) (cons 60 (/ (window-inside-pixel-edges)(selected-frame))) nil)
 ;; (setq initial-frame-alist '((top . 0) (left . 0) (width . 100) (height . maximized)))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
@@ -132,8 +133,8 @@
 (map! :n   "SPC t n"  '+workspace/new                        )
 (map! :n   "K"        '+workspace/switch-right               )
 (map! :n   "J"        '+workspace/switch-left                )
-(map! :n   "s-k"      '+workspace/swap-right                 )
-(map! :n   "s-j"      '+workspace/swap-left                  )
+;; (map! :n   "s-k"      '+workspace/swap-right                 )
+;; (map! :n   "s-j"      '+workspace/swap-left                  )
 (map! :vn  "g l"      'align-regexp                          )
 (map! :ie  "C-h"     #'backward-delete-char-untabify         )
 (general-def          'insert "C-h"    'delete-backward-char )

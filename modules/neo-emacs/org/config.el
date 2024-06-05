@@ -14,6 +14,7 @@
  yas-indent-line               'fixed
  yas-also-auto-indent-first-line t
  global-auto-revert-mode       1
+ org-export-with-broken-links  t ;; org link broken but do not effect
  auto-revert-verbose           nil ;; 禁用自动显示 Auto-Revert 的消息
  org-roam-v2-ack               t
  org-agenda-files              (list (concat org-roam-directory "/agenda/GTD.org"))

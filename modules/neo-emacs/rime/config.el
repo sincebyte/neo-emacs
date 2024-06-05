@@ -15,6 +15,7 @@
   (rime-emacs-module-header-root emacs-module-root)
   (default-input-method "rime"))
 (setq mode-line-mule-info   '((:eval (rime-lighter)))
+      rime-title "CH"
       rime-inline-ascii-trigger 'shift-l
       rime-disable-predicates '(
                                 rime-predicate-current-uppercase-letter-p
