@@ -194,8 +194,8 @@
        :neo-emacs
        java                ; lsp java setting
        shell               ; shell config for vterm & eshell
-       common               ; neoemacs common setting
-       org                  ; neoemacs org setting
+       common              ; neoemacs common setting
+       org                 ; neoemacs org setting
        rime                ; neoemacs rime setting
        translate           ; translate setting
        ;; xml                 ; xml buffer format
@@ -204,11 +204,12 @@
        find                ; find file config
        eredis              ; a redis client
        sql                 ; ejc sql setting
-       ;; modeline            ;modeline
+       ;; modeline         ; modeline
        modelinexp          ; Expand doom doom modeline
        elfeed              ; rss reader
        alpha               ; make emacs background transparent
        git                 ; magit wit
+       addspace            ; add space when typing
        :config
        ;;literate
        (default +bindings +smartparens))

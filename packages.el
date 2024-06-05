@@ -71,8 +71,10 @@
 (package! magit-delta         )
 (package! gptel               )
 (package! keyfreq      :recipe (:host github :repo "dacap/keyfreq"))
-(package! awesome-tray :recipe (:host github :repo "manateelazycat/awesome-tray"         :branch "master" ))
-(package! bookmark+    :recipe (:host github :repo "emacsmirror/bookmark-plus" :branch "master" ))
+(package! awesome-tray :recipe (:host github :repo "manateelazycat/awesome-tray" :branch "master" ))
+(package! bookmark+    :recipe (:host github :repo "emacsmirror/bookmark-plus"   :branch "master" ))
+(package! emt          :recipe (:host github :repo "roife/emt"                   :branch "master" ))
+
 (unpin! consult)
 (unpin! lsp-mode)
 (unpin! lsp-java)
