@@ -194,4 +194,5 @@
   :config (setq emt-lib-path (concat doom-user-dir "neoemacs/libEMT-aarch64.dylib" )))
 (with-eval-after-load 'evil
   (defalias #'forward-evil-word #'emt-forward-word)
+  (defalias #'evil-forward-word-begin #'emt-forward-word)
   (defalias #'backward-evil-word #'emt-backward-word))

@@ -38,44 +38,8 @@
   "延迟执行，在中英文之间自动添加空格。"
   (run-with-idle-timer 0 nil 'add-space-between-chinese-and-english))
 
-(defun process-pasted-text (text prev-char next-char)
-  "Process pasted TEXT to add spaces between Chinese and English characters, considering PREV-CHAR and NEXT-CHAR."
-  (with-temp-buffer
-    (insert (if prev-char (concat (char-to-string prev-char) text) text))
-    (goto-char (point-min))
-    (while (not (eobp))
-      (let ((current-char (char-after))
-            (next-char-internal (char-after (1+ (point)))))
-        (when (and current-char next-char-internal
-                   (should-insert-space current-char next-char-internal)
-                   (not (eq (char-after) ?\s)))
-          (save-excursion
-            (goto-char (1+ (point)))
-            (insert " "))))
-      (forward-char))
-    (let ((buffer-content (buffer-string)))
-      (if prev-char
-          (setq buffer-content (substring buffer-content 1)))
-      ;; Add space between the last char of pasted text and next-char
-      (setq buffer-content (insert-space-if-needed
-                            (aref buffer-content (1- (length buffer-content)))
-                            next-char
-                            buffer-content))
-      buffer-content)))
-
-(defun auto-space-yank-advice (orig-fun &rest args)
-  "Advice to automatically add spaces between Chinese and English characters after yanking."
-  (let ((beg (point))
-        (prev-char (char-before)))
-    (apply orig-fun args)
-    (let ((end (point))
-          (next-char (char-after)))
-      (let ((pasted-text (buffer-substring-no-properties beg end)))
-        (delete-region beg end)
-        (insert (process-pasted-text pasted-text prev-char next-char))))))
-
-(advice-add 'yank :around #'auto-space-yank-advice)
-(advice-add 'yank-pop :around #'auto-space-yank-advice)
+;;(advice-add 'yank :around #'auto-space-yank-advice)
+;;(advice-add 'yank-pop :around #'auto-space-yank-advice)
 
 (define-minor-mode auto-space-mode
   "在中英文之间自动添加空格的模式。"
