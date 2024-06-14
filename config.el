@@ -20,9 +20,9 @@
                  cjk-font-size 26))
   (progn (set-selection-coding-system 'utf-16le-dos)
          (setq doom-font (font-spec :family "Kode Mono" :size 16 )
-               doom-variable-pitch-font "Kode Mono"
-               doom-unicode-font "Kode Mono"
-               cjk-font "HYXinRenWenSongW"
+               ;; doom-variable-pitch-font "Hack Nerd Font"
+               ;; doom-unicode-font "Kode Mono"
+               cjk-font "霞鹜文楷"
                cjk-font-size 20)))
 
 (defun init-cjk-fonts()

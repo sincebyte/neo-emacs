@@ -185,14 +185,16 @@
   :config
   (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
 
-(defconst org-modern-indent-begin (propertize "┌" 'face 'org-modern-indent-bracket-line))
-(defconst org-modern-indent-guide (propertize "│" 'face 'org-modern-indent-bracket-line))
-(defconst org-modern-indent-end   (propertize "└" 'face 'org-modern-indent-bracket-line))
+(defconst org-modern-indent-begin (propertize "┌"  'face 'org-modern-indent-bracket-line))
+(defconst org-modern-indent-guide (propertize "│ " 'face 'org-modern-indent-bracket-line))
+(defconst org-modern-indent-end   (propertize "└"  'face 'org-modern-indent-bracket-line))
 
 (use-package emt
   :hook (after-init . emt-mode)
   :config (setq emt-lib-path (concat doom-user-dir "neoemacs/libEMT-aarch64.dylib" )))
-(with-eval-after-load 'evil
-  (defalias #'forward-evil-word #'emt-forward-word)
-  (defalias #'evil-forward-word-begin #'emt-forward-word)
-  (defalias #'backward-evil-word #'emt-backward-word))
+
+;; (add-hook 'org-mode-hook
+;;           (lambda ()
+;;             (with-eval-after-load 'evil
+;;               (defalias #'forward-evil-word #'emt-forward-word)
+;;               (defalias #'backward-evil-word #'emt-backward-word))))

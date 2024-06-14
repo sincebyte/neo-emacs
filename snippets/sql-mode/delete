@@ -1,7 +1,6 @@
 # -*- mode: snippet -*-
 # name: delete
 # key: delete
-# warning-suppress-types: (yasnippet backquote-change)
 # --
 
 <select name='delete'>
