@@ -206,11 +206,14 @@ Neo-Emacs will automatically download the jdtls from `lsp-java-jdt-download-url`
   3. Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
 
 ** Vterm Shell
+You'd better install vterm in a terminal environment case there might have error incompatible architecture.
+
 #+begin_notice-warning
 Vterm is not available on windows.
 Thus windows user have to use eshell as a downgrade plan.
 #+end_notice-warning
 *** Install vterm
+You'd better install vterm in a terminal environment case there might have error incompatible architecture.
 If vterm complie failed in emacs, we could complie it manually.
 #+begin_src bash
 cd .emacs.d/.local/straight/build/vterm/
