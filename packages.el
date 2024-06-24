@@ -76,11 +76,11 @@
 (package! bookmark+    :recipe (:host github :repo "emacsmirror/bookmark-plus"   :branch "master" ))
 (package! emt          :recipe (:host github :repo "roife/emt"                   :branch "master" ))
 
-(unpin! consult)
+;; (unpin! consult)
 (unpin! lsp-mode)
 (unpin! lsp-java)
-(package! copilot
-  :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el" "dist")))
+;; (package! copilot
+;;   :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el" "dist")))
 
 ;; (package! mml        :disable t)
 ;; (package! semantic   :disable t)

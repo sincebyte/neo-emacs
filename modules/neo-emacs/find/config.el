@@ -20,4 +20,17 @@
       :map dired-mode-map
       :ne "c" #'dired-create-empty-file)
 
+(map! :after magit
+      :map magit-mode-map
+      :ne "K" nil)
+(map! :after magit
+      :map magit-mode-map
+      :ne "K" #'+workspace/switch-right)
+(map! :after magit
+      :map magit-mode-map
+      :ne "J" nil)
+(map! :after magit
+      :map magit-mode-map
+      :ne "J" #'+workspace/switch-left)
+
 (setq bookmark-default-file "~/org/org-roam/bookmarks")
