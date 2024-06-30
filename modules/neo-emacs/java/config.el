@@ -133,3 +133,6 @@
 (defun org-babel-edit-prep:java (babel-info)
   (setq-local buffer-file-name (->> babel-info caddr (alist-get :tangle)))
   (lsp))
+
+;; (use-package pulsing-cursor
+;;   :config (pulsing-cursor-mode +1))

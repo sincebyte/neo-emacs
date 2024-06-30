@@ -128,13 +128,11 @@
 (map! :ne  "; d"      'delete-other-windows                  )
 (map! :ne  "; q"      'quit-window                           )
 (map! :ve  "; q"      'quit-window                           )
-(map! :ne  "; f"      'dired-jump                            )
+(map! :ne  "; f"      'dirvish                               )
 (map! :ne  "; o"      'neotree-projectile-action             )
 (map! :n   "SPC t n"  '+workspace/new                        )
 (map! :n   "K"        '+workspace/switch-right               )
 (map! :n   "J"        '+workspace/switch-left                )
-;; (map! :n   "s-k"      '+workspace/swap-right                 )
-;; (map! :n   "s-j"      '+workspace/swap-left                  )
 (map! :vn  "g l"      'align-regexp                          )
 (map! :ie  "C-h"     #'backward-delete-char-untabify         )
 (general-def          'insert "C-h"    'delete-backward-char )
@@ -149,8 +147,14 @@
  )
 
 (setq byte-compile-warnings '(cl-functions)
+      warning-minimum-level :error
+      warning-suppress-types '((obsolete) (cl-functions))
       display-time-default-load-average nil
       emacs-module-root "/Applications/Emacs.app/Contents/Resources/include")
+(with-eval-after-load 'ejc-sql
+  (add-to-list 'warning-suppress-types '(obsolete)))
+(with-eval-after-load 'npm-mode
+  (add-to-list 'warning-suppress-types '(cl-functions)))
 
 (setq +format-on-save-disabled-modes (add-to-list '+format-on-save-disabled-modes 'web-mode))
 
