@@ -16,6 +16,13 @@
 (setq gc-cons-threshold 100000000) ; Increase garbage collection threshold
 (setq read-process-output-max (* 1024 1024)) ; Increase the
 
+(map! :after evil
+      :map evil-normal-state-map
+      :ne "K" nil)
+(map! :after evil
+      :map evil-normal-state-map
+      :ne "K" #'+workspace/switch-right)
+
 (menu-bar-mode -1)
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)

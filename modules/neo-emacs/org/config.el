@@ -67,7 +67,8 @@
   (setq evil-shift-width 2)
   (setq org-todo-keywords
         '((sequence "TODO" "DOING" "BLOCK" "TEST" "DONE" "REPORT")))
-  (+org/close-all-folds))
+  (+org/close-all-folds)
+  (toggle-company-english-helper))
 
 (use-package! hl-todo
   :config
@@ -193,8 +194,5 @@
   :hook (after-init . emt-mode)
   :config (setq emt-lib-path (concat doom-user-dir "neoemacs/libEMT-aarch64.dylib" )))
 
-;; (add-hook 'org-mode-hook
-;;           (lambda ()
-;;             (with-eval-after-load 'evil
-;;               (defalias #'forward-evil-word #'emt-forward-word)
-;;               (defalias #'backward-evil-word #'emt-backward-word))))
+(add-to-list 'load-path (expand-file-name (concat doom-user-dir "neoemacs/company-english-helper" )))
+(use-package company-english-helper)

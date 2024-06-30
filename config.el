@@ -22,7 +22,7 @@
          (setq doom-font (font-spec :family "Kode Mono" :size 16 )
                ;; doom-variable-pitch-font "Hack Nerd Font"
                ;; doom-unicode-font "Kode Mono"
-               cjk-font "霞鹜文楷"
+               cjk-font "仓耳今楷01-9128"
                cjk-font-size 20)))
 
 (defun init-cjk-fonts()
