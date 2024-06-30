@@ -68,9 +68,13 @@
   (setq org-todo-keywords
         '((sequence "TODO" "DOING" "BLOCK" "TEST" "DONE" "REPORT")))
   (+org/close-all-folds)
-  (toggle-company-english-helper))
+  (open-company-english-helper))
+
+;; (add-to-list 'load-path (expand-file-name (concat doom-user-dir "neoemacs/company-english-helper")))
+;; (require 'company-english-helper)
 
 (use-package! hl-todo
+  :defer t
   :config
   ;; 配置高亮显示的关键字
   (setq hl-todo-keyword-faces
@@ -158,6 +162,7 @@
 (setq system-time-locale "C")
 
 (use-package org-modern
+  :defer t
   :hook (org-mode . org-modern-mode)
   :custom
   (org-modern-list '((43 . "•") (45 . "◦")))
@@ -182,6 +187,7 @@
       "C-," nil)
 
 (use-package org-modern-indent
+  :defer t
   :load-path "~/.doom.d/neoemacs/org-modern-indent/"
   :config
   (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
@@ -191,8 +197,30 @@
 (defconst org-modern-indent-end   (propertize "└"  'face 'org-modern-indent-bracket-line))
 
 (use-package emt
+  :defer t
   :hook (after-init . emt-mode)
   :config (setq emt-lib-path (concat doom-user-dir "neoemacs/libEMT-aarch64.dylib" )))
 
-(add-to-list 'load-path (expand-file-name (concat doom-user-dir "neoemacs/company-english-helper" )))
-(use-package company-english-helper)
+;; so queer there should a delay
+(defun open-company-english-helper ()
+  (run-at-time "1 sec" nil #'open-company-english-helper-dy))
+
+(defun open-company-english-helper-dy ()
+  (interactive)
+  (progn
+    (setq company-backends (remove 'company-english-helper-search company-backends))
+    ;; I need remove `company-english-helper-search' with `company-yasnippet',
+    ;; it's not enough just remove `company-english-helper-search' from `company-backends'
+    (setq company-backends (remove '(company-english-helper-search :with company-yasnippet) company-backends))
+    (setq company-english-helper-active-p nil))
+  (if (not company-mode)
+      (company-mode t))
+  (setq company-english-helper-active-p nil)
+  (add-to-list 'company-backends 'company-english-helper-search)
+  (setq company-english-helper-active-p t)
+  (message "English helper has enable."))
+
+(use-package company-english-helper
+  :load-path "~/.doom.d/neoemacs/company-english-helper"
+  :config
+  (add-hook 'org-mode-hook #'open-company-english-helper))

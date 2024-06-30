@@ -120,6 +120,7 @@
 ;;(add-to-list 'lsp-language-id-configuration '(".*\\.html\\.erb$" .(setq tab-always-indent ‘complete)
 
 (use-package web-mode
+  :defer t
   :custom
   (web-mode-markup-indent-offset 2)
   (web-mode-css-indent-offset 2)
