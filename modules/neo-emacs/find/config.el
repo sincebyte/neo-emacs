@@ -4,9 +4,11 @@
 (map! :ne "SPC v c" 'consult-ripgrep    )
 (map! :ie "C-i"     'consult-yank-pop   )
 
-(setq dirvish-hide-details t
-      dirvish-hide-cursor t
-      dirvish-default-layout '(0 0.4 0.6))
+(use-package dirvish
+  :config
+  (setq dirvish-hide-details t
+        dirvish-hide-cursor t
+        dirvish-default-layout '(0 0.4 0.6)))
 (dirvish-override-dired-mode)
 
 (map! :after dired

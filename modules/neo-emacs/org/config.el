@@ -67,8 +67,7 @@
   (setq evil-shift-width 2)
   (setq org-todo-keywords
         '((sequence "TODO" "DOING" "BLOCK" "TEST" "DONE" "REPORT")))
-  (+org/close-all-folds)
-  (open-company-english-helper))
+  (+org/close-all-folds))
 
 ;; (add-to-list 'load-path (expand-file-name (concat doom-user-dir "neoemacs/company-english-helper")))
 ;; (require 'company-english-helper)
