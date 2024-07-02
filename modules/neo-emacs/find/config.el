@@ -9,15 +9,15 @@
   (dirvish-override-dired-mode)
   :config
   (setq dirvish-hide-details t
-        dirvish-use-header-line 'global
         dirvish-hide-cursor t
         delete-by-moving-to-trash t
-        dirvish-default-layout '(0 0.2 0.8)
+        dirvish-default-layout '(0 0.4 0.6)
         dirvish-attributes
-        '(nerd-icons file-size subtree-state vc-state)
+        '(nerd-icons file-size vc-state git-msg)
         dirvish-header-line-format
-        '(:left (path) :right (free-space)))
-  )
+        '(:left (path) :right (free-space))))
+(add-hook 'dirvish-find-entry-hook
+          (lambda (&rest _) (setq-local truncate-lines t)))
 
 (map! :after dired
       :map dired-mode-map
