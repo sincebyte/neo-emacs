@@ -121,6 +121,40 @@ sh ~/.emacs.d/bin/doom upgrade
 sh ~/.emacs.d/bin/doom install
 sh ~/.emacs.d/bin/doom sync
 #+end_src
+* Patches
+** transparent patch
+It offer a window transparent solution which could transparent background but the font not.Note after install the patch, here have a alternative package to control the transparent value.
+#+begin_src elisp
+(use-package transwin
+  :config
+  (setq transwin-delta-alpha 5)
+  (setq transwin-parameter-alpha 'alpha-background)
+  :bind
+  ("C-M-=" . transwin-inc)
+  ("C-M--" . transwin-dec)
+  ("C-M-0" . transwin-toggle))
+#+end_src
+
+** cursor animation
+The awesome patch could make cursor more funny.But there have a bug,If you shift to full screen from a window state , there will remain a shadow of the current cursor which will stay here forever.I will make cursor in replace mode before shifting to full screen.This might makes it effect less more.
+** how to
+Here have a tutorial to apply patch if you are using emacs plus.
+1. Put the patches file under to `/opt/homebrew/Library/Taps/d12frosted/homebrew-emacs-plus/patches/emacs-30`
+2. Modify `/opt/homebrew/Library/Taps/d12frosted/homebrew-emacs-plus/Formula/emacs-plus@30.rb`, around _local_patch_.
+   There only have two terms to be filled in, one is patch name which referenced to the pathches directory, another is the pathchs `sha256` value.
+   #+begin_src ruby
+   #
+   # Patches
+   #
+   opoo "The option --with-no-frame-refocus is not required anymore in emacs-plus@30." if build.with? "no-frame-refocus"
+   local_patch "fix-window-role", sha: "1f8423ea7e6e66c9ac6dd8e37b119972daa1264de00172a24a79a710efcb8130"
+   local_patch "system-appearance", sha: "9eb3ce80640025bff96ebaeb5893430116368d6349f4eb0cb4ef8b3d58477db6"
+   local_patch "poll", sha: "31b76d6a2830fa3b6d453e3bbf5ec7259b5babf1d977b2bf88a6624fa78cb3e6" if build.with? "poll"
+   local_patch "round-undecorated-frame", sha: "7451f80f559840e54e6a052e55d1100778abc55f98f1d0c038a24e25773f2874"
+   local_patch "cursor-animation", sha: "d6898b69c5248da9ee400e4526892aed4e1ad489c992ae5dcf724d3b1275b5d2"
+   local_patch "ns-alpha-background", sha: "6c174aff2602b64255ce8952f91302ede51e213be090f1b39e06913bbe0b086b"
+   #+end_src
+3. Just install emacs plus, you could use `brew reinstall`
 * Private setting
 Customize your private setting config in the config.el ; use ~setq~
 
@@ -484,3 +518,4 @@ https://github.com/DogLooksGood/emacs-rime
 [[https://github.com/akicho8/string-inflection]]
 https://raw.githubusercontent.com/alibaba/p3c/master/p3c-formatter/eclipse-codestyle.xml
 https://www.tug.org/mactex/
+

@@ -61,9 +61,11 @@
 
 
 
-(setq initial-frame-alist '((height . 50)))
-(add-to-list 'initial-frame-alist '(top . 0))
-(add-to-list 'initial-frame-alist '(left . 0))
+;; (setq initial-frame-alist '((height . 50)))
+;; (add-to-list 'initial-frame-alist '(top . 0))
+;; (add-to-list 'initial-frame-alist '(left . 0))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
 ;; (set-frame-size (selected-frame) (cons 60 (/ (window-inside-pixel-edges)(selected-frame))) nil)
 ;; (setq initial-frame-alist '((top . 0) (left . 0) (width . 100) (height . maximized)))
 

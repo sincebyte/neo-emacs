@@ -72,6 +72,7 @@
 (package! gptel               )
 (package! telega              )
 (package! undo-tree           )
+(package! transwin            )
 (package! pdf-tools           )
 (package! keyfreq      :recipe (:host github :repo "dacap/keyfreq"))
 (package! awesome-tray :recipe (:host github :repo "manateelazycat/awesome-tray" :branch "master" ))

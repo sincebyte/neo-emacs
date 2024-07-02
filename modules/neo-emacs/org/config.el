@@ -161,7 +161,6 @@
 (setq system-time-locale "C")
 
 (use-package org-modern
-  :defer t
   :hook (org-mode . org-modern-mode)
   :custom
   (org-modern-list '((43 . "•") (45 . "◦")))
@@ -186,7 +185,6 @@
       "C-," nil)
 
 (use-package org-modern-indent
-  :defer t
   :load-path "~/.doom.d/neoemacs/org-modern-indent/"
   :config
   (add-hook 'org-mode-hook #'org-modern-indent-mode 90))

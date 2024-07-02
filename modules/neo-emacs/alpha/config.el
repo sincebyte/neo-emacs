@@ -36,3 +36,7 @@
       (load-theme 'kaolin-bubblegum t))))
 ;; (run-with-timer 0 3600 'synchronize-theme)
 ;; (load-theme 'kaolin-light t)
+(use-package transwin
+  :config
+  (setq transwin-delta-alpha 5)
+  (setq transwin-parameter-alpha 'alpha-background))

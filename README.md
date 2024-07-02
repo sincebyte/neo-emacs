@@ -1,32 +1,36 @@
 
 # Table of Contents
 
-1.  [About](#orgeda37ab)
-2.  [How to install](#org50fd7c0)
-    1.  [Install by Installer](#org2dce43a)
-    2.  [Install emacs](#orgadc19c9)
-    3.  [Clone project](#org465e90c)
-    4.  [Doom Install](#org35a211b)
-3.  [How to update](#orgbf1f99e)
-    1.  [For brew](#org1d810c4)
-    2.  [For doom project](#org599c956)
-4.  [Private setting](#org88ad6bf)
-    1.  [Font setting](#org8b6027e)
-    2.  [Basic setting](#orgbcb2f3c)
-5.  [Neoemacs modules](#orgb4a2b7b)
-    1.  [Lsp Java](#org923d151)
-    2.  [Vterm Shell](#org0d89796)
-    3.  [Ejc Sql](#org8552b34)
-    4.  [Emacs Rime](#orgfb3e36c)
-    5.  [Org mode](#org6b93b9d)
-    6.  [Restclient](#orgbe67279)
-    7.  [Eredis Usage](#org5c33c4f)
-    8.  [Bookmark](#org88ee104)
-    9.  [Elpa Offline](#org6cba487)
-    10. [Vue](#org23097f1)
-    11. [startup workspace](#org3a25613)
-6.  [About the Release](#org8956e34)
-7.  [Customize Farther](#org17dd43f)
+1.  [About](#org5737d69)
+2.  [How to install](#org0cc21c2)
+    1.  [Install by Installer](#org458b5a0)
+    2.  [Install emacs](#org2735fb8)
+    3.  [Clone project](#orgf31a6f8)
+    4.  [Doom Install](#orgb46949d)
+3.  [How to update](#org198dd10)
+    1.  [For brew](#orge0bd9a5)
+    2.  [For doom project](#org878c59a)
+4.  [Patches](#org9f9d040)
+    1.  [transparent patch](#org079d09a)
+    2.  [cursor animation](#org87bb299)
+    3.  [how to](#org9c5e0e3)
+5.  [Private setting](#org7607549)
+    1.  [Font setting](#orgc219132)
+    2.  [Basic setting](#org07d3250)
+6.  [Neoemacs modules](#org4952fb1)
+    1.  [Lsp Java](#org7d673f7)
+    2.  [Vterm Shell](#org12a078d)
+    3.  [Ejc Sql](#orgeb4af69)
+    4.  [Emacs Rime](#org9dfff3e)
+    5.  [Org mode](#org659cf10)
+    6.  [Restclient](#orgad420bb)
+    7.  [Eredis Usage](#org5dc7987)
+    8.  [Bookmark](#orgee64edc)
+    9.  [Elpa Offline](#orgd10add3)
+    10. [Vue](#org8c7f9d7)
+    11. [startup workspace](#org6a304bf)
+7.  [About the Release](#org7e1e9e3)
+8.  [Customize Farther](#org09da211)
 
 ![img](https://img.shields.io/badge/neo_emacs-v3.0-green.svg)  ![img](https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0)  ![img](https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1) ![img](https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&color=3498DB)  
 ![img](https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&color=2C2255) ![img](https://img.shields.io/badge/supports-Emacs_27.1_to_29.1-red.svg?logo=gnuemacs&color=7F5AB6)  
@@ -34,7 +38,7 @@
 ![img](./image-use.png)  
 
 
-<a id="orgeda37ab"></a>
+<a id="org5737d69"></a>
 
 # About
 
@@ -49,19 +53,19 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   Knowledge management system: Org-roam borrows principles from the Zettelkasten method, providing a solution for non-hierarchical note-taking.
 
 
-<a id="org50fd7c0"></a>
+<a id="org0cc21c2"></a>
 
 # How to install
 
 
-<a id="org2dce43a"></a>
+<a id="org458b5a0"></a>
 
 ## Install by Installer
 
 Hi everyone, the [neoemacs](http://neoemacs.com/dev) website is now online.Here we have a community online to discuss neo emacs which maybe allow you to start getting deeper into neo emacs faster.  
 
 
-<a id="orgadc19c9"></a>
+<a id="org2735fb8"></a>
 
 ## Install emacs
 
@@ -102,7 +106,7 @@ After emacs installation, set environment variables which names EMACS ,this depe
     export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs
 
 
-<a id="org465e90c"></a>
+<a id="orgf31a6f8"></a>
 
 ## Clone project
 
@@ -112,7 +116,7 @@ clone doom-emacs and neo-emacs from github.
     git clone --depth 1 https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
 
-<a id="org35a211b"></a>
+<a id="orgb46949d"></a>
 
 ## Doom Install
 
@@ -141,12 +145,12 @@ At last run below, this will take few minutes. And it depends on the quality of 
     ~/.emacs.doom/bin/doom.cmd install
 
 
-<a id="orgbf1f99e"></a>
+<a id="org198dd10"></a>
 
 # How to update
 
 
-<a id="org1d810c4"></a>
+<a id="orge0bd9a5"></a>
 
 ## For brew
 
@@ -154,7 +158,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     brew update && brew upgrade emacs-mac && brew cleanup emacs-mac
 
 
-<a id="org599c956"></a>
+<a id="org878c59a"></a>
 
 ## For doom project
 
@@ -164,14 +168,65 @@ At last run below, this will take few minutes. And it depends on the quality of 
     sh ~/.emacs.d/bin/doom sync
 
 
-<a id="org88ad6bf"></a>
+<a id="org9f9d040"></a>
+
+# Patches
+
+
+<a id="org079d09a"></a>
+
+## transparent patch
+
+It offer a window transparent solution which could transparent background but the font not.Note after install the patch, here have a alternative package to control the transparent value.  
+
+    (use-package transwin
+      :config
+      (setq transwin-delta-alpha 5)
+      (setq transwin-parameter-alpha 'alpha-background)
+      :bind
+      ("C-M-=" . transwin-inc)
+      ("C-M--" . transwin-dec)
+      ("C-M-0" . transwin-toggle))
+
+
+<a id="org87bb299"></a>
+
+## cursor animation
+
+The awesome patch could make cursor more funny.But there have a bug,If you shift to full screen from a window state , there will remain a shadow of the current cursor which will stay here forever.I will make cursor in replace mode before shifting to full screen.This might makes it effect less more.  
+
+
+<a id="org9c5e0e3"></a>
+
+## how to
+
+Here have a tutorial to apply patch if you are using emacs plus.  
+
+1.  Put the patches file under to \`/opt/homebrew/Library/Taps/d12frosted/homebrew-emacs-plus/patches/emacs-30\`
+2.  Modify \`/opt/homebrew/Library/Taps/d12frosted/homebrew-emacs-plus/Formula/emacs-plus@30.rb\`, around <span class="underline">local\_patch</span>.  
+    There only have two terms to be filled in, one is patch name which referenced to the pathches directory, another is the pathchs \`sha256\` value.  
+    
+        #
+        # Patches
+        #
+        opoo "The option --with-no-frame-refocus is not required anymore in emacs-plus@30." if build.with? "no-frame-refocus"
+        local_patch "fix-window-role", sha: "1f8423ea7e6e66c9ac6dd8e37b119972daa1264de00172a24a79a710efcb8130"
+        local_patch "system-appearance", sha: "9eb3ce80640025bff96ebaeb5893430116368d6349f4eb0cb4ef8b3d58477db6"
+        local_patch "poll", sha: "31b76d6a2830fa3b6d453e3bbf5ec7259b5babf1d977b2bf88a6624fa78cb3e6" if build.with? "poll"
+        local_patch "round-undecorated-frame", sha: "7451f80f559840e54e6a052e55d1100778abc55f98f1d0c038a24e25773f2874"
+        local_patch "cursor-animation", sha: "d6898b69c5248da9ee400e4526892aed4e1ad489c992ae5dcf724d3b1275b5d2"
+        local_patch "ns-alpha-background", sha: "6c174aff2602b64255ce8952f91302ede51e213be090f1b39e06913bbe0b086b"
+3.  Just install emacs plus, you could use \`brew reinstall\`
+
+
+<a id="org7607549"></a>
 
 # Private setting
 
 Customize your private setting config in the config.el ; use `setq`  
 
 
-<a id="org8b6027e"></a>
+<a id="orgc219132"></a>
 
 ## Font setting
 
@@ -205,7 +260,7 @@ Cause different platform have different font name,after font installed there nee
     -   M-x nerd-icons-install-fonts
 
 
-<a id="orgbcb2f3c"></a>
+<a id="org07d3250"></a>
 
 ## Basic setting
 
@@ -325,12 +380,12 @@ Cause different platform have different font name,after font installed there nee
 > recentfile save default dir: ~/.emacs.d/.local/cache/recentf  
 
 
-<a id="orgb4a2b7b"></a>
+<a id="org4952fb1"></a>
 
 # Neoemacs modules
 
 
-<a id="org923d151"></a>
+<a id="org7d673f7"></a>
 
 ## Lsp Java
 
@@ -425,13 +480,13 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     3.  Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
 
 
-<a id="org0d89796"></a>
+<a id="org12a078d"></a>
 
 ## Vterm Shell
 
 You&rsquo;d better install vterm in a terminal environment case there might have error incompatible architecture.  
 
-<div class="notice-warning" id="orge4b1b28">
+<div class="notice-warning" id="orgb9518e0">
 <p>
 Vterm is not available on windows.<br />
 Thus windows user have to use eshell as a downgrade plan.<br />
@@ -542,7 +597,7 @@ Thus windows user have to use eshell as a downgrade plan.<br />
         </table>
 
 
-<a id="org8552b34"></a>
+<a id="orgeb4af69"></a>
 
 ## Ejc Sql
 
@@ -615,7 +670,7 @@ Thus windows user have to use eshell as a downgrade plan.<br />
     </table>
 
 
-<a id="orgfb3e36c"></a>
+<a id="org9dfff3e"></a>
 
 ## Emacs Rime
 
@@ -653,7 +708,7 @@ So there have a variable which named `rime-user-data-dir` , And another importan
 [futher more rime readme](./modules/neo-emacs/rime/readme.md)  
 
 
-<a id="org6b93b9d"></a>
+<a id="org659cf10"></a>
 
 ## Org mode
 
@@ -700,7 +755,7 @@ So there have a variable which named `rime-user-data-dir` , And another importan
         ln -s ~/org/org-roam/image any_where/image
 
 
-<a id="orgbe67279"></a>
+<a id="orgad420bb"></a>
 
 ## Restclient
 
@@ -725,7 +780,7 @@ Fortunately we have solution for other mime type, it&rsquo;s restclient-set-var,
 About the variables infomation in current buffer, we could use `C-c Tab` to show them.  
 
 
-<a id="org5c33c4f"></a>
+<a id="org5dc7987"></a>
 
 ## Eredis Usage
 
@@ -782,7 +837,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="org88ee104"></a>
+<a id="orgee64edc"></a>
 
 ## Bookmark
 
@@ -823,7 +878,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="org6cba487"></a>
+<a id="orgd10add3"></a>
 
 ## Elpa Offline
 
@@ -836,7 +891,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="org23097f1"></a>
+<a id="org8c7f9d7"></a>
 
 ## Vue
 
@@ -845,7 +900,7 @@ as a full stack developer u need vue support, so here it comes.
     npm install vls -g
 
 
-<a id="org3a25613"></a>
+<a id="org6a304bf"></a>
 
 ## startup workspace
 
@@ -868,7 +923,7 @@ You could customization startup inital workspace and their buffer.No need to ope
     (add-hook 'window-setup-hook #'open-my-workspaces)
 
 
-<a id="org8956e34"></a>
+<a id="org7e1e9e3"></a>
 
 # About the Release
 
@@ -877,7 +932,7 @@ Release package contains the git repository of related dependencies.The compiled
 I will update the Release package once a month, And test them in advance and revise them for compatibility with upstream projects.  
 
 
-<a id="org17dd43f"></a>
+<a id="org09da211"></a>
 
 # Customize Farther
 
