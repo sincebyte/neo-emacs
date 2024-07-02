@@ -5,11 +5,19 @@
 (map! :ie "C-i"     'consult-yank-pop   )
 
 (use-package dirvish
+  :init
+  (dirvish-override-dired-mode)
   :config
   (setq dirvish-hide-details t
+        dirvish-use-header-line 'global
         dirvish-hide-cursor t
-        dirvish-default-layout '(0 0.4 0.6)))
-(dirvish-override-dired-mode)
+        delete-by-moving-to-trash t
+        dirvish-default-layout '(0 0.2 0.8)
+        dirvish-attributes
+        '(nerd-icons file-size subtree-state vc-state)
+        dirvish-header-line-format
+        '(:left (path) :right (free-space)))
+  )
 
 (map! :after dired
       :map dired-mode-map
