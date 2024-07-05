@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-07-05 Fri 16:54 -->
+<!-- 2024-07-05 Fri 16:56 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>neo emacs</title>
@@ -194,8 +194,8 @@
   .org-svg { }
 </style>
 <script src  = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src  = "https://emacs-1308440781.cos.ap-chengdu.myqcloud.com/scroll.js"></script>
-<link   href = "https://emacs-1308440781.cos.ap-chengdu.myqcloud.com/base.css" rel="stylesheet" type="text/css"></link>
+<script src  = "https://emacs-1308440781.cos.ap-chengdu.myqcloud.com/classic/scroll.js"></script>
+<link   href = "https://emacs-1308440781.cos.ap-chengdu.myqcloud.com/classic/base.css" rel="stylesheet" type="text/css"></link>
 <a href="https://github.com/vanniuner/neo-emacs" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#70B7FD; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
 </head>
 <body>
@@ -208,51 +208,51 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org3bbc29a">1. About</a></li>
-<li><a href="#orgdaebf5a">2. How to install</a>
+<li><a href="#orgbabe5b6">1. About</a></li>
+<li><a href="#org3d5b9c1">2. How to install</a>
 <ul>
-<li><a href="#orgecf7c82">2.1. Install by Installer</a></li>
-<li><a href="#org76efd39">2.2. Install emacs</a></li>
-<li><a href="#orge4f95a9">2.3. Clone project</a></li>
-<li><a href="#orgb85bca7">2.4. Doom Install</a></li>
+<li><a href="#org5822af3">2.1. Install by Installer</a></li>
+<li><a href="#orgbf8decd">2.2. Install emacs</a></li>
+<li><a href="#org8b66eff">2.3. Clone project</a></li>
+<li><a href="#org47306ff">2.4. Doom Install</a></li>
 </ul>
 </li>
-<li><a href="#org707f5d9">3. How to update</a>
+<li><a href="#org7f15bd0">3. How to update</a>
 <ul>
-<li><a href="#org7280f55">3.1. For brew</a></li>
-<li><a href="#orgc5d98ed">3.2. For doom project</a></li>
+<li><a href="#org139a4e0">3.1. For brew</a></li>
+<li><a href="#org90bbc8f">3.2. For doom project</a></li>
 </ul>
 </li>
-<li><a href="#org85de8c8">4. Patches</a>
+<li><a href="#org0b56560">4. Patches</a>
 <ul>
-<li><a href="#org418074f">4.1. transparent patch</a></li>
-<li><a href="#org6dc0a0e">4.2. cursor animation</a></li>
-<li><a href="#orgd19bcb8">4.3. how to</a></li>
+<li><a href="#orgd890b3b">4.1. transparent patch</a></li>
+<li><a href="#orgcf25897">4.2. cursor animation</a></li>
+<li><a href="#org4499205">4.3. how to</a></li>
 </ul>
 </li>
-<li><a href="#org3f158c0">5. Private setting</a>
+<li><a href="#org609db64">5. Private setting</a>
 <ul>
-<li><a href="#org0315395">5.1. Font setting</a></li>
-<li><a href="#org19e7c74">5.2. Basic setting</a></li>
+<li><a href="#org1b50701">5.1. Font setting</a></li>
+<li><a href="#org16d278f">5.2. Basic setting</a></li>
 </ul>
 </li>
-<li><a href="#orgdcb2a69">6. Neoemacs modules</a>
+<li><a href="#org9d38538">6. Neoemacs modules</a>
 <ul>
-<li><a href="#org5216173">6.1. Lsp Java</a></li>
-<li><a href="#orgc93aadc">6.2. Vterm Shell</a></li>
-<li><a href="#org3a78e5f">6.3. Ejc Sql</a></li>
-<li><a href="#org0e4dcbc">6.4. Emacs Rime</a></li>
-<li><a href="#org10e3594">6.5. Org mode</a></li>
-<li><a href="#orgb35e452">6.6. Restclient</a></li>
-<li><a href="#org261b43e">6.7. Eredis Usage</a></li>
-<li><a href="#orga4f7fd9">6.8. Bookmark</a></li>
-<li><a href="#orgd0957a7">6.9. Elpa Offline</a></li>
-<li><a href="#org1c81444">6.10. Vue</a></li>
-<li><a href="#org28a189c">6.11. startup workspace</a></li>
+<li><a href="#orgb09f008">6.1. Lsp Java</a></li>
+<li><a href="#orgcd86da9">6.2. Vterm Shell</a></li>
+<li><a href="#org54e2a68">6.3. Ejc Sql</a></li>
+<li><a href="#orgc201b66">6.4. Emacs Rime</a></li>
+<li><a href="#org1367150">6.5. Org mode</a></li>
+<li><a href="#orge9e3ffb">6.6. Restclient</a></li>
+<li><a href="#orgcb55745">6.7. Eredis Usage</a></li>
+<li><a href="#org59d1380">6.8. Bookmark</a></li>
+<li><a href="#org2281f10">6.9. Elpa Offline</a></li>
+<li><a href="#org8a653d4">6.10. Vue</a></li>
+<li><a href="#org5b94f40">6.11. startup workspace</a></li>
 </ul>
 </li>
-<li><a href="#orgc77b0dd">7. About the Release</a></li>
-<li><a href="#org1f543a1">8. Customize Farther</a></li>
+<li><a href="#org4aa7ac6">7. About the Release</a></li>
+<li><a href="#org49a0198">8. Customize Farther</a></li>
 </ul>
 </div>
 </div>
@@ -262,12 +262,12 @@
 </p>
 
 
-<div id="org943dc80" class="figure">
+<div id="org8cc3131" class="figure">
 <p><img src="./images/image-use.png" alt="image-use.png" /><br />
 </p>
 </div>
-<div id="outline-container-org3bbc29a" class="outline-2">
-<h2 id="org3bbc29a"><span class="section-number-2">1.</span> About</h2>
+<div id="outline-container-orgbabe5b6" class="outline-2">
+<h2 id="orgbabe5b6"><span class="section-number-2">1.</span> About</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Neo emacs is a configuration framework for GNU Emacs which is based on doom emacs and focuses on the java web application coding environment. Neo emacs has the following features:<br />
@@ -283,20 +283,20 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 </ul>
 </div>
 </div>
-<div id="outline-container-orgdaebf5a" class="outline-2">
-<h2 id="orgdaebf5a"><span class="section-number-2">2.</span> How to install</h2>
+<div id="outline-container-org3d5b9c1" class="outline-2">
+<h2 id="org3d5b9c1"><span class="section-number-2">2.</span> How to install</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgecf7c82" class="outline-3">
-<h3 id="orgecf7c82"><span class="section-number-3">2.1.</span> Install by Installer</h3>
+<div id="outline-container-org5822af3" class="outline-3">
+<h3 id="org5822af3"><span class="section-number-3">2.1.</span> Install by Installer</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Hi everyone, the <a href="http://neoemacs.com/dev">neoemacs</a> website is now online.Here we have a community online to discuss neo emacs which maybe allow you to start getting deeper into neo emacs faster.<br />
 </p>
 </div>
 </div>
-<div id="outline-container-org76efd39" class="outline-3">
-<h3 id="org76efd39"><span class="section-number-3">2.2.</span> Install emacs</h3>
+<div id="outline-container-orgbf8decd" class="outline-3">
+<h3 id="orgbf8decd"><span class="section-number-3">2.2.</span> Install emacs</h3>
 <div class="outline-text-3" id="text-2-2">
 <blockquote>
 <p>
@@ -358,8 +358,8 @@ After emacs installation, set environment variables which names EMACS ,this depe
 </div>
 </div>
 </div>
-<div id="outline-container-orge4f95a9" class="outline-3">
-<h3 id="orge4f95a9"><span class="section-number-3">2.3.</span> Clone project</h3>
+<div id="outline-container-org8b66eff" class="outline-3">
+<h3 id="org8b66eff"><span class="section-number-3">2.3.</span> Clone project</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 clone doom-emacs and neo-emacs from github.<br />
@@ -371,8 +371,8 @@ clone doom-emacs and neo-emacs from github.<br />
 </div>
 </div>
 </div>
-<div id="outline-container-orgb85bca7" class="outline-3">
-<h3 id="orgb85bca7"><span class="section-number-3">2.4.</span> Doom Install</h3>
+<div id="outline-container-org47306ff" class="outline-3">
+<h3 id="org47306ff"><span class="section-number-3">2.4.</span> Doom Install</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 Set up a vpn if you need it.<br />
@@ -426,12 +426,12 @@ At last run below, this will take few minutes. And it depends on the quality of 
 </div>
 </div>
 </div>
-<div id="outline-container-org707f5d9" class="outline-2">
-<h2 id="org707f5d9"><span class="section-number-2">3.</span> How to update</h2>
+<div id="outline-container-org7f15bd0" class="outline-2">
+<h2 id="org7f15bd0"><span class="section-number-2">3.</span> How to update</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org7280f55" class="outline-3">
-<h3 id="org7280f55"><span class="section-number-3">3.1.</span> For brew</h3>
+<div id="outline-container-org139a4e0" class="outline-3">
+<h3 id="org139a4e0"><span class="section-number-3">3.1.</span> For brew</h3>
 <div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
 <pre class="src src-shell">brew upgrade
@@ -440,8 +440,8 @@ brew update &amp;&amp; brew upgrade emacs-mac &amp;&amp; brew cleanup emacs-mac
 </div>
 </div>
 </div>
-<div id="outline-container-orgc5d98ed" class="outline-3">
-<h3 id="orgc5d98ed"><span class="section-number-3">3.2.</span> For doom project</h3>
+<div id="outline-container-org90bbc8f" class="outline-3">
+<h3 id="org90bbc8f"><span class="section-number-3">3.2.</span> For doom project</h3>
 <div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
 <pre class="src src-shell"><span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">EMACS</span>=/Applications/Emacs.app/Contents/MacOS/EMACS
@@ -453,12 +453,12 @@ sh ~/.emacs.d/bin/doom sync
 </div>
 </div>
 </div>
-<div id="outline-container-org85de8c8" class="outline-2">
-<h2 id="org85de8c8"><span class="section-number-2">4.</span> Patches</h2>
+<div id="outline-container-org0b56560" class="outline-2">
+<h2 id="org0b56560"><span class="section-number-2">4.</span> Patches</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org418074f" class="outline-3">
-<h3 id="org418074f"><span class="section-number-3">4.1.</span> transparent patch</h3>
+<div id="outline-container-orgd890b3b" class="outline-3">
+<h3 id="orgd890b3b"><span class="section-number-3">4.1.</span> transparent patch</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 It offer a window transparent solution which could transparent background but the font not.Note after install the patch, here have a alternative package to control the transparent value.<br />
@@ -476,16 +476,16 @@ It offer a window transparent solution which could transparent background but th
 </div>
 </div>
 </div>
-<div id="outline-container-org6dc0a0e" class="outline-3">
-<h3 id="org6dc0a0e"><span class="section-number-3">4.2.</span> cursor animation</h3>
+<div id="outline-container-orgcf25897" class="outline-3">
+<h3 id="orgcf25897"><span class="section-number-3">4.2.</span> cursor animation</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 The awesome patch could make cursor more funny.But there have a bug,If you shift to full screen from a window state , there will remain a shadow of the current cursor which will stay here forever.I will make cursor in replace mode before shifting to full screen.This might makes it effect less more.<br />
 </p>
 </div>
 </div>
-<div id="outline-container-orgd19bcb8" class="outline-3">
-<h3 id="orgd19bcb8"><span class="section-number-3">4.3.</span> how to</h3>
+<div id="outline-container-org4499205" class="outline-3">
+<h3 id="org4499205"><span class="section-number-3">4.3.</span> how to</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 Here have a tutorial to apply patch if you are using emacs plus.<br />
@@ -514,15 +514,15 @@ There only have two terms to be filled in, one is patch name which referenced to
 </div>
 </div>
 </div>
-<div id="outline-container-org3f158c0" class="outline-2">
-<h2 id="org3f158c0"><span class="section-number-2">5.</span> Private setting</h2>
+<div id="outline-container-org609db64" class="outline-2">
+<h2 id="org609db64"><span class="section-number-2">5.</span> Private setting</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Customize your private setting config in the config.el ; use <code>setq</code><br />
 </p>
 </div>
-<div id="outline-container-org0315395" class="outline-3">
-<h3 id="org0315395"><span class="section-number-3">5.1.</span> Font setting</h3>
+<div id="outline-container-org1b50701" class="outline-3">
+<h3 id="org1b50701"><span class="section-number-3">5.1.</span> Font setting</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 Before start up,install fonts in the <a href="./neoemacs/font">./neoemacs/font</a> directory firstly.<br />
@@ -530,7 +530,7 @@ Cause different platform have different font name,after font installed there nee
 </p>
 </div>
 <ol class="org-ol">
-<li><a id="org1b83a0a"></a>setting on macos<br />
+<li><a id="orga486906"></a>setting on macos<br />
 <div class="outline-text-4" id="text-5-1-1">
 <div class="org-src-container">
 <pre class="src src-elisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> <span style="color: #dcaeea;">doom-font</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">font-spec</span> <span style="color: #c678dd;">:family</span> <span style="color: #98be65;">"victor Mono"</span> <span style="color: #c678dd;">:size</span> <span style="color: #da8548; font-weight: bold;">19</span> <span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
@@ -543,7 +543,7 @@ Cause different platform have different font name,after font installed there nee
 </div>
 </div>
 </li>
-<li><a id="org3f4336d"></a>setting on windows<br />
+<li><a id="orgec445c3"></a>setting on windows<br />
 <div class="outline-text-4" id="text-5-1-2">
 <div class="org-src-container">
 <pre class="src src-elisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> <span style="color: #dcaeea;">doom-font</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">font-spec</span> <span style="color: #c678dd;">:family</span> <span style="color: #98be65;">"victor Mono Medium"</span> <span style="color: #c678dd;">:size</span> <span style="color: #da8548; font-weight: bold;">24</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
@@ -556,7 +556,7 @@ Cause different platform have different font name,after font installed there nee
 </div>
 </div>
 </li>
-<li><a id="org67478e5"></a>install all-the-icons<br />
+<li><a id="org7e473bd"></a>install all-the-icons<br />
 <div class="outline-text-4" id="text-5-1-3">
 <p>
 For the icons font, we need do below<br />
@@ -570,8 +570,8 @@ For the icons font, we need do below<br />
 </li>
 </ol>
 </div>
-<div id="outline-container-org19e7c74" class="outline-3">
-<h3 id="org19e7c74"><span class="section-number-3">5.2.</span> Basic setting</h3>
+<div id="outline-container-org16d278f" class="outline-3">
+<h3 id="org16d278f"><span class="section-number-3">5.2.</span> Basic setting</h3>
 <div class="outline-text-3" id="text-5-2">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 <caption class="t-bottom"><span class="table-number">Table 1:</span> neo-emacs basic setting</caption>
@@ -694,12 +694,12 @@ recentfile save default dir: ~/.emacs.d/.local/cache/recentf<br />
 </div>
 </div>
 </div>
-<div id="outline-container-orgdcb2a69" class="outline-2">
-<h2 id="orgdcb2a69"><span class="section-number-2">6.</span> Neoemacs modules</h2>
+<div id="outline-container-org9d38538" class="outline-2">
+<h2 id="org9d38538"><span class="section-number-2">6.</span> Neoemacs modules</h2>
 <div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-org5216173" class="outline-3">
-<h3 id="org5216173"><span class="section-number-3">6.1.</span> Lsp Java</h3>
+<div id="outline-container-orgb09f008" class="outline-3">
+<h3 id="orgb09f008"><span class="section-number-3">6.1.</span> Lsp Java</h3>
 <div class="outline-text-3" id="text-6-1">
 <p>
 <a href="./modules/neo-emacs/java/readme.html">futher more java readme</a><br />
@@ -806,14 +806,14 @@ Shotcuts/Key binding<br />
 </ul>
 </div>
 </div>
-<div id="outline-container-orgc93aadc" class="outline-3">
-<h3 id="orgc93aadc"><span class="section-number-3">6.2.</span> Vterm Shell</h3>
+<div id="outline-container-orgcd86da9" class="outline-3">
+<h3 id="orgcd86da9"><span class="section-number-3">6.2.</span> Vterm Shell</h3>
 <div class="outline-text-3" id="text-6-2">
 <p>
 You&rsquo;d better install vterm in a terminal environment case there might have error incompatible architecture.<br />
 </p>
 
-<div class="notice-warning" id="orgc872b46">
+<div class="notice-warning" id="org91571aa">
 <p>
 Vterm is not available on windows.<br />
 Thus windows user have to use eshell as a downgrade plan.<br />
@@ -822,7 +822,7 @@ Thus windows user have to use eshell as a downgrade plan.<br />
 </div>
 </div>
 <ol class="org-ol">
-<li><a id="orgf196469"></a>Install vterm<br />
+<li><a id="org59f395f"></a>Install vterm<br />
 <div class="outline-text-4" id="text-6-2-1">
 <p>
 You&rsquo;d better install vterm in a terminal environment case there might have error incompatible architecture.<br />
@@ -841,7 +841,7 @@ cmake ..
 </div>
 </div>
 </li>
-<li><a id="org45ad646"></a>Fish shell optimize<br />
+<li><a id="org34792bf"></a>Fish shell optimize<br />
 <div class="outline-text-4" id="text-6-2-2">
 <p>
 If you are using fish shell ,fortunately there have some optimize config prepared for you.<br />
@@ -902,7 +902,7 @@ The difference is wildcard<br />
 </div>
 </div>
 </li>
-<li><a id="orgb4f5017"></a>Usage<br />
+<li><a id="org7e44d78"></a>Usage<br />
 <div class="outline-text-4" id="text-6-2-3">
 <ul class="org-ul">
 <li>Being with eshell<br />
@@ -951,8 +951,8 @@ Key Binding<br />
 </li>
 </ol>
 </div>
-<div id="outline-container-org3a78e5f" class="outline-3">
-<h3 id="org3a78e5f"><span class="section-number-3">6.3.</span> Ejc Sql</h3>
+<div id="outline-container-org54e2a68" class="outline-3">
+<h3 id="org54e2a68"><span class="section-number-3">6.3.</span> Ejc Sql</h3>
 <div class="outline-text-3" id="text-6-3">
 <ul class="org-ul">
 <li><p>
@@ -1038,8 +1038,8 @@ key binding<br />
 </ul>
 </div>
 </div>
-<div id="outline-container-org0e4dcbc" class="outline-3">
-<h3 id="org0e4dcbc"><span class="section-number-3">6.4.</span> Emacs Rime</h3>
+<div id="outline-container-orgc201b66" class="outline-3">
+<h3 id="orgc201b66"><span class="section-number-3">6.4.</span> Emacs Rime</h3>
 <div class="outline-text-3" id="text-6-4">
 <p>
 <a href="https://github.com/DogLooksGood/emacs-rime">Emacs Rime</a> which makes to embedding an input method be possible whthin the emacs.Emacs could benefit form the flexible configuration of <a href="https://rime.im/">rime</a>.<br />
@@ -1078,22 +1078,22 @@ So there have a variable which named <code>rime-user-data-dir</code> , And anoth
 </p>
 </div>
 </div>
-<div id="outline-container-org10e3594" class="outline-3">
-<h3 id="org10e3594"><span class="section-number-3">6.5.</span> Org mode</h3>
+<div id="outline-container-org1367150" class="outline-3">
+<h3 id="org1367150"><span class="section-number-3">6.5.</span> Org mode</h3>
 <div class="outline-text-3" id="text-6-5">
 <p>
 <a href="./modules/neo-emacs/org/readme.html">futher more org readme</a><br />
 </p>
 </div>
 <ol class="org-ol">
-<li><a id="org4404d30"></a>Install Dependency<br />
+<li><a id="orga231550"></a>Install Dependency<br />
 <div class="outline-text-4" id="text-6-5-1">
 <p>
 There have some third party lib we need prepare.<br />
 </p>
 </div>
 <ol class="org-ol">
-<li><a id="org40566d0"></a>d2 diagram<br />
+<li><a id="orgf261548"></a>d2 diagram<br />
 <div class="outline-text-5" id="text-6-5-1-1">
 <p>
 <a href="https://github.com/terrastruct/d2/blob/master/docs/INSTALL.md">d2 installation</a><br />
@@ -1107,7 +1107,7 @@ alias d2 <span style="color: #98be65;">"/opt/homebrew/bin//d2 --pad 0 --layout t
 </li>
 </ol>
 </li>
-<li><a id="orgf313354"></a>Image to base64<br />
+<li><a id="org9ad66de"></a>Image to base64<br />
 <div class="outline-text-4" id="text-6-5-2">
 <p>
 No need to sent images files of the source.<br />
@@ -1115,7 +1115,7 @@ The embedded base64 image make to distribute your html documentation more easily
 </p>
 </div>
 </li>
-<li><a id="orgbe7d5a4"></a>Optimize Line Number<br />
+<li><a id="org016c4f6"></a>Optimize Line Number<br />
 <div class="outline-text-4" id="text-6-5-3">
 <p>
 Just hidden the colon after line number character.<br />
@@ -1136,7 +1136,7 @@ Modify `~/.emacs.d/.local/straight/repos/org/lisp/ox-html.el`.<br />
 </div>
 </div>
 </li>
-<li><a id="orgbf05479"></a>Image Directory<br />
+<li><a id="org127e569"></a>Image Directory<br />
 <div class="outline-text-4" id="text-6-5-4">
 <p>
 Cause org mode html export program  need a image directory locate at org root directory.<br />
@@ -1152,8 +1152,8 @@ Make the image directory as your screenshot file&rsquo;s saving location.<br />
 </li>
 </ol>
 </div>
-<div id="outline-container-orgb35e452" class="outline-3">
-<h3 id="orgb35e452"><span class="section-number-3">6.6.</span> Restclient</h3>
+<div id="outline-container-orge9e3ffb" class="outline-3">
+<h3 id="orge9e3ffb"><span class="section-number-3">6.6.</span> Restclient</h3>
 <div class="outline-text-3" id="text-6-6">
 <p>
 Restclient provide a test suite for HTTP REST in Emacs.The official repository here <a href="https://github.com/pashky/restclient.el">restclient.el</a>.<br />
@@ -1191,12 +1191,12 @@ About the variables infomation in current buffer, we could use <code>C-c Tab</co
 </p>
 </div>
 </div>
-<div id="outline-container-org261b43e" class="outline-3">
-<h3 id="org261b43e"><span class="section-number-3">6.7.</span> Eredis Usage</h3>
+<div id="outline-container-orgcb55745" class="outline-3">
+<h3 id="orgcb55745"><span class="section-number-3">6.7.</span> Eredis Usage</h3>
 <div class="outline-text-3" id="text-6-7">
 </div>
 <ol class="org-ol">
-<li><a id="orgc146f82"></a>config<br />
+<li><a id="org1c3cba2"></a>config<br />
 <div class="outline-text-4" id="text-6-7-1">
 <p>
 Use eredis firstly we could writen a funtion for a particular redis connection like this.<br />
@@ -1221,7 +1221,7 @@ Then you could use <b>M-x</b> ielm execution any redis command.<br />
 </div>
 </div>
 </li>
-<li><a id="org9ce7707"></a>send redis command on org mode<br />
+<li><a id="org995a3f4"></a>send redis command on org mode<br />
 <div class="outline-text-4" id="text-6-7-2">
 <p>
 key binding C-c C-c<br />
@@ -1263,8 +1263,8 @@ key binding C-c C-c<br />
 </li>
 </ol>
 </div>
-<div id="outline-container-orga4f7fd9" class="outline-3">
-<h3 id="orga4f7fd9"><span class="section-number-3">6.8.</span> Bookmark</h3>
+<div id="outline-container-org59d1380" class="outline-3">
+<h3 id="org59d1380"><span class="section-number-3">6.8.</span> Bookmark</h3>
 <div class="outline-text-3" id="text-6-8">
 <ul class="org-ul">
 <li><p>
@@ -1310,8 +1310,8 @@ key binding<br />
 </ul>
 </div>
 </div>
-<div id="outline-container-orgd0957a7" class="outline-3">
-<h3 id="orgd0957a7"><span class="section-number-3">6.9.</span> Elpa Offline</h3>
+<div id="outline-container-org2281f10" class="outline-3">
+<h3 id="org2281f10"><span class="section-number-3">6.9.</span> Elpa Offline</h3>
 <div class="outline-text-3" id="text-6-9">
 <p>
 rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa<br />
@@ -1326,8 +1326,8 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa<br />
 </div>
 </div>
 </div>
-<div id="outline-container-org1c81444" class="outline-3">
-<h3 id="org1c81444"><span class="section-number-3">6.10.</span> Vue</h3>
+<div id="outline-container-org8a653d4" class="outline-3">
+<h3 id="org8a653d4"><span class="section-number-3">6.10.</span> Vue</h3>
 <div class="outline-text-3" id="text-6-10">
 <p>
 as a full stack developer u need vue support, so here it comes.<br />
@@ -1338,8 +1338,8 @@ as a full stack developer u need vue support, so here it comes.<br />
 </div>
 </div>
 </div>
-<div id="outline-container-org28a189c" class="outline-3">
-<h3 id="org28a189c"><span class="section-number-3">6.11.</span> startup workspace</h3>
+<div id="outline-container-org5b94f40" class="outline-3">
+<h3 id="org5b94f40"><span class="section-number-3">6.11.</span> startup workspace</h3>
 <div class="outline-text-3" id="text-6-11">
 <p>
 You could customization startup inital workspace and their buffer.No need to open it every time.<br />
@@ -1365,8 +1365,8 @@ You could customization startup inital workspace and their buffer.No need to ope
 </div>
 </div>
 </div>
-<div id="outline-container-orgc77b0dd" class="outline-2">
-<h2 id="orgc77b0dd"><span class="section-number-2">7.</span> About the Release</h2>
+<div id="outline-container-org4aa7ac6" class="outline-2">
+<h2 id="org4aa7ac6"><span class="section-number-2">7.</span> About the Release</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 This step can help you compile neo emacs faster,It only takes 3 minutes to install using the release package on my Mac laptop. Otherwise it would take me 15 minutes. The release installation package is a better choice for users with unstable networks and those who need to frequently reinstall neoemacs.<br />
@@ -1375,8 +1375,8 @@ I will update the Release package once a month, And test them in advance and rev
 </p>
 </div>
 </div>
-<div id="outline-container-org1f543a1" class="outline-2">
-<h2 id="org1f543a1"><span class="section-number-2">8.</span> Customize Farther</h2>
+<div id="outline-container-org49a0198" class="outline-2">
+<h2 id="org49a0198"><span class="section-number-2">8.</span> Customize Farther</h2>
 <div class="outline-text-2" id="text-8">
 <p>
 For customize farther, there have some documentation you need read.<br />
@@ -1399,7 +1399,7 @@ For customize farther, there have some documentation you need read.<br />
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: sincebyte</p>
-<p class="date">Created: 2024-07-05 Fri 16:54</p>
+<p class="date">Created: 2024-07-05 Fri 16:56</p>
 </div>
 </body>
 </html>

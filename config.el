@@ -141,6 +141,12 @@
 (general-def          'insert "C-h"    'delete-backward-char )
 (keyboard-translate ?\C-h ?\C-?                              )
 
+(map! :after evil
+      :map evil-insert-state-map
+      "TAB" nil)
+(map! :after evil
+      :map evil-insert-state-map
+      "TAB" #'yas-expand)
 
 (setq
  kill-do-not-save-duplicates                t  ;不向kill-ring中加入重复内容
