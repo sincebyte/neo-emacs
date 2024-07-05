@@ -12,7 +12,7 @@
 ;; Doom exposes five (optional) variables for controlling fonts in Doom:
 ;;
 ;; - `doom-font' -- the primary font to use
-;; (setq doom-font (font-spec :family "等距更纱黑体 Slab SC" :size 18.0))
+
 (if (eq system-type 'windows-nt)
     (progn (set-selection-coding-system 'utf-8)
            (setq doom-font (font-spec :family "Kode Mono" :size 24)
@@ -20,17 +20,18 @@
                  cjk-font-size 26))
   (progn (set-selection-coding-system 'utf-16le-dos)
          (setq doom-font (font-spec :family "Kode Mono" :size 16 )
-               ;; doom-variable-pitch-font "Hack Nerd Font"
-               ;; doom-unicode-font "Kode Mono"
                cjk-font "仓耳今楷01-9128"
                cjk-font-size 20)))
+;; (progn (set-selection-coding-system 'utf-16le-dos)
+;;        (setq doom-font (font-spec :family "Kode Mono" :size 20 )
+;;              cjk-font "仓耳今楷01-9128"
+;;              cjk-font-size 24)))
 
 (defun init-cjk-fonts()
   (when (display-graphic-p) (eq (framep (selected-frame)) 'x)
         (dolist (charset '(kana han cjk-misc bopomofo))
           (set-fontset-font (frame-parameter nil 'font)
                             charset (font-spec :family cjk-font :size cjk-font-size)))))
-
 (add-hook 'doom-init-ui-hook 'init-cjk-fonts)
 
 ;; - `doom-variable-pitch-font' -- a non-monospace font (where applicable)

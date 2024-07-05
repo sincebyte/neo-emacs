@@ -1,44 +1,44 @@
 
 # Table of Contents
 
-1.  [About](#org5737d69)
-2.  [How to install](#org0cc21c2)
-    1.  [Install by Installer](#org458b5a0)
-    2.  [Install emacs](#org2735fb8)
-    3.  [Clone project](#orgf31a6f8)
-    4.  [Doom Install](#orgb46949d)
-3.  [How to update](#org198dd10)
-    1.  [For brew](#orge0bd9a5)
-    2.  [For doom project](#org878c59a)
-4.  [Patches](#org9f9d040)
-    1.  [transparent patch](#org079d09a)
-    2.  [cursor animation](#org87bb299)
-    3.  [how to](#org9c5e0e3)
-5.  [Private setting](#org7607549)
-    1.  [Font setting](#orgc219132)
-    2.  [Basic setting](#org07d3250)
-6.  [Neoemacs modules](#org4952fb1)
-    1.  [Lsp Java](#org7d673f7)
-    2.  [Vterm Shell](#org12a078d)
-    3.  [Ejc Sql](#orgeb4af69)
-    4.  [Emacs Rime](#org9dfff3e)
-    5.  [Org mode](#org659cf10)
-    6.  [Restclient](#orgad420bb)
-    7.  [Eredis Usage](#org5dc7987)
-    8.  [Bookmark](#orgee64edc)
-    9.  [Elpa Offline](#orgd10add3)
-    10. [Vue](#org8c7f9d7)
-    11. [startup workspace](#org6a304bf)
-7.  [About the Release](#org7e1e9e3)
-8.  [Customize Farther](#org09da211)
+1.  [About](#orga372750)
+2.  [How to install](#org86a0d54)
+    1.  [Install by Installer](#orgddb2521)
+    2.  [Install emacs](#orgb1bc1ec)
+    3.  [Clone project](#org2ee97c5)
+    4.  [Doom Install](#org05828d6)
+3.  [How to update](#org59c8400)
+    1.  [For brew](#org01df997)
+    2.  [For doom project](#org4c02090)
+4.  [Patches](#orgfbc8ff6)
+    1.  [transparent patch](#org15c8387)
+    2.  [cursor animation](#orgff276f9)
+    3.  [how to](#org6ae12fd)
+5.  [Private setting](#org5d3dc6b)
+    1.  [Font setting](#orgbbf81ab)
+    2.  [Basic setting](#org4f89feb)
+6.  [Neoemacs modules](#org4569a70)
+    1.  [Lsp Java](#orgb2395ad)
+    2.  [Vterm Shell](#org664c3cb)
+    3.  [Ejc Sql](#org6995575)
+    4.  [Emacs Rime](#org3084678)
+    5.  [Org mode](#org339c8ea)
+    6.  [Restclient](#org8211b89)
+    7.  [Eredis Usage](#org6b12474)
+    8.  [Bookmark](#org369304c)
+    9.  [Elpa Offline](#orgd3153b9)
+    10. [Vue](#org1b64fbd)
+    11. [startup workspace](#org70000aa)
+7.  [About the Release](#org9854447)
+8.  [Customize Farther](#org5e7879f)
 
 ![img](https://img.shields.io/badge/neo_emacs-v3.0-green.svg)  ![img](https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0)  ![img](https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1) ![img](https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&color=3498DB)  
 ![img](https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&color=2C2255) ![img](https://img.shields.io/badge/supports-Emacs_27.1_to_29.1-red.svg?logo=gnuemacs&color=7F5AB6)  
 
-![img](./image-use.png)  
+![img](./images/image-use.png)  
 
 
-<a id="org5737d69"></a>
+<a id="orga372750"></a>
 
 # About
 
@@ -53,19 +53,19 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   Knowledge management system: Org-roam borrows principles from the Zettelkasten method, providing a solution for non-hierarchical note-taking.
 
 
-<a id="org0cc21c2"></a>
+<a id="org86a0d54"></a>
 
 # How to install
 
 
-<a id="org458b5a0"></a>
+<a id="orgddb2521"></a>
 
 ## Install by Installer
 
 Hi everyone, the [neoemacs](http://neoemacs.com/dev) website is now online.Here we have a community online to discuss neo emacs which maybe allow you to start getting deeper into neo emacs faster.  
 
 
-<a id="org2735fb8"></a>
+<a id="orgb1bc1ec"></a>
 
 ## Install emacs
 
@@ -106,7 +106,7 @@ After emacs installation, set environment variables which names EMACS ,this depe
     export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs
 
 
-<a id="orgf31a6f8"></a>
+<a id="org2ee97c5"></a>
 
 ## Clone project
 
@@ -116,7 +116,7 @@ clone doom-emacs and neo-emacs from github.
     git clone --depth 1 https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
 
-<a id="orgb46949d"></a>
+<a id="org05828d6"></a>
 
 ## Doom Install
 
@@ -145,12 +145,12 @@ At last run below, this will take few minutes. And it depends on the quality of 
     ~/.emacs.doom/bin/doom.cmd install
 
 
-<a id="org198dd10"></a>
+<a id="org59c8400"></a>
 
 # How to update
 
 
-<a id="orge0bd9a5"></a>
+<a id="org01df997"></a>
 
 ## For brew
 
@@ -158,7 +158,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     brew update && brew upgrade emacs-mac && brew cleanup emacs-mac
 
 
-<a id="org878c59a"></a>
+<a id="org4c02090"></a>
 
 ## For doom project
 
@@ -168,12 +168,12 @@ At last run below, this will take few minutes. And it depends on the quality of 
     sh ~/.emacs.d/bin/doom sync
 
 
-<a id="org9f9d040"></a>
+<a id="orgfbc8ff6"></a>
 
 # Patches
 
 
-<a id="org079d09a"></a>
+<a id="org15c8387"></a>
 
 ## transparent patch
 
@@ -189,14 +189,14 @@ It offer a window transparent solution which could transparent background but th
       ("C-M-0" . transwin-toggle))
 
 
-<a id="org87bb299"></a>
+<a id="orgff276f9"></a>
 
 ## cursor animation
 
 The awesome patch could make cursor more funny.But there have a bug,If you shift to full screen from a window state , there will remain a shadow of the current cursor which will stay here forever.I will make cursor in replace mode before shifting to full screen.This might makes it effect less more.  
 
 
-<a id="org9c5e0e3"></a>
+<a id="org6ae12fd"></a>
 
 ## how to
 
@@ -219,14 +219,14 @@ Here have a tutorial to apply patch if you are using emacs plus.
 3.  Just install emacs plus, you could use \`brew reinstall\`
 
 
-<a id="org7607549"></a>
+<a id="org5d3dc6b"></a>
 
 # Private setting
 
 Customize your private setting config in the config.el ; use `setq`  
 
 
-<a id="orgc219132"></a>
+<a id="orgbbf81ab"></a>
 
 ## Font setting
 
@@ -260,7 +260,7 @@ Cause different platform have different font name,after font installed there nee
     -   M-x nerd-icons-install-fonts
 
 
-<a id="org07d3250"></a>
+<a id="org4f89feb"></a>
 
 ## Basic setting
 
@@ -380,12 +380,12 @@ Cause different platform have different font name,after font installed there nee
 > recentfile save default dir: ~/.emacs.d/.local/cache/recentf  
 
 
-<a id="org4952fb1"></a>
+<a id="org4569a70"></a>
 
 # Neoemacs modules
 
 
-<a id="org7d673f7"></a>
+<a id="orgb2395ad"></a>
 
 ## Lsp Java
 
@@ -480,13 +480,13 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     3.  Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
 
 
-<a id="org12a078d"></a>
+<a id="org664c3cb"></a>
 
 ## Vterm Shell
 
 You&rsquo;d better install vterm in a terminal environment case there might have error incompatible architecture.  
 
-<div class="notice-warning" id="orgb9518e0">
+<div class="notice-warning" id="orge9d62e1">
 <p>
 Vterm is not available on windows.<br />
 Thus windows user have to use eshell as a downgrade plan.<br />
@@ -597,7 +597,7 @@ Thus windows user have to use eshell as a downgrade plan.<br />
         </table>
 
 
-<a id="orgeb4af69"></a>
+<a id="org6995575"></a>
 
 ## Ejc Sql
 
@@ -670,7 +670,7 @@ Thus windows user have to use eshell as a downgrade plan.<br />
     </table>
 
 
-<a id="org9dfff3e"></a>
+<a id="org3084678"></a>
 
 ## Emacs Rime
 
@@ -708,7 +708,7 @@ So there have a variable which named `rime-user-data-dir` , And another importan
 [futher more rime readme](./modules/neo-emacs/rime/readme.md)  
 
 
-<a id="org659cf10"></a>
+<a id="org339c8ea"></a>
 
 ## Org mode
 
@@ -755,7 +755,7 @@ So there have a variable which named `rime-user-data-dir` , And another importan
         ln -s ~/org/org-roam/image any_where/image
 
 
-<a id="orgad420bb"></a>
+<a id="org8211b89"></a>
 
 ## Restclient
 
@@ -780,7 +780,7 @@ Fortunately we have solution for other mime type, it&rsquo;s restclient-set-var,
 About the variables infomation in current buffer, we could use `C-c Tab` to show them.  
 
 
-<a id="org5dc7987"></a>
+<a id="org6b12474"></a>
 
 ## Eredis Usage
 
@@ -837,7 +837,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="orgee64edc"></a>
+<a id="org369304c"></a>
 
 ## Bookmark
 
@@ -878,7 +878,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="orgd10add3"></a>
+<a id="orgd3153b9"></a>
 
 ## Elpa Offline
 
@@ -891,7 +891,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="org8c7f9d7"></a>
+<a id="org1b64fbd"></a>
 
 ## Vue
 
@@ -900,7 +900,7 @@ as a full stack developer u need vue support, so here it comes.
     npm install vls -g
 
 
-<a id="org6a304bf"></a>
+<a id="org70000aa"></a>
 
 ## startup workspace
 
@@ -923,7 +923,7 @@ You could customization startup inital workspace and their buffer.No need to ope
     (add-hook 'window-setup-hook #'open-my-workspaces)
 
 
-<a id="org7e1e9e3"></a>
+<a id="org9854447"></a>
 
 # About the Release
 
@@ -932,7 +932,7 @@ Release package contains the git repository of related dependencies.The compiled
 I will update the Release package once a month, And test them in advance and revise them for compatibility with upstream projects.  
 
 
-<a id="org09da211"></a>
+<a id="org5e7879f"></a>
 
 # Customize Farther
 
