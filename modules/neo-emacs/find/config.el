@@ -5,10 +5,14 @@
 (map! :ie "C-i"     'consult-yank-pop   )
 
 (use-package dirvish
-  :init
-  (dirvish-override-dired-mode)
+  ;; :init
+  ;; (dirvish-override-dired-mode)
   :config
   (setq dirvish-hide-details t
+        dirvish-use-header-line nil
+        dirvish-use-mode-line nil
+        ;; dirvish-header-line-height 10
+        ;; dirvish-mode-line-height 6
         dirvish-hide-cursor t
         delete-by-moving-to-trash t
         dirvish-default-layout '(0 0.4 0.6)

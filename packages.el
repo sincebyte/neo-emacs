@@ -80,7 +80,7 @@
 (package! emt          :recipe (:host github :repo "roife/emt"                   :branch "master" ))
 (package! pulsing-cursor :recipe (:host github :repo "jasonjckn/pulsing-cursor"))
 
-(unpin! dirvish)
+;; (unpin! dirvish)
 (unpin! lsp-mode)
 (unpin! lsp-java)
 ;; (package! copilot
