@@ -145,7 +145,7 @@ index 258b5594647..d69ae89f897 100644
  }
  
  
-@@ -9298,6 +9317,17 @@ - (instancetype) initWithEmacsFrame: (struct frame *) f
+@@ -9298,6 +9317,18 @@ - (instancetype) initWithEmacsFrame: (struct frame *) f
        [boundingView addSubview:view];
        [self makeFirstResponder:view];
  
@@ -159,6 +159,7 @@ index 258b5594647..d69ae89f897 100644
 +      view->cursor_layer = [CALayer layer];
 +      [canvasView.layer addSublayer: view->cursor_layer];
 +      view->cursor_layer.frame = CGRectMake(0, 0, 0, 0);
++      view->cursor_layer.opacity = 0.8; 
 +
  #if !defined (NS_IMPL_COCOA) || MAC_OS_X_VERSION_MIN_REQUIRED <= 1090
  #if MAC_OS_X_VERSION_MAX_ALLOWED > 1090
