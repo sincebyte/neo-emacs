@@ -1,44 +1,11 @@
 
-# Table of Contents
-
-1.  [About](#orga372750)
-2.  [How to install](#org86a0d54)
-    1.  [Install by Installer](#orgddb2521)
-    2.  [Install emacs](#orgb1bc1ec)
-    3.  [Clone project](#org2ee97c5)
-    4.  [Doom Install](#org05828d6)
-3.  [How to update](#org59c8400)
-    1.  [For brew](#org01df997)
-    2.  [For doom project](#org4c02090)
-4.  [Patches](#orgfbc8ff6)
-    1.  [transparent patch](#org15c8387)
-    2.  [cursor animation](#orgff276f9)
-    3.  [how to](#org6ae12fd)
-5.  [Private setting](#org5d3dc6b)
-    1.  [Font setting](#orgbbf81ab)
-    2.  [Basic setting](#org4f89feb)
-6.  [Neoemacs modules](#org4569a70)
-    1.  [Lsp Java](#orgb2395ad)
-    2.  [Vterm Shell](#org664c3cb)
-    3.  [Ejc Sql](#org6995575)
-    4.  [Emacs Rime](#org3084678)
-    5.  [Org mode](#org339c8ea)
-    6.  [Restclient](#org8211b89)
-    7.  [Eredis Usage](#org6b12474)
-    8.  [Bookmark](#org369304c)
-    9.  [Elpa Offline](#orgd3153b9)
-    10. [Vue](#org1b64fbd)
-    11. [startup workspace](#org70000aa)
-7.  [About the Release](#org9854447)
-8.  [Customize Farther](#org5e7879f)
-
 ![img](https://img.shields.io/badge/neo_emacs-v3.0-green.svg)  ![img](https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0)  ![img](https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1) ![img](https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&color=3498DB)  
-![img](https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&color=2C2255) ![img](https://img.shields.io/badge/supports-Emacs_27.1_to_29.1-red.svg?logo=gnuemacs&color=7F5AB6)  
+![img](https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&color=2C2255) ![img](https://img.shields.io/badge/supports-Emacs_27.1_to_3-red.svg?logo=gnuemacs&color=7F5AB6)  
 
-![img](./images/image-use.png)  
+  * [ ] ![img](./images/image-use.png)  
 
 
-<a id="orga372750"></a>
+<a id="org71e4b6d"></a>
 
 # About
 
@@ -48,24 +15,17 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   Program debugging: Dap-java supports program debugging.
 -   Http client: Rest-client is a tool to manually explore and test HTTP REST webservices just like Postman.
 -   SQL client: Ejc-sql turns Emacs into a simple SQL client which supports various databases.
--   Redis client: Eredis Non-blocking Redis client with focus on performance and robustness.
+-   Redis client: [IRedis](https://github.com/laixintao/iredis) is a terminal client for redis with auto-completion and syntax highlighting.
 -   Terminal emulator: Emacs-libvterm (vterm) is fully-fledged terminal emulator inside GNU Emacs based on libvterm.
 -   Knowledge management system: Org-roam borrows principles from the Zettelkasten method, providing a solution for non-hierarchical note-taking.
 
 
-<a id="org86a0d54"></a>
+<a id="org7f9c262"></a>
 
 # How to install
 
 
-<a id="orgddb2521"></a>
-
-## Install by Installer
-
-Hi everyone, the [neoemacs](http://neoemacs.com/dev) website is now online.Here we have a community online to discuss neo emacs which maybe allow you to start getting deeper into neo emacs faster.  
-
-
-<a id="orgb1bc1ec"></a>
+<a id="org28b22c6"></a>
 
 ## Install emacs
 
@@ -106,7 +66,7 @@ After emacs installation, set environment variables which names EMACS ,this depe
     export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs
 
 
-<a id="org2ee97c5"></a>
+<a id="org6042237"></a>
 
 ## Clone project
 
@@ -116,7 +76,7 @@ clone doom-emacs and neo-emacs from github.
     git clone --depth 1 https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
 
-<a id="org05828d6"></a>
+<a id="orgd8cb3fa"></a>
 
 ## Doom Install
 
@@ -145,12 +105,12 @@ At last run below, this will take few minutes. And it depends on the quality of 
     ~/.emacs.doom/bin/doom.cmd install
 
 
-<a id="org59c8400"></a>
+<a id="org3bb5a13"></a>
 
 # How to update
 
 
-<a id="org01df997"></a>
+<a id="org0c7f2a1"></a>
 
 ## For brew
 
@@ -158,7 +118,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     brew update && brew upgrade emacs-mac && brew cleanup emacs-mac
 
 
-<a id="org4c02090"></a>
+<a id="orgf366e8a"></a>
 
 ## For doom project
 
@@ -168,12 +128,12 @@ At last run below, this will take few minutes. And it depends on the quality of 
     sh ~/.emacs.d/bin/doom sync
 
 
-<a id="orgfbc8ff6"></a>
+<a id="orgeac69b7"></a>
 
 # Patches
 
 
-<a id="org15c8387"></a>
+<a id="org478cdef"></a>
 
 ## transparent patch
 
@@ -189,14 +149,14 @@ It offer a window transparent solution which could transparent background but th
       ("C-M-0" . transwin-toggle))
 
 
-<a id="orgff276f9"></a>
+<a id="org9abf425"></a>
 
 ## cursor animation
 
 The awesome patch could make cursor more funny.But there have a bug,If you shift to full screen from a window state , there will remain a shadow of the current cursor which will stay here forever.I will make cursor in replace mode before shifting to full screen.This might makes it effect less more.  
 
 
-<a id="org6ae12fd"></a>
+<a id="org2a7ef2f"></a>
 
 ## how to
 
@@ -214,19 +174,19 @@ Here have a tutorial to apply patch if you are using emacs plus.
         local_patch "system-appearance", sha: "9eb3ce80640025bff96ebaeb5893430116368d6349f4eb0cb4ef8b3d58477db6"
         local_patch "poll", sha: "31b76d6a2830fa3b6d453e3bbf5ec7259b5babf1d977b2bf88a6624fa78cb3e6" if build.with? "poll"
         local_patch "round-undecorated-frame", sha: "7451f80f559840e54e6a052e55d1100778abc55f98f1d0c038a24e25773f2874"
-        local_patch "cursor-animation", sha: "d6898b69c5248da9ee400e4526892aed4e1ad489c992ae5dcf724d3b1275b5d2"
+        local_patch "cursor-animation", sha: "b230dc0f6b1ea8fb8d56e47871ec340d3ea8f55a8cd54cec1e1a1b5e3a443d1e"
         local_patch "ns-alpha-background", sha: "6c174aff2602b64255ce8952f91302ede51e213be090f1b39e06913bbe0b086b"
 3.  Just install emacs plus, you could use \`brew reinstall\`
 
 
-<a id="org5d3dc6b"></a>
+<a id="org8c85b6e"></a>
 
 # Private setting
 
 Customize your private setting config in the config.el ; use `setq`  
 
 
-<a id="orgbbf81ab"></a>
+<a id="orgcb5f57c"></a>
 
 ## Font setting
 
@@ -260,7 +220,7 @@ Cause different platform have different font name,after font installed there nee
     -   M-x nerd-icons-install-fonts
 
 
-<a id="org4f89feb"></a>
+<a id="org67d36f9"></a>
 
 ## Basic setting
 
@@ -380,12 +340,12 @@ Cause different platform have different font name,after font installed there nee
 > recentfile save default dir: ~/.emacs.d/.local/cache/recentf  
 
 
-<a id="org4569a70"></a>
+<a id="org6f39a1e"></a>
 
 # Neoemacs modules
 
 
-<a id="orgb2395ad"></a>
+<a id="org5802a0e"></a>
 
 ## Lsp Java
 
@@ -480,13 +440,13 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     3.  Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
 
 
-<a id="org664c3cb"></a>
+<a id="org515b8ef"></a>
 
 ## Vterm Shell
 
 You&rsquo;d better install vterm in a terminal environment case there might have error incompatible architecture.  
 
-<div class="notice-warning" id="orge9d62e1">
+<div class="notice-warning" id="org30b85dd">
 <p>
 Vterm is not available on windows.<br />
 Thus windows user have to use eshell as a downgrade plan.<br />
@@ -597,7 +557,7 @@ Thus windows user have to use eshell as a downgrade plan.<br />
         </table>
 
 
-<a id="org6995575"></a>
+<a id="org952a5cd"></a>
 
 ## Ejc Sql
 
@@ -670,7 +630,7 @@ Thus windows user have to use eshell as a downgrade plan.<br />
     </table>
 
 
-<a id="org3084678"></a>
+<a id="org8f4b390"></a>
 
 ## Emacs Rime
 
@@ -708,7 +668,7 @@ So there have a variable which named `rime-user-data-dir` , And another importan
 [futher more rime readme](./modules/neo-emacs/rime/readme.md)  
 
 
-<a id="org339c8ea"></a>
+<a id="org7b1b5fa"></a>
 
 ## Org mode
 
@@ -755,7 +715,7 @@ So there have a variable which named `rime-user-data-dir` , And another importan
         ln -s ~/org/org-roam/image any_where/image
 
 
-<a id="org8211b89"></a>
+<a id="org5543d3d"></a>
 
 ## Restclient
 
@@ -780,64 +740,32 @@ Fortunately we have solution for other mime type, it&rsquo;s restclient-set-var,
 About the variables infomation in current buffer, we could use `C-c Tab` to show them.  
 
 
-<a id="org6b12474"></a>
+<a id="org0d45860"></a>
 
-## Eredis Usage
+## iredis
 
-1.  config
+1.  install
 
-    Use eredis firstly we could writen a funtion for a particular redis connection like this.  
-    
-        (use-package eredis)
-        (defun redis-tencent-dev (dbnum)
-          (interactive)
-          (setq redis-tencent-dev (eredis-connect "tencent.local" 6379))
-          (eredis-auth "yourpassword" redis-tencent-dev)
-          (eredis-select dbNum)
-        )
-    
-    Then you could use **M-x** ielm execution any redis command.  
-    
-        (redis-tencent-dev 1)
-        (eredis-get "center-bpm:flow-list-count")
+        brew install iredis
 
-2.  send redis command on org mode
+2.  config
 
-    key binding C-c C-c  
+    Here have a  [template](https://github.com/laixintao/iredis/blob/master/iredis/data/iredisrc) of iredis&rsquo; configuration.The essential point is <span class="underline">alias\_dsn</span>  
     
-        ;; select database
-        (eredis-select 1)
-        ;; query center-bpm:flow-list-count
-        (eredis-get "center-bpm:flow-list-count")
-        (eredis-org-table-from-keys '("center-bpm:flow-list-count" ))
+        1  [alias_dsn]
+        2  example_dsn1 = redis://[[username]:[password]]@localhost:6379/0
+        3  example_dsn2 = rediss://[[username]:[password]]@localhost:6379/0
+        4  example_dsn3 = unix://[[username]:[password]]@/path/to/socket.sock?db=0
+
+3.  usage
+
+    Use command to connect redis database.The most convenient thing is you could index your content as iredis have integrated with jq command.  
     
-    <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-    
-    
-    <colgroup>
-    <col  class="org-left" />
-    
-    <col  class="org-right" />
-    
-    <col  class="org-left" />
-    </colgroup>
-    <tbody>
-    <tr>
-    <td class="org-left">Key</td>
-    <td class="org-right">Value(s)</td>
-    <td class="org-left">Type</td>
-    </tr>
-    
-    <tr>
-    <td class="org-left">center-bpm:flow-list-count</td>
-    <td class="org-right">1</td>
-    <td class="org-left">string</td>
-    </tr>
-    </tbody>
-    </table>
+        iredis -d wvp-test
+        10.100.10.70:6379[7]> get VMP_MEDIA_SERVER:000000:zlm_fragment | jq .
 
 
-<a id="org369304c"></a>
+<a id="org4a549bf"></a>
 
 ## Bookmark
 
@@ -878,7 +806,7 @@ About the variables infomation in current buffer, we could use `C-c Tab` to show
     </table>
 
 
-<a id="orgd3153b9"></a>
+<a id="org485193b"></a>
 
 ## Elpa Offline
 
@@ -891,7 +819,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="org1b64fbd"></a>
+<a id="orgd91f1fd"></a>
 
 ## Vue
 
@@ -900,7 +828,7 @@ as a full stack developer u need vue support, so here it comes.
     npm install vls -g
 
 
-<a id="org70000aa"></a>
+<a id="org1e72208"></a>
 
 ## startup workspace
 
@@ -923,7 +851,7 @@ You could customization startup inital workspace and their buffer.No need to ope
     (add-hook 'window-setup-hook #'open-my-workspaces)
 
 
-<a id="org9854447"></a>
+<a id="org31a2431"></a>
 
 # About the Release
 
@@ -932,7 +860,7 @@ Release package contains the git repository of related dependencies.The compiled
 I will update the Release package once a month, And test them in advance and revise them for compatibility with upstream projects.  
 
 
-<a id="org5e7879f"></a>
+<a id="org4897cd9"></a>
 
 # Customize Farther
 

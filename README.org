@@ -22,12 +22,10 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 - Program debugging: Dap-java supports program debugging.
 - Http client: Rest-client is a tool to manually explore and test HTTP REST webservices just like Postman.
 - SQL client: Ejc-sql turns Emacs into a simple SQL client which supports various databases.
-- Redis client: Eredis Non-blocking Redis client with focus on performance and robustness.
+- Redis client: [[https://github.com/laixintao/iredis][IRedis]] is a terminal client for redis with auto-completion and syntax highlighting.
 - Terminal emulator: Emacs-libvterm (vterm) is fully-fledged terminal emulator inside GNU Emacs based on libvterm.
 - Knowledge management system: Org-roam borrows principles from the Zettelkasten method, providing a solution for non-hierarchical note-taking.
 * How to install
-** Install by Installer
-Hi everyone, the [[http://neoemacs.com/dev][neoemacs]] website is now online.Here we have a community online to discuss neo emacs which maybe allow you to start getting deeper into neo emacs faster.
 ** Install emacs
 #+begin_quote
 Most of the time, for safety you should install emacs by brew or complie it from source ,that will give you a better compatibility.
@@ -151,7 +149,7 @@ Here have a tutorial to apply patch if you are using emacs plus.
    local_patch "system-appearance", sha: "9eb3ce80640025bff96ebaeb5893430116368d6349f4eb0cb4ef8b3d58477db6"
    local_patch "poll", sha: "31b76d6a2830fa3b6d453e3bbf5ec7259b5babf1d977b2bf88a6624fa78cb3e6" if build.with? "poll"
    local_patch "round-undecorated-frame", sha: "7451f80f559840e54e6a052e55d1100778abc55f98f1d0c038a24e25773f2874"
-   local_patch "cursor-animation", sha: "d6898b69c5248da9ee400e4526892aed4e1ad489c992ae5dcf724d3b1275b5d2"
+   local_patch "cursor-animation", sha: "b230dc0f6b1ea8fb8d56e47871ec340d3ea8f55a8cd54cec1e1a1b5e3a443d1e"
    local_patch "ns-alpha-background", sha: "6c174aff2602b64255ce8952f91302ede51e213be090f1b39e06913bbe0b086b"
    #+end_src
 3. Just install emacs plus, you could use `brew reinstall`
@@ -427,35 +425,25 @@ Content-Type: application/x-www-form-urlencoded; charset=utf-8
 
 About the variables infomation in current buffer, we could use ~C-c Tab~ to show them.
 
-** Eredis Usage
+** iredis
+*** install
+#+begin_src shell
+brew install iredis
+#+end_src
 *** config
-Use eredis firstly we could writen a funtion for a particular redis connection like this.
-#+begin_src elisp
-(use-package eredis)
-(defun redis-tencent-dev (dbnum)
-  (interactive)
-  (setq redis-tencent-dev (eredis-connect "tencent.local" 6379))
-  (eredis-auth "yourpassword" redis-tencent-dev)
-  (eredis-select dbNum)
-)
+Here have a  [[https://github.com/laixintao/iredis/blob/master/iredis/data/iredisrc][template]] of iredis' configuration.The essential point is _alias_dsn_
+#+begin_src atom -n
+[alias_dsn]
+example_dsn1 = redis://[[username]:[password]]@localhost:6379/0
+example_dsn2 = rediss://[[username]:[password]]@localhost:6379/0
+example_dsn3 = unix://[[username]:[password]]@/path/to/socket.sock?db=0
 #+end_src
-Then you could use *M-x* ielm execution any redis command.
-#+begin_src elisp
-(redis-tencent-dev 1)
-(eredis-get "center-bpm:flow-list-count")
+*** usage
+Use command to connect redis database.The most convenient thing is you could index your content as iredis have integrated with jq command.
+#+begin_src shell
+iredis -d wvp-test
+10.100.10.70:6379[7]> get VMP_MEDIA_SERVER:000000:zlm_fragment | jq .
 #+end_src
-*** send redis command on org mode
-key binding C-c C-c
-#+begin_src lisp
-;; select database
-(eredis-select 1)
-;; query center-bpm:flow-list-count
-(eredis-get "center-bpm:flow-list-count")
-(eredis-org-table-from-keys '("center-bpm:flow-list-count" ))
-#+end_src
-
-| Key                        | Value(s) | Type   |
-| center-bpm:flow-list-count |        1 | string |
 ** Bookmark
 - set a particular location for bookmark
   #+begin_src lisp

@@ -202,7 +202,7 @@
        ;; bookmark            ; bookmark setting
        ;; eww                 ; eww config
        find                ; find file config
-       eredis              ; a redis client
+       ;; eredis              ; a redis client
        sql                 ; ejc sql setting
        ;; modeline         ; modeline
        modelinexp          ; Expand doom doom modeline
