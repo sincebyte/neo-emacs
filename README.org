@@ -149,7 +149,7 @@ Here have a tutorial to apply patch if you are using emacs plus.
    local_patch "system-appearance", sha: "9eb3ce80640025bff96ebaeb5893430116368d6349f4eb0cb4ef8b3d58477db6"
    local_patch "poll", sha: "31b76d6a2830fa3b6d453e3bbf5ec7259b5babf1d977b2bf88a6624fa78cb3e6" if build.with? "poll"
    local_patch "round-undecorated-frame", sha: "7451f80f559840e54e6a052e55d1100778abc55f98f1d0c038a24e25773f2874"
-   local_patch "cursor-animation", sha: "b230dc0f6b1ea8fb8d56e47871ec340d3ea8f55a8cd54cec1e1a1b5e3a443d1e"
+   local_patch "cursor-animation", sha: "812a934bd45dd4ee3311c1bc6681605364193bbd14ec05b9b847f9488bf989e2"
    local_patch "ns-alpha-background", sha: "6c174aff2602b64255ce8952f91302ede51e213be090f1b39e06913bbe0b086b"
    #+end_src
 3. Just install emacs plus, you could use `brew reinstall`
