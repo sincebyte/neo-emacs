@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: htmlbg
+# key: bg
+# --
+#+ATTR_HTML: :style background: #3498db

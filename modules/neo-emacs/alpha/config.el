@@ -38,5 +38,6 @@
 ;; (load-theme 'kaolin-light t)
 (use-package transwin
   :config
+  (setq transwin--record-toggle-frame-transparency 75)
   (setq transwin-delta-alpha 5)
   (setq transwin-parameter-alpha 'alpha-background))

@@ -66,6 +66,11 @@
 ;; (add-to-list 'initial-frame-alist '(top . 0))
 ;; (add-to-list 'initial-frame-alist '(left . 0))
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(setq-default frame-title-format nil)
+(when (display-graphic-p)
+  ;; 启动 Emacs 时进入全屏模式
+  (add-hook 'window-setup-hook #'toggle-frame-fullscreen))
+(toggle-frame-fullscreen)
 
 ;; (set-frame-size (selected-frame) (cons 60 (/ (window-inside-pixel-edges)(selected-frame))) nil)
 ;; (setq initial-frame-alist '((top . 0) (left . 0) (width . 100) (height . maximized)))
@@ -166,6 +171,7 @@
   (add-to-list 'warning-suppress-types '(cl-functions)))
 
 (setq +format-on-save-disabled-modes (add-to-list '+format-on-save-disabled-modes 'web-mode))
+(transwin-toggle)
 
 (add-to-list 'load-path          user-private-dir )
 (use-package! db-work                             )    ;; load by local, privacy config account or pwd here
