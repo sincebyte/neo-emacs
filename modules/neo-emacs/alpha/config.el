@@ -1,26 +1,6 @@
 ;;; module/alpha/config.el -*- lexical-binding: t; -*-
 
-;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
-(setq default-frame-alist
-      '((vertical-scroll-bars)
-        (top . 25)
-        (left . 45)
-        (width . 130)
-        (height . 30)))
-
-(defun set-frame-alpha (arg &optional active)
-  (interactive "nEnter alpha value (1-100): \np")
-  (let* ((elt (assoc 'alpha default-frame-alist))
-         (old (frame-parameter nil 'alpha))
-         (new (cond ((atom old)     `(,arg ,arg))
-                    ((eql 1 active) `(,arg ,(cadr old)))
-                    (t              `(,(car old) ,arg)))))
-    (if elt (setcdr elt new) (push `(alpha ,@new) default-frame-alist))
-    (set-frame-parameter nil 'alpha new)))
-(global-set-key (kbd "C-c t") 'set-frame-alpha)
-
-(setq frame-title-format nil)
-(set-frame-alpha 100)
+;; (setq frame-title-format nil)
 
 (setq kaolin-themes-underline nil)
 (defun synchronize-theme ()
@@ -36,8 +16,10 @@
       (load-theme 'kaolin-bubblegum t))))
 ;; (run-with-timer 0 3600 'synchronize-theme)
 ;; (load-theme 'kaolin-light t)
+
 (use-package transwin
   :config
   (setq transwin--record-toggle-frame-transparency 75)
   (setq transwin-delta-alpha 5)
   (setq transwin-parameter-alpha 'alpha-background))
+

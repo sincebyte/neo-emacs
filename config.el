@@ -12,6 +12,11 @@
 ;; Doom exposes five (optional) variables for controlling fonts in Doom:
 ;;
 ;; - `doom-font' -- the primary font to use
+(setq-default default-frame-alist '((undecorated . t)))
+(setq-default frame-title-format nil)
+;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(when (display-graphic-p)
+  (add-hook 'window-setup-hook #'toggle-frame-fullscreen))
 
 (if (eq system-type 'windows-nt)
     (progn (set-selection-coding-system 'utf-8)
@@ -65,12 +70,6 @@
 ;; (setq initial-frame-alist '((height . 50)))
 ;; (add-to-list 'initial-frame-alist '(top . 0))
 ;; (add-to-list 'initial-frame-alist '(left . 0))
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
-(setq-default frame-title-format nil)
-(when (display-graphic-p)
-  ;; 启动 Emacs 时进入全屏模式
-  (add-hook 'window-setup-hook #'toggle-frame-fullscreen))
-(toggle-frame-fullscreen)
 
 ;; (set-frame-size (selected-frame) (cons 60 (/ (window-inside-pixel-edges)(selected-frame))) nil)
 ;; (setq initial-frame-alist '((top . 0) (left . 0) (width . 100) (height . maximized)))
@@ -78,6 +77,7 @@
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type nil)
+
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!

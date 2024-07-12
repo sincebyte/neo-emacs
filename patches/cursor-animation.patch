@@ -145,10 +145,14 @@ index 258b5594647..d69ae89f897 100644
  }
  
  
-@@ -9298,6 +9317,18 @@ - (instancetype) initWithEmacsFrame: (struct frame *) f
+@@ -9298,6 +9317,22 @@ - (instancetype) initWithEmacsFrame: (struct frame *) f
        [boundingView addSubview:view];
        [self makeFirstResponder:view];
  
++      if (view->cursor_layer) {
++         [view->cursor_layer removeFromSuperlayer];
++         view->cursor_layer = nil;
++      }
 +      /* Overlay a canvas view on top of EmacsView.  */
 +      NSView *canvasView = [[NSView alloc] initWithFrame:view.bounds];
 +      canvasView.wantsLayer = YES;
