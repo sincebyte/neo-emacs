@@ -43,6 +43,12 @@
                                   lsp-enable-symbol-highlighting             t
                                   company-auto-update-doc                    nil
                                   lsp-ui-doc-show-with-cursor                nil
+                                  ;; lsp-ui-sideline-enable                     nil
+                                  ;; lsp-ui-sideline-show-diagnostics           t
+                                  ;; lsp-ui-sideline-show-hover                 t
+                                  ;; lsp-ui-sideline-diagnostic-max-lines       1
+                                  ;; lsp-ui-sideline-diagnostic-max-line-length 15
+                                  lsp-ui-sideline-update-mode 'line
                                   lsp-idle-delay                             0.1
                                   lsp-signature-render-documentation         nil
                                   lsp-signature-auto-activate                t
@@ -50,7 +56,7 @@
                                   lsp-signature-auto-activate                t
                                   ;; lsp-signature-doc-lines                    1
                                   lsp-java-signature-help-enabled            t
-                                  lsp-java-references-code-lens-enabled      t
+                                  ;; lsp-java-references-code-lens-enabled      t
                                   lsp-java-implementations-code-lens-enabled t
                                   lsp-enable-on-type-formatting              t
                                   lsp-java-format-enabled                    t
