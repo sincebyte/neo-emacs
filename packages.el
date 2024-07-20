@@ -83,6 +83,7 @@
 ;; (unpin! dirvish)
 (unpin! lsp-mode)
 (unpin! lsp-java)
+(unpin! apheleia)
 ;; (package! copilot
 ;;   :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el" "dist")))
 

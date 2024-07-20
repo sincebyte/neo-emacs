@@ -1,3 +1,4 @@
+
 ;;; neoemacs/java/config.el -*- lexical-binding: t; -*-
 ;;;
 (setenv "XMLLINT_INDENT" "    ")
@@ -13,7 +14,7 @@
  ;; company-dabbrev-ignore-case             nil
  ;; lsp-enable-file-watchers                   t
  company-format-margin-function             'company-text-icons-margin
- company-text-icons-format                  " %s "
+ company-text-icons-format                  " ⎨%s⎬ "
  company-text-icons-add-background          t
  company-text-face-extra-attributes         '(:weight bold :slant italic)
  company-tooltip-flip-when-above            t
@@ -33,12 +34,16 @@
                           (setq display-line-numbers                        t)))
 (add-hook 'lisp-mode-hook (lambda ()
                             (setq display-line-numbers                      t)))
+
+;; (setq company-text-icons-add-background t)
+;; (set-face-background 'font-lock-variable-name-face "#00e5ee")
 (add-hook 'java-mode-hook (lambda ()
+                            (apheleia-global-mode -1)
                             (setq-local lsp-enable-file-watchers t)
                             (tree-sitter-hl-mode)
                             (setq display-line-numbers                       t
                                   lsp-java-compile-null-analysis-mode        "automatic"
-                                  company-text-icons-format                  " %s "
+                                  ;; company-text-icons-format                  "%s ⇢ "
                                   company-text-icons-add-background          t
                                   lsp-enable-symbol-highlighting             t
                                   company-auto-update-doc                    nil
@@ -46,16 +51,16 @@
                                   ;; lsp-ui-sideline-enable                     nil
                                   ;; lsp-ui-sideline-show-diagnostics           t
                                   ;; lsp-ui-sideline-show-hover                 t
-                                  ;; lsp-ui-sideline-diagnostic-max-lines       1
-                                  ;; lsp-ui-sideline-diagnostic-max-line-length 15
-                                  lsp-ui-sideline-update-mode 'line
+                                  lsp-ui-sideline-diagnostic-max-lines       1
+                                  lsp-ui-sideline-diagnostic-max-line-length 15
+                                  lsp-ui-sideline-update-mode                'line
                                   lsp-idle-delay                             0.1
                                   lsp-signature-render-documentation         nil
                                   lsp-signature-auto-activate                t
                                   lsp-eldoc-render-all                       nil
                                   lsp-signature-auto-activate                t
-                                  ;; lsp-signature-doc-lines                    1
                                   lsp-java-signature-help-enabled            t
+                                  ;; lsp-signature-doc-lines                    1
                                   ;; lsp-java-references-code-lens-enabled      t
                                   lsp-java-implementations-code-lens-enabled t
                                   lsp-enable-on-type-formatting              t
@@ -72,6 +77,7 @@
                                   lsp-java-completion-guess-method-arguments t
                                   lsp-completion-enable-additional-text-edit t
                                   lsp-java-progress-reports-enabled          nil
+                                  lsp-progress-prefix                        "⧗ "
                                   lsp-completion-show-label-description      nil
                                   lsp-modeline-diagnostics-enable            t
                                   lsp-modeline-diagnostics-scope             :workspace
@@ -81,7 +87,8 @@
       lsp-java-java-path             (concat (getenv "JAVA_17_HOME") "/bin/java")
       lsp-java-server-install-dir    "~/lsp-java/"
       lsp-maven-path                 (concat (getenv "MAVEN_HOME") "/conf/settings.xml")
-      lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.35.0-202404251256.tar.gz"
+      ;; lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.35.0-202404251256.tar.gz"
+      lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.38.0-202407151826.tar.gz"
       lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path )
       lsp-java-vmargs                `("-XX:+UseParallelGC"
                                        "-XX:GCTimeRatio=4"
@@ -98,15 +105,20 @@
 (map! :ne "SPC c I"  #'lsp-java-open-super-implementation )
 (map! :map global-map "s-n" nil)
 
+(unbind-key "c f" doom-leader-map)
+(map! :after lsp-java
+      :map   general-override-mode-map
+      :v     "SPC c f" nil)
+
 (map! :after lsp-java
       :map   lsp-mode-map
       :n "SPC f b" #'lsp-format-buffer
+      :v "SPC c f" #'lsp-format-region
       :v "SPC f g" #'lsp-format-region
       :n "; i"     #'lsp-java-organize-imports
       :n "; s"     #'lsp-signature-activate
       :n "SPC t e" #'lsp-treemacs-java-deps-list
       :n "SPC t s" #'lsp-workspace-restart)
-
 
 
 (custom-set-faces `(lsp-face-highlight-textual ((t (:background nil )))))
