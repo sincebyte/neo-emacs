@@ -161,9 +161,9 @@
       :map (org-mode-map)
       "C-," nil)
 
-(map! :after org
-      :map org-mode-map
-      "C-c C-c" #'verb-send-request-on-point)
+;; (map! :after org
+;;       :map org-mode-map
+;;       "C-c C-c" #'verb-send-request-on-point)
 
 
 (set-company-backend! 'org-mode
