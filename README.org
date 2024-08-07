@@ -21,6 +21,7 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 - Code completion: Lsp-java supports maven and gradle project.
 - Program debugging: Dap-java supports program debugging.
 - Http client: Rest-client is a tool to manually explore and test HTTP REST webservices just like Postman.
+- Http client*: verb a package for Emacs which allows you to organize and send HTTP requests.
 - SQL client: Ejc-sql turns Emacs into a simple SQL client which supports various databases.
 - Redis client: [[https://github.com/laixintao/iredis][IRedis]] is a terminal client for redis with auto-completion and syntax highlighting.
 - Terminal emulator: Emacs-libvterm (vterm) is fully-fledged terminal emulator inside GNU Emacs based on libvterm.
@@ -425,6 +426,8 @@ Content-Type: application/x-www-form-urlencoded; charset=utf-8
 
 About the variables infomation in current buffer, we could use ~C-c Tab~ to show them.
 
+** Verb
+Verb is a new package for http client,becase the restclient is out of date and the author no longger maintain it on github.Fortunately there have a alternative one named verb which is more powerful and customizable. Verb support url template which makes you change different environment more conveniently.Also verb supports variables and picture query and upload.In org mode start verb just use `C-c C-r` as a previous command,example `C-c C-r C-f` will execute http request with your config,So verb is really fancy right?
 ** iredis
 *** install
 #+begin_src shell
