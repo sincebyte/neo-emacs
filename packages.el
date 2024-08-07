@@ -74,6 +74,8 @@
 (package! undo-tree           )
 (package! transwin            )
 (package! pdf-tools           )
+(package! ef-themes           )
+(package! verb                )
 (package! keyfreq      :recipe (:host github :repo "dacap/keyfreq"))
 (package! awesome-tray :recipe (:host github :repo "manateelazycat/awesome-tray" :branch "master" ))
 (package! bookmark+    :recipe (:host github :repo "emacsmirror/bookmark-plus"   :branch "master" ))

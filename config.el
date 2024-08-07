@@ -63,7 +63,7 @@
 ;; (load-theme 'color-theme-sanityinc-tomorrow-night t)
 ;; (load-theme 'kaolin t)
 ;; (color-theme-sanityinc-tomorrow-night)
-(setq doom-theme 'kaolin-dark)
+(setq doom-theme 'ef-night)
 
 
 
