@@ -67,7 +67,9 @@
   (setq evil-shift-width 2)
   (setq org-todo-keywords
         '((sequence "TODO" "DOING" "BLOCK" "TEST" "DONE" "REPORT")))
-  (+org/close-all-folds))
+  (+org/close-all-folds)
+  (verb-mode)
+  (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
 
 ;; (add-to-list 'load-path (expand-file-name (concat doom-user-dir "neoemacs/company-english-helper")))
 ;; (require 'company-english-helper)
@@ -155,6 +157,15 @@
       :map org-mode-map
       :ne "; l" #'org-toggle-narrow-to-subtree)
 
+(map! :after org
+      :map (org-mode-map)
+      "C-," nil)
+
+(map! :after org
+      :map org-mode-map
+      "C-c C-c" #'verb-send-request-on-point)
+
+
 (set-company-backend! 'org-mode
   'company-ispell 'company-yasnippet)
 
@@ -179,10 +190,6 @@
 ;; (custom-set-faces `(org-block-end-line   ((t (:foreground "#008ED1" :background "#EAEAFF")))))
 
 (setq org-latex-create-formula-image-program 'dvipng)
-
-(map! :after org
-      :map (org-mode-map)
-      "C-," nil)
 
 (use-package org-modern-indent
   :load-path "~/.doom.d/neoemacs/org-modern-indent/"
