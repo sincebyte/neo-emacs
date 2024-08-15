@@ -3,6 +3,8 @@
 # key: order
 # --
 #+BEGIN_SRC plantuml :file ./image/time.svg
+!define LIGHTGREEN
+!includeurl /Users/van/org/org-roam/emacs/C4-PlantUML/juststyle.puml
 skinparam backgroundColor transparent
 
 A -> B: reqest

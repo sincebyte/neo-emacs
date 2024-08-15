@@ -18,7 +18,9 @@
  company-text-icons-add-background          t
  company-text-face-extra-attributes         '(:weight bold :slant italic)
  company-tooltip-flip-when-above            t
- company-show-quick-access                  nil)
+ company-show-quick-access                  nil
+ +format-on-save-disabled-modes             (add-to-list '+format-on-save-disabled-modes 'c++-mode)
+ +format-on-save-disabled-modes             (add-to-list '+format-on-save-disabled-modes 'c-mode))
 
 
 (setq lsp-semgrep-languages '()
