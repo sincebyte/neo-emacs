@@ -9,8 +9,8 @@
   ;; (dirvish-override-dired-mode)
   :config
   (setq dirvish-hide-details t
-        dirvish-use-header-line nil
-        dirvish-use-mode-line nil
+        dirvish-use-header-line t
+        dirvish-use-mode-line t
         ;; dirvish-header-line-height 10
         ;; dirvish-mode-line-height 6
         dirvish-hide-cursor t
@@ -35,6 +35,12 @@
 (map! :after dired
       :map dired-mode-map
       :ne "c" #'dired-create-empty-file)
+(map! :after dired
+      :map dired-mode-map
+      :ne "h" #'dired-up-directory)
+(map! :after dired
+      :map dired-mode-map
+      :ne "l" #'dired-find-file)
 
 (map! :after magit
       :map magit-mode-map
