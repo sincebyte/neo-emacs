@@ -9,7 +9,7 @@
   ;; (dirvish-override-dired-mode)
   :config
   (setq dirvish-hide-details t
-        dirvish-use-header-line t
+        dirvish-use-header-line nil
         dirvish-use-mode-line t
         ;; dirvish-header-line-height 10
         ;; dirvish-mode-line-height 6
