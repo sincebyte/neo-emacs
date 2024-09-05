@@ -3,6 +3,9 @@
 #+author: vanniuner
 #+SETUPFILE: ~/.doom.d/org-head.setup
 
+* consult ripgrep search
+Use `SPC v c ` invoke consult ripgrep, this function will search text in current git project.
+You could search content through a particular file type by `#searchcontent -- -g *.java`
 * conflict with toggle-input-method
 In the mini search buffer ~C-;~  is binding to `embark-act`. It's conflict with [[~/.doom.d/modules/neo-emacs/rime/config.el][toggle-input-method]].
 - There have two solution:

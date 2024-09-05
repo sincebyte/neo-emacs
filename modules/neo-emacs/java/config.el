@@ -111,7 +111,10 @@
 (map! :after lsp-java
       :map   general-override-mode-map
       :v     "SPC c f" nil)
-
+(map! :after evil
+      :map evil-normal-state-map
+      :ne "; i" nil)
+evil-normal-state-map
 (map! :after lsp-java
       :map   lsp-mode-map
       :n "SPC f b" #'lsp-format-buffer

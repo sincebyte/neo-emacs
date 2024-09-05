@@ -1,5 +1,5 @@
 (setq
- ;; doom-modeline-height                       1
+ ;; doom-modeline-height                       30
  evil-emacs-state-tag                       (if (display-graphic-p) "󰬌" "▇▇▇")
  evil-insert-state-tag                      (if (display-graphic-p) "󰬐" "▇▇▇")
  evil-motion-state-tag                      (if (display-graphic-p) "󰬔" "▇▇▇")
