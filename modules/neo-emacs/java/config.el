@@ -13,6 +13,7 @@
  ;; company-frontends                       '(company-pseudo-tooltip-frontend company-echo-metadata-frontend)
  ;; company-dabbrev-ignore-case             nil
  ;; lsp-enable-file-watchers                   t
+ lsp-progress-prefix                        "⧗ "
  company-format-margin-function             'company-text-icons-margin
  company-text-icons-format                  " ⎨%s⎬ "
  company-text-icons-add-background          t
