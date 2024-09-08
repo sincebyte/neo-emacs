@@ -1,1381 +1,1083 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-<!-- 2024-09-08 Sun 10:30 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>neo emacs</title>
-<meta name="author" content="sincebyte" />
-<meta name="generator" content="Org Mode" />
-<style type="text/css">
-  #content { max-width: 60em; margin: auto; }
-  .title  { text-align: center;
-             margin-bottom: .2em; }
-  .subtitle { text-align: center;
-              font-size: medium;
-              font-weight: bold;
-              margin-top:0; }
-  .todo   { font-family: monospace; color: red; }
-  .done   { font-family: monospace; color: green; }
-  .priority { font-family: monospace; color: orange; }
-  .tag    { background-color: #eee; font-family: monospace;
-            padding: 2px; font-size: 80%; font-weight: normal; }
-  .timestamp { color: #bebebe; }
-  .timestamp-kwd { color: #5f9ea0; }
-  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
-  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
-  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
-  .underline { text-decoration: underline; }
-  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
-  p.verse { margin-left: 3%; }
-  pre {
-    border: 1px solid #e6e6e6;
-    border-radius: 3px;
-    background-color: #f2f2f2;
-    padding: 8pt;
-    font-family: monospace;
-    overflow: auto;
-    margin: 1.2em;
-  }
-  pre.src {
-    position: relative;
-    overflow: auto;
-  }
-  pre.src:before {
-    display: none;
-    position: absolute;
-    top: -8px;
-    right: 12px;
-    padding: 3px;
-    color: #555;
-    background-color: #f2f2f299;
-  }
-  pre.src:hover:before { display: inline; margin-top: 14px;}
-  /* Languages per Org manual */
-  pre.src-asymptote:before { content: 'Asymptote'; }
-  pre.src-awk:before { content: 'Awk'; }
-  pre.src-authinfo::before { content: 'Authinfo'; }
-  pre.src-C:before { content: 'C'; }
-  /* pre.src-C++ doesn't work in CSS */
-  pre.src-clojure:before { content: 'Clojure'; }
-  pre.src-css:before { content: 'CSS'; }
-  pre.src-D:before { content: 'D'; }
-  pre.src-ditaa:before { content: 'ditaa'; }
-  pre.src-dot:before { content: 'Graphviz'; }
-  pre.src-calc:before { content: 'Emacs Calc'; }
-  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
-  pre.src-fortran:before { content: 'Fortran'; }
-  pre.src-gnuplot:before { content: 'gnuplot'; }
-  pre.src-haskell:before { content: 'Haskell'; }
-  pre.src-hledger:before { content: 'hledger'; }
-  pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
-  pre.src-latex:before { content: 'LaTeX'; }
-  pre.src-ledger:before { content: 'Ledger'; }
-  pre.src-lisp:before { content: 'Lisp'; }
-  pre.src-lilypond:before { content: 'Lilypond'; }
-  pre.src-lua:before { content: 'Lua'; }
-  pre.src-matlab:before { content: 'MATLAB'; }
-  pre.src-mscgen:before { content: 'Mscgen'; }
-  pre.src-ocaml:before { content: 'Objective Caml'; }
-  pre.src-octave:before { content: 'Octave'; }
-  pre.src-org:before { content: 'Org mode'; }
-  pre.src-oz:before { content: 'OZ'; }
-  pre.src-plantuml:before { content: 'Plantuml'; }
-  pre.src-processing:before { content: 'Processing.js'; }
-  pre.src-python:before { content: 'Python'; }
-  pre.src-R:before { content: 'R'; }
-  pre.src-ruby:before { content: 'Ruby'; }
-  pre.src-sass:before { content: 'Sass'; }
-  pre.src-scheme:before { content: 'Scheme'; }
-  pre.src-screen:before { content: 'Gnu Screen'; }
-  pre.src-sed:before { content: 'Sed'; }
-  pre.src-sh:before { content: 'shell'; }
-  pre.src-sql:before { content: 'SQL'; }
-  pre.src-sqlite:before { content: 'SQLite'; }
-  /* additional languages in org.el's org-babel-load-languages alist */
-  pre.src-forth:before { content: 'Forth'; }
-  pre.src-io:before { content: 'IO'; }
-  pre.src-J:before { content: 'J'; }
-  pre.src-makefile:before { content: 'Makefile'; }
-  pre.src-maxima:before { content: 'Maxima'; }
-  pre.src-perl:before { content: 'Perl'; }
-  pre.src-picolisp:before { content: 'Pico Lisp'; }
-  pre.src-scala:before { content: 'Scala'; }
-  pre.src-shell:before { content: 'Shell Script'; }
-  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
-  /* additional language identifiers per "defun org-babel-execute"
-       in ob-*.el */
-  pre.src-cpp:before  { content: 'C++'; }
-  pre.src-abc:before  { content: 'ABC'; }
-  pre.src-coq:before  { content: 'Coq'; }
-  pre.src-groovy:before  { content: 'Groovy'; }
-  /* additional language identifiers from org-babel-shell-names in
-     ob-shell.el: ob-shell is the only babel language using a lambda to put
-     the execution function name together. */
-  pre.src-bash:before  { content: 'bash'; }
-  pre.src-csh:before  { content: 'csh'; }
-  pre.src-ash:before  { content: 'ash'; }
-  pre.src-dash:before  { content: 'dash'; }
-  pre.src-ksh:before  { content: 'ksh'; }
-  pre.src-mksh:before  { content: 'mksh'; }
-  pre.src-posh:before  { content: 'posh'; }
-  /* Additional Emacs modes also supported by the LaTeX listings package */
-  pre.src-ada:before { content: 'Ada'; }
-  pre.src-asm:before { content: 'Assembler'; }
-  pre.src-caml:before { content: 'Caml'; }
-  pre.src-delphi:before { content: 'Delphi'; }
-  pre.src-html:before { content: 'HTML'; }
-  pre.src-idl:before { content: 'IDL'; }
-  pre.src-mercury:before { content: 'Mercury'; }
-  pre.src-metapost:before { content: 'MetaPost'; }
-  pre.src-modula-2:before { content: 'Modula-2'; }
-  pre.src-pascal:before { content: 'Pascal'; }
-  pre.src-ps:before { content: 'PostScript'; }
-  pre.src-prolog:before { content: 'Prolog'; }
-  pre.src-simula:before { content: 'Simula'; }
-  pre.src-tcl:before { content: 'tcl'; }
-  pre.src-tex:before { content: 'TeX'; }
-  pre.src-plain-tex:before { content: 'Plain TeX'; }
-  pre.src-verilog:before { content: 'Verilog'; }
-  pre.src-vhdl:before { content: 'VHDL'; }
-  pre.src-xml:before { content: 'XML'; }
-  pre.src-nxml:before { content: 'XML'; }
-  /* add a generic configuration mode; LaTeX export needs an additional
-     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
-  pre.src-conf:before { content: 'Configuration File'; }
-
-  table { border-collapse:collapse; }
-  caption.t-above { caption-side: top; }
-  caption.t-bottom { caption-side: bottom; }
-  td, th { vertical-align:top;  }
-  th.org-right  { text-align: center;  }
-  th.org-left   { text-align: center;   }
-  th.org-center { text-align: center; }
-  td.org-right  { text-align: right;  }
-  td.org-left   { text-align: left;   }
-  td.org-center { text-align: center; }
-  dt { font-weight: bold; }
-  .footpara { display: inline; }
-  .footdef  { margin-bottom: 1em; }
-  .figure { padding: 1em; }
-  .figure p { text-align: center; }
-  .equation-container {
-    display: table;
-    text-align: center;
-    width: 100%;
-  }
-  .equation {
-    vertical-align: middle;
-  }
-  .equation-label {
-    display: table-cell;
-    text-align: right;
-    vertical-align: middle;
-  }
-  .inlinetask {
-    padding: 10px;
-    border: 2px solid gray;
-    margin: 10px;
-    background: #ffffcc;
-  }
-  #org-div-home-and-up
-   { text-align: right; font-size: 70%; white-space: nowrap; }
-  textarea { overflow-x: auto; }
-  .linenr { font-size: smaller }
-  .code-highlighted { background-color: #ffff00; }
-  .org-info-js_info-navigation { border-style: none; }
-  #org-info-js_console-label
-    { font-size: 10px; font-weight: bold; white-space: nowrap; }
-  .org-info-js_search-highlight
-    { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { }
-</style>
-<script src  = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src  = "https://emacs-1308440781.cos.ap-chengdu.myqcloud.com/classic/scroll.js"></script>
-<link   href = "https://emacs-1308440781.cos.ap-chengdu.myqcloud.com/classic/base.css" rel="stylesheet" type="text/css"></link>
-<a href="https://github.com/vanniuner/neo-emacs" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#70B7FD; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<title>README.html</title>
+<meta http-equiv="Content-Type" content="application/xhtml+xml;charset=utf-8"/>
+<link rel="stylesheet" type="text/css" media="all" href="https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.min.css"  />
+<link rel="stylesheet" type="text/css" media="all" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/github.min.css"  /><meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'><style> body { box-sizing: border-box; max-width: 740px; width: 100%; margin: 40px auto; padding: 0 10px; } </style><script id='MathJax-script' async src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'></script><script src='https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js'></script><script>document.addEventListener('DOMContentLoaded', () => { document.body.classList.add('markdown-body'); document.querySelectorAll('pre[lang] > code').forEach((code) => { code.classList.add(code.parentElement.lang); }); document.querySelectorAll('pre > code').forEach((code) => { hljs.highlightBlock(code); }); });</script>
 </head>
+
 <body>
-<div id="preamble" class="status">
-<p>Made ✐︎ by 
-</div>
-<div id="content" class="content">
-<h1 class="title">neo emacs</h1>
-<div id="table-of-contents" role="doc-toc">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents" role="doc-toc">
-<ul>
-<li><a href="#org3ad17d8">1. About</a></li>
-<li><a href="#org2ce9151">2. How to install</a>
-<ul>
-<li><a href="#org7aeac3d">2.1. Install emacs</a></li>
-<li><a href="#orgeeab9c1">2.2. Clone project</a></li>
-<li><a href="#org680fb05">2.3. Doom Install</a></li>
-</ul>
-</li>
-<li><a href="#orgf1aa04e">3. How to update</a>
-<ul>
-<li><a href="#org799afcf">3.1. For brew</a></li>
-<li><a href="#org8759644">3.2. For doom project</a></li>
-</ul>
-</li>
-<li><a href="#org7eccb39">4. Patches</a>
-<ul>
-<li><a href="#org3b1c28f">4.1. transparent patch</a></li>
-<li><a href="#org0f54425">4.2. cursor animation</a></li>
-<li><a href="#orgd079bd1">4.3. how to</a></li>
-</ul>
-</li>
-<li><a href="#org56fab1b">5. Private setting</a>
-<ul>
-<li><a href="#orgcc3eb9b">5.1. Font setting</a></li>
-<li><a href="#org9903bf5">5.2. Basic setting</a></li>
-</ul>
-</li>
-<li><a href="#org2ecace9">6. Neoemacs modules</a>
-<ul>
-<li><a href="#orgbe70867">6.1. Lsp Java</a></li>
-<li><a href="#org2ae7932">6.2. Vterm Shell</a></li>
-<li><a href="#org1130853">6.3. Ejc Sql</a></li>
-<li><a href="#orge5019db">6.4. Emacs Rime</a></li>
-<li><a href="#orgc74fdcb">6.5. Org mode</a></li>
-<li><a href="#org5ee2062">6.6. Restclient</a></li>
-<li><a href="#org7d5945e">6.7. Verb</a></li>
-<li><a href="#org3a067d7">6.8. iredis</a></li>
-<li><a href="#org727722f">6.9. Bookmark</a></li>
-<li><a href="#org0497254">6.10. Elpa Offline</a></li>
-<li><a href="#org4a3da3b">6.11. Vue</a></li>
-<li><a href="#org44275e5">6.12. startup workspace</a></li>
-</ul>
-</li>
-<li><a href="#org978b83c">7. About the Release</a></li>
-<li><a href="#orga1b2c88">8. Customize Farther</a></li>
-</ul>
-</div>
-</div>
-<p>
-<img src="https://img.shields.io/badge/neo_emacs-v3.0-green.svg" alt="neo_emacs-v3.0-green.svg" class="org-svg" />  <img src="https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0" alt="based_on-doom_emacs-red.svg?color=3152A0" />  <img src="https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&amp;color=55C2E1" alt="macos-full_supported-red.svg?logo=macos&amp;color=55C2E1" /> <img src="https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&amp;color=3498DB" alt="windows-almost_supported-red.svg?logo=windows&amp;color=3498DB" /><br />
-<img src="https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&amp;color=2C2255" alt="eclipse-jdt_1.27.1-red.svg?logo=eclipse&amp;color=2C2255" /> <img src="https://img.shields.io/badge/supports-Emacs_27.1_to_30.0-red.svg?logo=gnuemacs&amp;color=7F5AB6" alt="supports-Emacs_27.1_to_30.0-red.svg?logo=gnuemacs&amp;color=7F5AB6" /><br />
-</p>
 
-
-<div id="orgb0da07d" class="figure">
-<p><img src="./images/image-use.png" alt="image-use.png" /><br />
-</p>
-</div>
-<div id="outline-container-org3ad17d8" class="outline-2">
-<h2 id="org3ad17d8"><span class="section-number-2">1.</span> About</h2>
-<div class="outline-text-2" id="text-1">
-<p>
-Neo emacs is a configuration framework for GNU Emacs which is based on doom emacs and focuses on the java web application coding environment. Neo emacs has the following features:<br />
-</p>
-<ul class="org-ul">
-<li>Code completion: Lsp-java supports maven and gradle project.<br /></li>
-<li>Program debugging: Dap-java supports program debugging.<br /></li>
-<li>Http client: Rest-client is a tool to manually explore and test HTTP REST webservices just like Postman.<br /></li>
-<li>Http client*: verb a package for Emacs which allows you to organize and send HTTP requests.<br /></li>
-<li>SQL client: Ejc-sql turns Emacs into a simple SQL client which supports various databases.<br /></li>
-<li>Redis client: <a href="https://github.com/laixintao/iredis">IRedis</a> is a terminal client for redis with auto-completion and syntax highlighting.<br /></li>
-<li>Terminal emulator: Emacs-libvterm (vterm) is fully-fledged terminal emulator inside GNU Emacs based on libvterm.<br /></li>
-<li>Knowledge management system: Org-roam borrows principles from the Zettelkasten method, providing a solution for non-hierarchical note-taking.<br /></li>
+<p><img src="https://img.shields.io/badge/neo_emacs-v3.0-green.svg"
+alt="img" /> <img
+src="https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0"
+alt="img" /> <img
+src="https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&amp;color=55C2E1"
+alt="img" /> <img
+src="https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&amp;color=3498DB"
+alt="img" /><br />
+<img
+src="https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&amp;color=2C2255"
+alt="img" /> <img
+src="https://img.shields.io/badge/supports-Emacs_27.1_to_30.0-red.svg?logo=gnuemacs&amp;color=7F5AB6"
+alt="img" /></p>
+<figure>
+<img src="./images/image-use.png" alt="img" />
+<figcaption aria-hidden="true">img</figcaption>
+</figure>
+<p><a id="orgae3e4c3"></a></p>
+<h1 id="about">About</h1>
+<p>Neo emacs is a configuration framework for GNU Emacs which is based
+on doom emacs and focuses on the java web application coding
+environment. Neo emacs has the following features:</p>
+<ul>
+<li>Code completion: Lsp-java supports maven and gradle project.</li>
+<li>Program debugging: Dap-java supports program debugging.</li>
+<li>Http client: Rest-client is a tool to manually explore and test HTTP
+REST webservices just like Postman.</li>
+<li>Http client*: verb a package for Emacs which allows you to organize
+and send HTTP requests.</li>
+<li>SQL client: Ejc-sql turns Emacs into a simple SQL client which
+supports various databases.</li>
+<li>Redis client: <a
+href="https://github.com/laixintao/iredis">IRedis</a> is a terminal
+client for redis with auto-completion and syntax highlighting.</li>
+<li>Terminal emulator: Emacs-libvterm (vterm) is fully-fledged terminal
+emulator inside GNU Emacs based on libvterm.</li>
+<li>Knowledge management system: Org-roam borrows principles from the
+Zettelkasten method, providing a solution for non-hierarchical
+note-taking.</li>
 </ul>
-</div>
-</div>
-<div id="outline-container-org2ce9151" class="outline-2">
-<h2 id="org2ce9151"><span class="section-number-2">2.</span> How to install</h2>
-<div class="outline-text-2" id="text-2">
-</div>
-<div id="outline-container-org7aeac3d" class="outline-3">
-<h3 id="org7aeac3d"><span class="section-number-3">2.1.</span> Install emacs</h3>
-<div class="outline-text-3" id="text-2-1">
+<p><a id="org7bf6cf7"></a></p>
+<h1 id="how-to-install">How to install</h1>
+<p><a id="org971be88"></a></p>
+<h2 id="install-emacs">Install emacs</h2>
 <blockquote>
-<p>
-Most of the time, for safety you should install emacs by brew or complie it from source ,that will give you a better compatibility.<br />
-In other words, try not to install emacs throuht Free installation package like Gnu Emacs below.<br />
-</p>
+<p>Most of the time, for safety you should install emacs by brew or
+complie it from source ,that will give you a better compatibility.<br />
+In other words, try not to install emacs throuht Free installation
+package like Gnu Emacs below.</p>
 </blockquote>
-
-<p>
-There have many emacs distribution,just choose one and install it.<br />
-</p>
-<ul class="org-ul">
-<li><p>
-<a href="https://github.com/railwaycat/homebrew-emacsmacport">EmacsPorts</a> is the best choice to run NeoEmcas on macos now.<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-shell">  brew tap railwaycat/emacsmacport
-  brew install emacs-mac --with-natural-title-bar --with-mac-metal <span style="color: #98be65;">\</span>
-  --with-librsvg --with-starter --with-emacs-big-sur-icon --with-native-comp <span style="color: #98be65;">\</span>
-  defaults write org.gnu.Emacs TransparentTitleBar DARK <span style="color: #98be65;">\</span>
-  defaults write org.gnu.Emacs HideDocumentIcon kES
-</pre>
-</div></li>
-<li><p>
-<a href="https://github.com/d12frosted/homebrew-emacs-plus">Emacs-plus</a> which I used for a long time once.<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-shell">  brew tap d12frosted/emacs-plus
-  brew install emacs-mac --with-natural-title-bar <span style="color: #98be65;">\</span>
-  --with-mac-metal --with-librsvg --with-starter <span style="color: #98be65;">\</span>
-  --with-emacs-big-sur-icon --
-</pre>
-</div></li>
-<li><a href="https://www.gnu.org/software/emacs/">Gnu-Emacs</a> is the official emacs client which I used for windows platform.<br /></li>
-<li><p>
-<a href="https://git.savannah.gnu.org/cgit/emacs.git">Source Code</a> Building form source which I use rarely.<br />
-building emacs with with source code<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-shell"><span class="linenr">1: </span>  <span style="color: #ECBE7B;">git</span> clone git://git.savannah.gnu.org/emacs.git
-<span class="linenr">2: </span>  <span style="color: #ECBE7B;">cd</span> emacs
-<span class="linenr">3: </span>  <span style="color: #ECBE7B;">git</span> checkout emacs-28
-<span class="linenr">4: </span>  brew install libxml2
-<span class="linenr">5: </span>  <span style="color: #ECBE7B;">make</span> configure
-<span class="linenr">6: </span>  ./configure --with-native-compilation --with-modern-papirus-icon --with-no-titlebar
-<span class="linenr">7: </span>  <span style="color: #ECBE7B;">make</span> -j4
-<span class="linenr">8: </span>  <span style="color: #ECBE7B;">make</span> install
-<span class="linenr">9: </span>  open nextstep/Emacs.app
-</pre>
-</div></li>
+<p>There have many emacs distribution,just choose one and install
+it.</p>
+<ul>
+<li><p><a
+href="https://github.com/railwaycat/homebrew-emacsmacport">EmacsPorts</a>
+is the best choice to run NeoEmcas on macos now.</p>
+<pre><code>brew tap railwaycat/emacsmacport
+brew install emacs-mac --with-natural-title-bar --with-mac-metal \
+--with-librsvg --with-starter --with-emacs-big-sur-icon --with-native-comp \
+defaults write org.gnu.Emacs TransparentTitleBar DARK \
+defaults write org.gnu.Emacs HideDocumentIcon kES</code></pre></li>
+<li><p><a
+href="https://github.com/d12frosted/homebrew-emacs-plus">Emacs-plus</a>
+which I used for a long time once.</p>
+<pre><code>brew tap d12frosted/emacs-plus
+brew install emacs-mac --with-natural-title-bar \
+--with-mac-metal --with-librsvg --with-starter \
+--with-emacs-big-sur-icon --</code></pre></li>
+<li><p><a href="https://www.gnu.org/software/emacs/">Gnu-Emacs</a> is
+the official emacs client which I used for windows platform.</p></li>
+<li><p><a href="https://git.savannah.gnu.org/cgit/emacs.git">Source
+Code</a> Building form source which I use rarely.<br />
+building emacs with with source code</p>
+<pre><code>1    git clone git://git.savannah.gnu.org/emacs.git
+2    cd emacs
+3    git checkout emacs-28
+4    brew install libxml2
+5    make configure
+6    ./configure --with-native-compilation --with-modern-papirus-icon --with-no-titlebar
+7    make -j4
+8    make install
+9    open nextstep/Emacs.app</code></pre></li>
 </ul>
-
-<p>
-After emacs installation, set environment variables which names EMACS ,this depends on your emacs exec path.<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-shell"><span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">EMACS</span>=/Applications/Emacs.app/Contents/MacOS/Emacs
-</pre>
-</div>
-</div>
-</div>
-<div id="outline-container-orgeeab9c1" class="outline-3">
-<h3 id="orgeeab9c1"><span class="section-number-3">2.2.</span> Clone project</h3>
-<div class="outline-text-3" id="text-2-2">
-<p>
-clone doom-emacs and neo-emacs from github.<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-shell"><span style="color: #ECBE7B;">git</span> clone --depth <span style="color: #da8548; font-weight: bold;">1</span> https://github.com/doomemacs/doomemacs ~/.emacs.d
-<span style="color: #ECBE7B;">git</span> clone --depth <span style="color: #da8548; font-weight: bold;">1</span> https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
-</pre>
-</div>
-</div>
-</div>
-<div id="outline-container-org680fb05" class="outline-3">
-<h3 id="org680fb05"><span class="section-number-3">2.3.</span> Doom Install</h3>
-<div class="outline-text-3" id="text-2-3">
-<p>
-Set up a vpn if you need it.<br />
-</p>
-
-<div class="org-src-container">
-<pre class="src src-shell"><span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">http_proxy</span>=<span style="color: #98be65;">"ip:port"</span>
-<span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">https_proxy</span>=<span style="color: #98be65;">"ip:port"</span>
-</pre>
-</div>
-
-<p>
-Set your emacs cmd for doom install.<br />
-</p>
-
-<div class="org-src-container">
-<pre class="src src-shell"><span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">EMACS</span>= $<span style="color: #dcaeea;">YOUR</span> EMACS CMD PATH$
-</pre>
-</div>
-
-<p>
-Make sure there have Cmake lib or install it.<br />
-</p>
-<ul class="org-ul">
-<li><p>
-Ubuntu<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-shell">  <span style="color: #ECBE7B;">sudo</span> apt install cmake
-  <span style="color: #ECBE7B;">sudo</span> apt install libtool-bin
-</pre>
-</div></li>
-<li><p>
-MacOs<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-shell">  brew install cmake libtool gnuplot d2 ripgrep fzf terrastruct/tap/tala graphviz
-</pre>
-</div></li>
+<p>After emacs installation, set environment variables which names EMACS
+,this depends on your emacs exec path.</p>
+<pre><code>export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs</code></pre>
+<p><a id="org4367d98"></a></p>
+<h2 id="clone-project">Clone project</h2>
+<p>clone doom-emacs and neo-emacs from github.</p>
+<pre><code>git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.emacs.d
+git clone --depth 1 https://github.com/vanniuner/neo-emacs.git ~/.doom.d/</code></pre>
+<p><a id="orgaaa4994"></a></p>
+<h2 id="doom-install">Doom Install</h2>
+<p>Set up a vpn if you need it.</p>
+<pre><code>export http_proxy=&quot;ip:port&quot;
+export https_proxy=&quot;ip:port&quot;</code></pre>
+<p>Set your emacs cmd for doom install.</p>
+<pre><code>export EMACS= $YOUR EMACS CMD PATH$</code></pre>
+<p>Make sure there have Cmake lib or install it.</p>
+<ul>
+<li><p>Ubuntu</p>
+<pre><code>sudo apt install cmake
+sudo apt install libtool-bin</code></pre></li>
+<li><p>MacOs</p>
+<pre><code>brew install cmake libtool gnuplot d2 ripgrep fzf terrastruct/tap/tala graphviz</code></pre></li>
 </ul>
-
-<p>
-At last run below, this will take few minutes. And it depends on the quality of your network.<br />
-</p>
-
-<div class="org-src-container">
-<pre class="src src-shell">~/.emacs.doom/bin/doom install
-~/.emacs.doom/bin/doom.cmd install
-</pre>
-</div>
-</div>
-</div>
-</div>
-<div id="outline-container-orgf1aa04e" class="outline-2">
-<h2 id="orgf1aa04e"><span class="section-number-2">3.</span> How to update</h2>
-<div class="outline-text-2" id="text-3">
-</div>
-<div id="outline-container-org799afcf" class="outline-3">
-<h3 id="org799afcf"><span class="section-number-3">3.1.</span> For brew</h3>
-<div class="outline-text-3" id="text-3-1">
-<div class="org-src-container">
-<pre class="src src-shell">brew upgrade
-brew update &amp;&amp; brew upgrade emacs-mac &amp;&amp; brew cleanup emacs-mac
-</pre>
-</div>
-</div>
-</div>
-<div id="outline-container-org8759644" class="outline-3">
-<h3 id="org8759644"><span class="section-number-3">3.2.</span> For doom project</h3>
-<div class="outline-text-3" id="text-3-2">
-<div class="org-src-container">
-<pre class="src src-shell"><span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">EMACS</span>=/Applications/Emacs.app/Contents/MacOS/EMACS
+<p>At last run below, this will take few minutes. And it depends on the
+quality of your network.</p>
+<pre><code>~/.emacs.doom/bin/doom install
+~/.emacs.doom/bin/doom.cmd install</code></pre>
+<p><a id="org5bed6b9"></a></p>
+<h1 id="how-to-update">How to update</h1>
+<p><a id="org51542ab"></a></p>
+<h2 id="for-brew">For brew</h2>
+<pre><code>brew upgrade
+brew update &amp;&amp; brew upgrade emacs-mac &amp;&amp; brew cleanup emacs-mac</code></pre>
+<p><a id="org262ba82"></a></p>
+<h2 id="for-doom-project">For doom project</h2>
+<pre><code>export EMACS=/Applications/Emacs.app/Contents/MacOS/EMACS
 sh ~/.emacs.d/bin/doom upgrade
 sh ~/.emacs.d/bin/doom install
-sh ~/.emacs.d/bin/doom sync
-</pre>
-</div>
-</div>
-</div>
-</div>
-<div id="outline-container-org7eccb39" class="outline-2">
-<h2 id="org7eccb39"><span class="section-number-2">4.</span> Patches</h2>
-<div class="outline-text-2" id="text-4">
-</div>
-<div id="outline-container-org3b1c28f" class="outline-3">
-<h3 id="org3b1c28f"><span class="section-number-3">4.1.</span> transparent patch</h3>
-<div class="outline-text-3" id="text-4-1">
-<p>
-It offer a window transparent solution which could transparent background but the font not.Note after install the patch, here have a alternative package to control the transparent value.<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">use-package</span> transwin
-  <span style="color: #c678dd;">:config</span>
-  <span style="color: #c678dd;">(</span><span style="color: #51afef;">setq</span> <span style="color: #dcaeea;">transwin-delta-alpha</span> <span style="color: #da8548; font-weight: bold;">5</span><span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span><span style="color: #51afef;">setq</span> <span style="color: #dcaeea;">transwin-parameter-alpha</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">alpha-background</span><span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">:bind</span>
-  <span style="color: #c678dd;">(</span><span style="color: #98be65;">"C-M-="</span> . transwin-inc<span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span><span style="color: #98be65;">"C-M--"</span> . transwin-dec<span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span><span style="color: #98be65;">"C-M-0"</span> . transwin-toggle<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
-</pre>
-</div>
-</div>
-</div>
-<div id="outline-container-org0f54425" class="outline-3">
-<h3 id="org0f54425"><span class="section-number-3">4.2.</span> cursor animation</h3>
-<div class="outline-text-3" id="text-4-2">
-<p>
-The awesome patch could make cursor more funny.But there have a bug,If you shift to full screen from a window state , there will remain a shadow of the current cursor which will stay here forever.I will make cursor in replace mode before shifting to full screen.This might makes it effect less more.<br />
-</p>
-</div>
-</div>
-<div id="outline-container-orgd079bd1" class="outline-3">
-<h3 id="orgd079bd1"><span class="section-number-3">4.3.</span> how to</h3>
-<div class="outline-text-3" id="text-4-3">
-<p>
-Here have a <a href="https://neoemacs.com/posts/emacs-patches/">tutorial</a> to apply patch if you are using emacs plus.<br />
-</p>
-<ol class="org-ol">
-<li>Put the patches file under to `/opt/homebrew/Library/Taps/d12frosted/homebrew-emacs-plus/patches/emacs-30`<br /></li>
-<li><p>
-Modify `/opt/homebrew/Library/Taps/d12frosted/homebrew-emacs-plus/Formula/emacs-plus@30.rb`, around <span class="underline">local_patch</span>.<br />
-There only have two terms to be filled in, one is patch name which referenced to the pathches directory, another is the pathchs `sha256` value.<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-ruby">   <span style="color: #5B6268;">#</span>
-   <span style="color: #5B6268;"># </span><span style="color: #5B6268;">Patches</span>
-   <span style="color: #5B6268;">#</span>
-   opoo <span style="color: #98be65;">"The option --with-no-frame-refocus is not required anymore in emacs-plus@30."</span> <span style="color: #51afef;">if</span> build.with? <span style="color: #98be65;">"no-frame-refocus"</span>
-   local_patch <span style="color: #98be65;">"fix-window-role"</span>, <span style="color: #a9a1e1;">sha:</span> <span style="color: #98be65;">"1f8423ea7e6e66c9ac6dd8e37b119972daa1264de00172a24a79a710efcb8130"</span>
-   local_patch <span style="color: #98be65;">"system-appearance"</span>, <span style="color: #a9a1e1;">sha:</span> <span style="color: #98be65;">"9eb3ce80640025bff96ebaeb5893430116368d6349f4eb0cb4ef8b3d58477db6"</span>
-   local_patch <span style="color: #98be65;">"poll"</span>, <span style="color: #a9a1e1;">sha:</span> <span style="color: #98be65;">"31b76d6a2830fa3b6d453e3bbf5ec7259b5babf1d977b2bf88a6624fa78cb3e6"</span> <span style="color: #51afef;">if</span> build.with? <span style="color: #98be65;">"poll"</span>
-   local_patch <span style="color: #98be65;">"round-undecorated-frame"</span>, <span style="color: #a9a1e1;">sha:</span> <span style="color: #98be65;">"7451f80f559840e54e6a052e55d1100778abc55f98f1d0c038a24e25773f2874"</span>
-   local_patch <span style="color: #98be65;">"cursor-animation"</span>, <span style="color: #a9a1e1;">sha:</span> <span style="color: #98be65;">"812a934bd45dd4ee3311c1bc6681605364193bbd14ec05b9b847f9488bf989e2"</span>
-   local_patch <span style="color: #98be65;">"ns-alpha-background"</span>, <span style="color: #a9a1e1;">sha:</span> <span style="color: #98be65;">"6c174aff2602b64255ce8952f91302ede51e213be090f1b39e06913bbe0b086b"</span>
-</pre>
-</div>
-
+sh ~/.emacs.d/bin/doom sync</code></pre>
+<p><a id="org815f74a"></a></p>
+<h1 id="patches">Patches</h1>
+<p><a id="orgeaa62f8"></a></p>
+<h2 id="transparent-patch">transparent patch</h2>
+<p>It offer a window transparent solution which could transparent
+background but the font not.Note after install the patch, here have a
+alternative package to control the transparent value.</p>
+<pre><code>(use-package transwin
+  :config
+  (setq transwin-delta-alpha 5)
+  (setq transwin-parameter-alpha &#39;alpha-background)
+  :bind
+  (&quot;C-M-=&quot; . transwin-inc)
+  (&quot;C-M--&quot; . transwin-dec)
+  (&quot;C-M-0&quot; . transwin-toggle))</code></pre>
+<p><a id="orga21ffbe"></a></p>
+<h2 id="cursor-animation">cursor animation</h2>
+<p>The awesome patch could make cursor more funny.But there have a
+bug,If you shift to full screen from a window state , there will remain
+a shadow of the current cursor which will stay here forever.I will make
+cursor in replace mode before shifting to full screen.This might makes
+it effect less more.</p>
+<p><a id="org3af2866"></a></p>
+<h2 id="how-to">how to</h2>
+<p>Here have a <a
+href="https://neoemacs.com/posts/emacs-patches/">tutorial</a> to apply
+patch if you are using emacs plus.</p>
+<ol type="1">
+<li><p>Put the patches file under to
+`/opt/homebrew/Library/Taps/d12frosted/homebrew-emacs-plus/patches/emacs-30`</p></li>
+<li><p>Modify
+`/opt/homebrew/Library/Taps/d12frosted/homebrew-emacs-plus/Formula/emacs-plus@30.rb`,
+around <u>local_patch</u>.<br />
+There only have two terms to be filled in, one is patch name which
+referenced to the pathches directory, another is the pathchs `sha256`
+value.</p>
+<pre><code>#
+# Patches
+#
+opoo &quot;The option --with-no-frame-refocus is not required anymore in emacs-plus@30.&quot; if build.with? &quot;no-frame-refocus&quot;
+local_patch &quot;fix-window-role&quot;, sha: &quot;1f8423ea7e6e66c9ac6dd8e37b119972daa1264de00172a24a79a710efcb8130&quot;
+local_patch &quot;system-appearance&quot;, sha: &quot;9eb3ce80640025bff96ebaeb5893430116368d6349f4eb0cb4ef8b3d58477db6&quot;
+local_patch &quot;poll&quot;, sha: &quot;31b76d6a2830fa3b6d453e3bbf5ec7259b5babf1d977b2bf88a6624fa78cb3e6&quot; if build.with? &quot;poll&quot;
+local_patch &quot;round-undecorated-frame&quot;, sha: &quot;7451f80f559840e54e6a052e55d1100778abc55f98f1d0c038a24e25773f2874&quot;
+local_patch &quot;cursor-animation&quot;, sha: &quot;812a934bd45dd4ee3311c1bc6681605364193bbd14ec05b9b847f9488bf989e2&quot;
+local_patch &quot;ns-alpha-background&quot;, sha: &quot;6c174aff2602b64255ce8952f91302ede51e213be090f1b39e06913bbe0b086b&quot;</code></pre>
 <blockquote>
-<p>
-Notic: above sha value is out of date<br />
-</p>
+<p>Notic: above sha value is out of date</p>
 </blockquote></li>
-<li>Just install emacs plus, you could use `brew reinstall`<br /></li>
+<li><p>Just install emacs plus, you could use `brew reinstall`</p></li>
 </ol>
-</div>
-</div>
-</div>
-<div id="outline-container-org56fab1b" class="outline-2">
-<h2 id="org56fab1b"><span class="section-number-2">5.</span> Private setting</h2>
-<div class="outline-text-2" id="text-5">
-<p>
-Customize your private setting config in the config.el ; use <code>setq</code><br />
-</p>
-</div>
-<div id="outline-container-orgcc3eb9b" class="outline-3">
-<h3 id="orgcc3eb9b"><span class="section-number-3">5.1.</span> Font setting</h3>
-<div class="outline-text-3" id="text-5-1">
-<p>
-Before start up,install fonts in the <a href="./neoemacs/font">./neoemacs/font</a> directory firstly.<br />
-Cause different platform have different font name,after font installed there need a adjustment based on the fact.<br />
-</p>
-</div>
-<ol class="org-ol">
-<li><a id="org198308a"></a>setting on macos<br />
-<div class="outline-text-4" id="text-5-1-1">
-<div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> <span style="color: #dcaeea;">doom-font</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">font-spec</span> <span style="color: #c678dd;">:family</span> <span style="color: #98be65;">"victor Mono"</span> <span style="color: #c678dd;">:size</span> <span style="color: #da8548; font-weight: bold;">19</span> <span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
-<span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">init-cjk-fonts</span><span style="color: #c678dd;">()</span>
-  <span style="color: #c678dd;">(</span><span style="color: #51afef;">dolist</span> <span style="color: #98be65;">(</span>charset <span style="color: #51afef;">'</span><span style="color: #a9a1e1;">(</span>kana han cjk-misc bopomofo<span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
-    <span style="color: #98be65;">(</span><span style="color: #a9a1e1;">set-fontset-font</span> <span style="color: #a9a1e1;">(</span><span style="color: #a9a1e1;">frame-parameter</span> nil <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">font</span><span style="color: #a9a1e1;">)</span>
-      charset <span style="color: #a9a1e1;">(</span><span style="color: #a9a1e1;">font-spec</span> <span style="color: #c678dd;">:family</span> <span style="color: #98be65;">"HYXinRenWenSongW"</span> <span style="color: #c678dd;">:size</span> <span style="color: #da8548; font-weight: bold;">20</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
-<span style="color: #51afef;">(</span><span style="color: #a9a1e1;">add-hook</span> <span style="color: #51afef;">'</span><span style="color: #dcaeea;">doom-init-ui-hook</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">init-cjk-fonts</span><span style="color: #51afef;">)</span>
-</pre>
-</div>
-</div>
-</li>
-<li><a id="orgda582fd"></a>setting on windows<br />
-<div class="outline-text-4" id="text-5-1-2">
-<div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> <span style="color: #dcaeea;">doom-font</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">font-spec</span> <span style="color: #c678dd;">:family</span> <span style="color: #98be65;">"victor Mono Medium"</span> <span style="color: #c678dd;">:size</span> <span style="color: #da8548; font-weight: bold;">24</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
-<span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">init-cjk-fonts</span><span style="color: #c678dd;">()</span>
-  <span style="color: #c678dd;">(</span><span style="color: #51afef;">dolist</span> <span style="color: #98be65;">(</span>charset <span style="color: #51afef;">'</span><span style="color: #a9a1e1;">(</span>kana han cjk-misc bopomofo<span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
-    <span style="color: #98be65;">(</span><span style="color: #a9a1e1;">set-fontset-font</span> <span style="color: #a9a1e1;">(</span><span style="color: #a9a1e1;">frame-parameter</span> nil <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">font</span><span style="color: #a9a1e1;">)</span>
-      charset <span style="color: #a9a1e1;">(</span><span style="color: #a9a1e1;">font-spec</span> <span style="color: #c678dd;">:family</span> <span style="color: #98be65;">"&#27721;&#20202;&#26032;&#20154;&#25991;&#23435;W"</span> <span style="color: #c678dd;">:size</span> <span style="color: #da8548; font-weight: bold;">26</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
-<span style="color: #51afef;">(</span><span style="color: #a9a1e1;">add-hook</span> <span style="color: #51afef;">'</span><span style="color: #dcaeea;">doom-init-ui-hook</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">init-cjk-fonts</span><span style="color: #51afef;">)</span>
-</pre>
-</div>
-</div>
-</li>
-<li><a id="org22bdfcb"></a>install all-the-icons<br />
-<div class="outline-text-4" id="text-5-1-3">
-<p>
-For the icons font, we need do below<br />
-</p>
-<ul class="org-ul">
-<li>M-x install-package all-the-icons<br /></li>
-<li>M-x all-the-icons-install-fonts<br /></li>
-<li>M-x nerd-icons-install-fonts<br /></li>
-</ul>
-</div>
-</li>
+<p><a id="orgd1fdd20"></a></p>
+<h1 id="private-setting">Private setting</h1>
+<p>Customize your private setting config in the config.el ; use
+<code>setq</code></p>
+<p><a id="orgb44ef02"></a></p>
+<h2 id="font-setting">Font setting</h2>
+<p>Before start up,install fonts in the &lt;./neoemacs/font&gt;
+directory firstly.<br />
+Cause different platform have different font name,after font installed
+there need a adjustment based on the fact.</p>
+<ol type="1">
+<li><p>setting on macos</p>
+<pre><code>(setq doom-font (font-spec :family &quot;victor Mono&quot; :size 19 ))
+(defun init-cjk-fonts()
+  (dolist (charset &#39;(kana han cjk-misc bopomofo))
+    (set-fontset-font (frame-parameter nil &#39;font)
+      charset (font-spec :family &quot;HYXinRenWenSongW&quot; :size 20))))
+(add-hook &#39;doom-init-ui-hook &#39;init-cjk-fonts)</code></pre></li>
+<li><p>setting on windows</p>
+<pre><code>(setq doom-font (font-spec :family &quot;victor Mono Medium&quot; :size 24))
+(defun init-cjk-fonts()
+  (dolist (charset &#39;(kana han cjk-misc bopomofo))
+    (set-fontset-font (frame-parameter nil &#39;font)
+      charset (font-spec :family &quot;汉仪新人文宋W&quot; :size 26))))
+(add-hook &#39;doom-init-ui-hook &#39;init-cjk-fonts)</code></pre></li>
+<li><p>install all-the-icons</p>
+<p>For the icons font, we need do below</p>
+<ul>
+<li>M-x install-package all-the-icons</li>
+<li>M-x all-the-icons-install-fonts</li>
+<li>M-x nerd-icons-install-fonts</li>
+</ul></li>
 </ol>
-</div>
-<div id="outline-container-org9903bf5" class="outline-3">
-<h3 id="org9903bf5"><span class="section-number-3">5.2.</span> Basic setting</h3>
-<div class="outline-text-3" id="text-5-2">
+<p><a id="org357eaa7"></a></p>
+<h2 id="basic-setting">Basic setting</h2>
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-<caption class="t-bottom"><span class="table-number">Table 1:</span> neo-emacs basic setting</caption>
-
+<caption class="t-bottom">
+<span class="table-number">Table 1:</span> neo-emacs basic setting
+</caption>
 <colgroup>
 <col  class="org-left" />
-
 <col  class="org-left" />
-
 <col  class="org-left" />
-
 <col  class="org-left" />
 </colgroup>
 <tbody>
 <tr>
-<td class="org-left">variable</td>
-<td class="org-left">default value</td>
-<td class="org-left">config location</td>
-<td class="org-left">description</td>
+<td class="org-left">
+variable
+</td>
+<td class="org-left">
+default value
+</td>
+<td class="org-left">
+config location
+</td>
+<td class="org-left">
+description
+</td>
 </tr>
-
 <tr>
-<td class="org-left">emacs-module-root</td>
-<td class="org-left">/opt/homebrew/opt/emacs-plus@28/include</td>
-<td class="org-left">config.el</td>
-<td class="org-left">emcas module root</td>
+<td class="org-left">
+emacs-module-root
+</td>
+<td class="org-left">
+/opt/homebrew/opt/emacs-plus@28/include
+</td>
+<td class="org-left">
+config.el
+</td>
+<td class="org-left">
+emcas module root
+</td>
 </tr>
-
 <tr>
-<td class="org-left">display-line-numbers-type</td>
-<td class="org-left">nil</td>
-<td class="org-left">config.el</td>
-<td class="org-left">show line number</td>
+<td class="org-left">
+display-line-numbers-type
+</td>
+<td class="org-left">
+nil
+</td>
+<td class="org-left">
+config.el
+</td>
+<td class="org-left">
+show line number
+</td>
 </tr>
-
 <tr>
-<td class="org-left">org-directory</td>
-<td class="org-left">~/org/</td>
-<td class="org-left">config.el</td>
-<td class="org-left">org           root path</td>
+<td class="org-left">
+org-directory
+</td>
+<td class="org-left">
+~/org/
+</td>
+<td class="org-left">
+config.el
+</td>
+<td class="org-left">
+org root path
+</td>
 </tr>
-
 <tr>
-<td class="org-left">rg-exec-path</td>
-<td class="org-left">system path</td>
-<td class="org-left">-</td>
-<td class="org-left">-</td>
+<td class="org-left">
+rg-exec-path
+</td>
+<td class="org-left">
+system path
+</td>
+<td class="org-left">
+-
+</td>
+<td class="org-left">
+-
+</td>
 </tr>
-
 <tr>
-<td class="org-left">fd-exec-path</td>
-<td class="org-left">system path</td>
-<td class="org-left">-</td>
-<td class="org-left">-</td>
+<td class="org-left">
+fd-exec-path
+</td>
+<td class="org-left">
+system path
+</td>
+<td class="org-left">
+-
+</td>
+<td class="org-left">
+-
+</td>
 </tr>
-
 <tr>
-<td class="org-left">dot-exec-path</td>
-<td class="org-left">/opt/homebrew/bin/dot</td>
-<td class="org-left">modules/neo-emacs/org/config.el</td>
-<td class="org-left">dot           exec path</td>
+<td class="org-left">
+dot-exec-path
+</td>
+<td class="org-left">
+/opt/homebrew/bin/dot
+</td>
+<td class="org-left">
+modules/neo-emacs/org/config.el
+</td>
+<td class="org-left">
+dot exec path
+</td>
 </tr>
-
 <tr>
-<td class="org-left">pdflatex-exec-path</td>
-<td class="org-left">/Library/TeX/texbin/pdflatex</td>
-<td class="org-left">modules/neo-emacs/org/config.el</td>
-<td class="org-left">pdflatex      exec path</td>
+<td class="org-left">
+pdflatex-exec-path
+</td>
+<td class="org-left">
+/Library/TeX/texbin/pdflatex
+</td>
+<td class="org-left">
+modules/neo-emacs/org/config.el
+</td>
+<td class="org-left">
+pdflatex exec path
+</td>
 </tr>
-
 <tr>
-<td class="org-left">org-roam-directory</td>
-<td class="org-left">~/org/org-roam</td>
-<td class="org-left">modules/neo-emacs/org/config.el</td>
-<td class="org-left">org roam      root path</td>
+<td class="org-left">
+org-roam-directory
+</td>
+<td class="org-left">
+~/org/org-roam
+</td>
+<td class="org-left">
+modules/neo-emacs/org/config.el
+</td>
+<td class="org-left">
+org roam root path
+</td>
 </tr>
-
 <tr>
-<td class="org-left">lsp-java-jdt-download-url</td>
-<td class="org-left"><a href="http://1.117.167.195/download">http://1.117.167.195/download</a></td>
-<td class="org-left">modules/neo-emacs/java/config.el</td>
-<td class="org-left">jdt-server URL</td>
+<td class="org-left">
+lsp-java-jdt-download-url
+</td>
+<td class="org-left">
+<a href="http://1.117.167.195/download">http://1.117.167.195/download</a>
+</td>
+<td class="org-left">
+modules/neo-emacs/java/config.el
+</td>
+<td class="org-left">
+jdt-server URL
+</td>
 </tr>
-
 <tr>
-<td class="org-left">lsp-java-java-path</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">modules/neo-emacs/java/config.el</td>
-<td class="org-left">java11        exec path</td>
+<td class="org-left">
+lsp-java-java-path
+</td>
+<td class="org-left">
+ 
+</td>
+<td class="org-left">
+modules/neo-emacs/java/config.el
+</td>
+<td class="org-left">
+java11 exec path
+</td>
 </tr>
-
 <tr>
-<td class="org-left">lsp-maven-path</td>
-<td class="org-left">~/.m2/settings.xml</td>
-<td class="org-left">modules/neo-emacs/java/config.el</td>
-<td class="org-left">maven setting path</td>
+<td class="org-left">
+lsp-maven-path
+</td>
+<td class="org-left">
+~/.m2/settings.xml
+</td>
+<td class="org-left">
+modules/neo-emacs/java/config.el
+</td>
+<td class="org-left">
+maven setting path
+</td>
 </tr>
-
 <tr>
-<td class="org-left">rime-user-data-dir</td>
-<td class="org-left">~/Library/Rime/</td>
-<td class="org-left">modules/neo-emacs/rime/config.el</td>
-<td class="org-left">rime config input</td>
+<td class="org-left">
+rime-user-data-dir
+</td>
+<td class="org-left">
+~/Library/Rime/
+</td>
+<td class="org-left">
+modules/neo-emacs/rime/config.el
+</td>
+<td class="org-left">
+rime config input
+</td>
 </tr>
-
 <tr>
-<td class="org-left">rime-librime-root</td>
-<td class="org-left">~/.doom.d/myconfig/rime-macos/dist</td>
-<td class="org-left">modules/neo-emacs/rime/config.el</td>
-<td class="org-left">emacs-rime/blob/master/</td>
+<td class="org-left">
+rime-librime-root
+</td>
+<td class="org-left">
+~/.doom.d/myconfig/rime-macos/dist
+</td>
+<td class="org-left">
+modules/neo-emacs/rime/config.el
+</td>
+<td class="org-left">
+emacs-rime/blob/master/
+</td>
 </tr>
 </tbody>
 </table>
-
 <blockquote>
-<p>
-recentfile save default dir: ~/.emacs.d/.local/cache/recentf<br />
-</p>
+<p>recentfile save default dir: ~/.emacs.d/.local/cache/recentf</p>
 </blockquote>
-</div>
-</div>
-</div>
-<div id="outline-container-org2ecace9" class="outline-2">
-<h2 id="org2ecace9"><span class="section-number-2">6.</span> Neoemacs modules</h2>
-<div class="outline-text-2" id="text-6">
-</div>
-<div id="outline-container-orgbe70867" class="outline-3">
-<h3 id="orgbe70867"><span class="section-number-3">6.1.</span> Lsp Java</h3>
-<div class="outline-text-3" id="text-6-1">
-<p>
-<a href="./modules/neo-emacs/java/readme.html">futher more java readme</a><br />
-Neo-Emacs will automatically download the jdtls from `lsp-java-jdt-download-url`, and now it&rsquo;s located at <a href="https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.22.0/jdt-language-server-1.22.0-202304131553.tar.gz">jdt-language-server-1.22.0</a>.After that you could use all the features powered by eclipse.<br />
-</p>
-<ul class="org-ul">
-<li><p>
-Generate eclipse files<br />
-Execute mvn command for generate eclipse .project &amp; .classpath files on your project root path.<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-shell">  mvn eclipse:clean eclipse:eclipse
-</pre>
-</div></li>
-<li><p>
-Support projectlombok plugin<br />
-There have a default lombok.jar in <code>doom-user-dir/neoemacs</code> which you could replace by yourself.<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-elisp">  <span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span>  lombok-jar-path <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">expand-file-name</span> <span style="color: #98be65;">(</span><span style="color: #a9a1e1;">concat</span> <span style="color: #dcaeea;">doom-user-dir</span> <span style="color: #98be65;">"neoemacs/lombok.jar"</span><span style="color: #98be65;">)</span>
-</pre>
-</div></li>
-<li><p>
-Shotcuts/Key binding<br />
-</p>
+<p><a id="orgf03217c"></a></p>
+<h1 id="neoemacs-modules">Neoemacs modules</h1>
+<p><a id="orgdece738"></a></p>
+<h2 id="lsp-java">Lsp Java</h2>
+<p><a href="./modules/neo-emacs/java/readme.md">futher more java
+readme</a><br />
+Neo-Emacs will automatically download the jdtls from
+`lsp-java-jdt-download-url`, and now it’s located at <a
+href="https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.22.0/jdt-language-server-1.22.0-202304131553.tar.gz">jdt-language-server-1.22.0</a>.After
+that you could use all the features powered by eclipse.</p>
+<ul>
+<li><p>Generate eclipse files<br />
+Execute mvn command for generate eclipse .project &amp; .classpath files
+on your project root path.</p>
+<pre><code>mvn eclipse:clean eclipse:eclipse</code></pre></li>
+<li><p>Support projectlombok plugin<br />
+There have a default lombok.jar in <code>doom-user-dir/neoemacs</code>
+which you could replace by yourself.</p>
+<pre><code>(setq  lombok-jar-path (expand-file-name (concat doom-user-dir &quot;neoemacs/lombok.jar&quot;)</code></pre></li>
+<li><p>Shotcuts/Key binding</p>
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-<caption class="t-bottom"><span class="table-number">Table 2:</span> java mode key binding</caption>
-
+<caption class="t-bottom">
+<p><span class="table-number">Table 2:</span> java mode key binding</p>
+</caption>
 <colgroup>
 <col  class="org-left" />
-
 <col  class="org-left" />
-
 <col  class="org-left" />
 </colgroup>
 <tbody>
 <tr>
-<td class="org-left">KEY</td>
-<td class="org-left">FUNCTION</td>
-<td class="org-left">DESCRIPTION</td>
+<td class="org-left">
+<p>KEY</p>
+</td>
+<td class="org-left">
+<p>FUNCTION</p>
+</td>
+<td class="org-left">
+<p>DESCRIPTION</p>
+</td>
 </tr>
-
 <tr>
-<td class="org-left">SPC c i</td>
-<td class="org-left">find-implementations</td>
-<td class="org-left">find where sub class definition</td>
+<td class="org-left">
+<p>SPC c i</p>
+</td>
+<td class="org-left">
+<p>find-implementations</p>
+</td>
+<td class="org-left">
+<p>find where sub class definition</p>
+</td>
 </tr>
-
 <tr>
-<td class="org-left">SPC c I</td>
-<td class="org-left">lsp-java-open-super-implementation</td>
-<td class="org-left">find where sub class definition</td>
+<td class="org-left">
+<p>SPC c I</p>
+</td>
+<td class="org-left">
+<p>lsp-java-open-super-implementation</p>
+</td>
+<td class="org-left">
+<p>find where sub class definition</p>
+</td>
 </tr>
-
 <tr>
-<td class="org-left">SPC t e</td>
-<td class="org-left">lsp-treemacs-java-deps-list</td>
-<td class="org-left">find projects referenced libs</td>
+<td class="org-left">
+<p>SPC t e</p>
+</td>
+<td class="org-left">
+<p>lsp-treemacs-java-deps-list</p>
+</td>
+<td class="org-left">
+<p>find projects referenced libs</p>
+</td>
 </tr>
-
 <tr>
-<td class="org-left">SPC c f</td>
-<td class="org-left">formart buffer/region</td>
-<td class="org-left">goto type definition</td>
+<td class="org-left">
+<p>SPC c f</p>
+</td>
+<td class="org-left">
+<p>formart buffer/region</p>
+</td>
+<td class="org-left">
+<p>goto type definition</p>
+</td>
 </tr>
-
 <tr>
-<td class="org-left">SPC c a</td>
-<td class="org-left">lsp-execute-code-action</td>
-<td class="org-left">code action</td>
+<td class="org-left">
+<p>SPC c a</p>
+</td>
+<td class="org-left">
+<p>lsp-execute-code-action</p>
+</td>
+<td class="org-left">
+<p>code action</p>
+</td>
 </tr>
-
 <tr>
-<td class="org-left">SPC c d</td>
-<td class="org-left">lsp-jump-definition</td>
-<td class="org-left">jump to where symbol definition</td>
+<td class="org-left">
+<p>SPC c d</p>
+</td>
+<td class="org-left">
+<p>lsp-jump-definition</p>
+</td>
+<td class="org-left">
+<p>jump to where symbol definition</p>
+</td>
 </tr>
-
 <tr>
-<td class="org-left">SPC c D</td>
-<td class="org-left">lsp-jump-reference</td>
-<td class="org-left">jump to where symbol referenced</td>
+<td class="org-left">
+<p>SPC c D</p>
+</td>
+<td class="org-left">
+<p>lsp-jump-reference</p>
+</td>
+<td class="org-left">
+<p>jump to where symbol referenced</p>
+</td>
 </tr>
-
 <tr>
-<td class="org-left">SPC c o</td>
-<td class="org-left">lsp-java-organize-imports</td>
-<td class="org-left">import require package</td>
+<td class="org-left">
+<p>SPC c o</p>
+</td>
+<td class="org-left">
+<p>lsp-java-organize-imports</p>
+</td>
+<td class="org-left">
+<p>import require package</p>
+</td>
 </tr>
-
 <tr>
-<td class="org-left">SPC t s</td>
-<td class="org-left">lsp-workspace-restart</td>
-<td class="org-left">restart lsp server</td>
+<td class="org-left">
+<p>SPC t s</p>
+</td>
+<td class="org-left">
+<p>lsp-workspace-restart</p>
+</td>
+<td class="org-left">
+<p>restart lsp server</p>
+</td>
 </tr>
 </tbody>
 </table></li>
-<li>How to upgrade jdtls<br />
-<ol class="org-ol">
-<li>Customization your own eclipse jdtls project version by replace it&rsquo;s binary pacage.<br /></li>
-<li>Download the lastest jdt-language-server from <a href="https://download.eclipse.org/jdtls/milestones">https://download.eclipse.org/jdtls/milestones</a>.<br /></li>
-<li>Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.<br /></li>
+<li><p>How to upgrade jdtls</p>
+<ol type="1">
+<li>Customization your own eclipse jdtls project version by replace it’s
+binary pacage.</li>
+<li>Download the lastest jdt-language-server from <a
+href="https://download.eclipse.org/jdtls/milestones"
+class="uri">https://download.eclipse.org/jdtls/milestones</a>.</li>
+<li>Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.</li>
 </ol></li>
 </ul>
-</div>
-</div>
-<div id="outline-container-org2ae7932" class="outline-3">
-<h3 id="org2ae7932"><span class="section-number-3">6.2.</span> Vterm Shell</h3>
-<div class="outline-text-3" id="text-6-2">
+<p><a id="org4e22031"></a></p>
+<h2 id="vterm-shell">Vterm Shell</h2>
+<p>You’d better install vterm in a terminal environment case there might
+have error incompatible architecture.</p>
+<div id="orge772a1e" class="notice-warning">
 <p>
-You&rsquo;d better install vterm in a terminal environment case there might have error incompatible architecture.<br />
+Vterm is not available on windows.<br /> Thus windows user have to use
+eshell as a downgrade plan.<br />
 </p>
-
-<div class="notice-warning" id="orga3014b4">
-<p>
-Vterm is not available on windows.<br />
-Thus windows user have to use eshell as a downgrade plan.<br />
-</p>
-
 </div>
-</div>
-<ol class="org-ol">
-<li><a id="org5be5754"></a>Install vterm<br />
-<div class="outline-text-4" id="text-6-2-1">
-<p>
-You&rsquo;d better install vterm in a terminal environment case there might have error incompatible architecture.<br />
-If vterm complie failed in emacs, we could complie it manually.<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-bash"><span style="color: #ECBE7B;">cd</span> .emacs.d/.local/straight/build/vterm/
-<span style="color: #ECBE7B;">mkdir</span> -p build
-<span style="color: #5B6268;"># </span><span style="color: #5B6268;">install cmake and libtool-bin</span>
+<ol type="1">
+<li><p>Install vterm</p>
+<p>You’d better install vterm in a terminal environment case there might
+have error incompatible architecture.<br />
+If vterm complie failed in emacs, we could complie it manually.</p>
+<pre><code>cd .emacs.d/.local/straight/build/vterm/
+mkdir -p build
+# install cmake and libtool-bin
 brew install cmake libtool
-<span style="color: #ECBE7B;">mkdir</span> -p build
-<span style="color: #ECBE7B;">cd</span> build
+mkdir -p build
+cd build
 cmake ..
-<span style="color: #ECBE7B;">make</span>
-</pre>
-</div>
-</div>
-</li>
-<li><a id="orgec08d54"></a>Fish shell optimize<br />
-<div class="outline-text-4" id="text-6-2-2">
-<p>
-If you are using fish shell ,fortunately there have some optimize config prepared for you.<br />
-</p>
-<ul class="org-ul">
-<li>feature:<br />
-<ul class="org-ul">
-<li>use fish shell on emacs vterm.<br /></li>
-<li><p>
-use command `ff` %anyfile% on vterm will open %anyfile% in a new emacs buffer.It&rsquo;s very useful.<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-shell">      <span style="color: #51afef;">if</span> <span style="color: #51afef;">[</span> <span style="color: #98be65;">"</span><span style="color: #a9a1e1;">$</span><span style="color: #dcaeea;">INSIDE_EMACS</span><span style="color: #98be65;">"</span> = <span style="color: #98be65;">'vterm'</span> <span style="color: #51afef;">]</span>
-          <span style="color: #51afef;">function</span> <span style="color: #c678dd;">clear</span>
-              vterm_printf <span style="color: #98be65;">"51;Evterm-clear-scrollback"</span>;
-              tput clear;
-          end
-      end
-      <span style="color: #51afef;">function</span> <span style="color: #c678dd;">vterm_cmd</span> --description <span style="color: #98be65;">'Run an Emacs command among the ones been defined in vterm-eval-cmds.'</span>
-          <span style="color: #c678dd;">set</span> -l vterm_elisp <span style="color: #51afef;">()</span>
-          <span style="color: #51afef;">for</span> arg<span style="color: #51afef;"> in</span> $<span style="color: #dcaeea;">argv</span>
-              <span style="color: #c678dd;">set</span> -a vterm_elisp <span style="color: #51afef;">(</span>printf <span style="color: #98be65;">'"%s" '</span> <span style="color: #c678dd;">(</span>string replace -a -r <span style="color: #98be65;">'([\\\\"])'</span> <span style="color: #98be65;">'\\\\\\\\$1'</span> $<span style="color: #dcaeea;">arg</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
-          end
-          vterm_printf <span style="color: #98be65;">'51;E'</span><span style="color: #51afef;">(</span>string join <span style="color: #98be65;">''</span> $<span style="color: #dcaeea;">vterm_elisp</span><span style="color: #51afef;">)</span>
-      end
-      <span style="color: #51afef;">function</span> <span style="color: #c678dd;">ff</span>
-          <span style="color: #c678dd;">set</span> -q argv<span style="color: #51afef;">[</span><span style="color: #da8548; font-weight: bold;">1</span><span style="color: #51afef;">]</span>; or set argv<span style="color: #51afef;">[</span><span style="color: #da8548; font-weight: bold;">1</span><span style="color: #51afef;">]</span> <span style="color: #98be65;">"."</span>
-          vterm_cmd find-file <span style="color: #51afef;">(</span>realpath <span style="color: #98be65;">"</span><span style="color: #a9a1e1;">$</span><span style="color: #dcaeea;">argv</span><span style="color: #98be65;">"</span><span style="color: #51afef;">)</span>
-      end
-</pre>
-</div></li>
+make</code></pre></li>
+<li><p>Fish shell optimize</p>
+<p>If you are using fish shell ,fortunately there have some optimize
+config prepared for you.</p>
+<ul>
+<li>feature:
+<ul>
+<li><p>use fish shell on emacs vterm.</p></li>
+<li><p>use command `ff` %anyfile% on vterm will open %anyfile% in a new
+emacs buffer.It’s very useful.</p>
+<pre><code>if [ &quot;$INSIDE_EMACS&quot; = &#39;vterm&#39; ]
+    function clear
+        vterm_printf &quot;51;Evterm-clear-scrollback&quot;;
+        tput clear;
+    end
+end
+function vterm_cmd --description &#39;Run an Emacs command among the ones been defined in vterm-eval-cmds.&#39;
+    set -l vterm_elisp ()
+    for arg in $argv
+        set -a vterm_elisp (printf &#39;&quot;%s&quot; &#39; (string replace -a -r &#39;([\\\\&quot;])&#39; &#39;\\\\\\\\$1&#39; $arg))
+    end
+    vterm_printf &#39;51;E&#39;(string join &#39;&#39; $vterm_elisp)
+end
+function ff
+    set -q argv[1]; or set argv[1] &quot;.&quot;
+    vterm_cmd find-file (realpath &quot;$argv&quot;)
+end</code></pre></li>
 </ul></li>
-<li>http proxy<br /></li>
+<li>http proxy</li>
 </ul>
-<p>
-In fact there have two different config ,first one for vterm and another for emacs inner plugins.<br />
-In vterm the http proxy be effected by `~/.config/fish/config.fish`,you could config it like this.<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-shell"><span style="color: #c678dd;">set</span> -x http_proxy       http://vpn.local.com:10887
-<span style="color: #c678dd;">set</span> -x https_proxy      http://vpn.local.com:10887
-<span style="color: #c678dd;">set</span> -x no_proxy         <span style="color: #98be65;">".aliyun.com,192.168.0.0/16,137.239.155.184"</span>
-</pre>
-</div>
-<p>
-When you are using emacs lisp program such as restclient, you could config proxy like this.<br />
-The difference is wildcard<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">convert-to-regex</span> <span style="color: #c678dd;">(</span>str<span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span><span style="color: #51afef;">let*</span> <span style="color: #98be65;">(</span><span style="color: #a9a1e1;">(</span>joined <span style="color: #51afef;">(</span><span style="color: #a9a1e1;">replace-regexp-in-string</span> <span style="color: #98be65;">","</span> <span style="color: #98be65;">"\\\\|"</span> str<span style="color: #51afef;">)</span><span style="color: #a9a1e1;">)</span>
-         <span style="color: #a9a1e1;">(</span>wrapped <span style="color: #51afef;">(</span><span style="color: #a9a1e1;">concat</span> <span style="color: #98be65;">"^</span><span style="color: #51afef; font-weight: bold;">\\</span><span style="color: #51afef; font-weight: bold;">(</span><span style="color: #98be65;">"</span> joined <span style="color: #98be65;">"</span><span style="color: #51afef; font-weight: bold;">\\</span><span style="color: #51afef; font-weight: bold;">)</span><span style="color: #98be65;">"</span><span style="color: #51afef;">)</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
-    wrapped<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
-<span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> <span style="color: #dcaeea;">url-proxy-services</span> <span style="color: #51afef;">`</span><span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span><span style="color: #98be65;">"http"</span> .<span style="color: #98be65;">"vpn.local.com:10887"</span><span style="color: #98be65;">)</span>
-                           <span style="color: #98be65;">(</span><span style="color: #98be65;">"https"</span> .<span style="color: #98be65;">"vpn.local.com:10887"</span><span style="color: #98be65;">)</span>
-                           <span style="color: #98be65;">(</span><span style="color: #98be65;">"no_proxy"</span> . ,<span style="color: #a9a1e1;">(</span><span style="color: #c678dd;">convert-to-regex</span> <span style="color: #98be65;">".*aliyun.com,192.168.0.0/16,137.239.155.184"</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
-</pre>
-</div>
-</div>
-</li>
-<li><a id="orgb806c57"></a>Usage<br />
-<div class="outline-text-4" id="text-6-2-3">
-<ul class="org-ul">
-<li>Being with eshell<br />
-Eshell have a most wanted feature was <b>quickrun-eshell</b> which have a fast reload function after shell is runinng,you just use <code>C-c C-c</code> to stop it and use <b>r</b> to return you shell script file.It&rsquo;s pretty convenient.<br /></li>
-<li><p>
-Key Binding<br />
-</p>
+<p>In fact there have two different config ,first one for vterm and
+another for emacs inner plugins.<br />
+In vterm the http proxy be effected by `~/.config/fish/config.fish`,you
+could config it like this.</p>
+<pre><code>set -x http_proxy       http://vpn.local.com:10887
+set -x https_proxy      http://vpn.local.com:10887
+set -x no_proxy         &quot;.aliyun.com,192.168.0.0/16,137.239.155.184&quot;</code></pre>
+<p>When you are using emacs lisp program such as restclient, you could
+config proxy like this.<br />
+The difference is wildcard</p>
+<pre><code>(defun convert-to-regex (str)
+  (let* ((joined (replace-regexp-in-string &quot;,&quot; &quot;\\\\|&quot; str))
+         (wrapped (concat &quot;^\\(&quot; joined &quot;\\)&quot;)))
+    wrapped))
+(setq url-proxy-services `((&quot;http&quot; .&quot;vpn.local.com:10887&quot;)
+                           (&quot;https&quot; .&quot;vpn.local.com:10887&quot;)
+                           (&quot;no_proxy&quot; . ,(convert-to-regex &quot;.*aliyun.com,192.168.0.0/16,137.239.155.184&quot;))))</code></pre></li>
+<li><p>Usage</p>
+<ul>
+<li><p>Being with eshell<br />
+Eshell have a most wanted feature was <strong>quickrun-eshell</strong>
+which have a fast reload function after shell is runinng,you just use
+<code>C-c C-c</code> to stop it and use <strong>r</strong> to return you
+shell script file.It’s pretty convenient.</p></li>
+<li><p>Key Binding</p>
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
 <colgroup>
 <col  class="org-left" />
-
 <col  class="org-left" />
-
 <col  class="org-left" />
 </colgroup>
 <tbody>
 <tr>
-<td class="org-left">KEY</td>
-<td class="org-left">FUNCTION</td>
-<td class="org-left">DESCRIPTION</td>
+<td class="org-left">
+<p>KEY</p>
+</td>
+<td class="org-left">
+<p>FUNCTION</p>
+</td>
+<td class="org-left">
+<p>DESCRIPTION</p>
+</td>
 </tr>
-
 <tr>
-<td class="org-left">SPC v v</td>
-<td class="org-left">projectile-run-vterm</td>
-<td class="org-left">open vterm window base on the project root path</td>
+<td class="org-left">
+<p>SPC v v</p>
+</td>
+<td class="org-left">
+<p>projectile-run-vterm</p>
+</td>
+<td class="org-left">
+<p>open vterm window base on the project root path</p>
+</td>
 </tr>
-
 <tr>
-<td class="org-left">SPC v p</td>
-<td class="org-left">vterm-send-start</td>
-<td class="org-left">enable vterm screen roll</td>
+<td class="org-left">
+<p>SPC v p</p>
+</td>
+<td class="org-left">
+<p>vterm-send-start</p>
+</td>
+<td class="org-left">
+<p>enable vterm screen roll</p>
+</td>
 </tr>
-
 <tr>
-<td class="org-left">SPC v s</td>
-<td class="org-left">vterm-send-stop</td>
-<td class="org-left">disable vterm screen roll</td>
+<td class="org-left">
+<p>SPC v s</p>
+</td>
+<td class="org-left">
+<p>vterm-send-stop</p>
+</td>
+<td class="org-left">
+<p>disable vterm screen roll</p>
+</td>
 </tr>
 </tbody>
 </table></li>
-</ul>
-</div>
-</li>
+</ul></li>
 </ol>
-</div>
-<div id="outline-container-org1130853" class="outline-3">
-<h3 id="org1130853"><span class="section-number-3">6.3.</span> Ejc Sql</h3>
-<div class="outline-text-3" id="text-6-3">
-<ul class="org-ul">
-<li><p>
-The privacy configuration<br />
+<p><a id="org6a9ec08"></a></p>
+<h2 id="ejc-sql">Ejc Sql</h2>
+<ul>
+<li><p>The privacy configuration<br />
 In here you could save any connections in your setting config.<br />
-But where should the setting located especially for our Emacs config project with a public github repository? There have a privacy path which is excluded in the public repository named <b>user-private-dir</b>, You could config your connection&rsquo;s account/password here for safely.<br />
-There default load a db-work module which having your privacy config .<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-elisp">    <span style="color: #51afef;">(</span><span style="color: #a9a1e1;">add-to-list</span> <span style="color: #51afef;">'</span><span style="color: #dcaeea;">load-path</span> user-private-dir <span style="color: #51afef;">)</span>
-    <span style="color: #51afef;">(</span><span style="color: #51afef;">use-package!</span> db-work                    <span style="color: #51afef;">)</span>
-</pre>
-</div></li>
-<li><p>
-Config your particular db connection<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-lisp">   (use-package ejc-sql
-   <span style="color: #c678dd;">:commands</span> ejc-sql-mode ejc-connect
-   <span style="color: #c678dd;">:config</span>
-   (setq clomacs-httpd-default-port <span style="color: #da8548; font-weight: bold;">18090</span>)
-   (ejc-create-connection <span style="color: #98be65;">"connection-name"</span>
-           <span style="color: #c678dd;">:classpath</span>      <span style="color: #98be65;">"~/.m2/repository/mysql/mysql-connector-java/8.0.17/</span>
-<span style="color: #98be65;">               mysql-connector-java-8.0.17.jar"</span>
-           <span style="color: #c678dd;">:connection-uri</span> <span style="color: #98be65;">"jdbc:mysql://localhost/user?useSSL=false&amp;user=root&amp;password=pwd"</span>
-           <span style="color: #c678dd;">:separator</span>      <span style="color: #98be65;">"&lt;/?\.*&gt;"</span> )
-   )
-   (<span style="color: #51afef;">provide</span> '<span style="color: #a9a1e1;">db-work</span>)
-</pre>
-</div></li>
-<li><p>
-Write Sql file<br />
-Before try to use ejc sql, firstly create a sql file which named with a suffix <b>.sql</b>, cause emacs will turn on the sql minor mode so that ejc-sql could works well. And then use <code>SPC e c</code> to connect a particular database which you have configurated. Emacs will popup a minibuffer listing candidates which show you the <b>connection-name</b>.<br />
-Secondarily, write your testing sql content which surrounded by a tag, cause we have configurated <b>:separator</b> by a syntax meaning tag in order to execute a single sql rather than to choose it.For sure you could make any comment with the tag&rsquo;s schema.<br />
-Further more, you could use delimiter sign for batch execution. the delimiter could customization by any character.<br />
-Finnaly, use <code>C-c C-c</code> to execute it. It&rsquo;s just execute the content which surrounded by a tag in your cusor.<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-sql"><span class="linenr">1: </span>   &lt;<span style="color: #51afef;">SELECT</span> <span style="color: #51afef;">name</span>=<span style="color: #98be65;">'select all org'</span>&gt;
-<span class="linenr">2: </span>   <span style="color: #51afef;">SELECT</span> * <span style="color: #51afef;">FROM</span> TABLE_ORG
-<span class="linenr">3: </span>   &lt;/<span style="color: #51afef;">SELECT</span>&gt;
-<span class="linenr">4: </span>
-<span class="linenr">5: </span>   &lt;<span style="color: #51afef;">SELECT</span>&gt;
-<span class="linenr">6: </span>   delimiter ;
-<span class="linenr">7: </span>   COMMENT <span style="color: #51afef;">ON</span> <span style="color: #51afef;">COLUMN</span> TABLE_ORG.PROJECT_CODE <span style="color: #51afef;">IS</span> <span style="color: #98be65;">'&#39033;&#30446;&#32534;&#30721;'</span>;
-<span class="linenr">8: </span>   COMMENT <span style="color: #51afef;">ON</span> <span style="color: #51afef;">COLUMN</span> TABLE_ORG.PERIOD <span style="color: #51afef;">IS</span> <span style="color: #98be65;">'&#26399;&#38388;'</span>;
-<span class="linenr">9: </span>   &lt;/<span style="color: #51afef;">SELECT</span>&gt;
-</pre>
-</div></li>
-<li><p>
-key binding<br />
-</p>
+But where should the setting located especially for our Emacs config
+project with a public github repository? There have a privacy path which
+is excluded in the public repository named
+<strong>user-private-dir</strong>, You could config your connection’s
+account/password here for safely.<br />
+There default load a db-work module which having your privacy config
+.</p>
+<pre><code>(add-to-list &#39;load-path user-private-dir )
+(use-package! db-work                    )</code></pre></li>
+<li><p>Config your particular db connection</p>
+<pre><code>(use-package ejc-sql
+:commands ejc-sql-mode ejc-connect
+:config
+(setq clomacs-httpd-default-port 18090)
+(ejc-create-connection &quot;connection-name&quot;
+        :classpath      &quot;~/.m2/repository/mysql/mysql-connector-java/8.0.17/
+            mysql-connector-java-8.0.17.jar&quot;
+        :connection-uri &quot;jdbc:mysql://localhost/user?useSSL=false&amp;user=root&amp;password=pwd&quot;
+        :separator      &quot;&lt;/?\.*&gt;&quot; )
+)
+(provide &#39;db-work)</code></pre></li>
+<li><p>Write Sql file<br />
+Before try to use ejc sql, firstly create a sql file which named with a
+suffix <strong>.sql</strong>, cause emacs will turn on the sql minor
+mode so that ejc-sql could works well. And then use <code>SPC e c</code>
+to connect a particular database which you have configurated. Emacs will
+popup a minibuffer listing candidates which show you the
+<strong>connection-name</strong>.<br />
+Secondarily, write your testing sql content which surrounded by a tag,
+cause we have configurated <strong>:separator</strong> by a syntax
+meaning tag in order to execute a single sql rather than to choose
+it.For sure you could make any comment with the tag’s schema.<br />
+Further more, you could use delimiter sign for batch execution. the
+delimiter could customization by any character.<br />
+Finnaly, use <code>C-c C-c</code> to execute it. It’s just execute the
+content which surrounded by a tag in your cusor.</p>
+<pre><code>1     &lt;SELECT name=&#39;select all org&#39;&gt;
+2     SELECT * FROM TABLE_ORG
+3     &lt;/SELECT&gt;
+4
+5     &lt;SELECT&gt;
+6     delimiter ;
+7     COMMENT ON COLUMN TABLE_ORG.PROJECT_CODE IS &#39;项目编码&#39;;
+8     COMMENT ON COLUMN TABLE_ORG.PERIOD IS &#39;期间&#39;;
+9     &lt;/SELECT&gt;</code></pre></li>
+<li><p>key binding</p>
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
 <colgroup>
 <col  class="org-left" />
-
 <col  class="org-left" />
-
 <col  class="org-left" />
 </colgroup>
 <tbody>
 <tr>
-<td class="org-left">KEY</td>
-<td class="org-left">FUNCTION</td>
-<td class="org-left">description</td>
+<td class="org-left">
+<p>KEY</p>
+</td>
+<td class="org-left">
+<p>FUNCTION</p>
+</td>
+<td class="org-left">
+<p>description</p>
+</td>
 </tr>
-
 <tr>
-<td class="org-left">SPC e c</td>
-<td class="org-left">ejc-connection</td>
-<td class="org-left">choose connection with ivy</td>
+<td class="org-left">
+<p>SPC e c</p>
+</td>
+<td class="org-left">
+<p>ejc-connection</p>
+</td>
+<td class="org-left">
+<p>choose connection with ivy</p>
+</td>
 </tr>
-
 <tr>
-<td class="org-left">C-c C-c</td>
-<td class="org-left">ejc-execute</td>
-<td class="org-left">execute the sql</td>
+<td class="org-left">
+<p>C-c C-c</p>
+</td>
+<td class="org-left">
+<p>ejc-execute</p>
+</td>
+<td class="org-left">
+<p>execute the sql</p>
+</td>
 </tr>
 </tbody>
 </table></li>
 </ul>
-</div>
-</div>
-<div id="outline-container-orge5019db" class="outline-3">
-<h3 id="orge5019db"><span class="section-number-3">6.4.</span> Emacs Rime</h3>
-<div class="outline-text-3" id="text-6-4">
-<p>
-<a href="https://github.com/DogLooksGood/emacs-rime">Emacs Rime</a> which makes to embedding an input method be possible whthin the emacs.Emacs could benefit form the flexible configuration of <a href="https://rime.im/">rime</a>.<br />
-On macos it&rsquo;s required to install <b>Squirrel</b> which is one of rime&rsquo;s distribution. <b>Squirrel</b> is installed in your os system as a input method.<br />
-Note that the configuration of rime located at home/Library/Rime/. We want to sharing this configuration between Eamcs rime and os rime.<br />
-So there have a variable which named <code>rime-user-data-dir</code> , And another important variable is <code>rime-librime-root</code> which configed the librime location.<br />
-</p>
+<p><a id="org80683b9"></a></p>
+<h2 id="emacs-rime">Emacs Rime</h2>
+<p><a href="https://github.com/DogLooksGood/emacs-rime">Emacs Rime</a>
+which makes to embedding an input method be possible whthin the
+emacs.Emacs could benefit form the flexible configuration of <a
+href="https://rime.im/">rime</a>.<br />
+On macos it’s required to install <strong>Squirrel</strong> which is one
+of rime’s distribution. <strong>Squirrel</strong> is installed in your
+os system as a input method.<br />
+Note that the configuration of rime located at home/Library/Rime/. We
+want to sharing this configuration between Eamcs rime and os rime.<br />
+So there have a variable which named <code>rime-user-data-dir</code> ,
+And another important variable is <code>rime-librime-root</code> which
+configed the librime location.</p>
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
 <colgroup>
 <col  class="org-left" />
-
 <col  class="org-left" />
 </colgroup>
 <tbody>
 <tr>
-<td class="org-left">variable</td>
-<td class="org-left">required</td>
+<td class="org-left">
+variable
+</td>
+<td class="org-left">
+required
+</td>
 </tr>
-
 <tr>
-<td class="org-left">rime-user-data-dir</td>
-<td class="org-left">true</td>
+<td class="org-left">
+rime-user-data-dir
+</td>
+<td class="org-left">
+true
+</td>
 </tr>
-
 <tr>
-<td class="org-left">rime-librime-root</td>
-<td class="org-left">true</td>
+<td class="org-left">
+rime-librime-root
+</td>
+<td class="org-left">
+true
+</td>
 </tr>
 </tbody>
 </table>
-
-<p>
-<a href="./modules/neo-emacs/rime/readme.html">futher more rime readme</a><br />
-</p>
-</div>
-</div>
-<div id="outline-container-orgc74fdcb" class="outline-3">
-<h3 id="orgc74fdcb"><span class="section-number-3">6.5.</span> Org mode</h3>
-<div class="outline-text-3" id="text-6-5">
-<p>
-<a href="./modules/neo-emacs/org/readme.html">futher more org readme</a><br />
-</p>
-</div>
-<ol class="org-ol">
-<li><a id="org5c2f84c"></a>Install Dependency<br />
-<div class="outline-text-4" id="text-6-5-1">
-<p>
-There have some third party lib we need prepare.<br />
-</p>
-</div>
-<ol class="org-ol">
-<li><a id="org2d4245b"></a>d2 diagram<br />
-<div class="outline-text-5" id="text-6-5-1-1">
-<p>
-<a href="https://github.com/terrastruct/d2/blob/master/docs/INSTALL.md">d2 installation</a><br />
-</p>
-<div class="org-src-container">
-<pre class="src src-shell">alias ds2 <span style="color: #98be65;">"/opt/homebrew/bin//d2 --sketch --animate-interval=1400 -l elk -c --pad 0"</span>
-alias d2 <span style="color: #98be65;">"/opt/homebrew/bin//d2 --pad 0 --layout tala "</span>
-</pre>
-</div>
-</div>
-</li>
-</ol>
-</li>
-<li><a id="orgfa44034"></a>Image to base64<br />
-<div class="outline-text-4" id="text-6-5-2">
-<p>
-No need to sent images files of the source.<br />
-The embedded base64 image make to distribute your html documentation more easily.<br />
-</p>
-</div>
-</li>
-<li><a id="org7268684"></a>Optimize Line Number<br />
-<div class="outline-text-4" id="text-6-5-3">
-<p>
-Just hidden the colon after line number character.<br />
-Modify `~/.emacs.d/.local/straight/repos/org/lisp/ox-html.el`.<br />
-</p>
-
-<div class="org-src-container">
-<pre class="src src-elisp"><span class="linenr">1: </span><span style="color: #51afef;">(</span><span style="color: #51afef;">let*</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>code-lines <span style="color: #a9a1e1;">(</span><span style="color: #a9a1e1;">split-string</span> code <span style="color: #98be65;">"\n"</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
-<span class="linenr">2: </span>   <span style="color: #98be65;">(</span>code-length <span style="color: #a9a1e1;">(</span><span style="color: #a9a1e1;">length</span> code-lines<span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
-<span class="linenr">3: </span>   <span style="color: #98be65;">(</span>num-fmt
-<span class="linenr">4: </span>        <span style="color: #a9a1e1;">(</span><span style="color: #51afef;">and</span> num-start
-<span class="linenr">5: </span>             <span style="color: #51afef;">(</span><span style="color: #a9a1e1;">format</span> <span style="color: #98be65;">"%%%ds "</span>
-<span class="linenr">6: </span>             <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">format</span> <span style="color: #98be65;">"%(add-hook 'code-review-mode-hook</span>
-<span class="linenr">7: </span><span style="color: #98be65;">        (lambda ()</span>
-<span class="linenr">8: </span><span style="color: #98be65;">          ;; include *Code-Review* buffer into current workspace</span>
-<span class="linenr">9: </span><span style="color: #98be65;">          (persp-add-buffer (current-buffer))))%%ds: "</span>
-</pre>
-</div>
-</div>
-</li>
-<li><a id="orgdb913ab"></a>Image Directory<br />
-<div class="outline-text-4" id="text-6-5-4">
-<p>
-Cause org mode html export program  need a image directory locate at org root directory.<br />
+<p><a href="./modules/neo-emacs/rime/readme.md">futher more rime
+readme</a></p>
+<p><a id="org7dba411"></a></p>
+<h2 id="org-mode">Org mode</h2>
+<p><a href="./modules/neo-emacs/org/readme.md">futher more org
+readme</a></p>
+<ol type="1">
+<li><p>Install Dependency</p>
+<p>There have some third party lib we need prepare.</p>
+<ol type="1">
+<li><p>d2 diagram</p>
+<p><a
+href="https://github.com/terrastruct/d2/blob/master/docs/INSTALL.md">d2
+installation</a></p>
+<pre><code>alias ds2 &quot;/opt/homebrew/bin//d2 --sketch --animate-interval=1400 -l elk -c --pad 0&quot;
+alias d2 &quot;/opt/homebrew/bin//d2 --pad 0 --layout tala &quot;</code></pre></li>
+</ol></li>
+<li><p>Image to base64</p>
+<p>No need to sent images files of the source.<br />
+The embedded base64 image make to distribute your html documentation
+more easily.</p></li>
+<li><p>Optimize Line Number</p>
+<p>Just hidden the colon after line number character.<br />
+Modify `~/.emacs.d/.local/straight/repos/org/lisp/ox-html.el`.</p>
+<pre><code>1  (let* ((code-lines (split-string code &quot;\n&quot;))
+2     (code-length (length code-lines))
+3     (num-fmt
+4   (and num-start
+5        (format &quot;%%%ds &quot;
+6        (format &quot;%(add-hook &#39;code-review-mode-hook
+7          (lambda ()
+8            ;; include *Code-Review* buffer into current workspace
+9            (persp-add-buffer (current-buffer))))%%ds: &quot;</code></pre></li>
+<li><p>Image Directory</p>
+<p>Cause org mode html export program need a image directory locate at
+org root directory.<br />
 Highly recommended:<br />
 Use <code>ln</code> making an mirror of the directory.<br />
-Make the image directory as your screenshot file&rsquo;s saving location.<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-shell"><span style="color: #ECBE7B;">ln</span> -s ~/org/org-roam/image any_where/image
-</pre>
-</div>
-</div>
-</li>
+Make the image directory as your screenshot file’s saving location.</p>
+<pre><code>ln -s ~/org/org-roam/image any_where/image</code></pre></li>
 </ol>
-</div>
-<div id="outline-container-org5ee2062" class="outline-3">
-<h3 id="org5ee2062"><span class="section-number-3">6.6.</span> Restclient</h3>
-<div class="outline-text-3" id="text-6-6">
-<p>
-Restclient provide a test suite for HTTP REST in Emacs.The official repository here <a href="https://github.com/pashky/restclient.el">restclient.el</a>.<br />
-Yea, a pretty old old project.Fortunately doom emacs have integrated it.We just need open it with <code>(rest +jq)</code>.<br />
-<b>+jq</b> makes restclient have the ability to parse a particular response which Content-Type equalable application/json.<br />
-The amazing feature is restclient support set variables or make a part of response being a variables which one could as a request part for another HTTP REST.<br />
-</p>
-
-<p>
-Here we take the value from results as a variables which named count.<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-restclient"><span style="color: #51afef;">GET</span> <span style="color: #c678dd;">https://www.zhihu.com/api/v3/oauth/sms/supported_countries</span>
-<span style="color: #51afef; font-weight: bold;">-&gt;</span> <span style="color: #c678dd;">jq-set-var</span> <span style="color: #98be65;">:count .count</span>
-</pre>
-</div>
+<p><a id="orgf7c69f6"></a></p>
+<h2 id="restclient">Restclient</h2>
+<p>Restclient provide a test suite for HTTP REST in Emacs.The official
+repository here <a
+href="https://github.com/pashky/restclient.el">restclient.el</a>.<br />
+Yea, a pretty old old project.Fortunately doom emacs have integrated
+it.We just need open it with <code>(rest +jq)</code>.<br />
+<strong>+jq</strong> makes restclient have the ability to parse a
+particular response which Content-Type equalable application/json.<br />
+The amazing feature is restclient support set variables or make a part
+of response being a variables which one could as a request part for
+another HTTP REST.</p>
+<p>Here we take the value from results as a variables which named
+count.</p>
+<pre><code>GET https://www.zhihu.com/api/v3/oauth/sms/supported_countries
+-&gt; jq-set-var :count .count</code></pre>
 <blockquote>
-<p>
-Only <b>jq-set-var</b> could works when the content-type equal to application/json MIME type<br />
-</p>
+<p>Only <strong>jq-set-var</strong> could works when the content-type
+equal to application/json MIME type</p>
 </blockquote>
-
-<p>
-Fortunately we have solution for other mime type, it&rsquo;s restclient-set-var, you could use elisp to parse the response;<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-restclient"><span style="color: #51afef;">GET</span> <span style="color: #c678dd;">https://www.baidu.com/sugrec</span>
-<span style="color: #51afef; font-weight: bold;">-&gt;</span> <span style="color: #c678dd;">run-hook</span> <span style="color: #98be65;">(restclient-set-var ":queryid" (cdr (assq 'queryid (json-read))))</span>
-<span style="color: #dcaeea;">Content-Type</span>: <span style="color: #98be65;">application/x-www-form-urlencoded; charset=utf-8</span>
-</pre>
-</div>
-
-<p>
-About the variables infomation in current buffer, we could use <code>C-c Tab</code> to show them.<br />
-</p>
-</div>
-</div>
-<div id="outline-container-org7d5945e" class="outline-3">
-<h3 id="org7d5945e"><span class="section-number-3">6.7.</span> Verb</h3>
-<div class="outline-text-3" id="text-6-7">
-<p>
-Verb is a new package for http client,becase the restclient is out of date and the author no longger maintain it on github.Fortunately there have a alternative one named verb which is more powerful and customizable. Verb support url template which makes you change different environment more conveniently.Also verb supports variables and picture query and upload.In org mode start verb just use `C-c C-r` as a previous command,example `C-c C-r C-f` will execute http request with your config,So verb is really fancy right?<br />
-</p>
-</div>
-</div>
-<div id="outline-container-org3a067d7" class="outline-3">
-<h3 id="org3a067d7"><span class="section-number-3">6.8.</span> iredis</h3>
-<div class="outline-text-3" id="text-6-8">
-</div>
-<ol class="org-ol">
-<li><a id="orga0b04f8"></a>install<br />
-<div class="outline-text-4" id="text-6-8-1">
-<div class="org-src-container">
-<pre class="src src-shell">brew install iredis
-</pre>
-</div>
-</div>
-</li>
-<li><a id="org597f3dd"></a>config<br />
-<div class="outline-text-4" id="text-6-8-2">
-<p>
-Here have a  <a href="https://github.com/laixintao/iredis/blob/master/iredis/data/iredisrc">template</a> of iredis&rsquo; configuration.The essential point is <span class="underline">alias_dsn</span><br />
-</p>
-<div class="org-src-container">
-<pre class="src src-atom"><span class="linenr">1: </span>[alias_dsn]
-<span class="linenr">2: </span>example_dsn1 = redis://[[username]:[password]]@localhost:6379/0
-<span class="linenr">3: </span>example_dsn2 = rediss://[[username]:[password]]@localhost:6379/0
-<span class="linenr">4: </span>example_dsn3 = unix://[[username]:[password]]@/path/to/socket.sock?db=0
-</pre>
-</div>
-</div>
-</li>
-<li><a id="org95a553f"></a>usage<br />
-<div class="outline-text-4" id="text-6-8-3">
-<p>
-Use command to connect redis database.The most convenient thing is you could index your content as iredis have integrated with jq command.<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-shell">iredis -d wvp-test
-10.100.10.70:6379<span style="color: #51afef;">[</span><span style="color: #da8548; font-weight: bold;">7</span><span style="color: #51afef;">]</span>&gt; get VMP_MEDIA_SERVER:000000:zlm_fragment | jq .
-</pre>
-</div>
-</div>
-</li>
+<p>Fortunately we have solution for other mime type, it’s
+restclient-set-var, you could use elisp to parse the response;</p>
+<pre><code>GET https://www.baidu.com/sugrec
+-&gt; run-hook (restclient-set-var &quot;:queryid&quot; (cdr (assq &#39;queryid (json-read))))
+Content-Type: application/x-www-form-urlencoded; charset=utf-8</code></pre>
+<p>About the variables infomation in current buffer, we could use
+<code>C-c Tab</code> to show them.</p>
+<p><a id="orge3167dc"></a></p>
+<h2 id="verb">Verb</h2>
+<p>Verb is a new package for http client,becase the restclient is out of
+date and the author no longger maintain it on github.Fortunately there
+have a alternative one named verb which is more powerful and
+customizable. Verb support url template which makes you change different
+environment more conveniently.Also verb supports variables and picture
+query and upload.In org mode start verb just use `C-c C-r` as a previous
+command,example `C-c C-r C-f` will execute http request with your
+config,So verb is really fancy right?</p>
+<p><a id="orgf9d1945"></a></p>
+<h2 id="iredis">iredis</h2>
+<ol type="1">
+<li><p>install</p>
+<pre><code>brew install iredis</code></pre></li>
+<li><p>config</p>
+<p>Here have a <a
+href="https://github.com/laixintao/iredis/blob/master/iredis/data/iredisrc">template</a>
+of iredis’ configuration.The essential point is <u>alias_dsn</u></p>
+<pre><code>1  [alias_dsn]
+2  example_dsn1 = redis://[[username]:[password]]@localhost:6379/0
+3  example_dsn2 = rediss://[[username]:[password]]@localhost:6379/0
+4  example_dsn3 = unix://[[username]:[password]]@/path/to/socket.sock?db=0</code></pre></li>
+<li><p>usage</p>
+<p>Use command to connect redis database.The most convenient thing is
+you could index your content as iredis have integrated with jq
+command.</p>
+<pre><code>iredis -d wvp-test
+10.100.10.70:6379[7]&gt; get VMP_MEDIA_SERVER:000000:zlm_fragment | jq .</code></pre></li>
 </ol>
-</div>
-<div id="outline-container-org727722f" class="outline-3">
-<h3 id="org727722f"><span class="section-number-3">6.9.</span> Bookmark</h3>
-<div class="outline-text-3" id="text-6-9">
-<ul class="org-ul">
-<li><p>
-set a particular location for bookmark<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-lisp">  (setq bookmark-default-file <span style="color: #98be65;">"~/org/org-roam/command/doom/config/bookmark"</span>)
-</pre>
-</div></li>
-<li><p>
-key binding<br />
-</p>
+<p><a id="org9fc7931"></a></p>
+<h2 id="bookmark">Bookmark</h2>
+<ul>
+<li><p>set a particular location for bookmark</p>
+<pre><code>(setq bookmark-default-file &quot;~/org/org-roam/command/doom/config/bookmark&quot;)</code></pre></li>
+<li><p>key binding</p>
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
 <colgroup>
 <col  class="org-left" />
-
 <col  class="org-left" />
 </colgroup>
 <tbody>
 <tr>
-<td class="org-left">key</td>
-<td class="org-left">binding</td>
+<td class="org-left">
+<p>key</p>
+</td>
+<td class="org-left">
+<p>binding</p>
+</td>
 </tr>
-
 <tr>
-<td class="org-left">Spc-Ent</td>
-<td class="org-left">select a bookmark</td>
+<td class="org-left">
+<p>Spc-Ent</p>
+</td>
+<td class="org-left">
+<p>select a bookmark</p>
+</td>
 </tr>
-
 <tr>
-<td class="org-left">Spc b m</td>
-<td class="org-left">set a bookmark</td>
+<td class="org-left">
+<p>Spc b m</p>
+</td>
+<td class="org-left">
+<p>set a bookmark</p>
+</td>
 </tr>
-
 <tr>
-<td class="org-left">Spc b M</td>
-<td class="org-left">delete a bookmark</td>
+<td class="org-left">
+<p>Spc b M</p>
+</td>
+<td class="org-left">
+<p>delete a bookmark</p>
+</td>
 </tr>
 </tbody>
 </table></li>
 </ul>
-</div>
-</div>
-<div id="outline-container-org0497254" class="outline-3">
-<h3 id="org0497254"><span class="section-number-3">6.10.</span> Elpa Offline</h3>
-<div class="outline-text-3" id="text-6-10">
-<p>
-rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> configuration-layer--elpa-archives
-      <span style="color: #51afef;">'</span><span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span><span style="color: #98be65;">"melpa-cn"</span> . <span style="color: #98be65;">"/soft/emacs-elpa/melpa/"</span><span style="color: #98be65;">)</span>
-        <span style="color: #98be65;">(</span><span style="color: #98be65;">"org-cn"</span>   . <span style="color: #98be65;">"/soft/emacs-elpa/org/"</span><span style="color: #98be65;">)</span>
-        <span style="color: #98be65;">(</span><span style="color: #98be65;">"gnu-cn"</span>   . <span style="color: #98be65;">"/soft/emacs-elpa/gnu/"</span><span style="color: #98be65;">)</span>
-        <span style="color: #98be65;">(</span><span style="color: #98be65;">"marmalade-cn"</span>   . <span style="color: #98be65;">"/soft/emacs-elpa//marmalade/"</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
-</pre>
-</div>
-</div>
-</div>
-<div id="outline-container-org4a3da3b" class="outline-3">
-<h3 id="org4a3da3b"><span class="section-number-3">6.11.</span> Vue</h3>
-<div class="outline-text-3" id="text-6-11">
-<p>
-as a full stack developer u need vue support, so here it comes.<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-shell">npm install vls -g
-</pre>
-</div>
-</div>
-</div>
-<div id="outline-container-org44275e5" class="outline-3">
-<h3 id="org44275e5"><span class="section-number-3">6.12.</span> startup workspace</h3>
-<div class="outline-text-3" id="text-6-12">
-<p>
-You could customization startup inital workspace and their buffer.No need to open it every time.<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> <span style="color: #dcaeea;">+workspaces-main</span> <span style="color: #98be65;">"&#59011; SSH"</span><span style="color: #51afef;">)</span>
-<span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">open-my-workspaces</span> <span style="color: #c678dd;">()</span>
-  <span style="color: #c678dd;">(</span><span style="color: #51afef;">interactive</span><span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span><span style="color: #c678dd;">+workspace/new</span> <span style="color: #98be65;">"&#60160; IDE"</span><span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">find-file</span> <span style="color: #98be65;">"yourexpect.java"</span><span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span><span style="color: #c678dd;">+workspace/new</span> <span style="color: #98be65;">"&#60011; GPT"</span><span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span><span style="color: #c678dd;">gptel</span> <span style="color: #98be65;">"wangshenzhi/llama3-8b-chinese-chat-ollama-q8"</span><span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">switch-to-buffer</span> <span style="color: #98be65;">"wangshenzhi/llama3-8b-chinese-chat-ollama-q8"</span><span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span><span style="color: #c678dd;">+workspace/new</span> <span style="color: #98be65;">"&#59140; SQL"</span><span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">find-file</span> <span style="color: #98be65;">"yourexpect.sql"</span><span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span><span style="color: #c678dd;">+workspace/new</span> <span style="color: #98be65;">"&#62215; HTTP"</span><span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">find-file</span> <span style="color: #98be65;">"yourexpect.http"</span><span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span><span style="color: #c678dd;">+workspace/new</span> <span style="color: #98be65;">"&#988611; ORG"</span><span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">find-file</span> <span style="color: #98be65;">"yourexpect.org"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
-<span style="color: #51afef;">(</span><span style="color: #a9a1e1;">add-hook</span> <span style="color: #51afef;">'</span><span style="color: #dcaeea;">window-setup-hook</span> <span style="color: #51afef;">#'</span><span style="color: #ECBE7B;">open-my-workspaces</span><span style="color: #51afef;">)</span>
-</pre>
-</div>
-</div>
-</div>
-</div>
-<div id="outline-container-org978b83c" class="outline-2">
-<h2 id="org978b83c"><span class="section-number-2">7.</span> About the Release</h2>
-<div class="outline-text-2" id="text-7">
-<p>
-This step can help you compile neo emacs faster,It only takes 3 minutes to install using the release package on my Mac laptop. Otherwise it would take me 15 minutes. The release installation package is a better choice for users with unstable networks and those who need to frequently reinstall neoemacs.<br />
-Release package contains the git repository of related dependencies.The compiled directory files are removed and the .git directory is retained,So that you can perform subsequent upgrades.<br />
-I will update the Release package once a month, And test them in advance and revise them for compatibility with upstream projects.<br />
-</p>
-</div>
-</div>
-<div id="outline-container-orga1b2c88" class="outline-2">
-<h2 id="orga1b2c88"><span class="section-number-2">8.</span> Customize Farther</h2>
-<div class="outline-text-2" id="text-8">
-<p>
-For customize farther, there have some documentation you need read.<br />
-<a href="https://github.com/hlissner/doom-emacs/blob/master/docs/getting_started.org">https://github.com/hlissner/doom-emacs/blob/master/docs/getting_started.org</a><br />
-<a href="https://github.com/BurntSushi/ripgrep">https://github.com/BurntSushi/ripgrep</a><br />
-<a href="https://github.com/junegunn/fzf">https://github.com/junegunn/fzf</a><br />
-<a href="https://github.com/kostafey/ejc-sql">https://github.com/kostafey/ejc-sql</a><br />
-<a href="https://leiningen.org/">https://leiningen.org/</a><br />
-<a href="https://plantuml.com/">https://plantuml.com/</a><br />
-<a href="https://github.com/emacs-lsp/lsp-java">https://github.com/emacs-lsp/lsp-java</a><br />
-<a href="https://projectlombok.org/">https://projectlombok.org/</a><br />
-<a href="https://github.com/DogLooksGood/emacs-rime">https://github.com/DogLooksGood/emacs-rime</a><br />
-<a href="https://github.com/be5invis/Sarasa-Gothic">https://github.com/be5invis/Sarasa-Gothic</a><br />
-<a href="https://github.com/akicho8/string-inflection">https://github.com/akicho8/string-inflection</a><br />
-<a href="https://raw.githubusercontent.com/alibaba/p3c/master/p3c-formatter/eclipse-codestyle.xml">https://raw.githubusercontent.com/alibaba/p3c/master/p3c-formatter/eclipse-codestyle.xml</a><br />
-<a href="https://www.tug.org/mactex/">https://www.tug.org/mactex/</a><br />
-</p>
-</div>
-</div>
-</div>
-<div id="postamble" class="status">
-<p class="author">Author: sincebyte</p>
-<p class="date">Created: 2024-09-08 Sun 10:30</p>
-</div>
+<p><a id="org8438b11"></a></p>
+<h2 id="elpa-offline">Elpa Offline</h2>
+<p>rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa
+~/soft/emacs-elpa</p>
+<pre><code>(setq configuration-layer--elpa-archives
+      &#39;((&quot;melpa-cn&quot; . &quot;/soft/emacs-elpa/melpa/&quot;)
+        (&quot;org-cn&quot;   . &quot;/soft/emacs-elpa/org/&quot;)
+        (&quot;gnu-cn&quot;   . &quot;/soft/emacs-elpa/gnu/&quot;)
+        (&quot;marmalade-cn&quot;   . &quot;/soft/emacs-elpa//marmalade/&quot;)))</code></pre>
+<p><a id="org37a45f9"></a></p>
+<h2 id="vue">Vue</h2>
+<p>as a full stack developer u need vue support, so here it comes.</p>
+<pre><code>npm install vls -g</code></pre>
+<p><a id="org1ebf800"></a></p>
+<h2 id="startup-workspace">startup workspace</h2>
+<p>You could customization startup inital workspace and their buffer.No
+need to open it every time.</p>
+<pre><code>(setq +workspaces-main &quot; SSH&quot;)
+(defun open-my-workspaces ()
+  (interactive)
+  (+workspace/new &quot; IDE&quot;)
+  (find-file &quot;yourexpect.java&quot;)
+  (+workspace/new &quot; GPT&quot;)
+  (gptel &quot;wangshenzhi/llama3-8b-chinese-chat-ollama-q8&quot;)
+  (switch-to-buffer &quot;wangshenzhi/llama3-8b-chinese-chat-ollama-q8&quot;)
+  (+workspace/new &quot; SQL&quot;)
+  (find-file &quot;yourexpect.sql&quot;)
+  (+workspace/new &quot; HTTP&quot;)
+  (find-file &quot;yourexpect.http&quot;)
+  (+workspace/new &quot;󱗃 ORG&quot;)
+  (find-file &quot;yourexpect.org&quot;))
+(add-hook &#39;window-setup-hook #&#39;open-my-workspaces)</code></pre>
+<p><a id="org9b728cb"></a></p>
+<h1 id="about-the-release">About the Release</h1>
+<p>This step can help you compile neo emacs faster,It only takes 3
+minutes to install using the release package on my Mac laptop. Otherwise
+it would take me 15 minutes. The release installation package is a
+better choice for users with unstable networks and those who need to
+frequently reinstall neoemacs.<br />
+Release package contains the git repository of related dependencies.The
+compiled directory files are removed and the .git directory is
+retained,So that you can perform subsequent upgrades.<br />
+I will update the Release package once a month, And test them in advance
+and revise them for compatibility with upstream projects.</p>
+<p><a id="orgc09235f"></a></p>
+<h1 id="customize-farther">Customize Farther</h1>
+<p>For customize farther, there have some documentation you need
+read.<br />
+<a
+href="https://github.com/hlissner/doom-emacs/blob/master/docs/getting_started.org"
+class="uri">https://github.com/hlissner/doom-emacs/blob/master/docs/getting_started.org</a><br />
+<a href="https://github.com/BurntSushi/ripgrep"
+class="uri">https://github.com/BurntSushi/ripgrep</a><br />
+<a href="https://github.com/junegunn/fzf"
+class="uri">https://github.com/junegunn/fzf</a><br />
+<a href="https://github.com/kostafey/ejc-sql"
+class="uri">https://github.com/kostafey/ejc-sql</a><br />
+<a href="https://leiningen.org/"
+class="uri">https://leiningen.org/</a><br />
+<a href="https://plantuml.com/"
+class="uri">https://plantuml.com/</a><br />
+<a href="https://github.com/emacs-lsp/lsp-java"
+class="uri">https://github.com/emacs-lsp/lsp-java</a><br />
+<a href="https://projectlombok.org/"
+class="uri">https://projectlombok.org/</a><br />
+<a href="https://github.com/DogLooksGood/emacs-rime"
+class="uri">https://github.com/DogLooksGood/emacs-rime</a><br />
+<a href="https://github.com/be5invis/Sarasa-Gothic"
+class="uri">https://github.com/be5invis/Sarasa-Gothic</a><br />
+<a href="https://github.com/akicho8/string-inflection"
+class="uri">https://github.com/akicho8/string-inflection</a><br />
+<a
+href="https://raw.githubusercontent.com/alibaba/p3c/master/p3c-formatter/eclipse-codestyle.xml"
+class="uri">https://raw.githubusercontent.com/alibaba/p3c/master/p3c-formatter/eclipse-codestyle.xml</a><br />
+<a href="https://www.tug.org/mactex/"
+class="uri">https://www.tug.org/mactex/</a></p>
+
 </body>
 </html>

@@ -1,44 +1,10 @@
-
-# Table of Contents
-
-1.  [About](#org64cc756)
-2.  [How to install](#orgd66e356)
-    1.  [Install emacs](#orgaf21648)
-    2.  [Clone project](#org918d48c)
-    3.  [Doom Install](#orgc92c9cd)
-3.  [How to update](#orgc31a499)
-    1.  [For brew](#org301abfd)
-    2.  [For doom project](#orgbef33c3)
-4.  [Patches](#orgab6c6e6)
-    1.  [transparent patch](#orgdfdac7a)
-    2.  [cursor animation](#org90a57a5)
-    3.  [how to](#org985b89a)
-5.  [Private setting](#orgcfe7ab2)
-    1.  [Font setting](#org1ca3f1e)
-    2.  [Basic setting](#orgedc14fe)
-6.  [Neoemacs modules](#orgdd8b228)
-    1.  [Lsp Java](#org7b3b941)
-    2.  [Vterm Shell](#orgb7f73bc)
-    3.  [Ejc Sql](#orgfbd44a6)
-    4.  [Emacs Rime](#org3a152f1)
-    5.  [Org mode](#org80e63f4)
-    6.  [Restclient](#org3326c22)
-    7.  [Verb](#org9fb3eed)
-    8.  [iredis](#org8346bef)
-    9.  [Bookmark](#org1155daf)
-    10. [Elpa Offline](#org0f6d7cf)
-    11. [Vue](#org1b0c25a)
-    12. [startup workspace](#orgb5f94e1)
-7.  [About the Release](#orgd0f2886)
-8.  [Customize Farther](#orgdba3d4e)
-
 ![img](https://img.shields.io/badge/neo_emacs-v3.0-green.svg)  ![img](https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0)  ![img](https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1) ![img](https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&color=3498DB)  
 ![img](https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&color=2C2255) ![img](https://img.shields.io/badge/supports-Emacs_27.1_to_30.0-red.svg?logo=gnuemacs&color=7F5AB6)  
 
 ![img](./images/image-use.png)  
 
 
-<a id="org64cc756"></a>
+<a id="orgae3e4c3"></a>
 
 # About
 
@@ -54,12 +20,12 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   Knowledge management system: Org-roam borrows principles from the Zettelkasten method, providing a solution for non-hierarchical note-taking.
 
 
-<a id="orgd66e356"></a>
+<a id="org7bf6cf7"></a>
 
 # How to install
 
 
-<a id="orgaf21648"></a>
+<a id="org971be88"></a>
 
 ## Install emacs
 
@@ -100,7 +66,7 @@ After emacs installation, set environment variables which names EMACS ,this depe
     export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs
 
 
-<a id="org918d48c"></a>
+<a id="org4367d98"></a>
 
 ## Clone project
 
@@ -110,7 +76,7 @@ clone doom-emacs and neo-emacs from github.
     git clone --depth 1 https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
 
-<a id="orgc92c9cd"></a>
+<a id="orgaaa4994"></a>
 
 ## Doom Install
 
@@ -139,12 +105,12 @@ At last run below, this will take few minutes. And it depends on the quality of 
     ~/.emacs.doom/bin/doom.cmd install
 
 
-<a id="orgc31a499"></a>
+<a id="org5bed6b9"></a>
 
 # How to update
 
 
-<a id="org301abfd"></a>
+<a id="org51542ab"></a>
 
 ## For brew
 
@@ -152,7 +118,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     brew update && brew upgrade emacs-mac && brew cleanup emacs-mac
 
 
-<a id="orgbef33c3"></a>
+<a id="org262ba82"></a>
 
 ## For doom project
 
@@ -162,12 +128,12 @@ At last run below, this will take few minutes. And it depends on the quality of 
     sh ~/.emacs.d/bin/doom sync
 
 
-<a id="orgab6c6e6"></a>
+<a id="org815f74a"></a>
 
 # Patches
 
 
-<a id="orgdfdac7a"></a>
+<a id="orgeaa62f8"></a>
 
 ## transparent patch
 
@@ -183,18 +149,18 @@ It offer a window transparent solution which could transparent background but th
       ("C-M-0" . transwin-toggle))
 
 
-<a id="org90a57a5"></a>
+<a id="orga21ffbe"></a>
 
 ## cursor animation
 
 The awesome patch could make cursor more funny.But there have a bug,If you shift to full screen from a window state , there will remain a shadow of the current cursor which will stay here forever.I will make cursor in replace mode before shifting to full screen.This might makes it effect less more.  
 
 
-<a id="org985b89a"></a>
+<a id="org3af2866"></a>
 
 ## how to
 
-Here have a tutorial to apply patch if you are using emacs plus.  
+Here have a [tutorial](https://neoemacs.com/posts/emacs-patches/) to apply patch if you are using emacs plus.  
 
 1.  Put the patches file under to \`/opt/homebrew/Library/Taps/d12frosted/homebrew-emacs-plus/patches/emacs-30\`
 2.  Modify \`/opt/homebrew/Library/Taps/d12frosted/homebrew-emacs-plus/Formula/emacs-plus@30.rb\`, around <span class="underline">local\_patch</span>.  
@@ -210,17 +176,19 @@ Here have a tutorial to apply patch if you are using emacs plus.
         local_patch "round-undecorated-frame", sha: "7451f80f559840e54e6a052e55d1100778abc55f98f1d0c038a24e25773f2874"
         local_patch "cursor-animation", sha: "812a934bd45dd4ee3311c1bc6681605364193bbd14ec05b9b847f9488bf989e2"
         local_patch "ns-alpha-background", sha: "6c174aff2602b64255ce8952f91302ede51e213be090f1b39e06913bbe0b086b"
+    
+    > Notic: above sha value is out of date
 3.  Just install emacs plus, you could use \`brew reinstall\`
 
 
-<a id="orgcfe7ab2"></a>
+<a id="orgd1fdd20"></a>
 
 # Private setting
 
 Customize your private setting config in the config.el ; use `setq`  
 
 
-<a id="org1ca3f1e"></a>
+<a id="orgb44ef02"></a>
 
 ## Font setting
 
@@ -254,7 +222,7 @@ Cause different platform have different font name,after font installed there nee
     -   M-x nerd-icons-install-fonts
 
 
-<a id="orgedc14fe"></a>
+<a id="org357eaa7"></a>
 
 ## Basic setting
 
@@ -374,12 +342,12 @@ Cause different platform have different font name,after font installed there nee
 > recentfile save default dir: ~/.emacs.d/.local/cache/recentf  
 
 
-<a id="orgdd8b228"></a>
+<a id="orgf03217c"></a>
 
 # Neoemacs modules
 
 
-<a id="org7b3b941"></a>
+<a id="orgdece738"></a>
 
 ## Lsp Java
 
@@ -474,13 +442,13 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     3.  Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
 
 
-<a id="orgb7f73bc"></a>
+<a id="org4e22031"></a>
 
 ## Vterm Shell
 
 You&rsquo;d better install vterm in a terminal environment case there might have error incompatible architecture.  
 
-<div class="notice-warning" id="orge0d1a0b">
+<div class="notice-warning" id="orge772a1e">
 <p>
 Vterm is not available on windows.<br />
 Thus windows user have to use eshell as a downgrade plan.<br />
@@ -591,7 +559,7 @@ Thus windows user have to use eshell as a downgrade plan.<br />
         </table>
 
 
-<a id="orgfbd44a6"></a>
+<a id="org6a9ec08"></a>
 
 ## Ejc Sql
 
@@ -664,7 +632,7 @@ Thus windows user have to use eshell as a downgrade plan.<br />
     </table>
 
 
-<a id="org3a152f1"></a>
+<a id="org80683b9"></a>
 
 ## Emacs Rime
 
@@ -702,7 +670,7 @@ So there have a variable which named `rime-user-data-dir` , And another importan
 [futher more rime readme](./modules/neo-emacs/rime/readme.md)  
 
 
-<a id="org80e63f4"></a>
+<a id="org7dba411"></a>
 
 ## Org mode
 
@@ -749,7 +717,7 @@ So there have a variable which named `rime-user-data-dir` , And another importan
         ln -s ~/org/org-roam/image any_where/image
 
 
-<a id="org3326c22"></a>
+<a id="orgf7c69f6"></a>
 
 ## Restclient
 
@@ -774,14 +742,14 @@ Fortunately we have solution for other mime type, it&rsquo;s restclient-set-var,
 About the variables infomation in current buffer, we could use `C-c Tab` to show them.  
 
 
-<a id="org9fb3eed"></a>
+<a id="orge3167dc"></a>
 
 ## Verb
 
 Verb is a new package for http client,becase the restclient is out of date and the author no longger maintain it on github.Fortunately there have a alternative one named verb which is more powerful and customizable. Verb support url template which makes you change different environment more conveniently.Also verb supports variables and picture query and upload.In org mode start verb just use \`C-c C-r\` as a previous command,example \`C-c C-r C-f\` will execute http request with your config,So verb is really fancy right?  
 
 
-<a id="org8346bef"></a>
+<a id="orgf9d1945"></a>
 
 ## iredis
 
@@ -806,7 +774,7 @@ Verb is a new package for http client,becase the restclient is out of date and t
         10.100.10.70:6379[7]> get VMP_MEDIA_SERVER:000000:zlm_fragment | jq .
 
 
-<a id="org1155daf"></a>
+<a id="org9fc7931"></a>
 
 ## Bookmark
 
@@ -847,7 +815,7 @@ Verb is a new package for http client,becase the restclient is out of date and t
     </table>
 
 
-<a id="org0f6d7cf"></a>
+<a id="org8438b11"></a>
 
 ## Elpa Offline
 
@@ -860,7 +828,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="org1b0c25a"></a>
+<a id="org37a45f9"></a>
 
 ## Vue
 
@@ -869,7 +837,7 @@ as a full stack developer u need vue support, so here it comes.
     npm install vls -g
 
 
-<a id="orgb5f94e1"></a>
+<a id="org1ebf800"></a>
 
 ## startup workspace
 
@@ -892,7 +860,7 @@ You could customization startup inital workspace and their buffer.No need to ope
     (add-hook 'window-setup-hook #'open-my-workspaces)
 
 
-<a id="orgd0f2886"></a>
+<a id="org9b728cb"></a>
 
 # About the Release
 
@@ -901,7 +869,7 @@ Release package contains the git repository of related dependencies.The compiled
 I will update the Release package once a month, And test them in advance and revise them for compatibility with upstream projects.  
 
 
-<a id="orgdba3d4e"></a>
+<a id="orgc09235f"></a>
 
 # Customize Farther
 
