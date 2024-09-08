@@ -1,0 +1,133 @@
+From 79127d822df37df8c8ce1fa3415a649a931e3862 Mon Sep 17 00:00:00 2001
+From: "liu.zijie" <at18708169062@gmail.com>
+Date: Sat, 7 Sep 2024 18:45:28 +0800
+Subject: [PATCH] fix:
+
+fix: animation cursor
+
+feat: 1
+
+fix: return
+
+fix: return 2
+---
+ src/nsterm.h |  1 +
+ src/nsterm.m | 65 +++++++++++++++++++++++++---------------------------
+ 2 files changed, 32 insertions(+), 34 deletions(-)
+
+diff --git a/src/nsterm.h b/src/nsterm.h
+index 6c67653..480f9fe 100644
+--- a/src/nsterm.h
++++ b/src/nsterm.h
+@@ -485,6 +485,7 @@ enum ns_return_frame_mode
+   struct frame *emacsframe;
+   int scrollbarsNeedingUpdate;
+   NSRect ns_userRect;
++  CALayer *cursor_layer;
+ }
+ 
+ /* AppKit-side interface */
+diff --git a/src/nsterm.m b/src/nsterm.m
+index 8c40573..b43abec 100644
+--- a/src/nsterm.m
++++ b/src/nsterm.m
+@@ -71,6 +71,7 @@ Updated by Christian Limpach (chris@nice.ch)
+ #include "macfont.h"
+ #include <Carbon/Carbon.h>
+ #include <IOSurface/IOSurface.h>
++#include <QuartzCore/QuartzCore.h>
+ #endif
+ 
+ static EmacsMenu *dockMenu;
+@@ -3064,6 +3065,9 @@ Note that CURSOR_WIDTH is meaningful only for (h)bar cursors.
+       return;
+     }
+ 
++  if (!active_p)
++    return;
++
+   get_phys_cursor_geometry (w, glyph_row, phys_cursor_glyph, &fx, &fy, &h);
+ 
+   /* The above get_phys_cursor_geometry call set w->phys_cursor_width
+@@ -3101,44 +3105,22 @@ Note that CURSOR_WIDTH is meaningful only for (h)bar cursors.
+   /* Prevent the cursor from being drawn outside the text area.  */
+   r = NSIntersectionRect (r, ns_row_rect (w, glyph_row, TEXT_AREA));
+ 
+-  ns_focus (f, NULL, 0);
+-
+-  NSGraphicsContext *ctx = [NSGraphicsContext currentContext];
+-  [ctx saveGraphicsState];
+-#ifdef NS_IMPL_GNUSTEP
+-  GSRectClipList (ctx, &r, 1);
+-#else
+-  NSRectClip (r);
+-#endif
+-
+   [FRAME_CURSOR_COLOR (f) set];
+ 
+-  switch (cursor_type)
++  EmacsView *view = FRAME_NS_VIEW (f);
++  CALayer *cursor_layer = view->cursor_layer;
++  r.origin.y = [view bounds].size.height - r.size.height - r.origin.y;
++  [CATransaction begin];
++  [CATransaction setAnimationDuration:0.1];
++  cursor_layer.backgroundColor = FRAME_CURSOR_COLOR (f).CGColor;
++  if (cursor_type == BAR_CURSOR)
+     {
+-    case DEFAULT_CURSOR:
+-    case NO_CURSOR:
+-      break;
+-    case FILLED_BOX_CURSOR:
+-      /* The call to draw_phys_cursor_glyph can end up undoing the
+-	 ns_focus, so unfocus here and regain focus later.  */
+-      [ctx restoreGraphicsState];
+-      ns_unfocus (f);
+-      draw_phys_cursor_glyph (w, glyph_row, DRAW_CURSOR);
+-      ns_focus (f, &r, 1);
+-      break;
+-    case HOLLOW_BOX_CURSOR:
+-      /* This works like it does in PostScript, not X Windows.  */
+-      [NSBezierPath strokeRect: NSInsetRect (r, 0.5, 0.5)];
+-      [ctx restoreGraphicsState];
+-      break;
+-    case HBAR_CURSOR:
+-    case BAR_CURSOR:
+-      NSRectFill (r);
+-      [ctx restoreGraphicsState];
+-      break;
++      cursor_glyph = get_phys_cursor_glyph (w);
++      if ((cursor_glyph->resolved_level & 1) != 0)
++         r.origin.x += cursor_glyph->pixel_width - r.size.width;
+     }
+-
+-  ns_unfocus (f);
++   cursor_layer.frame = r;
++   [CATransaction commit];
+ }
+ 
+ 
+@@ -9294,6 +9276,21 @@ - (instancetype) initWithEmacsFrame: (struct frame *) f
+       [self setDelegate:view];
+       [[self contentView] addSubview:view];
+       [self makeFirstResponder:view];
++      if (view->cursor_layer) {
++         [view->cursor_layer removeFromSuperlayer];
++         view->cursor_layer = nil;
++      }
++      /* Overlay a canvas view on top of EmacsView.  */
++      NSView *canvasView = [[NSView alloc] initWithFrame:view.bounds];
++      canvasView.wantsLayer = YES;
++      canvasView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
++      [view addSubview:canvasView positioned:NSWindowAbove relativeTo:nil];
++
++      /* Create a cursor layer on the canvas.  */
++      view->cursor_layer = [CALayer layer];
++      [canvasView.layer addSublayer: view->cursor_layer];
++      view->cursor_layer.frame = CGRectMake(0, 0, 0, 0);
++      view->cursor_layer.opacity = 0.8;
+ 
+ #if !defined (NS_IMPL_COCOA) || MAC_OS_X_VERSION_MIN_REQUIRED <= 1090
+ #if MAC_OS_X_VERSION_MAX_ALLOWED > 1090
+-- 
+2.45.2
+

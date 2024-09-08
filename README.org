@@ -137,7 +137,7 @@ It offer a window transparent solution which could transparent background but th
 ** cursor animation
 The awesome patch could make cursor more funny.But there have a bug,If you shift to full screen from a window state , there will remain a shadow of the current cursor which will stay here forever.I will make cursor in replace mode before shifting to full screen.This might makes it effect less more.
 ** how to
-Here have a tutorial to apply patch if you are using emacs plus.
+Here have a [[https://neoemacs.com/posts/emacs-patches/][tutorial]] to apply patch if you are using emacs plus.
 1. Put the patches file under to `/opt/homebrew/Library/Taps/d12frosted/homebrew-emacs-plus/patches/emacs-30`
 2. Modify `/opt/homebrew/Library/Taps/d12frosted/homebrew-emacs-plus/Formula/emacs-plus@30.rb`, around _local_patch_.
    There only have two terms to be filled in, one is patch name which referenced to the pathches directory, another is the pathchs `sha256` value.
@@ -153,6 +153,10 @@ Here have a tutorial to apply patch if you are using emacs plus.
    local_patch "cursor-animation", sha: "812a934bd45dd4ee3311c1bc6681605364193bbd14ec05b9b847f9488bf989e2"
    local_patch "ns-alpha-background", sha: "6c174aff2602b64255ce8952f91302ede51e213be090f1b39e06913bbe0b086b"
    #+end_src
+
+   #+begin_quote
+   Notic: above sha value is out of date
+   #+end_quote
 3. Just install emacs plus, you could use `brew reinstall`
 * Private setting
 Customize your private setting config in the config.el ; use ~setq~
