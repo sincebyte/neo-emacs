@@ -12,8 +12,13 @@
 ;; Doom exposes five (optional) variables for controlling fonts in Doom:
 ;;
 ;; - `doom-font' -- the primary font to use
-(setq-default default-frame-alist '((undecorated . t)))
+;; emacs header line title setting
+;; (setq-default default-frame-alist '((undecorated . t)))
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . nil))
+(add-to-list 'default-frame-alist '(ns-appearance . dark))
 (setq-default frame-title-format nil)
+(setq ns-use-proxy-icon nil)
+
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (when (display-graphic-p)
   (add-hook 'window-setup-hook #'toggle-frame-fullscreen))
@@ -64,7 +69,7 @@
 ;; (load-theme 'color-theme-sanityinc-tomorrow-night t)
 ;; (load-theme 'kaolin t)
 ;; (color-theme-sanityinc-tomorrow-night)
-(setq doom-theme 'doom-one)
+(setq doom-theme 'ef-maris-light)
 
 
 

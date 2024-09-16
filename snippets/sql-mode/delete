@@ -4,5 +4,7 @@
 # --
 
 <select name='delete'>
- DELETE * FROM $0`(yank)` LIMIT 1
+ DELETE FROM $0`(yank)`
+ WHERE id=$1
+ LIMIT 1
 </select>
