@@ -13,7 +13,7 @@
 ;;
 ;; - `doom-font' -- the primary font to use
 ;; emacs header line title setting
-;; (setq-default default-frame-alist '((undecorated . t)))
+(setq-default default-frame-alist '((undecorated . t)))
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . nil))
 (add-to-list 'default-frame-alist '(ns-appearance . dark))
 (setq-default frame-title-format nil)
@@ -33,6 +33,14 @@
          (setq doom-font (font-spec :family "MonoLisa" :size 16 )
                cjk-font "仓耳今楷01-9128"
                cjk-font-size 20)))
+
+(setq doom-big-font (font-spec :family "MonoLisa" :size 24 ))
+(defun my/setup-big-cjk-fonts ()
+  "Setup CJK fonts for Doom Big Font Mode."
+  (dolist (charset '(kana han symbol cjk-misc bopomofo))
+    (set-fontset-font t charset (font-spec :family "仓耳今楷01-9128" :size 30))))
+(add-hook 'doom-big-font-mode-hook #'my/setup-big-cjk-fonts)
+
 ;; (progn (set-selection-coding-system 'utf-16le-dos)
 ;;        (setq doom-font (font-spec :family "Kode Mono" :size 20 )
 ;;              cjk-font "仓耳今楷01-9128"
@@ -69,7 +77,7 @@
 ;; (load-theme 'color-theme-sanityinc-tomorrow-night t)
 ;; (load-theme 'kaolin t)
 ;; (color-theme-sanityinc-tomorrow-night)
-(setq doom-theme 'ef-maris-light)
+(setq doom-theme 'ef-maris-dark)
 
 
 
