@@ -13,15 +13,17 @@
 ;;
 ;; - `doom-font' -- the primary font to use
 ;; emacs header line title setting
-(setq-default default-frame-alist '((undecorated . t)))
+;; (setq-default default-frame-alist '((undecorated . t)))
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . nil))
-(add-to-list 'default-frame-alist '(ns-appearance . dark))
+(add-to-list 'default-frame-alist '(ns-appearance . light))
 (setq-default frame-title-format nil)
 (setq ns-use-proxy-icon nil)
 
-;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
-(when (display-graphic-p)
-  (add-hook 'window-setup-hook #'toggle-frame-fullscreen))
+;; max width and height but not fullscreen
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; full screen
+;; (when (display-graphic-p)
+;;   (add-hook 'window-setup-hook #'toggle-frame-fullscreen))
 
 (if (eq system-type 'windows-nt)
     (progn (set-selection-coding-system 'utf-8)
@@ -82,8 +84,8 @@
 
 
 ;; (setq initial-frame-alist '((height . 50)))
-;; (add-to-list 'initial-frame-alist '(top . 0))
-;; (add-to-list 'initial-frame-alist '(left . 0))
+;; (add-to-list 'initial-frame-alist '(top . 10))
+;; (add-to-list 'initial-frame-alist '(left . 10))
 
 ;; (set-frame-size (selected-frame) (cons 60 (/ (window-inside-pixel-edges)(selected-frame))) nil)
 ;; (setq initial-frame-alist '((top . 0) (left . 0) (width . 100) (height . maximized)))
