@@ -4,7 +4,7 @@
 ![img](./images/image-use.png)  
 
 
-<a id="org2ef3248"></a>
+<a id="org1f13981"></a>
 
 # About
 
@@ -20,12 +20,12 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   Knowledge management system: Org-roam borrows principles from the Zettelkasten method, providing a solution for non-hierarchical note-taking.
 
 
-<a id="org542e74a"></a>
+<a id="org6e9ee57"></a>
 
 # How to install
 
 
-<a id="orga00ba4e"></a>
+<a id="org7b45597"></a>
 
 ## Install emacs
 
@@ -66,7 +66,7 @@ After emacs installation, set environment variables which names EMACS ,this depe
     export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs
 
 
-<a id="org78a7004"></a>
+<a id="org3eb4f1a"></a>
 
 ## Clone project
 
@@ -76,7 +76,7 @@ clone doom-emacs and neo-emacs from github.
     git clone --depth 1 https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
 
-<a id="org0ebf413"></a>
+<a id="org8909ea8"></a>
 
 ## Doom Install
 
@@ -105,12 +105,12 @@ At last run below, this will take few minutes. And it depends on the quality of 
     ~/.emacs.doom/bin/doom.cmd install
 
 
-<a id="org2dcf482"></a>
+<a id="org10d94fd"></a>
 
 # How to update
 
 
-<a id="org0cd543a"></a>
+<a id="org6edba6d"></a>
 
 ## For brew
 
@@ -118,7 +118,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     brew update && brew upgrade emacs-mac && brew cleanup emacs-mac
 
 
-<a id="org7cc932f"></a>
+<a id="orgb93b0cf"></a>
 
 ## For doom project
 
@@ -128,12 +128,12 @@ At last run below, this will take few minutes. And it depends on the quality of 
     sh ~/.emacs.d/bin/doom sync
 
 
-<a id="org74721a4"></a>
+<a id="org356e2f5"></a>
 
 # Patches
 
 
-<a id="org377bd7f"></a>
+<a id="orgab916d1"></a>
 
 ## transparent patch
 
@@ -149,14 +149,14 @@ It offer a window transparent solution which could transparent background but th
       ("C-M-0" . transwin-toggle))
 
 
-<a id="org7c03446"></a>
+<a id="orgf8dea52"></a>
 
 ## cursor animation
 
 The awesome patch could make cursor more funny.But there have a bug,If you shift to full screen from a window state , there will remain a shadow of the current cursor which will stay here forever.I will make cursor in replace mode before shifting to full screen.This might makes it effect less more.  
 
 
-<a id="orgaa3f04e"></a>
+<a id="org682e747"></a>
 
 ## how to
 
@@ -181,14 +181,14 @@ Here have a [tutorial](https://neoemacs.com/posts/emacs-patches/) to apply patch
 3.  Just install emacs plus, you could use \`brew reinstall\`
 
 
-<a id="org668cda9"></a>
+<a id="org082230e"></a>
 
 # Private setting
 
 Customize your private setting config in the config.el ; use `setq`  
 
 
-<a id="org52e1c2e"></a>
+<a id="orgad2a784"></a>
 
 ## Font setting
 
@@ -222,7 +222,7 @@ Cause different platform have different font name,after font installed there nee
     -   M-x nerd-icons-install-fonts
 
 
-<a id="orgd9d459e"></a>
+<a id="org8acac09"></a>
 
 ## Basic setting
 
@@ -342,12 +342,12 @@ Cause different platform have different font name,after font installed there nee
 > recentfile save default dir: ~/.emacs.d/.local/cache/recentf  
 
 
-<a id="org1108e1c"></a>
+<a id="org63efa49"></a>
 
 # Neoemacs modules
 
 
-<a id="org8a7615f"></a>
+<a id="orgd218951"></a>
 
 ## Lsp Java
 
@@ -442,30 +442,19 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     3.  Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
 
 
-<a id="orge3782e6"></a>
+<a id="org4ccc21c"></a>
 
 ## Vterm Shell
 
 You&rsquo;d better install vterm in a terminal environment case there might have error incompatible architecture.  
 
-<div class="notice-warning" id="org75b7ffc">
+<div class="notice-warning" id="org9af74d2">
 <p>
 Vterm is not available on windows.<br />
 Thus windows user have to use eshell as a downgrade plan.<br />
 </p>
 
 </div>
-
-How to display the command&rsquo;s time on fish shell ?  
-
-    1  funced fish_right_prompt -i
-    2  
-    3  function fish_right_prompt
-    4      # 显示当前时间
-    5      echo -n (date +"%H:%M:%S")
-    6  end
-    7  
-    8  funcsave fish_right_prompt
 
 1.  Install vterm
 
@@ -506,25 +495,32 @@ How to display the command&rsquo;s time on fish shell ?
                     set -q argv[1]; or set argv[1] "."
                     vterm_cmd find-file (realpath "$argv")
                 end
-    -   http proxy
-    
-    In fact there have two different config ,first one for vterm and another for emacs inner plugins.  
-    In vterm the http proxy be effected by \`~/.config/fish/config.fish\`,you could config it like this.  
-    
-        set -x http_proxy       http://vpn.local.com:10887
-        set -x https_proxy      http://vpn.local.com:10887
-        set -x no_proxy         ".aliyun.com,192.168.0.0/16,137.239.155.184"
-    
-    When you are using emacs lisp program such as restclient, you could config proxy like this.  
-    The difference is wildcard  
-    
-        (defun convert-to-regex (str)
-          (let* ((joined (replace-regexp-in-string "," "\\\\|" str))
-                 (wrapped (concat "^\\(" joined "\\)")))
+    -   http proxy  
+        In fact there have two different config ,first one for vterm and another for emacs inner plugins.  
+        In vterm the http proxy be effected by \`~/.config/fish/config.fish\`,you could config it like this.  
+        
+            set -x http_proxy       http://vpn.local.com:10887
+            set -x https_proxy      http://vpn.local.com:10887
+            set -x no_proxy         ".aliyun.com,192.168.0.0/16,137.239.155.184"
+        
+        When you are using emacs lisp program such as restclient, you could config proxy like this.  
+        The difference is wildcard  
+        
+            (defun convert-to-regex (str)
+            (let* ((joined (replace-regexp-in-string "," "\\\\|" str))
+                    (wrapped (concat "^\\(" joined "\\)")))
             wrapped))
-        (setq url-proxy-services `(("http" ."vpn.local.com:10887")
-                                   ("https" ."vpn.local.com:10887")
-                                   ("no_proxy" . ,(convert-to-regex ".*aliyun.com,192.168.0.0/16,137.239.155.184"))))
+            (setq url-proxy-services `(("http" ."vpn.local.com:10887")
+                                    ("https" ."vpn.local.com:10887")
+                                    ("no_proxy" . ,(convert-to-regex ".*aliyun.com,192.168.0.0/16,137.239.155.184"))))
+    -   How to display the command&rsquo;s time on fish shell ?  
+        
+            1     funced fish_right_prompt -i
+            2     function fish_right_prompt
+            3     # 显示当前时间
+            4     echo -n (date +"%H:%M:%S")
+            5     end
+            6     funcsave fish_right_prompt
 
 3.  Usage
 
@@ -570,7 +566,7 @@ How to display the command&rsquo;s time on fish shell ?
         </table>
 
 
-<a id="org90beb9b"></a>
+<a id="org0a9508f"></a>
 
 ## Ejc Sql
 
@@ -643,7 +639,7 @@ How to display the command&rsquo;s time on fish shell ?
     </table>
 
 
-<a id="org5e2bba3"></a>
+<a id="org658492b"></a>
 
 ## Emacs Rime
 
@@ -681,7 +677,7 @@ So there have a variable which named `rime-user-data-dir` , And another importan
 [futher more rime readme](./modules/neo-emacs/rime/readme.md)  
 
 
-<a id="org65903cf"></a>
+<a id="org8fb39a5"></a>
 
 ## Org mode
 
@@ -728,7 +724,7 @@ So there have a variable which named `rime-user-data-dir` , And another importan
         ln -s ~/org/org-roam/image any_where/image
 
 
-<a id="org7bd404b"></a>
+<a id="org09e8098"></a>
 
 ## Restclient
 
@@ -753,14 +749,14 @@ Fortunately we have solution for other mime type, it&rsquo;s restclient-set-var,
 About the variables infomation in current buffer, we could use `C-c Tab` to show them.  
 
 
-<a id="org195cd05"></a>
+<a id="orge6d4d05"></a>
 
 ## Verb
 
 Verb is a new package for http client,becase the restclient is out of date and the author no longger maintain it on github.Fortunately there have a alternative one named verb which is more powerful and customizable. Verb support url template which makes you change different environment more conveniently.Also verb supports variables and picture query and upload.In org mode start verb just use \`C-c C-r\` as a previous command,example \`C-c C-r C-f\` will execute http request with your config,So verb is really fancy right?  
 
 
-<a id="org6baa17f"></a>
+<a id="org802f7d5"></a>
 
 ## iredis
 
@@ -785,7 +781,7 @@ Verb is a new package for http client,becase the restclient is out of date and t
         10.100.10.70:6379[7]> get VMP_MEDIA_SERVER:000000:zlm_fragment | jq .
 
 
-<a id="org043b7b8"></a>
+<a id="orgb4bc902"></a>
 
 ## Bookmark
 
@@ -826,7 +822,7 @@ Verb is a new package for http client,becase the restclient is out of date and t
     </table>
 
 
-<a id="orgcb51561"></a>
+<a id="orgd202a9d"></a>
 
 ## Elpa Offline
 
@@ -839,7 +835,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="org16a49fe"></a>
+<a id="org6576dd5"></a>
 
 ## Vue
 
@@ -848,7 +844,7 @@ as a full stack developer u need vue support, so here it comes.
     npm install vls -g
 
 
-<a id="org5ed5f1a"></a>
+<a id="org39b45aa"></a>
 
 ## startup workspace
 
@@ -871,7 +867,7 @@ You could customization startup inital workspace and their buffer.No need to ope
     (add-hook 'window-setup-hook #'open-my-workspaces)
 
 
-<a id="org9798be7"></a>
+<a id="org05aa83f"></a>
 
 # About the Release
 
@@ -880,7 +876,7 @@ Release package contains the git repository of related dependencies.The compiled
 I will update the Release package once a month, And test them in advance and revise them for compatibility with upstream projects.  
 
 
-<a id="org186be24"></a>
+<a id="org7552b99"></a>
 
 # Customize Farther
 

@@ -250,17 +250,6 @@ Vterm is not available on windows.
 Thus windows user have to use eshell as a downgrade plan.
 #+end_notice-warning
 
-How to display the command's time on fish shell ?
-#+begin_src shell -n
-funced fish_right_prompt -i
-
-function fish_right_prompt
-    # 显示当前时间
-    echo -n (date +"%H:%M:%S")
-end
-
-funcsave fish_right_prompt
-#+end_src
 *** Install vterm
 You'd better install vterm in a terminal environment case there might have error incompatible architecture.
 If vterm complie failed in emacs, we could complie it manually.
@@ -299,24 +288,33 @@ If you are using fish shell ,fortunately there have some optimize config prepare
       end
     #+end_src
 - http proxy
-In fact there have two different config ,first one for vterm and another for emacs inner plugins.
-In vterm the http proxy be effected by `~/.config/fish/config.fish`,you could config it like this.
-#+begin_src shell
-set -x http_proxy       http://vpn.local.com:10887
-set -x https_proxy      http://vpn.local.com:10887
-set -x no_proxy         ".aliyun.com,192.168.0.0/16,137.239.155.184"
-#+end_src
-When you are using emacs lisp program such as restclient, you could config proxy like this.
-The difference is wildcard
-#+begin_src elisp
-(defun convert-to-regex (str)
-  (let* ((joined (replace-regexp-in-string "," "\\\\|" str))
-         (wrapped (concat "^\\(" joined "\\)")))
-    wrapped))
-(setq url-proxy-services `(("http" ."vpn.local.com:10887")
+  In fact there have two different config ,first one for vterm and another for emacs inner plugins.
+  In vterm the http proxy be effected by `~/.config/fish/config.fish`,you could config it like this.
+   #+begin_src shell
+   set -x http_proxy       http://vpn.local.com:10887
+   set -x https_proxy      http://vpn.local.com:10887
+   set -x no_proxy         ".aliyun.com,192.168.0.0/16,137.239.155.184"
+   #+end_src
+  When you are using emacs lisp program such as restclient, you could config proxy like this.
+  The difference is wildcard
+   #+begin_src elisp
+   (defun convert-to-regex (str)
+   (let* ((joined (replace-regexp-in-string "," "\\\\|" str))
+           (wrapped (concat "^\\(" joined "\\)")))
+   wrapped))
+   (setq url-proxy-services `(("http" ."vpn.local.com:10887")
                            ("https" ."vpn.local.com:10887")
                            ("no_proxy" . ,(convert-to-regex ".*aliyun.com,192.168.0.0/16,137.239.155.184"))))
-#+end_src
+   #+end_src
+- How to display the command's time on fish shell ?
+   #+begin_src shell -n
+   funced fish_right_prompt -i
+   function fish_right_prompt
+   # 显示当前时间
+   echo -n (date +"%H:%M:%S")
+   end
+   funcsave fish_right_prompt
+   #+end_src
 *** Usage
 - Being with eshell
   Eshell have a most wanted feature was *quickrun-eshell* which have a fast reload function after shell is runinng,you just use ~C-c C-c~ to stop it and use *r* to return you shell script file.It's pretty convenient.
