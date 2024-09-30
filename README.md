@@ -4,7 +4,7 @@
 ![img](./images/image-use.png)  
 
 
-<a id="org1f13981"></a>
+<a id="orgc03c7cf"></a>
 
 # About
 
@@ -20,12 +20,12 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   Knowledge management system: Org-roam borrows principles from the Zettelkasten method, providing a solution for non-hierarchical note-taking.
 
 
-<a id="org6e9ee57"></a>
+<a id="org124d72e"></a>
 
 # How to install
 
 
-<a id="org7b45597"></a>
+<a id="org3f1f813"></a>
 
 ## Install emacs
 
@@ -66,7 +66,7 @@ After emacs installation, set environment variables which names EMACS ,this depe
     export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs
 
 
-<a id="org3eb4f1a"></a>
+<a id="org56c8ba2"></a>
 
 ## Clone project
 
@@ -76,7 +76,7 @@ clone doom-emacs and neo-emacs from github.
     git clone --depth 1 https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
 
-<a id="org8909ea8"></a>
+<a id="orga1988a1"></a>
 
 ## Doom Install
 
@@ -105,12 +105,12 @@ At last run below, this will take few minutes. And it depends on the quality of 
     ~/.emacs.doom/bin/doom.cmd install
 
 
-<a id="org10d94fd"></a>
+<a id="org0ed9826"></a>
 
 # How to update
 
 
-<a id="org6edba6d"></a>
+<a id="org4a2d13a"></a>
 
 ## For brew
 
@@ -118,7 +118,7 @@ At last run below, this will take few minutes. And it depends on the quality of 
     brew update && brew upgrade emacs-mac && brew cleanup emacs-mac
 
 
-<a id="orgb93b0cf"></a>
+<a id="orgbca76c8"></a>
 
 ## For doom project
 
@@ -128,12 +128,12 @@ At last run below, this will take few minutes. And it depends on the quality of 
     sh ~/.emacs.d/bin/doom sync
 
 
-<a id="org356e2f5"></a>
+<a id="orga2f17a6"></a>
 
 # Patches
 
 
-<a id="orgab916d1"></a>
+<a id="orga7ad687"></a>
 
 ## transparent patch
 
@@ -149,14 +149,14 @@ It offer a window transparent solution which could transparent background but th
       ("C-M-0" . transwin-toggle))
 
 
-<a id="orgf8dea52"></a>
+<a id="org1ae1c05"></a>
 
 ## cursor animation
 
 The awesome patch could make cursor more funny.But there have a bug,If you shift to full screen from a window state , there will remain a shadow of the current cursor which will stay here forever.I will make cursor in replace mode before shifting to full screen.This might makes it effect less more.  
 
 
-<a id="org682e747"></a>
+<a id="org692e973"></a>
 
 ## how to
 
@@ -181,14 +181,14 @@ Here have a [tutorial](https://neoemacs.com/posts/emacs-patches/) to apply patch
 3.  Just install emacs plus, you could use \`brew reinstall\`
 
 
-<a id="org082230e"></a>
+<a id="orgbd66ff9"></a>
 
 # Private setting
 
 Customize your private setting config in the config.el ; use `setq`  
 
 
-<a id="orgad2a784"></a>
+<a id="org3f2cebc"></a>
 
 ## Font setting
 
@@ -222,7 +222,7 @@ Cause different platform have different font name,after font installed there nee
     -   M-x nerd-icons-install-fonts
 
 
-<a id="org8acac09"></a>
+<a id="orgecab38a"></a>
 
 ## Basic setting
 
@@ -342,12 +342,12 @@ Cause different platform have different font name,after font installed there nee
 > recentfile save default dir: ~/.emacs.d/.local/cache/recentf  
 
 
-<a id="org63efa49"></a>
+<a id="org05b6b6c"></a>
 
 # Neoemacs modules
 
 
-<a id="orgd218951"></a>
+<a id="org10fd3a2"></a>
 
 ## Lsp Java
 
@@ -442,13 +442,13 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     3.  Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
 
 
-<a id="org4ccc21c"></a>
+<a id="org8d52b87"></a>
 
 ## Vterm Shell
 
 You&rsquo;d better install vterm in a terminal environment case there might have error incompatible architecture.  
 
-<div class="notice-warning" id="org9af74d2">
+<div class="notice-warning" id="org05a4539">
 <p>
 Vterm is not available on windows.<br />
 Thus windows user have to use eshell as a downgrade plan.<br />
@@ -513,14 +513,13 @@ Thus windows user have to use eshell as a downgrade plan.<br />
             (setq url-proxy-services `(("http" ."vpn.local.com:10887")
                                     ("https" ."vpn.local.com:10887")
                                     ("no_proxy" . ,(convert-to-regex ".*aliyun.com,192.168.0.0/16,137.239.155.184"))))
-    -   How to display the command&rsquo;s time on fish shell ?  
+    -   display command&rsquo;s time  
         
-            1     funced fish_right_prompt -i
-            2     function fish_right_prompt
-            3     # 显示当前时间
-            4     echo -n (date +"%H:%M:%S")
-            5     end
-            6     funcsave fish_right_prompt
+            funced fish_right_prompt -i
+            function fish_right_prompt
+                echo -n (date +"%H:%M:%S")
+            end
+            funcsave fish_right_prompt
 
 3.  Usage
 
@@ -566,7 +565,7 @@ Thus windows user have to use eshell as a downgrade plan.<br />
         </table>
 
 
-<a id="org0a9508f"></a>
+<a id="org590b441"></a>
 
 ## Ejc Sql
 
@@ -639,7 +638,7 @@ Thus windows user have to use eshell as a downgrade plan.<br />
     </table>
 
 
-<a id="org658492b"></a>
+<a id="orgb7c6a3d"></a>
 
 ## Emacs Rime
 
@@ -677,7 +676,7 @@ So there have a variable which named `rime-user-data-dir` , And another importan
 [futher more rime readme](./modules/neo-emacs/rime/readme.md)  
 
 
-<a id="org8fb39a5"></a>
+<a id="org7cac410"></a>
 
 ## Org mode
 
@@ -724,7 +723,7 @@ So there have a variable which named `rime-user-data-dir` , And another importan
         ln -s ~/org/org-roam/image any_where/image
 
 
-<a id="org09e8098"></a>
+<a id="orgc8e7056"></a>
 
 ## Restclient
 
@@ -749,14 +748,14 @@ Fortunately we have solution for other mime type, it&rsquo;s restclient-set-var,
 About the variables infomation in current buffer, we could use `C-c Tab` to show them.  
 
 
-<a id="orge6d4d05"></a>
+<a id="org6546d9a"></a>
 
 ## Verb
 
 Verb is a new package for http client,becase the restclient is out of date and the author no longger maintain it on github.Fortunately there have a alternative one named verb which is more powerful and customizable. Verb support url template which makes you change different environment more conveniently.Also verb supports variables and picture query and upload.In org mode start verb just use \`C-c C-r\` as a previous command,example \`C-c C-r C-f\` will execute http request with your config,So verb is really fancy right?  
 
 
-<a id="org802f7d5"></a>
+<a id="org85caafa"></a>
 
 ## iredis
 
@@ -781,7 +780,7 @@ Verb is a new package for http client,becase the restclient is out of date and t
         10.100.10.70:6379[7]> get VMP_MEDIA_SERVER:000000:zlm_fragment | jq .
 
 
-<a id="orgb4bc902"></a>
+<a id="org63874e3"></a>
 
 ## Bookmark
 
@@ -822,7 +821,7 @@ Verb is a new package for http client,becase the restclient is out of date and t
     </table>
 
 
-<a id="orgd202a9d"></a>
+<a id="orgd19424b"></a>
 
 ## Elpa Offline
 
@@ -835,7 +834,7 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="org6576dd5"></a>
+<a id="org93f87a8"></a>
 
 ## Vue
 
@@ -844,7 +843,7 @@ as a full stack developer u need vue support, so here it comes.
     npm install vls -g
 
 
-<a id="org39b45aa"></a>
+<a id="org15faa2e"></a>
 
 ## startup workspace
 
@@ -867,7 +866,7 @@ You could customization startup inital workspace and their buffer.No need to ope
     (add-hook 'window-setup-hook #'open-my-workspaces)
 
 
-<a id="org05aa83f"></a>
+<a id="org13dfd20"></a>
 
 # About the Release
 
@@ -876,7 +875,7 @@ Release package contains the git repository of related dependencies.The compiled
 I will update the Release package once a month, And test them in advance and revise them for compatibility with upstream projects.  
 
 
-<a id="org7552b99"></a>
+<a id="org64b2b8d"></a>
 
 # Customize Farther
 

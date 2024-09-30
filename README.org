@@ -269,23 +269,23 @@ If you are using fish shell ,fortunately there have some optimize config prepare
   - use fish shell on emacs vterm.
   - use command `ff` %anyfile% on vterm will open %anyfile% in a new emacs buffer.It's very useful.
     #+begin_src shell
-      if [ "$INSIDE_EMACS" = 'vterm' ]
-          function clear
-              vterm_printf "51;Evterm-clear-scrollback";
-              tput clear;
-          end
-      end
-      function vterm_cmd --description 'Run an Emacs command among the ones been defined in vterm-eval-cmds.'
-          set -l vterm_elisp ()
-          for arg in $argv
-              set -a vterm_elisp (printf '"%s" ' (string replace -a -r '([\\\\"])' '\\\\\\\\$1' $arg))
-          end
-          vterm_printf '51;E'(string join '' $vterm_elisp)
-      end
-      function ff
-          set -q argv[1]; or set argv[1] "."
-          vterm_cmd find-file (realpath "$argv")
-      end
+    if [ "$INSIDE_EMACS" = 'vterm' ]
+        function clear
+            vterm_printf "51;Evterm-clear-scrollback";
+            tput clear;
+        end
+    end
+    function vterm_cmd --description 'Run an Emacs command among the ones been defined in vterm-eval-cmds.'
+        set -l vterm_elisp ()
+        for arg in $argv
+            set -a vterm_elisp (printf '"%s" ' (string replace -a -r '([\\\\"])' '\\\\\\\\$1' $arg))
+        end
+        vterm_printf '51;E'(string join '' $vterm_elisp)
+    end
+    function ff
+        set -q argv[1]; or set argv[1] "."
+        vterm_cmd find-file (realpath "$argv")
+    end
     #+end_src
 - http proxy
   In fact there have two different config ,first one for vterm and another for emacs inner plugins.
@@ -306,12 +306,11 @@ If you are using fish shell ,fortunately there have some optimize config prepare
                            ("https" ."vpn.local.com:10887")
                            ("no_proxy" . ,(convert-to-regex ".*aliyun.com,192.168.0.0/16,137.239.155.184"))))
    #+end_src
-- How to display the command's time on fish shell ?
-   #+begin_src shell -n
+- display command's time
+   #+begin_src shell
    funced fish_right_prompt -i
    function fish_right_prompt
-   # 显示当前时间
-   echo -n (date +"%H:%M:%S")
+       echo -n (date +"%H:%M:%S")
    end
    funcsave fish_right_prompt
    #+end_src
