@@ -4,3 +4,5 @@ logs/
 .local
 ustom.el
 .git
+
+modules/neo-emacs/modelinexp/error.log
