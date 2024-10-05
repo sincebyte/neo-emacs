@@ -79,14 +79,33 @@
        (propertize (concat "" charc " ") 'face face))))
   (doom-modeline-def-segment my-custom-segment
     (my-add-x-to-segment 'doom-modeline--major-mode-segment))
+  (doom-modeline-def-segment wechat-msg-count
+    "A custom segment that reads content from a local file."
+    (concat "󰆄" (get-message-count)))
   ;; (display-battery-mode 1)
   (display-time-mode 1)
   (doom-modeline-def-modeline 'main
     '(modals matches buffer-info buffer-position parrot selection-info)
-    '(misc-info minor-modes input-method buffer-encoding my-major-mode process vcs time my-segment))
+    '(misc-info minor-modes wechat-msg-count input-method buffer-encoding my-major-mode process vcs time my-segment))
   (doom-modeline-def-modeline 'vcs
     '(" 󰬎"  matches buffer-info remote-host buffer-position parrot selection-info)
     '(compilation misc-info battery irc mu4e gnus github debug minor-modes buffer-encoding major-mode process time "󰬎 "))
   (doom-modeline-def-modeline 'dashboard
     '(modals buffer-default-directory-simple remote-host)
     '(my-segment)))
+
+
+(defun get-message-count ()
+  "Read the content of a specific file and return it as a string."
+  (let ((file-path "~/.message"))
+    (if (file-exists-p file-path)
+        (with-temp-buffer
+          (insert-file-contents file-path)
+          (string-trim (buffer-string)))
+      "File not found")))
+
+(defun run-applescript ()
+  (interactive "fSelect AppleScript file: ")
+  (let ((output-buffer "*AppleScript Output*"))
+    (shell-command "osascript /Users/van/Desktop/获取微信消息数量.scpt" output-buffer)
+    (display-buffer output-buffer)))

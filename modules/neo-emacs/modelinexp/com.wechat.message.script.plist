@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<!--put this file in ~/Library/LaunchAgents -->
+<dict>
+    <key>Label</key>
+    <string>com.wechat.message.script</string>
+
+    <!-- 设置为每隔 10 秒执行一次 -->
+    <key>StartInterval</key>
+    <integer>10</integer>
+
+    <!-- 指定要执行的 AppleScript 文件 -->
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/osascript</string>
+        <string>/Users/van/.doom.d/modules/neo-emacs/modelinexp/getWechatMessageCount.scpt</string>
+    </array>
+
+    <!-- <key>StandardErrorPath</key> -->
+    <!-- <string>/Users/van/.doom.d/modules/neo-emacs/modelinexp/error.log</string>  <!-\- 错误输出日志 -\-> -->
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <true/>
+</dict>
+</plist>

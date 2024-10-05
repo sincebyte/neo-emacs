@@ -166,6 +166,12 @@
       :map evil-insert-state-map
       "TAB" nil)
 (map! :after evil
+      :map evil-normal-state-map
+      "K" nil)
+(map! :after evil
+      :map evil-normal-state-map
+      "K" '+workspace/switch-right)
+(map! :after evil
       :map evil-insert-state-map
       "TAB" #'yas-expand)
 
