@@ -81,7 +81,7 @@
     (my-add-x-to-segment 'doom-modeline--major-mode-segment))
   (doom-modeline-def-segment wechat-msg-count
     "A custom segment that reads content from a local file."
-    (concat "󰆄" (get-message-count)))
+    (propertize (concat "" (get-message-count)) 'face 'doom-modeline-evil-insert-state))
   ;; (display-battery-mode 1)
   (display-time-mode 1)
   (doom-modeline-def-modeline 'main
@@ -101,7 +101,20 @@
     (if (file-exists-p file-path)
         (with-temp-buffer
           (insert-file-contents file-path)
-          (string-trim (buffer-string)))
+          (let ((content (string-trim (buffer-string))))
+            (cond
+             ((string= content "")  "")
+             ((string= content "0") "")
+             ((string= content "1") "󰆄󰬺")
+             ((string= content "2") "󰆄󰬻")
+             ((string= content "3") "󰆄󰬼")
+             ((string= content "4") "󰆄󰬽")
+             ((string= content "5") "󰆄󰬾")
+             ((string= content "6") "󰆄󰬿")
+             ((string= content "7") "󰆄󰭀")
+             ((string= content "8") "󰆄󰭁")
+             ((string= content "9") "󰆄󰭂")
+             (t "󰆄󰭂"))))
       "File not found")))
 
 (defun run-applescript ()
