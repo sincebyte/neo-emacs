@@ -64,6 +64,7 @@
           ("REPORT"    . (:foreground "#bdc3c7" :weight bold)))))
 
 (after! org
+  (focus-mode)
   (setq evil-shift-width 2)
   (setq org-todo-keywords
         '((sequence "TODO" "DOING" "BLOCK" "TEST" "DONE" "REPORT")))
@@ -228,3 +229,9 @@
   :load-path "~/.doom.d/neoemacs/company-english-helper"
   :config
   (add-hook 'org-mode-hook #'open-company-english-helper))
+
+(use-package focus
+  :after org-roam
+  :config
+  (add-hook 'lsp-mode-hook 'focus-mode)
+  (add-to-list 'focus-mode-to-thing '((org-mode . org-element) (lsp-mode . defun))))

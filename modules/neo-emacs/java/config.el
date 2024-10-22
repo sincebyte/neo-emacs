@@ -41,6 +41,7 @@
 ;; (setq company-text-icons-add-background t)
 ;; (set-face-background 'font-lock-variable-name-face "#00e5ee")
 (add-hook 'java-mode-hook (lambda ()
+                            (focus-mode)
                             (apheleia-global-mode -1)
                             (setq-local lsp-enable-file-watchers t)
                             (tree-sitter-hl-mode)
