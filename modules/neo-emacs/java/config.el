@@ -101,7 +101,7 @@
                                        "-Xmx2G"
                                        "-Xms100m",
                                        (concat "-javaagent:"
-                                               (expand-file-name (concat doom-user-dir "neoemacs/lombok.jar")))))
+                                               (expand-file-name (concat doom-user-dir "neoemacs/lombok1.18.34.jar")))))
 
 ;; ;; ;; java key setting
 (map! :nve "; c"     'comment-line                        )

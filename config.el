@@ -157,7 +157,7 @@
 (map! :n   "SPC t n"  '+workspace/new                        )
 (map! :n   "K"        '+workspace/switch-right               )
 (map! :n   "J"        '+workspace/switch-left                )
-(map! :vn  "g l"      'align-regexp                          )
+(map! :vn  "g l"      'ialign                                )
 (map! :ie  "C-h"     #'backward-delete-char-untabify         )
 (general-def          'insert "C-h"    'delete-backward-char )
 (keyboard-translate ?\C-h ?\C-?                              )
