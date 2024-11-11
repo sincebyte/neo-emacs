@@ -79,7 +79,7 @@
 ;; (load-theme 'color-theme-sanityinc-tomorrow-night t)
 ;; (load-theme 'kaolin t)
 ;; (color-theme-sanityinc-tomorrow-night)
-(setq doom-theme 'doom-one)
+(setq doom-theme 'ef-maris-light)
 
 
 
@@ -194,6 +194,18 @@
 
 (setq +format-on-save-disabled-modes (add-to-list '+format-on-save-disabled-modes 'web-mode))
 (transwin-toggle)
+
+;; eshell binding
+(defun shell/openAndResetCursor ()
+  (interactive)
+  (progn
+    (vterm)  ;; 启动 vterm
+    (run-with-idle-timer
+     0.1 nil 'vterm-reset-cursor-point)))
+(map! :leader
+      :desc "Open terminal" "o t" nil)
+(map! :leader
+      :desc "Open terminal" "o t" #'shell/openAndResetCursor)
 
 (add-to-list 'load-path          user-private-dir )
 (use-package! db-work                             )    ;; load by local, privacy config account or pwd here
