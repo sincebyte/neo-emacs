@@ -128,7 +128,7 @@
   (display-time-mode 1)
   (doom-modeline-def-modeline 'main
     '(my-segment powerline-separator-right powerline-separator-left matches powerline-separator-right powerline-separator-left buffer-info empty-segment
-      powerline-separator-right powerline-separator-left buffer-position powerline-separator-right powerline-separator-right-vert parrot selection-info)
+      powerline-separator-right powerline-separator-left buffer-position empty-segment powerline-separator-right powerline-separator-right-vert parrot selection-info)
     '(misc-info minor-modes wechat-msg-count input-method buffer-encoding powerline-separator-right powerline-separator-left
       my-major-mode powerline-separator-right powerline-separator-left vcs powerline-separator-right powerline-separator-left
       time powerline-separator-right powerline-separator-left my-segment))
