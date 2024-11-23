@@ -13,7 +13,7 @@
 ;;
 ;; - `doom-font' -- the primary font to use
 ;; emacs header line title setting
-;; (setq-default default-frame-alist '((undecorated . t)))
+(setq-default default-frame-alist '((undecorated . t)))
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . nil))
 (add-to-list 'default-frame-alist '(ns-appearance . light))
 (setq-default frame-title-format nil)
@@ -79,7 +79,7 @@
 ;; (load-theme 'color-theme-sanityinc-tomorrow-night t)
 ;; (load-theme 'kaolin t)
 ;; (color-theme-sanityinc-tomorrow-night)
-(setq doom-theme 'ef-maris-light)
+(setq doom-theme 'doom-one)
 
 
 

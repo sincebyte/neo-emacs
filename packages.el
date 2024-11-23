@@ -78,6 +78,7 @@
 (package! verb                )
 (package! focus               )
 (package! ialign              )
+(package! powerline           )
 (package! keyfreq      :recipe (:host github :repo "dacap/keyfreq"))
 (package! awesome-tray :recipe (:host github :repo "manateelazycat/awesome-tray" :branch "master" ))
 (package! bookmark+    :recipe (:host github :repo "emacsmirror/bookmark-plus"   :branch "master" ))
