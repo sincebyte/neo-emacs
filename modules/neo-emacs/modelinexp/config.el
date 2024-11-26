@@ -19,9 +19,55 @@
  doom-modeline-buffer-file-name-style       'buffer-name
  doom-modeline-continuous-word-count-modes  '(java-mode)
  doom-modeline-enable-word-count            t  )
+
+
+(with-eval-after-load 'doom-modeline
+  (defface powerline-evil-normal-state   '((t (:background "nil"   :weight bold))) "")
+  (defface powerline-evil-insert-state   '((t (:background "nil"   :weight bold))) "")
+  (defface powerline-evil-replace-state  '((t (:background "nil"   :weight bold))) "")
+  (defface powerline-evil-motion-state   '((t (:background "nil"   :weight bold))) "")
+  (defface powerline-evil-visual-state   '((t (:background "nil"   :weight bold))) "")
+  (defface powerline-evil-emacs-state    '((t (:background "nil"   :weight bold))) "")
+  (set-face-attribute 'doom-modeline-evil-normal-state nil
+                      :background (face-attribute 'doom-modeline-evil-normal-state :foreground nil t)
+                      :foreground "black"
+                      :weight 'bold)
+  (set-face-attribute 'doom-modeline-evil-insert-state nil
+                      :background (face-attribute 'doom-modeline-evil-insert-state :foreground nil t)
+                      :foreground "black"
+                      :weight 'bold)
+  (set-face-attribute 'doom-modeline-evil-visual-state nil
+                      :background (face-attribute 'doom-modeline-evil-visual-state :foreground nil t)
+                      :foreground "black"
+                      :weight 'bold)
+  (set-face-attribute 'doom-modeline-evil-replace-state nil
+                      :background (face-attribute 'doom-modeline-evil-replace-state :foreground nil t)
+                      :foreground "black"
+                      :weight 'bold)
+  (set-face-attribute 'doom-modeline-evil-motion-state nil
+                      :background (face-attribute 'doom-modeline-evil-motion-state :foreground nil t)
+                      :foreground "black"
+                      :weight 'bold)
+
+  (set-face-attribute 'powerline-evil-normal-state nil
+                      :background (face-attribute 'doom-modeline-evil-normal-state :background nil t)
+                      :weight 'bold)
+  (set-face-attribute 'powerline-evil-insert-state nil
+                      :background (face-attribute 'doom-modeline-evil-insert-state :background nil t)
+                      :weight 'bold)
+  (set-face-attribute 'powerline-evil-visual-state nil
+                      :background (face-attribute 'doom-modeline-evil-visual-state :background nil t)
+                      :weight 'bold)
+  (set-face-attribute 'powerline-evil-replace-state nil
+                      :background (face-attribute 'doom-modeline-evil-replace-state :background nil t)
+                      :weight 'bold)
+  (set-face-attribute 'powerline-evil-motion-state nil
+                      :background (face-attribute 'doom-modeline-evil-motion-state :background nil t)
+                      :weight 'bold)
+  )
 ;; (custom-set-faces
 ;;  '(doom-modeline-evil-normal-state
-;;    ((t (:background "blue" :foreground "white" :weight bold))))
+;;    ((t (:background (face-attribute 'doom-modeline-evil-normal-state :foreground nil t) :foreground (face-attribute 'doom-modeline-evil-normal-state :background nil t) :weight bold))))
 ;;  '(evil-insert-state-tag
 ;;    ((t (:background "red" :foreground "white" :weight bold))))
 ;;  '(evil-visual-state-tag
@@ -40,6 +86,10 @@
   '((t ( :foreground "#98be65" : "#98be65")))
   "Face for bracket line in org-modern-indent."
   :group 'faces)
+
+                                        ; available value of separator
+                                        ;  alternate, arrow, arrow-fade, bar, box, brace, butt,
+;; chamfer, contour, curve, rounded, roundstub, slant, wave, zigzag, and nil.
 (defun fresh/modelineconfig ()
   (doom-modeline-def-segment powerline-separator-right
     "Insert a Powerline separator into the Doom Modeline."
@@ -47,7 +97,7 @@
            (separator-fn (intern (format "powerline-%s-%s"
                                          separator
                                          (cdr powerline-default-separator-dir ))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn 'mode-line 'doom-modeline-evil-normal-state ))))
+      (propertize " " 'display (funcall separator-fn 'mode-line 'doom-modeline-evil-emacs-state ))))
 
   (doom-modeline-def-segment powerline-separator-right-vert
     "Insert a Powerline separator into the Doom Modeline."
@@ -55,16 +105,43 @@
            (separator-fn (intern (format "powerline-%s-%s"
                                          separator
                                          (cdr powerline-default-separator-dir ))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-normal-state 'mode-line ))))
+      (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-emacs-state 'mode-line ))))
 
   (doom-modeline-def-segment powerline-separator-left
-
     "Insert a Powerline separator into the Doom Modeline."
     (let* ((separator 'arrow) ;; 获取当前分隔符
            (separator-fn (intern (format "powerline-%s-%s"
                                          separator
                                          (car powerline-default-separator-dir))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-normal-state 'mode-line)  )))
+      (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-emacs-state 'mode-line)  )))
+
+  (doom-modeline-def-segment powerline-evil-right
+    "Insert a Powerline separator into the Doom Modeline."
+    (let* ((separator 'arrow) ;; 获取当前分隔符
+           (separator-fn (intern (format "powerline-%s-%s"
+                                         separator
+                                         (cdr powerline-default-separator-dir))))) ;; 获取分隔符函数
+      (propertize " " 'display (funcall separator-fn (when (doom-modeline--active)
+                                                       (if (eq evil-state 'normal) 'powerline-evil-normal-state
+                                                         (if (eq evil-state 'insert) 'powerline-evil-insert-state
+                                                           (if (eq evil-state 'visual) 'powerline-evil-visual-state
+                                                             (if (eq evil-state 'replace) 'powerline-evil-replace-state
+                                                               (if (eq evil-state 'motion) 'powerline-evil-motion-state)
+                                                               'powerline-evil-normal-state))))) 'doom-modeline-evil-emacs-state )  )))
+
+  (doom-modeline-def-segment powerline-evil-left
+    "Insert a Powerline separator into the Doom Modeline."
+    (let* ((separator 'arrow) ;; 获取当前分隔符
+           (separator-fn (intern (format "powerline-%s-%s"
+                                         separator
+                                         (car powerline-default-separator-dir))))) ;; 获取分隔符函数
+      (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-emacs-state  (when (doom-modeline--active)
+                                                                                        (if (eq evil-state 'normal) 'powerline-evil-normal-state
+                                                                                          (if (eq evil-state 'insert) 'powerline-evil-insert-state
+                                                                                            (if (eq evil-state 'visual) 'powerline-evil-visual-state
+                                                                                              (if (eq evil-state 'replace) 'powerline-evil-replace-state
+                                                                                                (if (eq evil-state 'motion) 'powerline-evil-motion-state)
+                                                                                                'powerline-evil-normal-state))))) )  )))
 
   (doom-modeline-def-segment my-major-mode
     "The major mode, including environment and text-scale info."
@@ -79,9 +156,9 @@
                              (cadr (assq major-mode delighted-modes)))
                         mode-name))
                    'help-echo "Major mode\n\
-  mouse-1: Display major mode menu\n\
-  mouse-2: Show help for major mode\n\
-  mouse-3: Toggle minor modes"
+                   mouse-1: Display major mode menu\n\
+                   mouse-2: Show help for major mode\n\
+                   mouse-3: Toggle minor modes"
                    'mouse-face 'doom-modeline-highlight
                    'local-map mode-line-major-mode-keymap)
        (when (and doom-modeline-env-version doom-modeline-env--version)
@@ -123,15 +200,15 @@
     (propertize (concat "" (get-message-count)) 'face 'doom-modeline-evil-insert-state))
 
   (doom-modeline-def-segment empty-segment
-    (propertize (concat " " "") 'face 'doom-modeline-evil-insert-state))
+    (propertize (concat " " "") 'face 'doom-modeline-evil-emacs-state))
   ;; (display-battery-mode 1)
   (display-time-mode 1)
   (doom-modeline-def-modeline 'main
-    '(my-segment powerline-separator-right powerline-separator-left matches powerline-separator-right powerline-separator-left buffer-info empty-segment
+    '(my-segment powerline-evil-right powerline-separator-left matches powerline-separator-right powerline-separator-left buffer-info empty-segment
       powerline-separator-right powerline-separator-left buffer-position empty-segment powerline-separator-right powerline-separator-right-vert parrot selection-info)
     '(misc-info minor-modes wechat-msg-count input-method buffer-encoding powerline-separator-right powerline-separator-left
       my-major-mode powerline-separator-right powerline-separator-left vcs powerline-separator-right powerline-separator-left
-      time powerline-separator-right powerline-separator-left my-segment))
+      time powerline-separator-right powerline-evil-left my-segment))
   (doom-modeline-def-modeline 'vcs
     '(" 󰬎"  matches buffer-info remote-host buffer-position parrot selection-info)
     '(compilation misc-info battery irc mu4e gnus github debug minor-modes buffer-encoding major-mode process time "󰬎 "))
@@ -178,3 +255,8 @@
   :config
   (setq powerline-default-separator 'arrow) ;; 分隔符样式
   (setq powerline-default-separator-dir '(right . left)))
+
+(add-hook 'doom-big-font-mode-hook
+          (lambda ()
+            (setq powerline-scale (if doom-big-font-mode 1.5 1))
+            (powerline-reset)))
