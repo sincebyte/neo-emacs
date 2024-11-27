@@ -201,12 +201,12 @@
   (doom-modeline-def-modeline 'main
     '(my-segment powerline-evil-right powerline-separator-left matches powerline-separator-right powerline-separator-left buffer-info empty-segment
       powerline-separator-right powerline-separator-left buffer-position empty-segment powerline-separator-right powerline-separator-right-vert parrot selection-info)
-    '(misc-info minor-modes eyeMonitor-count wechat-msg-count input-method buffer-encoding powerline-separator-right powerline-separator-left
+    '(misc-info minor-modes wechat-msg-count input-method buffer-encoding powerline-separator-right powerline-separator-left
       my-major-mode powerline-separator-right powerline-separator-left vcs powerline-separator-right powerline-separator-left
-      time powerline-separator-right powerline-evil-left my-segment))
+      time eyeMonitor-count powerline-separator-right powerline-evil-left my-segment))
   (doom-modeline-def-modeline 'vcs
-    '(my-segment powerline-evil-right  matches buffer-info remote-host buffer-position parrot selection-info)
-    '(compilation misc-info battery irc mu4e gnus github debug minor-modes buffer-encoding major-mode process time powerline-evil-left my-segment))
+    '(my-segment powerline-evil-right powerline-separator-left matches buffer-info remote-host buffer-position parrot selection-info)
+    '(compilation misc-info battery irc mu4e gnus github debug minor-modes buffer-encoding major-mode process time eyeMonitor-count powerline-separator-right powerline-evil-left my-segment))
   (doom-modeline-def-modeline 'dashboard
     '(modals buffer-default-directory-simple remote-host)
     '(my-segment)))
