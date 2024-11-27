@@ -1,12 +1,5 @@
 (setq
  ;; doom-modeline-height                       30
- evil-emacs-state-tag                       (if (display-graphic-p) "󰬌" "▇▇▇")
- evil-insert-state-tag                      (if (display-graphic-p) "󰬐" "▇▇▇")
- evil-motion-state-tag                      (if (display-graphic-p) "󰬔" "▇▇▇")
- ;; evil-normal-state-tag                      (if (display-graphic-p) "󰬕" "▇▇▇")
- evil-operator-state-tag                    (if (display-graphic-p) "󰬖" "▇▇▇")
- evil-visual-state-tag                      (if (display-graphic-p) "󰬝" "▇▇▇")
- evil-replace-state-tag                     (if (display-graphic-p) "󰬙" "▇▇▇")
  doom-modeline-modal-icon                   nil
  doom-modeline-icon                         nil
  doom-modeline-time-icon                    nil
@@ -28,6 +21,12 @@
   (defface powerline-evil-motion-state   '((t (:background "nil"   :weight bold))) "")
   (defface powerline-evil-visual-state   '((t (:background "nil"   :weight bold))) "")
   (defface powerline-evil-emacs-state    '((t (:background "nil"   :weight bold))) "")
+  (set-face-attribute 'doom-modeline-time nil
+                      :foreground (face-attribute 'org-level-2 :foreground nil t)
+                      :weight 'bold)
+  (set-face-attribute 'doom-modeline-buffer-file nil
+                      :foreground (face-attribute 'org-level-3 :foreground nil t)
+                      :weight 'bold)
   (set-face-attribute 'doom-modeline-evil-normal-state nil
                       :background (face-attribute 'doom-modeline-evil-normal-state :foreground nil t)
                       :foreground "black"
@@ -65,28 +64,12 @@
                       :background (face-attribute 'doom-modeline-evil-motion-state :background nil t)
                       :weight 'bold)
   )
-;; (custom-set-faces
-;;  '(doom-modeline-evil-normal-state
-;;    ((t (:background (face-attribute 'doom-modeline-evil-normal-state :foreground nil t) :foreground (face-attribute 'doom-modeline-evil-normal-state :background nil t) :weight bold))))
-;;  '(evil-insert-state-tag
-;;    ((t (:background "red" :foreground "white" :weight bold))))
-;;  '(evil-visual-state-tag
-;;    ((t (:background "orange" :foreground "black" :weight bold))))
-;;  '(evil-replace-state-tag
-;;    ((t (:background "purple" :foreground "white" :weight bold))))
-;;  '(evil-motion-state-tag
-;;    ((t (:background "cyan" :foreground "black" :weight bold)))))
 
 (after! doom-modeline
   (fresh/modelineconfig)
   (add-hook '+workspace-new-hook #'fresh/modelineconfig))
 (after! dashboard
   (fresh/modelineconfig))
-(defface doom-modeline-evil-normal-state-vert
-  '((t ( :foreground "#98be65" : "#98be65")))
-  "Face for bracket line in org-modern-indent."
-  :group 'faces)
-
                                         ; available value of separator
                                         ;  alternate, arrow, arrow-fade, bar, box, brace, butt,
 ;; chamfer, contour, curve, rounded, roundstub, slant, wave, zigzag, and nil.
@@ -184,12 +167,12 @@
                        (if (eq evil-state 'motion) 'doom-modeline-motion-visual-state)
                        'doom-modeline-evil-normal-state)))))))
           (charc
-           (if (eq evil-state 'normal) (if (display-graphic-p)           " NORMAL "  "▇▇▇")
-             (if (eq evil-state 'insert) (if (display-graphic-p)         " INSERT "  "▇▇▇")
-               (if (eq evil-state 'visual) (if (display-graphic-p)       " VISUAL "  "▇▇▇")
-                 (if (eq evil-state 'replace) (if (display-graphic-p)    " REPLACE " "▇▇▇")
-                   (if (eq evil-state 'emacs) (if (display-graphic-p)    " EMACS "   "▇▇▇")
-                     (if (eq evil-state 'motion) (if (display-graphic-p) " MOTION "  "▇▇▇"))
+           (if (eq evil-state 'normal) (if (display-graphic-p)           " NORMAL "  " NORMAL "  )
+             (if (eq evil-state 'insert) (if (display-graphic-p)         " INSERT "  " INSERT "  )
+               (if (eq evil-state 'visual) (if (display-graphic-p)       " VISUAL "  " VISUAL "  )
+                 (if (eq evil-state 'replace) (if (display-graphic-p)    " REPLACE " " REPLACE " )
+                   (if (eq evil-state 'emacs) (if (display-graphic-p)    " EMACS "   " EMACS "   )
+                     (if (eq evil-state 'motion) (if (display-graphic-p) " MOTION "  " MOTION "  ))
                      "▇")))))))
       (concat
        (propertize (concat "" charc "") 'face face))))
@@ -197,21 +180,33 @@
     (my-add-x-to-segment 'doom-modeline--major-mode-segment))
   (doom-modeline-def-segment wechat-msg-count
     "A custom segment that reads content from a local file."
-    (propertize (concat "" (get-message-count)) 'face 'doom-modeline-evil-insert-state))
+    (propertize (concat "" (get-message-count)) 'face 'doom-modeline-evil-emacs-state))
+  (doom-modeline-def-segment eyeMonitor-count
+    "A custom segment that reads content from a local file."
+    (let ((count (get-eyeMonitor-count)))  ; 定义局部变量 count
+      (cond
+       ((<= count 20) (propertize (concat "󰫃" " ") 'face 'org-level-6) )
+       ((<= count 40) (propertize (concat "󰫄" " ") 'face 'org-level-4) )
+       ((<= count 60) (propertize (concat "󰫅" " ") 'face 'org-level-1) )
+       ((<= count 80) (propertize (concat "󰫆" " ") 'face 'org-level-5) )
+       ((<= count 99) (propertize (concat "󰫇" " ") 'face 'nerd-icons-lred) )
+       ((= count 100) (propertize (concat "󰫈" " ") 'face 'error) )
+       (t (propertize (concat "󰫃" " ") 'face 'diary)))))
 
   (doom-modeline-def-segment empty-segment
     (propertize (concat " " "") 'face 'doom-modeline-evil-emacs-state))
+
   ;; (display-battery-mode 1)
   (display-time-mode 1)
   (doom-modeline-def-modeline 'main
     '(my-segment powerline-evil-right powerline-separator-left matches powerline-separator-right powerline-separator-left buffer-info empty-segment
       powerline-separator-right powerline-separator-left buffer-position empty-segment powerline-separator-right powerline-separator-right-vert parrot selection-info)
-    '(misc-info minor-modes wechat-msg-count input-method buffer-encoding powerline-separator-right powerline-separator-left
+    '(misc-info minor-modes eyeMonitor-count wechat-msg-count input-method buffer-encoding powerline-separator-right powerline-separator-left
       my-major-mode powerline-separator-right powerline-separator-left vcs powerline-separator-right powerline-separator-left
       time powerline-separator-right powerline-evil-left my-segment))
   (doom-modeline-def-modeline 'vcs
-    '(" 󰬎"  matches buffer-info remote-host buffer-position parrot selection-info)
-    '(compilation misc-info battery irc mu4e gnus github debug minor-modes buffer-encoding major-mode process time "󰬎 "))
+    '(my-segment powerline-evil-right  matches buffer-info remote-host buffer-position parrot selection-info)
+    '(compilation misc-info battery irc mu4e gnus github debug minor-modes buffer-encoding major-mode process time powerline-evil-left my-segment))
   (doom-modeline-def-modeline 'dashboard
     '(modals buffer-default-directory-simple remote-host)
     '(my-segment)))
@@ -238,6 +233,18 @@
              ((string= content "9") "󰆄")
              (t "󰆄"))))
       "File not found")))
+
+(defun get-eyeMonitor-count ()
+  "Read the content of a specific file and return it as a number."
+  (let ((file-path "~/.eyeMonitor"))
+    (if (file-exists-p file-path)
+        (with-temp-buffer
+          (insert-file-contents file-path)  ; 读取文件内容到缓冲区
+          (let ((content (string-trim (buffer-string))))  ; 去除两端空白
+            (if (string-empty-p content)  ; 如果内容为空，返回 0
+                0
+              (string-to-number content))))  ; 转换为数字
+      0)))  ; 如果文件不存在，返回 0
 
 (defun run-applescript ()
   (interactive "fSelect AppleScript file: ")

@@ -13,11 +13,11 @@
  ;; company-frontends                       '(company-pseudo-tooltip-frontend company-echo-metadata-frontend)
  ;; company-dabbrev-ignore-case             nil
  ;; lsp-enable-file-watchers                   t
- lsp-progress-prefix                        "⧗ "
+ lsp-progress-prefix                        "󰫆 "
  company-format-margin-function             'company-text-icons-margin
- company-text-icons-format                  " ⎨%s⎬ "
+ company-text-icons-format                  "❬%s❭"
  company-text-icons-add-background          t
- company-text-face-extra-attributes         '(:weight bold :slant italic)
+ company-text-face-extra-attributes         '(:weight bold )
  company-tooltip-flip-when-above            t
  company-show-quick-access                  nil
  +format-on-save-disabled-modes             (add-to-list '+format-on-save-disabled-modes 'c++-mode)
@@ -43,7 +43,7 @@
 (add-hook 'java-mode-hook (lambda ()
                             (focus-mode)
                             (apheleia-global-mode -1)
-                            (setq-local lsp-enable-file-watchers t)
+                            (setq-local lsp-enable-file-watchers nil)
                             (tree-sitter-hl-mode)
                             (setq display-line-numbers                       t
                                   lsp-java-compile-null-analysis-mode        "automatic"
@@ -162,3 +162,14 @@ evil-normal-state-map
 
 ;; (use-package pulsing-cursor
 ;;   :config (pulsing-cursor-mode +1))
+
+(with-eval-after-load 'lsp-java
+  (setq lsp-file-watch-ignored-directories
+        '("[/\\\\]\\.git$"
+          "[/\\\\]\\.m2$"
+          "[/\\\\]node_modules$"
+          "[/\\\\]\\.classpath$"
+          "[/\\\\]\\.project$"
+          "[/\\\\]\\.settings$"
+          "[/\\\\]target$"
+          "[/\\\\]build$")))

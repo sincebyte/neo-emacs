@@ -56,3 +56,4 @@
       :ne "J" #'+workspace/switch-left)
 
 (setq bookmark-default-file "~/org/org-roam/bookmarks")
+(setq consult-ripgrep-default-directory (projectile-project-root))
