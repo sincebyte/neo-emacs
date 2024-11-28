@@ -193,6 +193,14 @@
        ((= count 100) (propertize (concat "󰫈" " ") 'face 'error) )
        (t (propertize (concat "󰫃" " ") 'face 'diary)))))
 
+  (doom-modeline-def-segment hr-count
+    "A custom segment that reads content from a local file."
+    (let ((count (get-hr-count)))  ; 定义局部变量 count
+      (concat
+       (propertize " 󰐰 " 'face 'error)  ;; 图标的颜色
+       (propertize (number-to-string count) 'face 'org-todo)  ;; 数字的颜色
+       (propertize " " 'face 'org-table))))
+
   (doom-modeline-def-segment empty-segment
     (propertize (concat " " "") 'face 'doom-modeline-evil-emacs-state))
 
@@ -203,7 +211,7 @@
       powerline-separator-right powerline-separator-left buffer-position empty-segment powerline-separator-right powerline-separator-right-vert parrot selection-info)
     '(misc-info minor-modes wechat-msg-count input-method buffer-encoding powerline-separator-right powerline-separator-left
       my-major-mode powerline-separator-right powerline-separator-left vcs powerline-separator-right powerline-separator-left
-      time eyeMonitor-count powerline-separator-right powerline-evil-left my-segment))
+      time eyeMonitor-count powerline-separator-right powerline-separator-left hr-count powerline-separator-right powerline-evil-left my-segment))
   (doom-modeline-def-modeline 'vcs
     '(my-segment powerline-evil-right powerline-separator-left matches buffer-info remote-host buffer-position parrot selection-info)
     '(compilation misc-info battery irc mu4e gnus github debug minor-modes buffer-encoding major-mode process time eyeMonitor-count powerline-separator-right powerline-evil-left my-segment))
@@ -233,6 +241,14 @@
              ((string= content "9") "󰆄")
              (t "󰆄"))))
       "File not found")))
+
+(defun get-hr-count ()
+  "Read the content of a specific file and return it as a string."
+  (let ((file-path "~/.hr"))
+    (if (file-exists-p file-path)
+        (with-temp-buffer
+          (insert-file-contents file-path)
+          (string-to-number (string-trim (buffer-string)))) 46)))
 
 (defun get-eyeMonitor-count ()
   "Read the content of a specific file and return it as a number."
