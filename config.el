@@ -32,15 +32,15 @@
                  cjk-font-size 26))
   (progn (set-selection-coding-system 'utf-16le-dos)
          ;; (setq doom-font (font-spec :family "Kode Mono" :size 16 )
-         (setq doom-font (font-spec :family "MonoLisa" :size 16 )
+         (setq doom-font (font-spec :family "IBM Plex Mono" :size 18 )
                cjk-font "仓耳今楷01-9128"
-               cjk-font-size 20)))
+               cjk-font-size 22)))
 
-(setq doom-big-font (font-spec :family "MonoLisa" :size 24 ))
+(setq doom-big-font (font-spec :family "IBM Plex Mono" :size 22 ))
 (defun my/setup-big-cjk-fonts ()
   "Setup CJK fonts for Doom Big Font Mode."
   (dolist (charset '(kana han symbol cjk-misc bopomofo))
-    (set-fontset-font t charset (font-spec :family "仓耳今楷01-9128" :size 30))))
+    (set-fontset-font t charset (font-spec :family "仓耳今楷01-9128" :size 26))))
 (add-hook 'doom-big-font-mode-hook #'my/setup-big-cjk-fonts)
 
 ;; (progn (set-selection-coding-system 'utf-16le-dos)
@@ -80,6 +80,9 @@
 ;; (load-theme 'kaolin t)
 ;; (color-theme-sanityinc-tomorrow-night)
 ;; (setq doom-theme 'kaolin-bubblegum)
+;; (setq doom-theme 'sanityinc-tomorrow-eighties)
+(setq doom-theme 'doom-one)
+
 
 
 

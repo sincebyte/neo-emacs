@@ -15,7 +15,7 @@
  ;; lsp-enable-file-watchers                   t
  lsp-progress-prefix                        "󰫆 "
  company-format-margin-function             'company-text-icons-margin
- company-text-icons-format                  "❬%s❭"
+ company-text-icons-format                  "<%s>"
  company-text-icons-add-background          t
  company-text-face-extra-attributes         '(:weight bold )
  company-tooltip-flip-when-above            t

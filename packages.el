@@ -79,11 +79,13 @@
 (package! focus               )
 (package! ialign              )
 (package! powerline           )
+;; (package! color-theme-sanityinc-tomorrow )
 (package! keyfreq      :recipe (:host github :repo "dacap/keyfreq"))
 (package! awesome-tray :recipe (:host github :repo "manateelazycat/awesome-tray" :branch "master" ))
 (package! bookmark+    :recipe (:host github :repo "emacsmirror/bookmark-plus"   :branch "master" ))
 (package! emt          :recipe (:host github :repo "roife/emt"                   :branch "master" ))
 (package! pulsing-cursor :recipe (:host github :repo "jasonjckn/pulsing-cursor"))
+
 ;; (package! org-clock-reminder :recipe (:host github :repo "inickey/org-clock-reminder" :branch "master"))
 
 ;; (unpin! dirvish)

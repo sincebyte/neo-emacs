@@ -26,3 +26,5 @@
 ;; (setq highlight-indent-guides-auto-enabled nil)
 ;;(set-face-foreground 'highlight-indent-guides-character-face "dimgray")
 (setq highlight-indent-guides-responsive 'stack)
+
+;; (require 'color-theme-sanityinc-tomorrow)

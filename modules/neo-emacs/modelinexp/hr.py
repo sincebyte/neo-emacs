@@ -1,6 +1,5 @@
 import asyncio
 from bleak import BleakClient, BleakError
-import time
 
 # 设备的蓝牙地址
 DEVICE_ADDRESS = "2A964ADD-92DC-C48F-80AB-6F403EC8A03A"
@@ -27,13 +26,15 @@ async def run():
                 await client.start_notify(
                     HEART_RATE_MEASUREMENT_UUID, heart_rate_notification_handler
                 )
-                # 保持连接并接收通知
-                await asyncio.sleep(10)
+                while client.is_connected:
+                    # 保持连接并接收通知
+                    await asyncio.sleep(10)
                 # 停止通知
                 # await client.stop_notify(HEART_RATE_MEASUREMENT_UUID)
-        except BleakError as e:
-            print(f"Error: {e}. Retrying in 1 minute...")
-            await asyncio.sleep(60)  # 等待 60 秒后重新尝试
+        except (BleakError, asyncio.TimeoutError):
+            await asyncio.sleep(10)
+        except Exception:
+            await asyncio.sleep(10)
 
 
 # 运行异步任务
