@@ -21,6 +21,7 @@
   (defface powerline-evil-motion-state   '((t (:background "nil"   :weight bold))) "")
   (defface powerline-evil-visual-state   '((t (:background "nil"   :weight bold))) "")
   (defface powerline-evil-emacs-state    '((t (:background "nil"   :weight bold))) "")
+  (custom-set-faces '(doom-modeline-panel ((t (:background nil :foreground "#da8548" :weight bold)))))
   (set-face-attribute 'doom-modeline-time nil
                       :foreground (face-attribute 'org-level-2 :foreground nil t)
                       :weight 'bold)
@@ -207,15 +208,13 @@
   ;; (display-battery-mode 1)
   (display-time-mode 1)
   (doom-modeline-def-modeline 'main
-    '(my-segment powerline-evil-right powerline-separator-left buffer-info matches
-      powerline-separator-right powerline-separator-left buffer-position parrot selection-info)
+    '(my-segment powerline-evil-right powerline-separator-left buffer-info matches parrot selection-info)
     '(misc-info minor-modes wechat-msg-count input-method buffer-encoding powerline-separator-right powerline-separator-left
       my-major-mode powerline-separator-right powerline-separator-left vcs powerline-separator-right powerline-separator-left
-      time eyeMonitor-count powerline-separator-right powerline-separator-left hr-count))
+      time eyeMonitor-count))
   (doom-modeline-def-modeline 'vcs
-    '(my-segment powerline-evil-right powerline-separator-left matches buffer-info remote-host buffer-position parrot selection-info)
-    '(compilation misc-info battery irc mu4e gnus github debug minor-modes buffer-encoding major-mode process time eyeMonitor-count
-      powerline-separator-right powerline-separator-left hr-count ))
+    '(my-segment powerline-evil-right powerline-separator-left matches buffer-info remote-host parrot selection-info)
+    '(compilation misc-info battery irc mu4e gnus github debug minor-modes buffer-encoding major-mode process time eyeMonitor-count))
   (doom-modeline-def-modeline 'dashboard
     '(modals buffer-default-directory-simple remote-host)
     '(my-segment)))
@@ -284,4 +283,9 @@
           (lambda ()
             (setq powerline-scale (if doom-big-font-mode 1.5 1))
             (powerline-reset)))
+(add-hook 'doom-modeline-mode-hook
+          (lambda ()
+            (setq doom-modeline-spc "")    ; 替换普通分隔符
+            (setq doom-modeline-wspc ""))) ; 替换宽空格
+
 (run-with-timer 0 1 'force-mode-line-update)

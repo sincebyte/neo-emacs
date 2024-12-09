@@ -1,4 +1,6 @@
 (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
+(setq projectile-project-root-files '(".git"))
+
 
 (map! :ne "SPC z"   'consult-find       )
 (map! :ne "SPC v c" 'consult-ripgrep    )
@@ -57,3 +59,5 @@
 
 (setq bookmark-default-file "~/org/org-roam/bookmarks")
 (setq consult-ripgrep-default-directory (projectile-project-root))
+
+(projectile-add-known-project "~/ZY/workspace/minex-work/")
