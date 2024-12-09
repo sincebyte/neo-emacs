@@ -4,6 +4,7 @@ import AppKit
 from PyObjCTools.AppHelper import callLater, runEventLoop
 
 from Cocoa import (
+    NSEvent,
     NSApplication,
     NSWindow,
     NSRect,
@@ -60,35 +61,28 @@ async def run():
         except Exception:
             await asyncio.sleep(10)
 
+def get_mouse_position():
+    mouse_location = NSEvent.mouseLocation()
+    mouse_location.x -= 15
+    mouse_location.y -= 15
+    return mouse_location
 
 class DraggableWindow(NSWindow):
-    def __init__(self, frame):
-        super(DraggableWindow, self).__init__()
-        self.setFrame_(frame)
-        self.setStringValue_("Drag Me!")
-        self.setFont_(NSFont.fontWithName_size_("IBM Plex Mono", 24))
-
-        # 初始化鼠标按下时的位置
-        self.mouse_initial_pos = None
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.setAcceptsMouseMovedEvents_(True)
 
     def mouseDown_(self, event):
-        # 记录鼠标按下的位置
-        self.mouse_initial_pos = event.locationInWindow()
+        # 获取初始鼠标位置
+        self.mouse_initial_pos = get_mouse_position()
 
     def mouseDragged_(self, event):
-        if self.mouse_initial_pos is not None:
-            # 获取鼠标拖动的位移，分别计算 x 和 y 的差值
-            delta_x = event.locationInWindow().x - self.mouse_initial_pos.x
-            delta_y = event.locationInWindow().y - self.mouse_initial_pos.y
-
-            # 创建新的位置，手动计算 x 和 y 坐标
-            new_origin_x = self.frame().origin.x + delta_x
-            new_origin_y = self.frame().origin.y + delta_y
-
-            # 设置新的 frame
-            self.setFrameOrigin_(NSPoint(new_origin_x, new_origin_y))
-            self.mouse_initial_pos = event.locationInWindow()
-
+        if self.mouse_initial_pos:
+            # 获取当前鼠标位置（相对于窗口）
+            current_mouse_pos = get_mouse_position()
+            self.setFrameOrigin_(NSPoint(current_mouse_pos.x, current_mouse_pos.y))
+            # 更新初始鼠标位置
+            self.mouse_initial_pos = current_mouse_pos
 
 class BlurWindowApp:
     def __init__(self):
@@ -121,6 +115,17 @@ class BlurWindowApp:
 
         # 激活应用
         self.app.activateIgnoringOtherApps_(True)
+
+    def mouseDown_(self, event):
+        # 获取初始鼠标位置
+        self.mouse_initial_pos = event.locationInWindow()
+
+    def mouseDragged_(self, event):
+        if self.mouse_initial_pos:
+            # 获取当前鼠标位置（相对于窗口）
+            delta = event.locationInWindow() - self.mouse_initial_pos
+            # 调用系统方法自动处理拖动
+            self.setFrameOrigin_(self.frame().origin + delta)
 
     def set_rounded_corners(self, radius):
         """为窗口设置圆角"""
@@ -182,7 +187,7 @@ class BlurWindowApp:
         alpha = 1.0
         custom_color = NSColor.colorWithCalibratedRed_green_blue_alpha_(
             red, green, blue, alpha
-        )  # 淡蓝色
+        )  # 淡红色
 
         fred = 135 / 255.0
         fgreen = 180 / 255.0
@@ -226,6 +231,9 @@ class BlurWindowApp:
 
     def update_label(self, number):
         self.label.setStringValue_(str(number))
+
+    def update_icon_alpha(self, rcolor):
+        self.labelIcon.setTextColor_(rcolor)
 
 
 def start_async_loop(loop):
