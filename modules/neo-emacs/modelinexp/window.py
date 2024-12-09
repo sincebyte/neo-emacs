@@ -66,7 +66,7 @@ class DraggableWindow(NSWindow):
         super(DraggableWindow, self).__init__()
         self.setFrame_(frame)
         self.setStringValue_("Drag Me!")
-        self.setFont_(NSFont.fontWithName_size_("Helvetica", 24))
+        self.setFont_(NSFont.fontWithName_size_("IBM Plex Mono", 24))
 
         # 初始化鼠标按下时的位置
         self.mouse_initial_pos = None
@@ -103,7 +103,8 @@ class BlurWindowApp:
 
         # 创建窗口
         self.window = (
-            DraggableWindow.alloc().initWithContentRect_styleMask_backing_defer_(
+            DraggableWindow.alloc()
+            .initWithContentRect_styleMask_backing_defer_(
                 NSRect((100, 100), (80, 30)),  # 窗口位置和大小
                 window_style,  # 窗口样式
                 2,  # 缓冲区存储
@@ -164,7 +165,7 @@ class BlurWindowApp:
     def add_number_label(self, number):
         # 创建文本框（只读，用于显示数字）
         font = NSFont.systemFontOfSize_(24)
-        fontSmall = NSFont.systemFontOfSize_(18)
+        fontSmall = NSFont.fontWithName_size_("IBM Plex Mono", 20)
         font_manager = AppKit.NSFontManager.sharedFontManager()
         italic_font = font_manager.convertFont_toHaveTrait_(
             fontSmall, AppKit.NSFontItalicTrait
