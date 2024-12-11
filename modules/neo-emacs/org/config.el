@@ -235,3 +235,7 @@
   :config
   (add-hook 'lsp-mode-hook 'focus-mode)
   (add-to-list 'focus-mode-to-thing '((org-mode . org-element) (lsp-mode . defun))))
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((gnuplot . t)))

@@ -13,6 +13,7 @@
  ;; company-frontends                       '(company-pseudo-tooltip-frontend company-echo-metadata-frontend)
  ;; company-dabbrev-ignore-case             nil
  ;; lsp-enable-file-watchers                   t
+ indent-guides-char                         ?│
  lsp-progress-prefix                        "󰫆 "
  company-format-margin-function             'company-text-icons-margin
  company-text-icons-format                  "<%s>"
@@ -55,9 +56,9 @@
                                   ;; lsp-ui-sideline-enable                     nil
                                   ;; lsp-ui-sideline-show-diagnostics           t
                                   ;; lsp-ui-sideline-show-hover                 t
-                                  lsp-ui-sideline-diagnostic-max-lines       1
-                                  lsp-ui-sideline-diagnostic-max-line-length 15
-                                  lsp-ui-sideline-update-mode                'line
+                                  lsp-ui-sideline-diagnostic-max-lines       2
+                                  lsp-ui-sideline-diagnostic-max-line-length 550
+                                  lsp-ui-sideline-update-mode                'point
                                   lsp-idle-delay                             0.1
                                   lsp-signature-render-documentation         nil
                                   lsp-signature-auto-activate                t
