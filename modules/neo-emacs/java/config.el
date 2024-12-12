@@ -46,6 +46,7 @@
                             (apheleia-global-mode -1)
                             (setq-local lsp-enable-file-watchers nil)
                             (tree-sitter-hl-mode)
+                            (indent-bars-mode 1)
                             (setq display-line-numbers                       t
                                   lsp-java-compile-null-analysis-mode        "automatic"
                                   ;; company-text-icons-format                  "%s ⇢ "
