@@ -2,7 +2,7 @@ rREADME.html
 logs/
 .DS_Store
 .local
-ustom.el
+custom.el
 .git
 
 modules/neo-emacs/modelinexp/error.log
