@@ -310,7 +310,7 @@ If you are using fish shell ,fortunately there have some optimize config prepare
    #+begin_src shell
    funced fish_right_prompt -i
    function fish_right_prompt
-       echo -n (date +"%H:%M:%S")
+       echo -n (date +"%H:%M:%S ")
    end
    funcsave fish_right_prompt
    #+end_src

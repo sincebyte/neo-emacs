@@ -49,7 +49,8 @@ async def run():
             async with BleakClient(DEVICE_ADDRESS) as client:
                 # 启动通知
                 await client.start_notify(
-                    HEART_RATE_MEASUREMENT_UUID, heart_rate_notification_handler
+                    HEART_RATE_MEASUREMENT_UUID,
+                    heart_rate_notification_handler
                 )
                 while client.is_connected:
                     # 保持连接并接收通知
