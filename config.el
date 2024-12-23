@@ -19,6 +19,7 @@
 (setq-default frame-title-format nil)
 (setq ns-use-proxy-icon nil)
 
+
 ;; max width and height but not fullscreen
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 ;; full screen
@@ -81,8 +82,9 @@
 ;; (color-theme-sanityinc-tomorrow-night)
 ;; (setq doom-theme 'kaolin-bubblegum)
 ;; (setq doom-theme 'sanityinc-tomorrow-eighties)
-(setq doom-theme 'doom-one)
-
+(setq doom-theme 'doom-tomorrow-night)
+;; (after! doom-themes
+;;   (load-theme 'doom-nano-dark t))
 
 
 

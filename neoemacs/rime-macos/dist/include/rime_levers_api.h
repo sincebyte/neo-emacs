@@ -13,18 +13,24 @@
 extern "C" {
 #endif
 
-typedef struct { char placeholder; } RimeCustomSettings;
+typedef struct {
+  char placeholder;
+} RimeCustomSettings;
 
-typedef struct { char placeholder; } RimeSwitcherSettings;
+typedef struct {
+  char placeholder;
+} RimeSwitcherSettings;
 
-typedef struct { char placeholder; } RimeSchemaInfo;
+typedef struct {
+  char placeholder;
+} RimeSchemaInfo;
 
 typedef struct {
   void* ptr;
   size_t i;
 } RimeUserDictIterator;
 
-typedef struct rime_levers_api_t {
+typedef struct RIME_FLAVORED(rime_levers_api_t) {
   int data_size;
 
   RimeCustomSettings* (*custom_settings_init)(const char* config_id,
@@ -32,10 +38,18 @@ typedef struct rime_levers_api_t {
   void (*custom_settings_destroy)(RimeCustomSettings* settings);
   Bool (*load_settings)(RimeCustomSettings* settings);
   Bool (*save_settings)(RimeCustomSettings* settings);
-  Bool (*customize_bool)(RimeCustomSettings* settings, const char* key, Bool value);
-  Bool (*customize_int)(RimeCustomSettings* settings, const char* key, int value);
-  Bool (*customize_double)(RimeCustomSettings* settings, const char* key, double value);
-  Bool (*customize_string)(RimeCustomSettings* settings, const char* key, const char* value);
+  Bool (*customize_bool)(RimeCustomSettings* settings,
+                         const char* key,
+                         Bool value);
+  Bool (*customize_int)(RimeCustomSettings* settings,
+                        const char* key,
+                        int value);
+  Bool (*customize_double)(RimeCustomSettings* settings,
+                           const char* key,
+                           double value);
+  Bool (*customize_string)(RimeCustomSettings* settings,
+                           const char* key,
+                           const char* value);
   Bool (*is_first_run)(RimeCustomSettings* settings);
   Bool (*settings_is_modified)(RimeCustomSettings* settings);
   Bool (*settings_get_config)(RimeCustomSettings* settings, RimeConfig* config);
@@ -68,9 +82,10 @@ typedef struct rime_levers_api_t {
 
   // patch a list or a map
   Bool (*customize_item)(RimeCustomSettings* settings,
-                         const char* key, RimeConfig* value);
+                         const char* key,
+                         RimeConfig* value);
 
-} RimeLeversApi;
+} RIME_FLAVORED(RimeLeversApi);
 
 #ifdef __cplusplus
 }

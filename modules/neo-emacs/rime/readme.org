@@ -5,7 +5,8 @@
 
 * Install Librime
 ** how to get librime on mac?
-- M-x install-package rime
+- from offical: https://github.com/rime/librime
+- from elpa: M-x install-package rime
 unzip rime-1.5.3-osx.zip -d ~/.emacs.d/librime
 ** how to get librime on windows?
 on window we need [[https://scoop.sh/]].After that [[https://github.com/DogLooksGood/emacs-rime/blob/master/INSTALLATION.org][install librime]]

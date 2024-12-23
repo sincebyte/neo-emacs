@@ -7,6 +7,14 @@
   :defer t
   :after nxml-mode)
 
+(use-package prism
+  :defer t
+  :config
+  (prism-set-colors :lightens '(0 5 10) :desaturations '(-2.5 0 2.5)
+    :colors (-map #'doom-color
+                  '(red orange yellow green blue violet))))
+
+
 (setq ;;company-box-doc-enable                   nil
  company-tooltip-limit                      7
  ;; company-auto-update-doc                    nil
@@ -30,18 +38,23 @@
       lsp-warn-no-matched-clients nil)
 (setq-default flymake-no-changes-timeout 30)
 (add-hook 'web-mode-hook (lambda ()
+                           (prism-mode)
                            (setq display-line-numbers                       t
                                  lsp-modeline-code-actions-enable           nil
                                  +format-on-save-disabled-modes (add-to-list '+format-on-save-disabled-modes 'web-mode)
                                  doom-modeline-icon                         nil)))
 (add-hook 'js-mode-hook (lambda ()
+                          ;; (prism-mode)
                           (setq display-line-numbers                        t)))
 (add-hook 'lisp-mode-hook (lambda ()
+                            (focus-mode)
+                            ;; (prism-mode)
                             (setq display-line-numbers                      t)))
 
 ;; (setq company-text-icons-add-background t)
 ;; (set-face-background 'font-lock-variable-name-face "#00e5ee")
 (add-hook 'java-mode-hook (lambda ()
+                            ;; (prism-mode)
                             (focus-mode)
                             (apheleia-global-mode -1)
                             (setq-local lsp-enable-file-watchers nil)
