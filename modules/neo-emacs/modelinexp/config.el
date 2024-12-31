@@ -1,5 +1,10 @@
+;;; neoemacs/modelinexp/config.el -*- lexical-binding: t; -*-
+;;(use-package doom-modeline
+;;  :init
+;;  (setq doom-modeline-height 20))
+
 (setq
- ;; doom-modeline-height                       25
+ doom-modeline-height                       20
  doom-modeline-modal-icon                   nil
  doom-modeline-icon                         nil
  doom-modeline-time-icon                    nil
@@ -74,7 +79,6 @@
                       :background (face-attribute 'doom-modeline-evil-motion-state :background nil t)
                       :weight 'bold)
   )
-
 (after! doom-modeline
   (fresh/modelineconfig)
   (add-hook '+workspace-new-hook #'fresh/modelineconfig))
@@ -298,3 +302,7 @@
             (setq doom-modeline-wspc ""))) ; 替换宽空格
 
 (run-with-timer 0 1 'force-mode-line-update)
+                                        ;(doom-modeline-refresh-bars)
+(add-hook 'after-init-hook
+          (lambda ()
+            (setq-local line-spacing nil)))

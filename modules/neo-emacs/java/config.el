@@ -11,8 +11,8 @@
   :defer t
   :config
   (prism-set-colors :lightens '(0 5 10) :desaturations '(-2.5 0 2.5)
-    :colors (-map #'doom-color
-                  '(red orange yellow green blue violet))))
+                    :colors (-map #'doom-color
+                                  '(red orange yellow green blue violet))))
 
 
 (setq ;;company-box-doc-enable                   nil
@@ -24,9 +24,9 @@
  indent-guides-char                         ?│
  lsp-progress-prefix                        "󰫆 "
  company-format-margin-function             'company-text-icons-margin
- company-text-icons-format                  "<%s>"
+ company-text-icons-format                  " %s "
  company-text-icons-add-background          t
- company-text-face-extra-attributes         '(:weight bold )
+ company-text-face-extra-attributes         '(:weight bold :family "Street Stencil")
  company-tooltip-flip-when-above            t
  company-show-quick-access                  nil
  +format-on-save-disabled-modes             (add-to-list '+format-on-save-disabled-modes 'c++-mode)
@@ -96,7 +96,7 @@
                                   lsp-java-completion-guess-method-arguments t
                                   lsp-completion-enable-additional-text-edit t
                                   lsp-java-progress-reports-enabled          nil
-                                  lsp-progress-prefix                        "⧗ "
+                                  lsp-progress-prefix                        "󰫆 "
                                   lsp-completion-show-label-description      nil
                                   lsp-modeline-diagnostics-enable            t
                                   lsp-modeline-diagnostics-scope             :workspace
