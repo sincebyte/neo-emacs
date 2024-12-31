@@ -4,7 +4,6 @@
 ;;  (setq doom-modeline-height 20))
 
 (setq
- doom-modeline-height                       20
  doom-modeline-modal-icon                   nil
  doom-modeline-icon                         nil
  doom-modeline-time-icon                    nil
@@ -26,7 +25,7 @@
   (defface powerline-evil-motion-state   '((t (:background "nil"   :weight bold))) "")
   (defface powerline-evil-visual-state   '((t (:background "nil"   :weight bold))) "")
   (defface powerline-evil-emacs-state    '((t (:background "nil"   :weight bold))) "")
-  (custom-set-faces '(doom-modeline-panel ((t (:background nil :foreground "#da8548" :weight bold)))))
+  (custom-set-faces '(doom-modeline-panel ((t (:background nil :foreground "#da8548" :weight bold :height 150)))))
   (let ((org-level-1f (face-attribute 'outline-1 :foreground)))
     (custom-set-faces  '(indent-bars-face                         ((t (:family "Kode Mono" ))))
                        '(line-number                             ((t (:family "IBM Plex Mono" :box nil :weight bold))))
@@ -34,8 +33,8 @@
                        `(org-block-begin-line                    ((t (:family "IBM Plex Mono" :box nil :foreground ,org-level-1f :weight bold))))
                        `(org-block-end-line                      ((t (:family "IBM Plex Mono" :box nil :foreground ,org-level-1f :weight bold))))
                        `(org-modern-indent-bracket-line          ((t (:family "Kode Mono"     :box nil :foreground ,org-level-1f))))
-                       '(mode-line                               ((t (:family "IBM Plex Mono" :box nil ))))  ;; 去掉 modeline 的边框
-                       '(mode-line-inactive                      ((t (:family "IBM Plex Mono" :box nil )))))) ;; 去掉非活动 modeline 的边框
+                       '(mode-line                               ((t (:family "IBM Plex Mono" :box nil :height 150))))  ;; 去掉 modeline 的边框
+                       '(mode-line-inactive                      ((t (:family "IBM Plex Mono" :box nil :height 150)))))) ;; 去掉非活动 modeline 的边框
   (set-face-attribute 'doom-modeline-time nil
                       :foreground (face-attribute 'org-level-2 :foreground nil t)
                       :weight 'bold)
@@ -292,10 +291,29 @@
   (setq powerline-default-separator 'arrow) ;; 分隔符样式
   (setq powerline-default-separator-dir '(right . left)))
 
-(add-hook 'doom-big-font-mode-hook
-          (lambda ()
-            (setq powerline-scale (if doom-big-font-mode 1.5 1))
-            (powerline-reset)))
+(defun my-change-fonts-on-big-font-mode ()
+  (if doom-big-font-mode
+      (progn
+        (custom-set-faces
+         '(mode-line ((t (:family "IBM Plex Mono" :box nil :height 175))))
+         '(mode-line-inactive ((t (:family "IBM Plex Mono" :box nil :height 175))))))
+    (progn
+      (custom-set-faces
+       '(mode-line ((t (:family "IBM Plex Mono" :box nil :height 150))))
+       '(mode-line-inactive ((t (:family "IBM Plex Mono" :box nil :height 150))))))
+    (setq powerline-scale (if doom-big-font-mode 1.5 1))
+    (powerline-reset)))
+(defun my-update-powerline-scale ()
+  "Adjust powerline scale based on doom-big-font-mode."
+  (setq powerline-scale (if doom-big-font-mode 1.5 1))
+  (powerline-reset))
+
+(add-hook 'doom-big-font-mode-hook 'my-change-fonts-on-big-font-mode)
+(add-hook 'doom-big-font-mode-hook 'my-update-powerline-scale)
+
+
+;; (add-hook 'doom-big-font-mode-hook #'reset-to-default-font)
+
 (add-hook 'doom-modeline-mode-hook
           (lambda ()
             (setq doom-modeline-spc "")    ; 替换普通分隔符

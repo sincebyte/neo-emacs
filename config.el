@@ -33,11 +33,12 @@
                  cjk-font-size 26))
   (progn (set-selection-coding-system 'utf-16le-dos)
          ;; (setq doom-font (font-spec :family "Kode Mono" :size 16 )
-         (setq doom-font (font-spec :family "M PLUS Code Latin 50" :size 19 )
+         (setq doom-font (font-spec :family "Triplicate T4c" :size 17 )
                cjk-font "仓耳今楷01-9128"
                cjk-font-size 20)))
 
-(setq doom-big-font (font-spec :family "M PLUS Code Latin 50" :size 23 ))
+(setq doom-big-font (font-spec :family "Triplicate T4c" :size 20 )
+      doom-variable-pitch-font (font-spec :family "Triplicate T4c"))
 (defun my/setup-big-cjk-fonts ()
   "Setup CJK fonts for Doom Big Font Mode."
   (dolist (charset '(kana han symbol cjk-misc bopomofo))

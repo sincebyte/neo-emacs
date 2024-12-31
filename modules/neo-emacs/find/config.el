@@ -61,3 +61,8 @@
 (setq consult-ripgrep-default-directory (projectile-project-root))
 
 (projectile-add-known-project "~/ZY/workspace/minex-work/")
+
+(add-hook 'dired-mode-hook
+          (lambda ()
+            (buffer-face-set
+             '(:family "M PLUS Code Latin 50" :height 140))))
