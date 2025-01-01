@@ -45,6 +45,22 @@
     (set-fontset-font t charset (font-spec :family "仓耳今楷01-9128" :size 24))))
 (add-hook 'doom-big-font-mode-hook #'my/setup-big-cjk-fonts)
 
+(defun my-set-font-for-mode ()
+  (cond
+   ((derived-mode-p 'dired-mode)
+    (setq-local face-remapping-alist '((default (:family "M PLUS Code Latin 50" :height 180) default))))
+   ((derived-mode-p 'vterm-mode)
+    (setq-local face-remapping-alist '((default (:family "Kode Mono" :height 160) default))))
+   ))
+
+(add-hook 'after-change-major-mode-hook #'my-set-font-for-mode)
+
+(defun my-set-font-for-minibuffer ()
+  (setq-local face-remapping-alist '((default (:family "M PLUS Code Latin 50" :height 170) default)))
+  (redraw-frame (selected-frame)))
+
+(add-hook 'minibuffer-setup-hook #'my-set-font-for-minibuffer)
+
 ;; (progn (set-selection-coding-system 'utf-16le-dos)
 ;;        (setq doom-font (font-spec :family "Kode Mono" :size 20 )
 ;;              cjk-font "仓耳今楷01-9128"
