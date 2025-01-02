@@ -17,6 +17,10 @@
  doom-modeline-continuous-word-count-modes  '(java-mode)
  doom-modeline-enable-word-count            t  )
 
+(with-eval-after-load 'which-key
+  (set-face-attribute 'which-key-key-face nil :family "IBM Plex Mono")
+  (set-face-attribute 'which-key-command-description-face nil :family "IBM Plex Mono")
+  (set-face-attribute 'which-key-separator-face nil :family "IBM Plex Mono"))
 
 (with-eval-after-load 'doom-modeline
   (defface powerline-evil-normal-state   '((t (:background "nil"   :weight bold))) "")
@@ -26,13 +30,18 @@
   (defface powerline-evil-visual-state   '((t (:background "nil"   :weight bold))) "")
   (defface powerline-evil-emacs-state    '((t (:background "nil"   :weight bold))) "")
   (custom-set-faces '(doom-modeline-panel ((t (:background nil :foreground "#da8548" :weight bold :height 150)))))
-  (let ((org-level-1f (face-attribute 'outline-1 :foreground)))
-    (custom-set-faces  '(indent-bars-face                         ((t (:family "Kode Mono" ))))
+
+  (let ((org-level-1f (face-attribute 'outline-1 :foreground))
+        (highlight-foreground (face-attribute 'highlight :foreground))
+        (highlight-background (face-attribute 'highlight :background)))
+    (custom-set-faces  '(indent-bars-face                        ((t (:family "Kode Mono" ))))
                        '(line-number                             ((t (:family "IBM Plex Mono" :box nil :weight bold))))
                        `(line-number-current-line                ((t (:family "IBM Plex Mono" :box nil :foreground ,org-level-1f :weight bold))))
                        `(org-block-begin-line                    ((t (:family "IBM Plex Mono" :box nil :foreground ,org-level-1f :weight bold))))
                        `(org-block-end-line                      ((t (:family "IBM Plex Mono" :box nil :foreground ,org-level-1f :weight bold))))
                        `(org-modern-indent-bracket-line          ((t (:family "Kode Mono"     :box nil :foreground ,org-level-1f))))
+                       `(+workspace-tab-selected-face            ((t (:family "IBM Plex Mono" :box nil :foreground ,highlight-foreground :background ,highlight-background :weight bold))))
+                       '(+workspace-tab-face                     ((t (:family "IBM Plex Mono" :box nil :weight bold))))
                        '(mode-line                               ((t (:family "IBM Plex Mono" :box nil :height 150))))  ;; 去掉 modeline 的边框
                        '(mode-line-inactive                      ((t (:family "IBM Plex Mono" :box nil :height 150)))))) ;; 去掉非活动 modeline 的边框
   (set-face-attribute 'doom-modeline-time nil
