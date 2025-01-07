@@ -60,11 +60,20 @@
 (setq bookmark-default-file "~/org/org-roam/bookmarks")
 (setq consult-ripgrep-default-directory (projectile-project-root))
 
+;; (defun my-project-root-from-git-rev-parse (_dir)
+;;   (let ((root (shell-command-to-string (format "git -C %s rev-parse --show-toplevel" _dir))))
+;;     (if (and root (not (string-empty-p root)))
+;;         (file-name-as-directory (string-trim root))  ;; 返回根目录路径
+;;       nil)))
 (defun my-project-root-from-git-rev-parse (_dir)
-  (let ((root (shell-command-to-string (format "git -C %s rev-parse --show-toplevel" _dir))))
-    (if (and root (not (string-empty-p root)))
-        (file-name-as-directory (string-trim root))  ;; 返回根目录路径
-      nil)))
+  (if (file-remote-p _dir)  ;; 检查路径是否是 Tramp 路径
+      (progn
+        nil) ;; 返回默认设置，或你可以指定其他值
+    (let ((root (shell-command-to-string (format "git -C %s rev-parse --show-toplevel" _dir))))
+      (if (and root (not (string-empty-p root)))
+          (file-name-as-directory (string-trim root))
+        nil))))
+
 
 (setq projectile-project-root-functions
       '(my-project-root-from-git-rev-parse
