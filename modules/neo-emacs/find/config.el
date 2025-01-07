@@ -60,7 +60,20 @@
 (setq bookmark-default-file "~/org/org-roam/bookmarks")
 (setq consult-ripgrep-default-directory (projectile-project-root))
 
-(projectile-add-known-project "~/ZY/workspace/minex-work/")
+(defun my-project-root-from-git-rev-parse (_dir)
+  (let ((root (shell-command-to-string (format "git -C %s rev-parse --show-toplevel" _dir))))
+    (if (and root (not (string-empty-p root)))
+        (file-name-as-directory (string-trim root))  ;; 返回根目录路径
+      nil)))
+
+(setq projectile-project-root-functions
+      '(my-project-root-from-git-rev-parse
+        projectile-root-local
+        projectile-root-marked
+        projectile-root-bottom-up
+        projectile-root-top-down
+        projectile-root-top-down-recurring))
+
 
 (add-hook 'dired-mode-hook
           (lambda ()

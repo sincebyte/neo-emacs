@@ -80,6 +80,8 @@
 (package! ialign              )
 (package! powerline           )
 (package! uniline)
+(package! color-theme-sanityinc-tomorrow)
+
 ;; (package! color-theme-sanityinc-tomorrow )
 (package! keyfreq      :recipe (:host github :repo "dacap/keyfreq"))
 (package! awesome-tray :recipe (:host github :repo "manateelazycat/awesome-tray" :branch "master" ))

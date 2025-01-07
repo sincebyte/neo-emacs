@@ -140,13 +140,15 @@ evil-normal-state-map
       :n "; i"     #'lsp-java-organize-imports
       :n "; s"     #'lsp-signature-activate
       :n "SPC t e" #'lsp-treemacs-java-deps-list
+      :n "; p"     #'(lambda () (interactive) (lsp-ui-find-workspace-symbol (concat "@/")))
       :n "SPC t s" #'lsp-workspace-restart)
 
 
 (custom-set-faces `(lsp-face-highlight-textual ((t (:background nil )))))
-(custom-set-faces `(lsp-face-highlight-read ((t (:foreground "#57a6db" :background nil :weight bold :underline nil)))))
-(custom-set-faces `(lsp-face-highlight-write ((t (:foreground "#57a6db" :background nil :weight bold :underline nil)))))
-(custom-set-faces `(tide-hl-identifier-face ((t (:foreground "#57a6db" :background nil)))))
+;; (custom-set-faces `(lsp-face-highlight-textual ((t (:background nil )))))
+(custom-set-faces `(lsp-face-highlight-read ((t (:underline nil :weight bold :slant italic)))))
+(custom-set-faces `(lsp-face-highlight-write ((t (:underline nil :weight bold :slant italic)))))
+;; (custom-set-faces `(tide-hl-identifier-face ((t (:foreground "#57a6db" :background nil)))))
 
 ;; (company-posframe-mode 1)
 
@@ -188,3 +190,6 @@ evil-normal-state-map
           "[/\\\\]\\.settings$"
           "[/\\\\]target$"
           "[/\\\\]build$")))
+
+(add-hook 'lsp-mode-hook #'lsp-lens-mode)
+(add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
