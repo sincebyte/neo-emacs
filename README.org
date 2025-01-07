@@ -188,6 +188,30 @@ For the icons font, we need do below
 - M-x install-package all-the-icons
 - M-x all-the-icons-install-fonts
 - M-x nerd-icons-install-fonts
+*** font sepcify by mode
+Use different font is a funny thing.The main idea to change font family is use ~after-change-major-mode-hook~,unfortunately the implement do not fit doom big font.
+#+begin_src elisp
+(defun my-set-font-for-mode ()
+  (cond
+   ((derived-mode-p 'dired-mode)
+    (setq-local face-remapping-alist '((default (:family "M PLUS Code Latin 50" :height 180) default))))
+   ((derived-mode-p 'vterm-mode)
+    (setq-local face-remapping-alist '((default (:family "Kode Mono" :height 160) default))))
+   ))
+(add-hook 'after-change-major-mode-hook #'my-set-font-for-mode)
+
+(defun my-set-font-for-minibuffer ()
+  (setq-local face-remapping-alist '((default (:family "M PLUS Code Latin 50" :height 170) default)))
+  (redraw-frame (selected-frame)))
+(add-hook 'minibuffer-setup-hook #'my-set-font-for-minibuffer)
+#+end_src
+*** require fonts
+Cause we are using multiple fonts ,here they are.
+| FONT NAME            | USED                |
+| M PLUS Code Latin 50 | dired mode          |
+| Kode Mono            | vterm mode          |
+| JetBrains Mono       | lsp mode            |
+| IBM Plex Mono        | mode line which key |
 ** Basic setting
 #+CAPTION: neo-emacs basic setting
 | <l>                       | <l>                                     | <l>                              | <l>                     |
