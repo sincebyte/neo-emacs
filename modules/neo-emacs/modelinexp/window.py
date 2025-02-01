@@ -39,6 +39,7 @@ def heart_rate_notification_handler(characteristic, data):
         # with open("/Users/van/.hr", "w") as f:
         #     f.write(f"{heart_rate}")
     else:
+        callLater(0, glabel.setStringValue_, "")
         print("Invalid heart rate data")
 
 
@@ -58,8 +59,10 @@ async def run():
                 # 停止通知
                 # await client.stop_notify(HEART_RATE_MEASUREMENT_UUID)
         except (BleakError, asyncio.TimeoutError):
+            callLater(0, glabel.setStringValue_, "¨")
             await asyncio.sleep(10)
         except Exception:
+            callLater(0, glabel.setStringValue_, "¨")
             await asyncio.sleep(10)
 
 def get_mouse_position():

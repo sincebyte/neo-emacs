@@ -4,3 +4,6 @@
 [submodule "neoemacs/company-english-helper"]
 	path = neoemacs/company-english-helper
 	url = git@github.com:manateelazycat/company-english-helper.git
+[submodule "ultra-scroll"]
+	path = ultra-scroll
+	url = git@github.com:jdtsmith/ultra-scroll.git

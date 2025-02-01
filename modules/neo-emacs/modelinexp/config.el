@@ -32,15 +32,15 @@
   (custom-set-faces '(doom-modeline-panel ((t (:background nil :foreground "#da8548" :weight bold :height 150)))))
 
   (let ((org-level-1f (face-attribute 'outline-1 :foreground))
-        (highlight-foreground (face-attribute 'highlight :foreground))
-        (highlight-background (face-attribute 'highlight :background)))
+        (highlight-foreground (face-attribute 'org-date-selected :foreground))
+        (highlight-background (face-attribute 'org-date-selected :background)))
     (custom-set-faces  '(indent-bars-face                  ((t (:family "Kode Mono" ))))
                        '(line-number                       ((t (:family "JetBrains Mono" :weight bold :slant italic))))
                        `(line-number-current-line          ((t (:family "JetBrains Mono" :weight bold :slant italic :foreground ,org-level-1f ))))
                        `(org-block-begin-line              ((t (:family "IBM Plex Mono" :box nil :foreground ,org-level-1f :weight bold))))
                        `(org-block-end-line                ((t (:family "IBM Plex Mono" :box nil :foreground ,org-level-1f :weight bold))))
                        `(org-modern-indent-bracket-line    ((t (:family "Kode Mono"     :box nil :foreground ,org-level-1f))))
-                       `(+workspace-tab-selected-face      ((t (:family "IBM Plex Mono" :box nil :foreground ,highlight-foreground :background ,highlight-background :weight bold))))
+                       `(+workspace-tab-selected-face      ((t (:family "IBM Plex Mono" :box nil :foreground "black" :background ,highlight-foreground :weight bold))))
                        '(+workspace-tab-face               ((t (:family "IBM Plex Mono" :box nil :weight bold))))
                        '(mode-line                         ((t (:family "IBM Plex Mono" :box nil :height 150 :underline nil))))  ;; 去掉 modeline 的边框
                        '(mode-line-inactive                ((t (:family "IBM Plex Mono" :box nil :height 150 :underline nil)))))) ;; 去掉非活动 modeline 的边框
