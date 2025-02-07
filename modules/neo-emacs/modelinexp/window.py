@@ -24,7 +24,7 @@ from Cocoa import (
 from bleak import BleakClient, BleakError
 
 # 设备的蓝牙地址
-DEVICE_ADDRESS = "2A964ADD-92DC-C48F-80AB-6F403EC8A03A"
+DEVICE_ADDRESS = "146407C2-EBE5-2A03-2AA5-338CA1AECCE5"
 HEART_RATE_MEASUREMENT_UUID = "2A37"
 glabel = None
 
