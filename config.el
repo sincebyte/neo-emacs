@@ -99,7 +99,7 @@
 ;; (color-theme-sanityinc-tomorrow-night)
 ;; (setq doom-theme 'kaolin-bubblegum)
 ;; (setq doom-theme 'sanityinc-tomorrow-eighties)
-(setq doom-theme 'sanityinc-tomorrow-night)
+;; (setq doom-theme 'sanityinc-tomorrow-night)
 ;; (after! doom-themes
 ;;   (load-theme 'doom-nano-dark t))
 

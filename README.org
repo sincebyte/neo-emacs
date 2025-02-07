@@ -72,7 +72,7 @@ export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs
 ** Clone project
 clone doom-emacs and neo-emacs from github.
 #+BEGIN_SRC shell
-git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.emacs.d
+git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs
 git clone --depth 1 https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 #+END_SRC
 ** Doom Install
