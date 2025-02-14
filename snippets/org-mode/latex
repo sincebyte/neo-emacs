@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: latex
+# key: lax
+# --
+$$\begin{aligned}
+A &= B \times C \\
+Delay_{A} &= \frac{A（bit）}{B（bit/s）} \\
+\end{aligned} $$

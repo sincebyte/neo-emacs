@@ -172,15 +172,17 @@
 
 (setq system-time-locale "C")
 
+(add-hook 'org-mode-hook (lambda () (ws-butler-mode -1)))
 (use-package org-modern
   :hook (org-mode . org-modern-mode)
   :custom
   (org-modern-list '((43 . "•") (45 . "◦")))
   (org-ellipsis " ")
-  (org-modern-table nil)
+  (org-modern-table t)
   :config
   (neo/org-set-todo-keyword-faces)
   (setq org-modern-keyword '((t . t) ("caption" . "☰"))
+        show-trailing-whitespace t
         org-pretty-entities t
         org-tags-column 0
         org-modern-block-fringe 10

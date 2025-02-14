@@ -34,7 +34,7 @@
   (progn (set-selection-coding-system 'utf-16le-dos)
          ;; (setq doom-font (font-spec :family "Kode Mono" :size 16 )
          (setq doom-font (font-spec :family "JetBrains Mono" :size 17 )
-               cjk-font "仓耳今楷01-9128"
+               cjk-font "方正悠宋+ GBK"
                cjk-font-size 20)))
 
 (setq doom-big-font (font-spec :family "JetBrains Mono" :size 20 )
@@ -42,7 +42,7 @@
 (defun my/setup-big-cjk-fonts ()
   "Setup CJK fonts for Doom Big Font Mode."
   (dolist (charset '(kana han symbol cjk-misc bopomofo))
-    (set-fontset-font t charset (font-spec :family "仓耳今楷01-9128" :size 24))))
+    (set-fontset-font t charset (font-spec :family "方正悠宋+ GBK" :size 24))))
 (add-hook 'doom-big-font-mode-hook #'my/setup-big-cjk-fonts)
 
 (defun my-set-font-for-mode ()
