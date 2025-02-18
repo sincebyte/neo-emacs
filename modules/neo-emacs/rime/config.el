@@ -11,8 +11,9 @@
   :defer t
   :config
   (setq rime-show-candidate 'minibuffer)
+  (setq rime-translate-keybindings '("C-n" "C-p" "<left>" "<right>" "<up>" "<down>"))
   :custom
-  (rime-emacs-module-header-root emacs-module-root)
+  ;; (rime-emacs-module-header-root emacs-module-root)
   (default-input-method "rime"))
 (setq mode-line-mule-info   '((:eval (rime-lighter)))
       rime-title "CH"

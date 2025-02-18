@@ -29,7 +29,7 @@
   (defface powerline-evil-motion-state   '((t (:background "nil"   :weight bold))) "")
   (defface powerline-evil-visual-state   '((t (:background "nil"   :weight bold))) "")
   (defface powerline-evil-emacs-state    '((t (:background "nil"   :weight bold))) "")
-  (custom-set-faces '(doom-modeline-panel ((t (:background nil :foreground "#da8548" :weight bold :height 150)))))
+  (custom-set-faces '(doom-modeline-panel ((t (:background unspecified :foreground "#da8548" :weight bold :height 150)))))
 
   (let ((org-level-1f (face-attribute 'outline-1 :foreground))
         (highlight-foreground (face-attribute 'org-date-selected :foreground))
@@ -295,7 +295,7 @@
          (separator-fn (intern (format "powerline-%s-%s" separator (car powerline-default-separator-dir)))))
     (propertize " " 'display (funcall separator-fn 'doom-modeline-bar 'mode-line))))
 (use-package powerline
-  :ensure t
+  ;; :ensure t
   :config
   (setq powerline-default-separator 'arrow) ;; 分隔符样式
   (setq powerline-default-separator-dir '(right . left)))

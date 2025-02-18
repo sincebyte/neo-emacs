@@ -144,7 +144,7 @@ evil-normal-state-map
       :n "SPC t s" #'lsp-workspace-restart)
 
 
-(custom-set-faces `(lsp-face-highlight-textual ((t (:background nil )))))
+(custom-set-faces `(lsp-face-highlight-textual ((t (:background unspecified )))))
 ;; (custom-set-faces `(lsp-face-highlight-textual ((t (:background nil )))))
 (custom-set-faces `(lsp-face-highlight-read ((t (:underline nil :weight bold :slant italic)))))
 (custom-set-faces `(lsp-face-highlight-write ((t (:underline nil :weight bold :slant italic)))))

@@ -66,6 +66,7 @@
 (after! org
   (focus-mode)
   (setq evil-shift-width 2)
+  (setq org-log-done 'time)
   (setq org-todo-keywords
         '((sequence "TODO" "DOING" "BLOCK" "TEST" "DONE" "REPORT")))
   (+org/close-all-folds)
@@ -187,6 +188,7 @@
         org-tags-column 0
         org-modern-block-fringe 10
         org-modern-block-name t
+        org-modern-timestamp t
         org-modern-star 'org-modern-replace-stars
         org-modern-replace-stars    '("⁞" "⁞⁞" "⁞⁞⁞" "⁞⁞⁞⁞" "⁞⁞⁞⁞⁞")))
 ;; (custom-set-faces `(org-block-begin-line ((t (:foreground "#008ED1" :background "#EAEAFF")))))
