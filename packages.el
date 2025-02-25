@@ -51,6 +51,7 @@
 
 (unpin!   restclient          )
 (unpin!   restclient-jq       )
+(unpin!   npm-mode            )
 (package! org-appear          )
 (package! org-roam-ui         )
 (package! rime                )

@@ -46,6 +46,7 @@
                        '(mode-line-inactive                ((t (:family "IBM Plex Mono" :box nil :height 150 :underline nil)))))) ;; 去掉非活动 modeline 的边框
   (set-face-attribute 'doom-modeline-time nil
                       :foreground (face-attribute 'org-level-2 :foreground nil t)
+                      :background (face-attribute 'doom-modeline-evil-insert-state :foreground nil t)
                       :weight 'bold)
   (set-face-attribute 'doom-modeline-buffer-file nil
                       :foreground (face-attribute 'org-level-3 :foreground nil t)
@@ -86,6 +87,7 @@
   (set-face-attribute 'powerline-evil-motion-state nil
                       :background (face-attribute 'doom-modeline-evil-motion-state :background nil t)
                       :weight 'bold)
+
   )
 (after! doom-modeline
   (fresh/modelineconfig)
@@ -118,7 +120,22 @@
            (separator-fn (intern (format "powerline-%s-%s"
                                          separator
                                          (car powerline-default-separator-dir))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-emacs-state 'mode-line)  )))
+      (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-operator-state 'org-code)  )))
+  (doom-modeline-def-segment powerline-separator-left-vcs
+    "Insert a Powerline separator into the Doom Modeline."
+    (let* ((separator 'arrow) ;; 获取当前分隔符
+           (separator-fn (intern (format "powerline-%s-%s"
+                                         separator
+                                         (car powerline-default-separator-dir))))) ;; 获取分隔符函数
+      (propertize " " 'display (funcall separator-fn 'org-code 'doom-modeline-evil-operator-state)  )))
+
+  (doom-modeline-def-segment powerline-separator-left-time
+    "Insert a Powerline separator into the Doom Modeline."
+    (let* ((separator 'arrow) ;; 获取当前分隔符
+           (separator-fn (intern (format "powerline-%s-%s"
+                                         separator
+                                         (car powerline-default-separator-dir))))) ;; 获取分隔符函数
+      (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-operator-state 'doom-modeline-meow-motion-state )  )))
 
   (doom-modeline-def-segment powerline-evil-right
     "Insert a Powerline separator into the Doom Modeline."
@@ -132,7 +149,7 @@
                                                            (if (eq evil-state 'visual) 'powerline-evil-visual-state
                                                              (if (eq evil-state 'replace) 'powerline-evil-replace-state
                                                                (if (eq evil-state 'motion) 'powerline-evil-motion-state)
-                                                               'powerline-evil-normal-state))))) 'doom-modeline-evil-emacs-state )  )))
+                                                               'powerline-evil-normal-state))))) 'doom-modeline-evil-operator-state )  )))
 
   (doom-modeline-def-segment powerline-evil-left
     "Insert a Powerline separator into the Doom Modeline."
@@ -176,7 +193,7 @@
                " (%-d)")
              text-scale-mode-amount))
        (doom-modeline-spc)))
-     'face (doom-modeline-face 'doom-modeline-buffer-major-mode)))
+     'face (doom-modeline-face 'org-block-end-line)))
   (doom-modeline-def-segment my-segment
     "My custom segment "
     (let ((face
@@ -207,13 +224,13 @@
     "A custom segment that reads content from a local file."
     (let ((count (get-eyeMonitor-count)))  ; 定义局部变量 count
       (cond
-       ((<= count 20) (propertize (concat "󰫃" " ") 'face 'org-level-6) )
-       ((<= count 40) (propertize (concat "󰫄" " ") 'face 'org-level-4) )
-       ((<= count 60) (propertize (concat "󰫅" " ") 'face 'org-level-1) )
-       ((<= count 80) (propertize (concat "󰫆" " ") 'face 'org-level-5) )
-       ((<= count 99) (propertize (concat "󰫇" " ") 'face 'nerd-icons-lred) )
-       ((= count 100) (propertize (concat "󰫈" " ") 'face 'error) )
-       (t (propertize (concat "󰫃" " ") 'face 'diary)))))
+       ((<= count 20) (propertize (concat "󰫃" "") 'face 'org-level-6) )
+       ((<= count 40) (propertize (concat "󰫄" "") 'face 'org-level-4) )
+       ((<= count 60) (propertize (concat "󰫅" "") 'face 'org-level-1) )
+       ((<= count 80) (propertize (concat "󰫆" "") 'face 'org-level-5) )
+       ((<= count 99) (propertize (concat "󰫇" "") 'face 'nerd-icons-lred) )
+       ((= count 100) (propertize (concat "󰫈" "") 'face 'error) )
+       (t (propertize (concat "󰫃" "") 'face 'diary)))))
 
   (doom-modeline-def-segment hr-count
     "A custom segment that reads content from a local file."
@@ -222,20 +239,22 @@
        (propertize " 󰐰 " 'face 'error)  ;; 图标的颜色
        (propertize (number-to-string count) 'face 'org-todo)  ;; 数字的颜色
        (propertize " " 'face 'org-table))))
+  (doom-modeline-def-segment my-time
+    "Display the current time in HH:mm:ss format."
+    (propertize (format-time-string " %H:%M ")
+                'face 'doom-modeline-meow-motion-state))
 
   (doom-modeline-def-segment empty-segment
     (propertize (concat " " "") 'face 'doom-modeline-evil-emacs-state))
-
   ;; (display-battery-mode 1)
   (display-time-mode 1)
   (doom-modeline-def-modeline 'main
-    '(my-segment powerline-evil-right powerline-separator-left buffer-info matches parrot selection-info)
-    '(misc-info minor-modes wechat-msg-count input-method buffer-encoding powerline-separator-right powerline-separator-left
-      my-major-mode powerline-separator-right powerline-separator-left vcs powerline-separator-right powerline-separator-left
-      time eyeMonitor-count))
+    '(my-segment powerline-evil-right empty-segment eyeMonitor-count wechat-msg-count buffer-info matches parrot selection-info)
+    '(misc-info minor-modes input-method buffer-encoding powerline-separator-left
+      my-major-mode powerline-separator-left-vcs vcs powerline-separator-left-time my-time ))
   (doom-modeline-def-modeline 'vcs
-    '(my-segment powerline-evil-right powerline-separator-left matches buffer-info remote-host parrot selection-info)
-    '(compilation misc-info battery irc mu4e gnus github debug minor-modes buffer-encoding major-mode process time eyeMonitor-count))
+    '(my-segment powerline-evil-right empty-segment eyeMonitor-count wechat-msg-count matches buffer-info remote-host parrot selection-info)
+    '(compilation misc-info battery irc mu4e gnus github debug minor-modes buffer-encoding major-mode process powerline-separator-left-time my-time ))
   (doom-modeline-def-modeline 'dashboard
     '(modals buffer-default-directory-simple remote-host)
     '(my-segment)))
@@ -251,16 +270,16 @@
             (cond
              ((string= content "")  "")
              ((string= content "0") "")
-             ((string= content "1") "󰆄")
-             ((string= content "2") "󰆄")
-             ((string= content "3") "󰆄")
-             ((string= content "4") "󰆄")
-             ((string= content "5") "󰆄")
-             ((string= content "6") "󰆄")
-             ((string= content "7") "󰆄")
-             ((string= content "8") "󰆄")
-             ((string= content "9") "󰆄")
-             (t "󰆄"))))
+             ((string= content "1") " 󰆄")
+             ((string= content "2") " 󰆄")
+             ((string= content "3") " 󰆄")
+             ((string= content "4") " 󰆄")
+             ((string= content "5") " 󰆄")
+             ((string= content "6") " 󰆄")
+             ((string= content "7") " 󰆄")
+             ((string= content "8") " 󰆄")
+             ((string= content "9") " 󰆄")
+             (t " 󰆄"))))
       "File not found")))
 
 (defun get-hr-count ()

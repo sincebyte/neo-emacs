@@ -3,6 +3,7 @@
 (use-package! ds2   :defer t)
 ;; common setting
 (setq
+ org-display-custom-times      t
  org-plantuml-executable-path  (expand-file-name (concat doom-user-dir "neoemacs/plantuml.jar"))
  org-plantuml-args             '("-headless")
  org-plantuml-jar-path         (expand-file-name (concat doom-user-dir "neoemacs/plantuml.jar"))
@@ -67,6 +68,9 @@
   (focus-mode)
   (setq evil-shift-width 2)
   (setq org-log-done 'time)
+  (setq org-display-custom-times t)
+  (setq org-time-stamp-formats '("<%Y-%m-%d %H:%M>" . "<%Y-%m-%d>"))
+
   (setq org-todo-keywords
         '((sequence "TODO" "DOING" "BLOCK" "TEST" "DONE" "REPORT")))
   (+org/close-all-folds)
@@ -205,10 +209,10 @@
 (defconst org-modern-indent-guide (propertize "│ " 'face 'org-modern-indent-bracket-line))
 (defconst org-modern-indent-end   (propertize "└"  'face 'org-modern-indent-bracket-line))
 
-(use-package emt
-  :defer t
-  :hook (after-init . emt-mode)
-  :config (setq emt-lib-path (concat doom-user-dir "neoemacs/libEMT-aarch64.dylib" )))
+;; (use-package emt
+;;   :defer t
+;;   :hook (after-init . emt-mode)
+;;   :config (setq emt-lib-path (concat doom-user-dir "neoemacs/libEMT-aarch64.dylib" )))
 
 ;; so queer there should a delay
 (defun open-company-english-helper ()

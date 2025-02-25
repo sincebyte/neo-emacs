@@ -75,7 +75,8 @@
                                   lsp-ui-sideline-update-mode                'point
                                   lsp-idle-delay                             0.1
                                   lsp-signature-render-documentation         nil
-                                  lsp-signature-auto-activate                t
+                                  lsp-signature-auto-activate                nil
+                                  lsp-eldoc-enable-hover                     t
                                   lsp-eldoc-render-all                       nil
                                   lsp-signature-auto-activate                t
                                   lsp-java-signature-help-enabled            t
@@ -92,12 +93,12 @@
                                   lsp-java-inhibit-message                   nil
                                   lsp-completion-show-kind                   nil
                                   lsp-completion-sort-initial-results        t
-                                  lsp-completion-show-detail                 nil
+                                  lsp-completion-show-detail                 t
                                   lsp-java-completion-guess-method-arguments t
                                   lsp-completion-enable-additional-text-edit t
                                   lsp-java-progress-reports-enabled          nil
                                   lsp-progress-prefix                        "󰫆 "
-                                  lsp-completion-show-label-description      nil
+                                  ;; lsp-completion-show-label-description      nil
                                   lsp-modeline-diagnostics-enable            t
                                   lsp-modeline-diagnostics-scope             :workspace
                                   lsp-modeline-code-actions-enable           nil
@@ -171,7 +172,8 @@ evil-normal-state-map
 (after! tramp
   (setq explicit-shell-file-name "/bin/bash"))
 (setq tramp-default-method "ssh")
-(setq tramp-verbose 10)
+(setq tramp-verbose 0)
+;; (setq tramp-connection-properties '(("hassio"  "root" "explicit-shell-file-name" "/bin/bash")))
 
 (defun org-babel-edit-prep:java (babel-info)
   (setq-local buffer-file-name (->> babel-info caddr (alist-get :tangle)))

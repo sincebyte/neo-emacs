@@ -88,3 +88,15 @@
           (lambda ()
             (buffer-face-set
              '(:family "M PLUS Code Latin 50" :height 140))))
+
+(defun jump-to-java-error ()
+  "从当前日志行中提取文件名和行号，跳转到对应的 Java 文件和行号。"
+  (interactive)
+  (let ((line (thing-at-point 'line t)))  ;; 获取当前光标所在行
+    (when (and line (string-match "\\.?\\([a-zA-Z]+[0-9]?\\):\\([0-9]+\\)" line))  ;; 确保有冒号
+      (let* ((file-name (match-string 1 line))  ;; 捕获文件名
+             (line-number (string-to-number (match-string 2 line))))  ;; 捕获行号
+        (let* ((files (projectile-current-project-files)))  ;; 获取当前项目的文件列表
+        (find-file (completing-read "Choose file: " (projectile-current-project-files) nil nil file-name))
+        (goto-line line-number)))           ;; 跳转到指定行
+    )))
