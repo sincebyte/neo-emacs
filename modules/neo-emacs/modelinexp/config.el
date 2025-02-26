@@ -97,14 +97,29 @@
                                         ; available value of separator
                                         ;  alternate, arrow, arrow-fade, bar, box, brace, butt,
 ;; chamfer, contour, curve, rounded, roundstub, slant, wave, zigzag, and nil.
+;;
+
 (defun fresh/modelineconfig ()
-  (doom-modeline-def-segment powerline-separator-right
+  (doom-modeline-def-segment powerline-evil-right
+    "Insert a Powerline separator into the Doom Modeline."
+    (let* ((separator 'arrow) ;; 获取当前分隔符
+           (separator-fn (intern (format "powerline-%s-%s"
+                                         separator
+                                         (cdr powerline-default-separator-dir))))) ;; 获取分隔符函数
+      (propertize " " 'display (funcall separator-fn (when (doom-modeline--active)
+                                                       (if (eq evil-state 'normal) 'powerline-evil-normal-state
+                                                         (if (eq evil-state 'insert) 'powerline-evil-insert-state
+                                                           (if (eq evil-state 'visual) 'powerline-evil-visual-state
+                                                             (if (eq evil-state 'replace) 'powerline-evil-replace-state
+                                                               (if (eq evil-state 'motion) 'powerline-evil-motion-state)
+                                                               'powerline-evil-normal-state))))) 'org-agenda-clocking )  )))
+  (doom-modeline-def-segment powerline-evil-right-arrow
     "Insert a Powerline separator into the Doom Modeline."
     (let* ((separator 'arrow) ;; 获取当前分隔符
            (separator-fn (intern (format "powerline-%s-%s"
                                          separator
                                          (cdr powerline-default-separator-dir ))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn 'mode-line 'doom-modeline-evil-emacs-state ))))
+      (propertize " " 'display (funcall separator-fn 'org-agenda-clocking 'mode-line ))))
 
   (doom-modeline-def-segment powerline-separator-right-vert
     "Insert a Powerline separator into the Doom Modeline."
@@ -135,21 +150,15 @@
            (separator-fn (intern (format "powerline-%s-%s"
                                          separator
                                          (car powerline-default-separator-dir))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-operator-state 'doom-modeline-meow-motion-state )  )))
+      (propertize " " 'display (funcall separator-fn 'org-agenda-clocking 'doom-modeline-meow-motion-state )  )))
 
-  (doom-modeline-def-segment powerline-evil-right
+  (doom-modeline-def-segment powerline-separator-left-time-db
     "Insert a Powerline separator into the Doom Modeline."
     (let* ((separator 'arrow) ;; 获取当前分隔符
            (separator-fn (intern (format "powerline-%s-%s"
                                          separator
-                                         (cdr powerline-default-separator-dir))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn (when (doom-modeline--active)
-                                                       (if (eq evil-state 'normal) 'powerline-evil-normal-state
-                                                         (if (eq evil-state 'insert) 'powerline-evil-insert-state
-                                                           (if (eq evil-state 'visual) 'powerline-evil-visual-state
-                                                             (if (eq evil-state 'replace) 'powerline-evil-replace-state
-                                                               (if (eq evil-state 'motion) 'powerline-evil-motion-state)
-                                                               'powerline-evil-normal-state))))) 'doom-modeline-evil-operator-state )  )))
+                                         (car powerline-default-separator-dir ))))) ;; 获取分隔符函数
+      (propertize " " 'display (funcall separator-fn 'mode-line 'org-agenda-clocking ))))
 
   (doom-modeline-def-segment powerline-evil-left
     "Insert a Powerline separator into the Doom Modeline."
@@ -249,12 +258,14 @@
   ;; (display-battery-mode 1)
   (display-time-mode 1)
   (doom-modeline-def-modeline 'main
-    '(my-segment powerline-evil-right empty-segment eyeMonitor-count wechat-msg-count buffer-info matches parrot selection-info)
-    '(misc-info minor-modes input-method buffer-encoding powerline-separator-left
-      my-major-mode powerline-separator-left-vcs vcs powerline-separator-left-time my-time ))
+    '(my-segment powerline-evil-right powerline-evil-right-arrow empty-segment eyeMonitor-count wechat-msg-count
+      buffer-info matches parrot selection-info)
+    '(misc-info minor-modes input-method buffer-encoding powerline-separator-left my-major-mode powerline-separator-left-vcs vcs
+      powerline-separator-left-time-db powerline-separator-left-time my-time ))
   (doom-modeline-def-modeline 'vcs
-    '(my-segment powerline-evil-right empty-segment eyeMonitor-count wechat-msg-count matches buffer-info remote-host parrot selection-info)
-    '(compilation misc-info battery irc mu4e gnus github debug minor-modes buffer-encoding major-mode process powerline-separator-left-time my-time ))
+    '(my-segment powerline-evil-right powerline-evil-right-arrow empty-segment eyeMonitor-count wechat-msg-count matches buffer-info remote-host parrot selection-info)
+    '(compilation misc-info battery irc mu4e gnus github debug minor-modes buffer-encoding major-mode process
+      powerline-separator-left-time-db powerline-separator-left-time my-time ))
   (doom-modeline-def-modeline 'dashboard
     '(modals buffer-default-directory-simple remote-host)
     '(my-segment)))
