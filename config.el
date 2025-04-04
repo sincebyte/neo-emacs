@@ -25,7 +25,7 @@
 ;; full screen
 ;; (when (display-graphic-p)
 ;;   (add-hook 'window-setup-hook #'toggle-frame-fullscreen))
-
+;; 普通字体设置
 (if (eq system-type 'windows-nt)
     (progn (set-selection-coding-system 'utf-8)
            (setq doom-font (font-spec :family "Kode Mono" :size 24)
@@ -34,17 +34,19 @@
   (progn (set-selection-coding-system 'utf-16le-dos)
          ;; (setq doom-font (font-spec :family "Kode Mono" :size 16 )
          (setq doom-font (font-spec :family "JetBrains Mono" :size 17 )
-               cjk-font "方正悠宋+ GBK"
+               cjk-font "方正悠宋+ GBK" 
                cjk-font-size 20)))
 
+;; 设置大字体和可变字体
 (setq doom-big-font (font-spec :family "JetBrains Mono" :size 20 )
       doom-variable-pitch-font (font-spec :family "JetBrains Mono"))
 (defun my/setup-big-cjk-fonts ()
   "Setup CJK fonts for Doom Big Font Mode."
   (dolist (charset '(kana han symbol cjk-misc bopomofo))
-    (set-fontset-font t charset (font-spec :family "方正悠宋+ GBK" :size 24))))
+    (set-fontset-font t charset (font-spec :family "方正悠宋+ GBK" :size 24 ))))
 (add-hook 'doom-big-font-mode-hook #'my/setup-big-cjk-fonts)
 
+;; 设置不同模式下的字体
 (defun my-set-font-for-mode ()
   (cond
    ((derived-mode-p 'dired-mode)
@@ -55,6 +57,7 @@
 
 (add-hook 'after-change-major-mode-hook #'my-set-font-for-mode)
 
+;; 设置 minibuffer 中的字体
 (defun my-set-font-for-minibuffer ()
   (setq-local face-remapping-alist '((default (:family "M PLUS Code Latin 50" :height 170) default)))
   (redraw-frame (selected-frame)))
