@@ -171,6 +171,14 @@ evil-normal-state-map
 
 (after! tramp
   (setq explicit-shell-file-name "/bin/bash"))
+
+(connection-local-set-profile-variables
+'remote-direct-async-process
+'((tramp-direct-async-process . t)))
+(connection-local-set-profiles
+'(:application tramp :protocol "ssh")
+'remote-direct-async-process)
+
 (setq tramp-default-method "ssh")
 (setq tramp-verbose 0)
 ;; (setq tramp-connection-properties '(("hassio"  "root" "explicit-shell-file-name" "/bin/bash")))

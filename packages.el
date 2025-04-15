@@ -95,7 +95,7 @@
 
 ;; (package! org-clock-reminder :recipe (:host github :repo "inickey/org-clock-reminder" :branch "master"))
 
-;; (unpin! dirvish)
+(unpin! dirvish)
 (unpin! lsp-mode)
 (unpin! lsp-java)
 (unpin! apheleia)

@@ -3,13 +3,13 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-03-12 Tue 09:04 -->
+<!-- 2025-04-07 Mon 16:01 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>readme</title>
 <meta name="author" content="vanniuner" />
 <meta name="generator" content="Org Mode" />
-<style>
+<style type="text/css">
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -210,18 +210,28 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org1199fb3">1. conflict with toggle-input-method</a></li>
-<li><a href="#org24dada8">2. <span class="done DONE">DONE</span> most wanted</a>
+<li><a href="#org7121ec6">1. consult ripgrep search</a></li>
+<li><a href="#orgf8b9915">2. conflict with toggle-input-method</a></li>
+<li><a href="#orgc0727f0">3. <span class="todo DONE">DONE</span> most wanted</a>
 <ul>
-<li><a href="#orgcddbf59">2.1. code advice</a></li>
+<li><a href="#org84a106c">3.1. code advice</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org1199fb3" class="outline-2">
-<h2 id="org1199fb3"><span class="section-number-2">1.</span> conflict with toggle-input-method</h2>
+<div id="outline-container-org7121ec6" class="outline-2">
+<h2 id="org7121ec6"><span class="section-number-2">1.</span> consult ripgrep search</h2>
 <div class="outline-text-2" id="text-1">
+<p>
+Use `SPC v c ` invoke consult ripgrep, this function will search text in current git project.<br />
+You could search content through a particular file type by `#searchcontent &#x2013; -g *.java`<br />
+</p>
+</div>
+</div>
+<div id="outline-container-orgf8b9915" class="outline-2">
+<h2 id="orgf8b9915"><span class="section-number-2">2.</span> conflict with toggle-input-method</h2>
+<div class="outline-text-2" id="text-2">
 <p>
 In the mini search buffer <code>C-;</code>  is binding to `embark-act`. It&rsquo;s conflict with <a href="file:///Users/van/.doom.d/modules/neo-emacs/rime/config.el">toggle-input-method</a>.<br />
 </p>
@@ -232,10 +242,10 @@ In the mini search buffer <code>C-;</code>  is binding to `embark-act`. It&rsquo
 Disable short cut <code>C-;</code> ,we need chage file here in <a href="file:///Users/van/.emacs.d/modules/completion/vertico/config.el">vertico/config.el</a>.<br />
 </p>
 <div class="org-src-container">
-<pre class="src src-elisp"><span class="linenr">1: </span>   <span style="color: #51afef;">(</span><span style="color: #51afef;">map!</span> <span style="color: #c678dd;">[</span>remap describe-bindings<span style="color: #c678dd;">]</span> <span style="color: #51afef;">#'</span><span style="color: #ECBE7B;">embark-bindings</span>
-<span class="linenr">2: </span>        <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">"C-;"               #'embark-act  ; to be moved to :config default if accepted</span>
-<span class="linenr">3: </span>        <span style="color: #c678dd;">(</span><span style="color: #c678dd;">:map</span> <span style="color: #dcaeea;">minibuffer-local-map</span>
-<span class="linenr">4: </span>         <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">"C-;"               #'embark-act</span>
+<pre class="src src-elisp"><span class="linenr">1: </span>&#9474; &#9474;<span style="color: #51afef;">(</span><span style="color: #51afef;">map!</span> <span style="color: #c678dd;">[</span>remap describe-bindings<span style="color: #c678dd;">]</span> <span style="color: #51afef;">#'</span><span style="color: #ECBE7B;">embark-bindings</span>
+<span class="linenr">2: </span>&#9474; &#9474; &#9474; &#9474; <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">"C-;"               #'embark-act  ; to be moved to :config default if accepted</span>
+<span class="linenr">3: </span>&#9474; &#9474; &#9474; &#9474; <span style="color: #c678dd;">(</span><span style="color: #c678dd;">:map</span> <span style="color: #dcaeea;">minibuffer-local-map</span>
+<span class="linenr">4: </span>&#9474; &#9474; &#9474; &#9474; &#9474;<span style="color: #5B6268;">;; </span><span style="color: #5B6268;">"C-;"               #'embark-act</span>
 </pre>
 </div></li>
 <li>The short cut <code>C-SPC</code> seems more popular for `toogle-input-method`, cause windows have a default setting for <code>C-SPC</code>.So a better way is binding <code>C-SPC</code> to `toogle-input-method`<br /></li>
@@ -243,21 +253,21 @@ Disable short cut <code>C-;</code> ,we need chage file here in <a href="file:///
 a new method to unbind c-; to embark-act<br />
 </p>
 <div class="org-src-container">
-<pre class="src src-elisp">    <span style="color: #51afef;">(</span><span style="color: #51afef;">map!</span> <span style="color: #c678dd;">:map</span> <span style="color: #c678dd;">(</span><span style="color: #dcaeea;">minibuffer-local-map</span><span style="color: #c678dd;">)</span>
-        <span style="color: #98be65;">"C-;"</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">toggle-input-method</span><span style="color: #51afef;">)</span>
+<pre class="src src-elisp">&#9474; &#9474; <span style="color: #51afef;">(</span><span style="color: #51afef;">map!</span> <span style="color: #c678dd;">:map</span> <span style="color: #c678dd;">(</span><span style="color: #dcaeea;">minibuffer-local-map</span><span style="color: #c678dd;">)</span>
+&#9474; &#9474; &#9474; &#9474; <span style="color: #98be65;">"C-;"</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">toggle-input-method</span><span style="color: #51afef;">)</span>
 </pre>
 </div></li>
 </ul></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org24dada8" class="outline-2">
-<h2 id="org24dada8"><span class="section-number-2">2.</span> <span class="done DONE">DONE</span> most wanted</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-orgc0727f0" class="outline-2">
+<h2 id="orgc0727f0"><span class="section-number-2">3.</span> <span class="todo DONE">DONE</span> most wanted</h2>
+<div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgcddbf59" class="outline-3">
-<h3 id="orgcddbf59"><span class="section-number-3">2.1.</span> code advice</h3>
-<div class="outline-text-3" id="text-2-1">
+<div id="outline-container-org84a106c" class="outline-3">
+<h3 id="org84a106c"><span class="section-number-3">3.1.</span> code advice</h3>
+<div class="outline-text-3" id="text-3-1">
 <p>
 Automatically to evil normal mode when `J` `K` be clicked.<br />
 It&rsquo;s actually a advice regard to `+workspace/switch-right` and `+workspace/switch-right`.<br />
@@ -267,13 +277,114 @@ It&rsquo;s actually a advice regard to `+workspace/switch-right` and `+workspace
 (map! <span style="color: #c678dd;">:n</span> <span style="color: #98be65;">"J"</span>                  '+workspace/switch-left                )
 </pre>
 </div>
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">积分兑换商城</td>
+<td class="org-left">✅</td>
+<td class="org-left">✅</td>
+<td class="org-left">✅</td>
+<td class="org-left">✅</td>
+<td class="org-left">✅</td>
+</tr>
+
+<tr>
+<td class="org-left">客服优先通道</td>
+<td class="org-left">-</td>
+<td class="org-left">-</td>
+<td class="org-left">✅</td>
+<td class="org-left">✅</td>
+<td class="org-left">✅</td>
+</tr>
+
+<tr>
+<td class="org-left">免押金租车资格</td>
+<td class="org-left">-</td>
+<td class="org-left">-</td>
+<td class="org-left">-</td>
+<td class="org-left">✅</td>
+<td class="org-left">✅</td>
+</tr>
+
+<tr>
+<td class="org-left">热门车型优先预定</td>
+<td class="org-left">-</td>
+<td class="org-left">-</td>
+<td class="org-left">-</td>
+<td class="org-left">✅</td>
+<td class="org-left">✅</td>
+</tr>
+
+<tr>
+<td class="org-left">租金折扣</td>
+<td class="org-left">-</td>
+<td class="org-left">-</td>
+<td class="org-left">95折</td>
+<td class="org-left">9折</td>
+<td class="org-left">85折</td>
+</tr>
+
+<tr>
+<td class="org-left">免费延迟还车（2小时）</td>
+<td class="org-left">-</td>
+<td class="org-left">-</td>
+<td class="org-left">-</td>
+<td class="org-left">✅</td>
+<td class="org-left">✅</td>
+</tr>
+
+<tr>
+<td class="org-left">专属生日福利</td>
+<td class="org-left">-</td>
+<td class="org-left">✅</td>
+<td class="org-left">✅</td>
+<td class="org-left">✅</td>
+<td class="org-left">✅</td>
+</tr>
+
+<tr>
+<td class="org-left">年度租车券</td>
+<td class="org-left">-</td>
+<td class="org-left">-</td>
+<td class="org-left">-</td>
+<td class="org-left">1张</td>
+<td class="org-left">2张</td>
+</tr>
+
+<tr>
+<td class="org-left">专属会员活动邀请</td>
+<td class="org-left">-</td>
+<td class="org-left">-</td>
+<td class="org-left">-</td>
+<td class="org-left">✅</td>
+<td class="org-left">✅</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: vanniuner</p>
-<p class="date">Created: 2024-03-12 Tue 09:04</p>
+<p class="date">Created: 2025-04-07 Mon 16:01</p>
 </div>
 </body>
 </html>

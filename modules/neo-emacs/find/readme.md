@@ -42,3 +42,4 @@ It&rsquo;s actually a advice regard to \`+workspace/switch-right\` and \`+worksp
     (map! :n "K"                  '+workspace/switch-right               )
     (map! :n "J"                  '+workspace/switch-left                )
 
+

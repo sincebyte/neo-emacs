@@ -97,7 +97,7 @@ Make sure there have Cmake lib or install it.
   #+end_src
 - MacOs
   #+begin_src shell
-  brew install cmake libtool gnuplot d2 ripgrep fzf terrastruct/tap/tala graphviz
+  brew install cmake libtool gnuplot d2 ripgrep fzf terrastruct/tap/tala graphviz vips
   #+end_src
 
 At last run below, this will take few minutes. And it depends on the quality of your network.
