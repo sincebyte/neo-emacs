@@ -22,10 +22,7 @@ make
 #+end_src
 ** Fish shell optimize
 If you are using fish shell ,fortunately there have some optimize config prepared for you.
-- feature:
-  - use fish shell on emacs vterm.
-  - use command `ff` %anyfile% on vterm will open %anyfile% in a new emacs buffer.It's very useful.
-    
+
 #+begin_src bash -n
 function vterm_printf;
     if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end
@@ -58,6 +55,10 @@ function ff
     vterm_cmd find-file (realpath "$argv")
 end
 #+end_src
+- feature:
+  - use fish shell on emacs vterm.
+  - use command `ff` %anyfile% on vterm will open %anyfile% in a new emacs buffer.It's very useful.
+    
 
 ** git push for proxy
 https://juejin.cn/post/7095575058705285151

@@ -1,327 +1,98 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<head>
-<!-- 2025-04-25 Fri 09:56 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>vterm packcage readme</title>
-<meta name="author" content="vanniuner" />
-<meta name="generator" content="Org Mode" />
-<style type="text/css">
-  #content { max-width: 60em; margin: auto; }
-  .title  { text-align: center;
-             margin-bottom: .2em; }
-  .subtitle { text-align: center;
-              font-size: medium;
-              font-weight: bold;
-              margin-top:0; }
-  .todo   { font-family: monospace; color: red; }
-  .done   { font-family: monospace; color: green; }
-  .priority { font-family: monospace; color: orange; }
-  .tag    { background-color: #eee; font-family: monospace;
-            padding: 2px; font-size: 80%; font-weight: normal; }
-  .timestamp { color: #bebebe; }
-  .timestamp-kwd { color: #5f9ea0; }
-  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
-  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
-  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
-  .underline { text-decoration: underline; }
-  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
-  p.verse { margin-left: 3%; }
-  pre {
-    border: 1px solid #e6e6e6;
-    border-radius: 3px;
-    background-color: #f2f2f2;
-    padding: 8pt;
-    font-family: monospace;
-    overflow: auto;
-    margin: 1.2em;
-  }
-  pre.src {
-    position: relative;
-    overflow: auto;
-  }
-  pre.src:before {
-    display: none;
-    position: absolute;
-    top: -8px;
-    right: 12px;
-    padding: 3px;
-    color: #555;
-    background-color: #f2f2f299;
-  }
-  pre.src:hover:before { display: inline; margin-top: 14px;}
-  /* Languages per Org manual */
-  pre.src-asymptote:before { content: 'Asymptote'; }
-  pre.src-awk:before { content: 'Awk'; }
-  pre.src-authinfo::before { content: 'Authinfo'; }
-  pre.src-C:before { content: 'C'; }
-  /* pre.src-C++ doesn't work in CSS */
-  pre.src-clojure:before { content: 'Clojure'; }
-  pre.src-css:before { content: 'CSS'; }
-  pre.src-D:before { content: 'D'; }
-  pre.src-ditaa:before { content: 'ditaa'; }
-  pre.src-dot:before { content: 'Graphviz'; }
-  pre.src-calc:before { content: 'Emacs Calc'; }
-  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
-  pre.src-fortran:before { content: 'Fortran'; }
-  pre.src-gnuplot:before { content: 'gnuplot'; }
-  pre.src-haskell:before { content: 'Haskell'; }
-  pre.src-hledger:before { content: 'hledger'; }
-  pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
-  pre.src-latex:before { content: 'LaTeX'; }
-  pre.src-ledger:before { content: 'Ledger'; }
-  pre.src-lisp:before { content: 'Lisp'; }
-  pre.src-lilypond:before { content: 'Lilypond'; }
-  pre.src-lua:before { content: 'Lua'; }
-  pre.src-matlab:before { content: 'MATLAB'; }
-  pre.src-mscgen:before { content: 'Mscgen'; }
-  pre.src-ocaml:before { content: 'Objective Caml'; }
-  pre.src-octave:before { content: 'Octave'; }
-  pre.src-org:before { content: 'Org mode'; }
-  pre.src-oz:before { content: 'OZ'; }
-  pre.src-plantuml:before { content: 'Plantuml'; }
-  pre.src-processing:before { content: 'Processing.js'; }
-  pre.src-python:before { content: 'Python'; }
-  pre.src-R:before { content: 'R'; }
-  pre.src-ruby:before { content: 'Ruby'; }
-  pre.src-sass:before { content: 'Sass'; }
-  pre.src-scheme:before { content: 'Scheme'; }
-  pre.src-screen:before { content: 'Gnu Screen'; }
-  pre.src-sed:before { content: 'Sed'; }
-  pre.src-sh:before { content: 'shell'; }
-  pre.src-sql:before { content: 'SQL'; }
-  pre.src-sqlite:before { content: 'SQLite'; }
-  /* additional languages in org.el's org-babel-load-languages alist */
-  pre.src-forth:before { content: 'Forth'; }
-  pre.src-io:before { content: 'IO'; }
-  pre.src-J:before { content: 'J'; }
-  pre.src-makefile:before { content: 'Makefile'; }
-  pre.src-maxima:before { content: 'Maxima'; }
-  pre.src-perl:before { content: 'Perl'; }
-  pre.src-picolisp:before { content: 'Pico Lisp'; }
-  pre.src-scala:before { content: 'Scala'; }
-  pre.src-shell:before { content: 'Shell Script'; }
-  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
-  /* additional language identifiers per "defun org-babel-execute"
-       in ob-*.el */
-  pre.src-cpp:before  { content: 'C++'; }
-  pre.src-abc:before  { content: 'ABC'; }
-  pre.src-coq:before  { content: 'Coq'; }
-  pre.src-groovy:before  { content: 'Groovy'; }
-  /* additional language identifiers from org-babel-shell-names in
-     ob-shell.el: ob-shell is the only babel language using a lambda to put
-     the execution function name together. */
-  pre.src-bash:before  { content: 'bash'; }
-  pre.src-csh:before  { content: 'csh'; }
-  pre.src-ash:before  { content: 'ash'; }
-  pre.src-dash:before  { content: 'dash'; }
-  pre.src-ksh:before  { content: 'ksh'; }
-  pre.src-mksh:before  { content: 'mksh'; }
-  pre.src-posh:before  { content: 'posh'; }
-  /* Additional Emacs modes also supported by the LaTeX listings package */
-  pre.src-ada:before { content: 'Ada'; }
-  pre.src-asm:before { content: 'Assembler'; }
-  pre.src-caml:before { content: 'Caml'; }
-  pre.src-delphi:before { content: 'Delphi'; }
-  pre.src-html:before { content: 'HTML'; }
-  pre.src-idl:before { content: 'IDL'; }
-  pre.src-mercury:before { content: 'Mercury'; }
-  pre.src-metapost:before { content: 'MetaPost'; }
-  pre.src-modula-2:before { content: 'Modula-2'; }
-  pre.src-pascal:before { content: 'Pascal'; }
-  pre.src-ps:before { content: 'PostScript'; }
-  pre.src-prolog:before { content: 'Prolog'; }
-  pre.src-simula:before { content: 'Simula'; }
-  pre.src-tcl:before { content: 'tcl'; }
-  pre.src-tex:before { content: 'TeX'; }
-  pre.src-plain-tex:before { content: 'Plain TeX'; }
-  pre.src-verilog:before { content: 'Verilog'; }
-  pre.src-vhdl:before { content: 'VHDL'; }
-  pre.src-xml:before { content: 'XML'; }
-  pre.src-nxml:before { content: 'XML'; }
-  /* add a generic configuration mode; LaTeX export needs an additional
-     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
-  pre.src-conf:before { content: 'Configuration File'; }
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
-  table { border-collapse:collapse; }
-  caption.t-above { caption-side: top; }
-  caption.t-bottom { caption-side: bottom; }
-  td, th { vertical-align:top;  }
-  th.org-right  { text-align: center;  }
-  th.org-left   { text-align: center;   }
-  th.org-center { text-align: center; }
-  td.org-right  { text-align: right;  }
-  td.org-left   { text-align: left;   }
-  td.org-center { text-align: center; }
-  dt { font-weight: bold; }
-  .footpara { display: inline; }
-  .footdef  { margin-bottom: 1em; }
-  .figure { padding: 1em; }
-  .figure p { text-align: center; }
-  .equation-container {
-    display: table;
-    text-align: center;
-    width: 100%;
-  }
-  .equation {
-    vertical-align: middle;
-  }
-  .equation-label {
-    display: table-cell;
-    text-align: right;
-    vertical-align: middle;
-  }
-  .inlinetask {
-    padding: 10px;
-    border: 2px solid gray;
-    margin: 10px;
-    background: #ffffcc;
-  }
-  #org-div-home-and-up
-   { text-align: right; font-size: 70%; white-space: nowrap; }
-  textarea { overflow-x: auto; }
-  .linenr { font-size: smaller }
-  .code-highlighted { background-color: #ffff00; }
-  .org-info-js_info-navigation { border-style: none; }
-  #org-info-js_console-label
-    { font-size: 10px; font-weight: bold; white-space: nowrap; }
-  .org-info-js_search-highlight
-    { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { }
-</style>
-<script src  = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src  = "https://emacs-1308440781.cos.ap-chengdu.myqcloud.com/scroll.js"></script>
-<link   href = "https://emacs-1308440781.cos.ap-chengdu.myqcloud.com/base.css" rel="stylesheet" type="text/css"></link>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>readme.html</title>
+<meta http-equiv="Content-Type" content="application/xhtml+xml;charset=utf-8"/>
+<link rel="stylesheet" type="text/css" media="all" href="https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.min.css"  />
+<link rel="stylesheet" type="text/css" media="all" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/github.min.css"  /><meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'><style> body { box-sizing: border-box; max-width: 740px; width: 100%; margin: 40px auto; padding: 0 10px; } </style><script id='MathJax-script' async src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'></script><script src='https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js'></script><script>document.addEventListener('DOMContentLoaded', () => { document.body.classList.add('markdown-body'); document.querySelectorAll('pre[lang] > code').forEach((code) => { code.classList.add(code.parentElement.lang); }); document.querySelectorAll('pre > code').forEach((code) => { hljs.highlightBlock(code); }); });</script>
 </head>
+
 <body>
-<div id="preamble" class="status">
-<p>Made ✐︎ by 
-</div>
-<div id="content" class="content">
-<h1 class="title">vterm packcage readme</h1>
-<div id="table-of-contents" role="doc-toc">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents" role="doc-toc">
-<ul>
-<li><a href="#org671848a">1. outline</a>
-<ul>
-<li><a href="#org9983139">1.1. Install vterm</a></li>
-<li><a href="#org6257087">1.2. Fish shell optimize</a></li>
-<li><a href="#org1cf81fe">1.3. git push for proxy</a></li>
-<li><a href="#org3970a39">1.4. shell path</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
+
+<h1 id="table-of-contents">Table of Contents</h1>
+<ol type="1">
+<li><a href="#org98b934b">outline</a>
+<ol type="1">
+<li><a href="#org5def028">Install vterm</a></li>
+<li><a href="#org68932fd">Fish shell optimize</a></li>
+<li><a href="#org200f886">git push for proxy</a></li>
+<li><a href="#orgcc78e04">shell path</a></li>
+</ol></li>
+</ol>
 <blockquote>
-<p>
-vterm cloud not been available on windows<br />
-So windows user could use eshell as downgrade plan.<br />
-</p>
+<p>vterm cloud not been available on windows<br />
+So windows user could use eshell as downgrade plan.</p>
 </blockquote>
-<div id="outline-container-org671848a" class="outline-2">
-<h2 id="org671848a"><span class="section-number-2">1.</span> outline</h2>
-<div class="outline-text-2" id="text-1">
-</div>
-<div id="outline-container-org9983139" class="outline-3">
-<h3 id="org9983139"><span class="section-number-3">1.1.</span> Install vterm</h3>
-<div class="outline-text-3" id="text-1-1">
-<p>
-If vterm complie failed in emacs, we could complie it manually.<br />
-</p>
-<div class="org-src-container">
-<pre class="src src-bash"><span style="color: #ECBE7B;">cd</span> .emacs.d/.local/straight/build/vterm/
-<span style="color: #ECBE7B;">mkdir</span> -p build
-<span style="color: #5B6268;"># </span><span style="color: #5B6268;">install cmake and libtool-bin</span>
+<p><a id="org98b934b"></a></p>
+<h1 id="outline">outline</h1>
+<p><a id="org5def028"></a></p>
+<h2 id="install-vterm">Install vterm</h2>
+<p>If vterm complie failed in emacs, we could complie it manually.</p>
+<pre><code>cd .emacs.d/.local/straight/build/vterm/
+mkdir -p build
+# install cmake and libtool-bin
 brew install cmake, brew install libtool
-<span style="color: #ECBE7B;">mkdir</span> -p build
-<span style="color: #ECBE7B;">cd</span> build
+mkdir -p build
+cd build
 cmake ..
-<span style="color: #ECBE7B;">make</span>
-</pre>
-</div>
-</div>
-</div>
-<div id="outline-container-org6257087" class="outline-3">
-<h3 id="org6257087"><span class="section-number-3">1.2.</span> Fish shell optimize</h3>
-<div class="outline-text-3" id="text-1-2">
-<p>
-If you are using fish shell ,fortunately there have some optimize config prepared for you.<br />
-</p>
-<ul class="org-ul">
-<li>feature:<br />
-<ul class="org-ul">
-<li>use fish shell on emacs vterm.<br /></li>
-<li>use command `ff` %anyfile% on vterm will open %anyfile% in a new emacs buffer.It&rsquo;s very useful.<br /></li>
+make</code></pre>
+<p><a id="org68932fd"></a></p>
+<h2 id="fish-shell-optimize">Fish shell optimize</h2>
+<p>If you are using fish shell ,fortunately there have some optimize
+config prepared for you.</p>
+<pre><code> 1  function vterm_printf;
+ 2      if begin; [  -n &quot;$TMUX&quot; ]  ; and  string match -q -r &quot;screen|tmux&quot; &quot;$TERM&quot;; end
+ 3          # tell tmux to pass the escape sequences through
+ 4          printf &quot;\ePtmux;\e\e]%s\007\e\\&quot; &quot;$argv&quot;
+ 5      else if string match -q -- &quot;screen*&quot; &quot;$TERM&quot;
+ 6          # GNU screen (screen, screen-256color, screen-256color-bce)
+ 7          printf &quot;\eP\e]%s\007\e\\&quot; &quot;$argv&quot;
+ 8      else
+ 9          printf &quot;\e]%s\e\\&quot; &quot;$argv&quot;
+10      end
+11  end
+12  if [ &quot;$INSIDE_EMACS&quot; = &#39;vterm&#39; ]
+13      function clear
+14          vterm_printf &quot;51;Evterm-clear-scrollback&quot;;
+15          tput clear;
+16      end
+17  end
+18
+19
+20  function vterm_cmd --description &#39;Run an Emacs command among the ones been defined in vterm-eval-cmds.&#39;
+21      set -l vterm_elisp ()
+22      for arg in $argv
+23          set -a vterm_elisp (printf &#39;&quot;%s&quot; &#39; (string replace -a -r &#39;([\\\\&quot;])&#39; &#39;\\\\\\\\$1&#39; $arg))
+24      end
+25      vterm_printf &#39;51;E&#39;(string join &#39;&#39; $vterm_elisp)
+26  end
+27  function ff
+28      set -q argv[1]; or set argv[1] &quot;.&quot;
+29      vterm_cmd find-file (realpath &quot;$argv&quot;)
+30  end</code></pre>
+<ul>
+<li>feature:
+<ul>
+<li>use fish shell on emacs vterm.</li>
+<li>use command `ff` %anyfile% on vterm will open %anyfile% in a new
+emacs buffer.It’s very useful.</li>
 </ul></li>
 </ul>
-<div class="org-src-container">
-<pre class="src src-shell"><span style="color: #51afef;">function</span> <span style="color: #c678dd;">vterm_printf</span>;
-&#9474;   <span style="color: #51afef;">if</span> begin; <span style="color: #51afef;">[</span>  -n <span style="color: #98be65;">"</span><span style="color: #a9a1e1;">$</span><span style="color: #dcaeea;">TMUX</span><span style="color: #98be65;">"</span> <span style="color: #51afef;">]</span>  ; and  string match -q -r <span style="color: #98be65;">"screen|tmux"</span> <span style="color: #98be65;">"</span><span style="color: #a9a1e1;">$</span><span style="color: #dcaeea;">TERM</span><span style="color: #98be65;">"</span>; end
-&#9474;   &#9474;   <span style="color: #5B6268;"># </span><span style="color: #5B6268;">tell tmux to pass the escape sequences through</span>
-&#9474;   &#9474;   printf <span style="color: #98be65;">"\ePtmux;\e\e]%s\007\e\\"</span> <span style="color: #98be65;">"</span><span style="color: #a9a1e1;">$</span><span style="color: #dcaeea;">argv</span><span style="color: #98be65;">"</span>
-&#9474;   <span style="color: #51afef;">else if</span> string match -q -- <span style="color: #98be65;">"screen*"</span> <span style="color: #98be65;">"</span><span style="color: #a9a1e1;">$</span><span style="color: #dcaeea;">TERM</span><span style="color: #98be65;">"</span>
-&#9474;   &#9474;   <span style="color: #5B6268;"># </span><span style="color: #5B6268;">GNU screen (screen, screen-256color, screen-256color-bce)</span>
-&#9474;   &#9474;   printf <span style="color: #98be65;">"\eP\e]%s\007\e\\"</span> <span style="color: #98be65;">"</span><span style="color: #a9a1e1;">$</span><span style="color: #dcaeea;">argv</span><span style="color: #98be65;">"</span>
-&#9474;   <span style="color: #51afef;">else</span>
-&#9474;   &#9474;   printf <span style="color: #98be65;">"\e]%s\e\\"</span> <span style="color: #98be65;">"</span><span style="color: #a9a1e1;">$</span><span style="color: #dcaeea;">argv</span><span style="color: #98be65;">"</span>
-&#9474;   end
-end
-<span style="color: #51afef;">if</span> <span style="color: #51afef;">[</span> <span style="color: #98be65;">"</span><span style="color: #a9a1e1;">$</span><span style="color: #dcaeea;">INSIDE_EMACS</span><span style="color: #98be65;">"</span> = <span style="color: #98be65;">'vterm'</span> <span style="color: #51afef;">]</span>
-&#9474;   <span style="color: #51afef;">function</span> <span style="color: #c678dd;">clear</span>
-&#9474;   &#9474;   vterm_printf <span style="color: #98be65;">"51;Evterm-clear-scrollback"</span>;
-&#9474;   &#9474;   tput clear;
-&#9474;   end
-end
+<p><a id="org200f886"></a></p>
+<h2 id="git-push-for-proxy">git push for proxy</h2>
+<p><a href="https://juejin.cn/post/7095575058705285151"
+class="uri">https://juejin.cn/post/7095575058705285151</a></p>
+<pre><code>Host github.com
+    ProxyCommand nc -x 127.0.0.1:1089 %h %p</code></pre>
+<p><a id="orgcc78e04"></a></p>
+<h2 id="shell-path">shell path</h2>
+<p>doom emacs make exec-path sync from your shell path automatically.
+You could use `(exec-path)` to check it out.<br />
+when you change your shell $PATH , use doom sync to reload it .</p>
 
-
-<span style="color: #51afef;">function</span> <span style="color: #c678dd;">vterm_cmd</span> --description <span style="color: #98be65;">'Run an Emacs command among the ones been defined in vterm-eval-cmds.'</span>
-&#9474;   <span style="color: #c678dd;">set</span> -l vterm_elisp <span style="color: #51afef;">()</span>
-&#9474;   <span style="color: #51afef;">for</span> arg<span style="color: #51afef;"> in</span> $<span style="color: #dcaeea;">argv</span>
-&#9474;   &#9474;   <span style="color: #c678dd;">set</span> -a vterm_elisp <span style="color: #51afef;">(</span>printf <span style="color: #98be65;">'"%s" '</span> <span style="color: #c678dd;">(</span>string replace -a -r <span style="color: #98be65;">'([\\\\"])'</span> <span style="color: #98be65;">'\\\\\\\\$1'</span> $<span style="color: #dcaeea;">arg</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
-&#9474;   end
-&#9474;   vterm_printf <span style="color: #98be65;">'51;E'</span><span style="color: #51afef;">(</span>string join <span style="color: #98be65;">''</span> $<span style="color: #dcaeea;">vterm_elisp</span><span style="color: #51afef;">)</span>
-end
-<span style="color: #51afef;">function</span> <span style="color: #c678dd;">ff</span>
-&#9474;   <span style="color: #c678dd;">set</span> -q argv<span style="color: #51afef;">[</span><span style="color: #da8548; font-weight: bold;">1</span><span style="color: #51afef;">]</span>; or set argv<span style="color: #51afef;">[</span><span style="color: #da8548; font-weight: bold;">1</span><span style="color: #51afef;">]</span> <span style="color: #98be65;">"."</span>
-&#9474;   vterm_cmd find-file <span style="color: #51afef;">(</span>realpath <span style="color: #98be65;">"</span><span style="color: #a9a1e1;">$</span><span style="color: #dcaeea;">argv</span><span style="color: #98be65;">"</span><span style="color: #51afef;">)</span>
-end
-</pre>
-</div>
-</div>
-</div>
-<div id="outline-container-org1cf81fe" class="outline-3">
-<h3 id="org1cf81fe"><span class="section-number-3">1.3.</span> git push for proxy</h3>
-<div class="outline-text-3" id="text-1-3">
-<p>
-<a href="https://juejin.cn/post/7095575058705285151">https://juejin.cn/post/7095575058705285151</a><br />
-</p>
-<div class="org-src-container">
-<pre class="src src-ssh">Host github.com
-    ProxyCommand nc -x 127.0.0.1:1089 %h %p
-</pre>
-</div>
-</div>
-</div>
-<div id="outline-container-org3970a39" class="outline-3">
-<h3 id="org3970a39"><span class="section-number-3">1.4.</span> shell path</h3>
-<div class="outline-text-3" id="text-1-4">
-<p>
-doom emacs make exec-path sync from your shell path automatically. You could use `(exec-path)` to check it out.<br />
-when you change your shell $PATH , use doom sync to reload it .<br />
-</p>
-</div>
-</div>
-</div>
-</div>
-<div id="postamble" class="status">
-<p class="author">Author: vanniuner</p>
-<p class="date">Created: 2025-04-25 Fri 09:56</p>
-</div>
 </body>
 </html>

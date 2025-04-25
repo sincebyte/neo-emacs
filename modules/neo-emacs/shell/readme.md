@@ -1,22 +1,22 @@
 
 # Table of Contents
 
-1.  [outline](#org93c38ba)
-    1.  [Install vterm](#org6626bfd)
-    2.  [Fish shell optimize](#orgf1b9f1e)
-    3.  [git push for proxy](#org3729e46)
-    4.  [shell path](#orgb1d2fdc)
+1.  [outline](#org98b934b)
+    1.  [Install vterm](#org5def028)
+    2.  [Fish shell optimize](#org68932fd)
+    3.  [git push for proxy](#org200f886)
+    4.  [shell path](#orgcc78e04)
 
 > vterm cloud not been available on windows  
 > So windows user could use eshell as downgrade plan.  
 
 
-<a id="org93c38ba"></a>
+<a id="org98b934b"></a>
 
 # outline
 
 
-<a id="org6626bfd"></a>
+<a id="org5def028"></a>
 
 ## Install vterm
 
@@ -32,15 +32,11 @@ If vterm complie failed in emacs, we could complie it manually.
     make
 
 
-<a id="orgf1b9f1e"></a>
+<a id="org68932fd"></a>
 
 ## Fish shell optimize
 
 If you are using fish shell ,fortunately there have some optimize config prepared for you.  
-
--   feature:  
-    -   use fish shell on emacs vterm.
-    -   use command \`ff\` %anyfile% on vterm will open %anyfile% in a new emacs buffer.It&rsquo;s very useful.
 
      1  function vterm_printf;
      2      if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end
@@ -73,8 +69,12 @@ If you are using fish shell ,fortunately there have some optimize config prepare
     29      vterm_cmd find-file (realpath "$argv")
     30  end
 
+-   feature:  
+    -   use fish shell on emacs vterm.
+    -   use command \`ff\` %anyfile% on vterm will open %anyfile% in a new emacs buffer.It&rsquo;s very useful.
 
-<a id="org3729e46"></a>
+
+<a id="org200f886"></a>
 
 ## git push for proxy
 
@@ -84,7 +84,7 @@ If you are using fish shell ,fortunately there have some optimize config prepare
         ProxyCommand nc -x 127.0.0.1:1089 %h %p
 
 
-<a id="orgb1d2fdc"></a>
+<a id="orgcc78e04"></a>
 
 ## shell path
 
