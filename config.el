@@ -242,3 +242,11 @@
 
 (add-to-list 'load-path          user-private-dir )
 (use-package! db-work                             )    ;; load by local, privacy config account or pwd here
+
+(after! dired
+  (map! :map dired-mode-map
+        :n "c" nil
+        "c" nil))
+(after! dired
+  (map! :map dired-mode-map
+        :n "c" #'dired-create-empty-file))

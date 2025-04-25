@@ -1,20 +1,22 @@
 
 # Table of Contents
 
-1.  [outline](#orgfa3c894)
-    1.  [Install vterm](#org865bcd8)
-    2.  [Fish shell optimize](#orge1f8941)
+1.  [outline](#org53f109d)
+    1.  [Install vterm](#orge2e6139)
+    2.  [Fish shell optimize](#orged39c82)
+    3.  [git push for proxy](#orga6e817b)
+    4.  [shell path](#org4e7b978)
 
 > vterm cloud not been available on windows  
 > So windows user could use eshell as downgrade plan.  
 
 
-<a id="orgfa3c894"></a>
+<a id="org53f109d"></a>
 
 # outline
 
 
-<a id="org865bcd8"></a>
+<a id="orge2e6139"></a>
 
 ## Install vterm
 
@@ -30,7 +32,7 @@ If vterm complie failed in emacs, we could complie it manually.
     make
 
 
-<a id="orge1f8941"></a>
+<a id="orged39c82"></a>
 
 ## Fish shell optimize
 
@@ -70,4 +72,22 @@ If you are using fish shell ,fortunately there have some optimize config prepare
         set -q argv[1]; or set argv[1] "."
         vterm_cmd find-file (realpath "$argv")
     end
+
+
+<a id="orga6e817b"></a>
+
+## git push for proxy
+
+<https://juejin.cn/post/7095575058705285151>  
+
+    Host github.com
+        ProxyCommand nc -x 127.0.0.1:1089 %h %p
+
+
+<a id="org4e7b978"></a>
+
+## shell path
+
+doom emacs make exec-path sync from your shell path automatically. You could use \`(exec-path)\` to check it out.  
+when you change your shell $PATH , use doom sync to reload it .  
 

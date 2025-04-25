@@ -31,12 +31,13 @@
 (map! :after dired
       :map dired-mode-map
       :ne "J" #'+workspace/switch-left)
-(map! :after dired
-      :map dired-mode-map
-      :ne "c" nil)
-(map! :after dired
-      :map dired-mode-map
-      :ne "c" #'dired-create-empty-file)
+(after! dired
+  (map! :map dired-mode-map
+        :n "c" nil
+        "c" nil))
+(after! dired
+  (map! :map dired-mode-map
+        :n "c" #'dired-create-empty-file))
 (map! :after dired
       :map dired-mode-map
       :ne "h" #'dired-up-directory)

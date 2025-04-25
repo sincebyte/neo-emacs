@@ -63,3 +63,8 @@ https://juejin.cn/post/7095575058705285151
 Host github.com
     ProxyCommand nc -x 127.0.0.1:1089 %h %p
 #+end_src
+
+** shell path 
+doom emacs make exec-path sync from your shell path automatically. You could use `(exec-path)` to check it out. 
+when you change your shell $PATH , use doom sync to reload it .
+

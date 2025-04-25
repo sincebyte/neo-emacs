@@ -31,7 +31,7 @@
  gc-cons-threshold             (* 2 1000 1000)
  neo-show-updir-line           t
  neo-show-hidden-files         nil)
-(add-to-list 'exec-path             pdflatex-exec-path )
+;; (add-to-list 'exec-path             pdflatex-exec-path )
 
 ;; org roam ui
 ;; (use-package! websocket
