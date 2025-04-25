@@ -25,7 +25,8 @@ If you are using fish shell ,fortunately there have some optimize config prepare
 - feature:
   - use fish shell on emacs vterm.
   - use command `ff` %anyfile% on vterm will open %anyfile% in a new emacs buffer.It's very useful.
-#+begin_src shell
+    
+#+begin_src bash -n
 function vterm_printf;
     if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end
         # tell tmux to pass the escape sequences through
@@ -57,6 +58,7 @@ function ff
     vterm_cmd find-file (realpath "$argv")
 end
 #+end_src
+
 ** git push for proxy
 https://juejin.cn/post/7095575058705285151
 #+begin_src ssh

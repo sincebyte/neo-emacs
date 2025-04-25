@@ -1,22 +1,22 @@
 
 # Table of Contents
 
-1.  [outline](#org53f109d)
-    1.  [Install vterm](#orge2e6139)
-    2.  [Fish shell optimize](#orged39c82)
-    3.  [git push for proxy](#orga6e817b)
-    4.  [shell path](#org4e7b978)
+1.  [outline](#org93c38ba)
+    1.  [Install vterm](#org6626bfd)
+    2.  [Fish shell optimize](#orgf1b9f1e)
+    3.  [git push for proxy](#org3729e46)
+    4.  [shell path](#orgb1d2fdc)
 
 > vterm cloud not been available on windows  
 > So windows user could use eshell as downgrade plan.  
 
 
-<a id="org53f109d"></a>
+<a id="org93c38ba"></a>
 
 # outline
 
 
-<a id="orge2e6139"></a>
+<a id="org6626bfd"></a>
 
 ## Install vterm
 
@@ -32,7 +32,7 @@ If vterm complie failed in emacs, we could complie it manually.
     make
 
 
-<a id="orged39c82"></a>
+<a id="orgf1b9f1e"></a>
 
 ## Fish shell optimize
 
@@ -42,39 +42,39 @@ If you are using fish shell ,fortunately there have some optimize config prepare
     -   use fish shell on emacs vterm.
     -   use command \`ff\` %anyfile% on vterm will open %anyfile% in a new emacs buffer.It&rsquo;s very useful.
 
-    function vterm_printf;
-        if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end
-            # tell tmux to pass the escape sequences through
-            printf "\ePtmux;\e\e]%s\007\e\\" "$argv"
-        else if string match -q -- "screen*" "$TERM"
-            # GNU screen (screen, screen-256color, screen-256color-bce)
-            printf "\eP\e]%s\007\e\\" "$argv"
-        else
-            printf "\e]%s\e\\" "$argv"
-        end
-    end
-    if [ "$INSIDE_EMACS" = 'vterm' ]
-        function clear
-            vterm_printf "51;Evterm-clear-scrollback";
-            tput clear;
-        end
-    end
-    
-    
-    function vterm_cmd --description 'Run an Emacs command among the ones been defined in vterm-eval-cmds.'
-        set -l vterm_elisp ()
-        for arg in $argv
-            set -a vterm_elisp (printf '"%s" ' (string replace -a -r '([\\\\"])' '\\\\\\\\$1' $arg))
-        end
-        vterm_printf '51;E'(string join '' $vterm_elisp)
-    end
-    function ff
-        set -q argv[1]; or set argv[1] "."
-        vterm_cmd find-file (realpath "$argv")
-    end
+     1  function vterm_printf;
+     2      if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end
+     3          # tell tmux to pass the escape sequences through
+     4          printf "\ePtmux;\e\e]%s\007\e\\" "$argv"
+     5      else if string match -q -- "screen*" "$TERM"
+     6          # GNU screen (screen, screen-256color, screen-256color-bce)
+     7          printf "\eP\e]%s\007\e\\" "$argv"
+     8      else
+     9          printf "\e]%s\e\\" "$argv"
+    10      end
+    11  end
+    12  if [ "$INSIDE_EMACS" = 'vterm' ]
+    13      function clear
+    14          vterm_printf "51;Evterm-clear-scrollback";
+    15          tput clear;
+    16      end
+    17  end
+    18  
+    19  
+    20  function vterm_cmd --description 'Run an Emacs command among the ones been defined in vterm-eval-cmds.'
+    21      set -l vterm_elisp ()
+    22      for arg in $argv
+    23          set -a vterm_elisp (printf '"%s" ' (string replace -a -r '([\\\\"])' '\\\\\\\\$1' $arg))
+    24      end
+    25      vterm_printf '51;E'(string join '' $vterm_elisp)
+    26  end
+    27  function ff
+    28      set -q argv[1]; or set argv[1] "."
+    29      vterm_cmd find-file (realpath "$argv")
+    30  end
 
 
-<a id="orga6e817b"></a>
+<a id="org3729e46"></a>
 
 ## git push for proxy
 
@@ -84,7 +84,7 @@ If you are using fish shell ,fortunately there have some optimize config prepare
         ProxyCommand nc -x 127.0.0.1:1089 %h %p
 
 
-<a id="org4e7b978"></a>
+<a id="orgb1d2fdc"></a>
 
 ## shell path
 
