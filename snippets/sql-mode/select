@@ -4,5 +4,5 @@
 # --
 
 <select name='select'>
- SELECT * FROM $0`(yank)`
+ SELECT * FROM $0`(yank)` limit 1
 </select>

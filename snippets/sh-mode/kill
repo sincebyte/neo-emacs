@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: kill
+# key: kill
+# --
+ps -ef | grep $0 | awk '{print \$2}' | xargs kill -9
