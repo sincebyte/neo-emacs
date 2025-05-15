@@ -173,11 +173,11 @@ evil-normal-state-map
   (setq explicit-shell-file-name "/bin/bash"))
 
 (connection-local-set-profile-variables
-'remote-direct-async-process
-'((tramp-direct-async-process . t)))
+ 'remote-direct-async-process
+ '((tramp-direct-async-process . t)))
 (connection-local-set-profiles
-'(:application tramp :protocol "ssh")
-'remote-direct-async-process)
+ '(:application tramp :protocol "ssh")
+ 'remote-direct-async-process)
 
 (setq tramp-default-method "ssh")
 (setq tramp-verbose 0)
@@ -203,3 +203,6 @@ evil-normal-state-map
 
 ;; (add-hook 'lsp-mode-hook #'lsp-lens-mode)
 ;; (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
+;; (after! corfu
+;;   (setq corfu-preselect 'prompt)     ;; 不自动选中鼠标悬停的项
+;;   (setq corfu-on-exact-match nil))   ;; 防止鼠标悬浮自动补全

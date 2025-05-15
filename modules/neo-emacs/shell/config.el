@@ -25,6 +25,29 @@
     (map! :n  "SPC r r" 'quickrun-shell                           )
     (map! :ne "SPC v v" 'project-eshell                           )))
 
+
 (if (eq system-type 'windows-nt)
     (progn (shell/configOnWin))
   (progn (shell/configOnMac)))
+
+(defun my/vterm-with-dir-and-file-name ()
+  (interactive)
+  (let* ((dir (file-name-nondirectory
+               (directory-file-name default-directory)))
+         (file (when buffer-file-name
+                 (file-name-nondirectory buffer-file-name)))
+         (file-part (or file "no-file"))
+         (bufname (format "*vterm: %s/%s*" dir file-part))
+         (existing (get-buffer bufname)))
+    (if existing
+        (switch-to-buffer existing)
+      (let ((default-directory default-directory))
+        (vterm bufname)))))
+
+;; eshell binding
+(defun shell/openAndResetCursor ()
+  (interactive)
+  (progn
+    (vterm)  ;; 启动 vterm
+    (run-with-idle-timer
+     0.1 nil 'vterm-reset-cursor-point)))

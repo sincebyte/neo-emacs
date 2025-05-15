@@ -220,18 +220,6 @@
 (setq +format-on-save-disabled-modes (add-to-list '+format-on-save-disabled-modes 'web-mode))
 (transwin-toggle)
 
-;; eshell binding
-(defun shell/openAndResetCursor ()
-  (interactive)
-  (progn
-    (vterm)  ;; 启动 vterm
-    (run-with-idle-timer
-     0.1 nil 'vterm-reset-cursor-point)))
-(map! :leader
-      :desc "Open terminal" "o t" nil)
-(map! :leader
-      :desc "Open terminal" "o t" #'shell/openAndResetCursor)
-
 (use-package ultra-scroll
   :load-path "~/.doom.d/neoemacs/ultra-scroll/"
   :init
@@ -241,12 +229,6 @@
   (ultra-scroll-mode 1))
 
 (add-to-list 'load-path          user-private-dir )
-(use-package! db-work                             )    ;; load by local, privacy config account or pwd here
-
-(after! dired
-  (map! :map dired-mode-map
-        :n "c" nil
-        "c" nil))
-(after! dired
-  (map! :map dired-mode-map
-        :n "c" #'dired-create-empty-file))
+(add-to-list 'load-path          "~/.doom.d/"     )
+(use-package! db-work                             )
+(load "keymap.el")
