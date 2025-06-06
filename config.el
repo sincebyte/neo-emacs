@@ -106,6 +106,7 @@
 ;; (after! doom-themes
 ;;   (load-theme 'doom-nano-dark t))
 
+(load-theme 'doom-moonlight t)
 
 
 ;; (setq initial-frame-alist '((height . 50)))

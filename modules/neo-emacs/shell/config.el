@@ -48,6 +48,6 @@
 (defun shell/openAndResetCursor ()
   (interactive)
   (progn
-    (vterm)  ;; 启动 vterm
+    (my/vterm-with-dir-and-file-name)
     (run-with-idle-timer
      0.1 nil 'vterm-reset-cursor-point)))

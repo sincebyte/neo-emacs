@@ -37,6 +37,9 @@
       +tree-sitter-hl-enabled-modes '(java-mode go-mode)
       lsp-warn-no-matched-clients nil)
 (setq-default flymake-no-changes-timeout 30)
+(add-hook 'go-mode-hook
+          (lambda ()
+            (setq lsp-modeline-code-action-fallback-icon                         "")))
 (add-hook 'web-mode-hook (lambda ()
                            (prism-mode)
                            (setq display-line-numbers                       t
