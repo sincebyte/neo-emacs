@@ -12,3 +12,5 @@
 (map! :leader :n "o T" #'my/vterm-with-dir-and-file-name)
 (map! :leader :desc "Open terminal" "o t" nil)
 (map! :leader :desc "Open terminal" "o t" #'shell/openAndResetCursor)
+(map! :i "s-y"  nil)
+(map! :i "s-y"  #'yank-from-kill-ring)

@@ -258,12 +258,12 @@
   ;; (display-battery-mode 1)
   (display-time-mode 1)
   (doom-modeline-def-modeline 'main
-    '(my-segment powerline-evil-right powerline-evil-right-arrow empty-segment eyeMonitor-count wechat-msg-count
+    '(my-segment powerline-evil-right powerline-evil-right-arrow empty-segment wechat-msg-count
       buffer-info matches parrot selection-info)
     '(misc-info minor-modes input-method buffer-encoding powerline-separator-left my-major-mode powerline-separator-left-vcs vcs
       powerline-separator-left-time-db powerline-separator-left-time my-time ))
   (doom-modeline-def-modeline 'vcs
-    '(my-segment powerline-evil-right powerline-evil-right-arrow empty-segment eyeMonitor-count wechat-msg-count matches buffer-info remote-host parrot selection-info)
+    '(my-segment powerline-evil-right powerline-evil-right-arrow empty-segment wechat-msg-count matches buffer-info remote-host parrot selection-info)
     '(compilation misc-info battery irc mu4e gnus github debug minor-modes buffer-encoding major-mode process
       powerline-separator-left-time-db powerline-separator-left-time my-time ))
   (doom-modeline-def-modeline 'dashboard

@@ -100,3 +100,21 @@ because of the isuue https://github.com/emacs-lsp/lsp-java/issues/465
 #+begin_src shell
 /Users/van/soft/apache-maven-3.6.1/bin/mvn -Djdt.js.server.root\=/Users/van/lsp-java/ -Djunit.runner.root\=/Users/van/.emacs.d/.local/cache/eclipse.jdt.ls/test-runner/ -Djunit.runner.fileName\=junit-platform-console-standalone.jar -Djava.debug.root\=/Users/van/lsp-java/bundles clean package -Djdt.download.url\=http\://1.117.167.195/download/jdt-language-server-1.31.0-202401111522.tar.gz -f ~/.doom.d/modules/neo-emacs/java/pom.xml
 #+end_src
+
+** eclipse jdt server
+#+begin_src bash
+/Users/van/soft/jdk/jdk-21.0.6.jdk/Contents/Home/bin/java \
+$JAVA_17_HOME/bin/java \
+-Declipse.application=org.eclipse.jdt.ls.core.id1 \
+-Dosgi.bundles.defaultStartLevel=4 \
+-Declipse.product=org.eclipse.jdt.ls.core.product \
+-Djava.import.generatesMetadataFilesAtProjectRoot=false \
+-Dlog.level=ALL \
+-Xmx1G \
+--add-modules=ALL-SYSTEM \
+--add-opens java.base/java.util=ALL-UNNAMED \
+--add-opens java.base/java.lang=ALL-UNNAMED \
+-jar ./plugins/org.eclipse.equinox.launcher_1.7.0.v20250331-1702.jar \
+-configuration ./config_mac \
+-data ~/.config/emacs/.local/etc/java-workspace
+#+end_src

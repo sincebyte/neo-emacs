@@ -107,11 +107,11 @@
                                   lsp-modeline-code-actions-enable           nil
                                   lsp-lens-enable                            t)))
 (setq lsp-java-format-settings-url   (expand-file-name (concat doom-user-dir "neoemacs/eclipse-codestyle.xml"))
-      lsp-java-java-path             (concat (getenv "JAVA_17_HOME") "/bin/java")
+      lsp-java-java-path             (concat (getenv "JAVA_21_HOME") "/bin/java")
       lsp-java-server-install-dir    "~/lsp-java/"
       lsp-maven-path                 (concat (getenv "MAVEN_HOME") "/conf/settings.xml")
-      ;; lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.35.0-202404251256.tar.gz"
-      lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.38.0-202407151826.tar.gz"
+      lsp-java-jdt-download-url      "http://localhost:8080/jdt-language-server-1.47.0-202505151856.tar.gz"
+      ;; lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.38.0-202407151826.tar.gz"
       lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path )
       lsp-java-vmargs                `("-XX:+UseParallelGC"
                                        "-XX:GCTimeRatio=4"
@@ -120,7 +120,8 @@
                                        "-Xmx2G"
                                        "-Xms100m",
                                        (concat "-javaagent:"
-                                               (expand-file-name (concat doom-user-dir "neoemacs/lombok1.18.34.jar")))))
+                                               (expand-file-name (concat doom-user-dir "neoemacs/lombok1.18.38.jar"))))
+)
 
 ;; ;; ;; java key setting
 (map! :nve "; c"     'comment-line                        )
