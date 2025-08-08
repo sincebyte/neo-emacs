@@ -2,6 +2,8 @@
 
 (use-package! go-translate :defer t               )
 
+                                        ;(setq gt-langs '(en zh))
+                                        ;(setq gt-default-translator (gt-translator :engines (gt-youdao-dict-engine)))
 (map! :ne "; t"     'gt-do-translate )
 (map! :ve "; t"     'gt-do-translate )
 ;; (map! :ne "; y"     'gt-start gbuffer)
@@ -16,6 +18,7 @@
 
 (after! go-translate
   (setq gt-langs '(en zh))
+  (setq gt-default-translator (gt-translator :engines (gt-youdao-dict-engine)))
   (setq gt-preset-translators
         `((default . ,(gt-translator
                        :taker   (gt-taker :text 'word :pick 'paragraph)

@@ -1,6 +1,5 @@
 ;;; module/alpha/config.el -*- lexical-binding: t; -*-
 
-;; (setq frame-title-format nil)
 
 (setq kaolin-themes-underline nil)
 (defun synchronize-theme ()
@@ -19,7 +18,7 @@
 
 (use-package transwin
   :config
-  (setq transwin--record-toggle-frame-transparency 95)
+  (setq transwin--record-toggle-frame-transparency 80)
   (setq transwin-delta-alpha 5)
   (setq transwin-parameter-alpha 'alpha-background))
 

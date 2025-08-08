@@ -15,6 +15,7 @@
 ;; emacs header line title setting
 ;; (setq-default default-frame-alist '((undecorated . t)))
 ;; (add-to-list 'default-frame-alist '(ns-transparent-titlebar . nil))
+
 (add-to-list 'default-frame-alist '(ns-appearance . light))
 (setq-default frame-title-format nil)
 (setq ns-use-proxy-icon nil)
@@ -96,8 +97,6 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-;; (load-file "~/.emacs.d/themes/masked-theme-source-code.el")
-;; (load-theme 'color-theme-sanityinc-tomorrow-night t)
 ;; (load-theme 'kaolin t)
 ;; (color-theme-sanityinc-tomorrow-night)
 ;; (setq doom-theme 'kaolin-bubblegum)
@@ -106,7 +105,7 @@
 ;; (after! doom-themes
 ;;   (load-theme 'doom-nano-dark t))
 
-;; (load-theme 'doom-moonlight t)
+;; (load-theme 'doom-wilmersdorf t)
 
 
 ;; (setq initial-frame-alist '((height . 50)))

@@ -32,6 +32,10 @@
  +format-on-save-disabled-modes             (add-to-list '+format-on-save-disabled-modes 'c++-mode)
  +format-on-save-disabled-modes             (add-to-list '+format-on-save-disabled-modes 'c-mode))
 
+(with-eval-after-load 'vertico
+  (keymap-set vertico-map "C-j" #'vertico-next)
+  (keymap-set vertico-map "C-k" #'vertico-previous))
+
 
 (setq lsp-semgrep-languages '()
       +tree-sitter-hl-enabled-modes '(java-mode go-mode)
@@ -121,7 +125,7 @@
                                        "-Xms100m",
                                        (concat "-javaagent:"
                                                (expand-file-name (concat doom-user-dir "neoemacs/lombok1.18.38.jar"))))
-)
+      )
 
 ;; ;; ;; java key setting
 (map! :nve "; c"     'comment-line                        )
@@ -183,8 +187,16 @@ evil-normal-state-map
  '(:application tramp :protocol "ssh")
  'remote-direct-async-process)
 
-(setq tramp-default-method "ssh")
-(setq tramp-verbose 0)
+(setq tramp-default-method "ssh"
+      tramp-copy-size-limit (* 1024 1024)
+      tramp-verbose 0
+      remote-file-name-inhibit-locks t
+      tramp-use-scp-direct-remote-copying t
+      remote-file-name-inhibit-auto-save-visited t)
+(with-eval-after-load 'tramp
+  (with-eval-after-load 'compile
+    (remove-hook 'compilation-mode-hook #'tramp-compile-disable-ssh-controlmaster-options)))
+
 ;; (setq tramp-connection-properties '(("hassio"  "root" "explicit-shell-file-name" "/bin/bash")))
 
 (defun org-babel-edit-prep:java (babel-info)

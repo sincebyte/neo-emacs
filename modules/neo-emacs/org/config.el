@@ -233,10 +233,10 @@
   (setq company-english-helper-active-p t)
   (message "English helper has enable."))
 
-(use-package company-english-helper
-  :load-path "~/.doom.d/neoemacs/company-english-helper"
-  :config
-  (add-hook 'org-mode-hook #'open-company-english-helper))
+;; (use-package company-english-helper
+;;   :load-path "~/.doom.d/neoemacs/company-english-helper"
+;;   :config
+;;   (add-hook 'org-mode-hook #'open-company-english-helper))
 
 (use-package focus
   :after org-roam

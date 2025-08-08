@@ -80,6 +80,7 @@
 (package! focus               )
 (package! ialign              )
 (package! powerline           )
+;; (package! aider               )
 
 (package! uniline)
 (package! color-theme-sanityinc-tomorrow)
