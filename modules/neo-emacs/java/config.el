@@ -36,7 +36,7 @@
   :after corfu
   :custom
   (kind-icon-blend-background t)
-  ; (kind-icon-default-face 'corfu-default) ; only needed with blend-background
+                                        ; (kind-icon-default-face 'corfu-default) ; only needed with blend-background
   :config
   (setq kind-icon-use-icons  nil
         corfu-count          7    )
@@ -45,8 +45,16 @@
   (corfu-popupinfo-mode -1)              ; 强制禁用
   (setq corfu-popupinfo-delay nil        ; 禁止延迟触发
         corfu-popupinfo-hide t           ; 隐藏可能残留的弹窗
+        corfu-auto                t
+        corfu-preselect           'first
+        corfu-bar-width           0.5
+        corfu-quit-at-boundary    nil
+        corfu-quit-no-match       nil
         corfu-popupinfo-max-width 0      ; 确保弹窗尺寸为零
-        corfu-popupinfo-max-height 0))
+        corfu-popupinfo-max-height 0)
+  (custom-set-faces!
+    '(corfu-current :background "#2C3946" :foreground "#7BB6E2" :weight bold))
+  (define-key corfu-map (kbd "<escape>") nil))
 
 (with-eval-after-load 'vertico
   (keymap-set vertico-map "C-j" #'vertico-next)
@@ -89,6 +97,8 @@
                                   ;; company-text-icons-format                  "%s ⇢ "
                                   company-text-icons-add-background          t
                                   lsp-enable-symbol-highlighting             t
+                                  lsp-completion-show-annotation             nil
+                                  lsp-completion-show-detail                 t
                                   company-auto-update-doc                    nil
                                   lsp-ui-doc-show-with-cursor                nil
                                   ;; lsp-ui-sideline-enable                     nil
@@ -117,7 +127,6 @@
                                   lsp-java-inhibit-message                   nil
                                   lsp-completion-show-kind                   nil
                                   lsp-completion-sort-initial-results        t
-                                  lsp-completion-show-detail                 t
                                   lsp-java-completion-guess-method-arguments t
                                   lsp-completion-enable-additional-text-edit t
                                   lsp-java-progress-reports-enabled          nil
