@@ -4,8 +4,8 @@
 
                                         ;(setq gt-langs '(en zh))
                                         ;(setq gt-default-translator (gt-translator :engines (gt-youdao-dict-engine)))
-(map! :ne "; t"     'gt-do-translate )
-(map! :ve "; t"     'gt-do-translate )
+(map! :ne "; t"     'gt-translate )
+(map! :ve "; t"     'gt-translate )
 ;; (map! :ne "; y"     'gt-start gbuffer)
 ;;(map! :ne "; y"     'gt-start gt-buffer)
 ;; (map! :ne "; y"     'gt-go-buffer-translate)
@@ -16,7 +16,7 @@
       :map evil-normal-state-map
       "q" nil)
 
-(after! go-translate
+(after! gt
   (setq gt-langs '(en zh))
   (setq gt-default-translator (gt-translator :engines (gt-youdao-dict-engine)))
   (setq gt-preset-translators
