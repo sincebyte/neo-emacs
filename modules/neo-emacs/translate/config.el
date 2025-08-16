@@ -1,6 +1,6 @@
 ;;; neoemacs/translate/config.el -*- lexical-binding: t; -*-
 
-(use-package! go-translate :defer t               )
+(use-package! gt :defer t               )
 
                                         ;(setq gt-langs '(en zh))
                                         ;(setq gt-default-translator (gt-translator :engines (gt-youdao-dict-engine)))
@@ -12,7 +12,7 @@
 
 ;; (map! :ne "; y"     'gt-do-translate-buffer     )
 
-(map! :after go-translate
+(map! :after gt 
       :map evil-normal-state-map
       "q" nil)
 

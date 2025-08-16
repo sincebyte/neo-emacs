@@ -78,10 +78,10 @@ git clone --depth 1 https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 ** Doom Install
 Set up a vpn if you need it.
 
-#+BEGIN_SRC shell
+#+begin_src shell
 export http_proxy="ip:port"
 export https_proxy="ip:port"
-#+END_SRC
+#+end_src
 
 Set your emacs cmd for doom install.
 
@@ -174,7 +174,7 @@ Cause different platform have different font name,after font installed there nee
 (add-hook 'doom-init-ui-hook 'init-cjk-fonts)
 #+end_src
 *** setting on windows
-#+begin_src  elisp
+#+begin_src elisp
 (setq doom-font (font-spec :family "victor Mono Medium" :size 24))
 (defun init-cjk-fonts()
   (dolist (charset '(kana han cjk-misc bopomofo))

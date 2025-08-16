@@ -31,6 +31,22 @@
  company-show-quick-access                  nil
  +format-on-save-disabled-modes             (add-to-list '+format-on-save-disabled-modes 'c++-mode)
  +format-on-save-disabled-modes             (add-to-list '+format-on-save-disabled-modes 'c-mode))
+(use-package kind-icon
+  :ensure t
+  :after corfu
+  :custom
+  (kind-icon-blend-background t)
+  ; (kind-icon-default-face 'corfu-default) ; only needed with blend-background
+  :config
+  (setq kind-icon-use-icons  nil
+        corfu-count          7    )
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+(after! corfu
+  (corfu-popupinfo-mode -1)              ; 强制禁用
+  (setq corfu-popupinfo-delay nil        ; 禁止延迟触发
+        corfu-popupinfo-hide t           ; 隐藏可能残留的弹窗
+        corfu-popupinfo-max-width 0      ; 确保弹窗尺寸为零
+        corfu-popupinfo-max-height 0))
 
 (with-eval-after-load 'vertico
   (keymap-set vertico-map "C-j" #'vertico-next)
@@ -68,6 +84,7 @@
                             (tree-sitter-hl-mode)
                             (indent-bars-mode 1)
                             (setq display-line-numbers                       t
+                                  corfu-popupinfo-mode                       nil
                                   lsp-java-compile-null-analysis-mode        "automatic"
                                   ;; company-text-icons-format                  "%s ⇢ "
                                   company-text-icons-add-background          t
@@ -219,6 +236,3 @@ evil-normal-state-map
 
 ;; (add-hook 'lsp-mode-hook #'lsp-lens-mode)
 ;; (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
-;; (after! corfu
-;;   (setq corfu-preselect 'prompt)     ;; 不自动选中鼠标悬停的项
-;;   (setq corfu-on-exact-match nil))   ;; 防止鼠标悬浮自动补全

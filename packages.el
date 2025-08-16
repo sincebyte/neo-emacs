@@ -56,7 +56,7 @@
 (package! org-roam-ui         )
 (package! rime                )
 (package! liberime            )
-(package! go-translate        )
+(package! gt                  )
 (package! d2-mode             )
 (package! gnuplot             )
 (package! string-inflection   )
@@ -80,6 +80,7 @@
 (package! focus               )
 (package! ialign              )
 (package! powerline           )
+(package! kind-icon           )
 ;; (package! aider               )
 
 (package! uniline)
