@@ -102,6 +102,7 @@
 (unpin! lsp-mode)
 (unpin! lsp-java)
 (unpin! apheleia)
+(unpin! transient)
 ;; (package! copilot
 ;;   :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el" "dist")))
 

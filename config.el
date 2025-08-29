@@ -178,6 +178,7 @@
 (map! :ne  "; q"      'quit-window                           )
 (map! :ve  "; q"      'quit-window                           )
 (map! :ne  "; f"      'dirvish                               )
+(map! :map dirvish-mode-map :ne "; f" #'+dired/quit-all      )
 (map! :ne  "; o"      'neotree-projectile-action             )
 (map! :n   "SPC t n"  '+workspace/new                        )
 (map! :n   "K"        '+workspace/switch-right               )
@@ -232,3 +233,4 @@
 (add-to-list 'load-path          "~/.doom.d/"     )
 (use-package! db-work                             )
 (load "keymap.el")
+(setq transient-show-during-minibuffer-read t)
