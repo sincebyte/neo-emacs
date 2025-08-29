@@ -18,8 +18,7 @@
 (setq mode-line-mule-info   '((:eval (rime-lighter)))
       rime-title "CH"
       rime-inline-ascii-trigger 'shift-l
-      rime-disable-predicates '(
-                                rime-predicate-current-uppercase-letter-p
+      rime-disable-predicates '(rime-predicate-after-alphabet-char-p
                                 rime-predicate-space-after-cc-p))
 
 

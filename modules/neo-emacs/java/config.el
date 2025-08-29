@@ -29,6 +29,10 @@
  company-text-face-extra-attributes         '(:weight bold :family "Street Stencil")
  company-tooltip-flip-when-above            t
  company-show-quick-access                  nil
+ ;; lsp-pylsp-plugins-autopep8-enabled         t
+ ;; lsp-pylsp-plugins-rope-autoimport-code-actions-enabled  t
+ ;; lsp-pylsp-plugins-rope-autoimport-enabled  t
+ ;; lsp-pylsp-plugins-pydocstyle-enabled       nil
  +format-on-save-disabled-modes             (add-to-list '+format-on-save-disabled-modes 'c++-mode)
  +format-on-save-disabled-modes             (add-to-list '+format-on-save-disabled-modes 'c-mode))
 (use-package kind-icon
@@ -82,6 +86,12 @@
                             ;; (prism-mode)
                             (setq display-line-numbers                      t)))
 
+(add-hook 'python-mode-hook (lambda ()
+                              (focus-mode)
+                              (setq lsp-modeline-code-actions-enable nil)
+                              (setq doom-modeline-check-icon nil)
+                              (setq display-line-numbers                      t)))
+
 ;; (setq company-text-icons-add-background t)
 ;; (set-face-background 'font-lock-variable-name-face "#00e5ee")
 (add-hook 'java-mode-hook (lambda ()
@@ -104,6 +114,7 @@
                                   ;; lsp-ui-sideline-enable                     nil
                                   ;; lsp-ui-sideline-show-diagnostics           t
                                   ;; lsp-ui-sideline-show-hover                 t
+                                  lsp-ui-sideline-enable                     nil
                                   lsp-ui-sideline-diagnostic-max-lines       2
                                   lsp-ui-sideline-diagnostic-max-line-length 550
                                   lsp-ui-sideline-update-mode                'point
@@ -190,6 +201,7 @@ evil-normal-state-map
 (setq-hook! 'web-mode-hook indent-tabs-mode nil)
 
 (after! lsp-mode
+  (setq doom-modeline-icon nil)
   (setq lsp-disabled-clients '(xmlls)))
 
 ;;(add-hook 'java-mode-hook #'(lambda () (add-hook 'post-command-hook #'my-java-hook-function nil t)))

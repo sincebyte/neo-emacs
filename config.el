@@ -14,9 +14,9 @@
 ;; - `doom-font' -- the primary font to use
 ;; emacs header line title setting
 ;; (setq-default default-frame-alist '((undecorated . t)))
-;; (add-to-list 'default-frame-alist '(ns-transparent-titlebar . nil))
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . nil))
 
-(add-to-list 'default-frame-alist '(ns-appearance . light))
+;; (add-to-list 'default-frame-alist '(ns-appearance . light))
 (setq-default frame-title-format nil)
 (setq ns-use-proxy-icon nil)
 

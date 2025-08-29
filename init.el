@@ -158,9 +158,9 @@
        (org +roam2
             +present)      ; organize your plain life in plain text
        ;;php               ; perl's insecure younger brother
-       ;;plantuml          ; diagrams for confusing people more
-       ;;purescript        ; javascript, but functional
-       (python +lsp +pyenv +pyright)       ; beautiful is better than ugly
+       ;; plantuml          ; diagrams for confusing people more
+       ;; purescript        ; javascript, but functional
+       (python +lsp +pyright)       ; beautiful is better than ugly
        ;;qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
        ;;raku              ; the artist formerly known as perl6
@@ -176,7 +176,7 @@
        ;;swift             ; who asked for emoji variables?
        ;;terra             ; Earth and Moon in alignment for performance.
        (web +lsp)               ; the tubes
-       ;;yaml              ; JSON, but readable
+       yaml              ; JSON, but readable
        ;;zig               ; C, but simpler
 
        :email
@@ -210,7 +210,7 @@
        elfeed              ; rss reader
        alpha               ; make emacs background transparent
        git                 ; magit wit
-       addspace            ; add space when typing
+       ;; addspace            ; add space when typing
        telega              ; use telega
        :config
        ;;literate
