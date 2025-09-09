@@ -101,11 +101,11 @@
 ;; (color-theme-sanityinc-tomorrow-night)
 ;; (setq doom-theme 'kaolin-bubblegum)
 ;; (setq doom-theme 'sanityinc-tomorrow-eighties)
-;; (setq doom-theme 'sanityinc-tomorrow-night)
+;; (setq doom-theme 'doom-winter-is-coming-dark-blue)
 ;; (after! doom-themes
-;;   (load-theme 'doom-nano-dark t))
+;;   (load-theme 'doom-winter-is-coming-dark-blue t))
 
-;; (load-theme 'doom-wilmersdorf t)
+;(load-theme 'doom-winter-is-coming-dark-blue)
 
 
 ;; (setq initial-frame-alist '((height . 50)))

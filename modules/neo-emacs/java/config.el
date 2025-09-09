@@ -7,12 +7,12 @@
   :defer t
   :after nxml-mode)
 
-(use-package prism
-  :defer t
-  :config
-  (prism-set-colors :lightens '(0 5 10) :desaturations '(-2.5 0 2.5)
-                    :colors (-map #'doom-color
-                                  '(red orange yellow green blue violet))))
+;; (use-package prism
+;;   :defer t
+;;   :config
+;;   (prism-set-colors :lightens '(0 5 10) :desaturations '(-2.5 0 2.5)
+;;                     :colors (-map #'doom-color
+;;                                   '(red orange yellow green blue violet))))
 
 
 (setq ;;company-box-doc-enable                   nil
@@ -51,7 +51,7 @@
         corfu-popupinfo-hide t           ; 隐藏可能残留的弹窗
         corfu-auto                t
         corfu-preselect           'first
-        corfu-bar-width           0.5
+        corfu-bar-width           0.3
         corfu-quit-at-boundary    nil
         corfu-quit-no-match       nil
         corfu-popupinfo-max-width 0      ; 确保弹窗尺寸为零
@@ -65,103 +65,120 @@
   (keymap-set vertico-map "C-k" #'vertico-previous))
 
 
-(setq lsp-semgrep-languages '()
-      +tree-sitter-hl-enabled-modes '(java-mode go-mode)
-      lsp-warn-no-matched-clients nil)
+;; (setq lsp-semgrep-languages '()
+;;       +tree-sitter-hl-enabled-modes '(java-mode go-mode)
+;;       lsp-warn-no-matched-clients nil)
+;;
 (setq-default flymake-no-changes-timeout 30)
 (add-hook 'go-mode-hook
           (lambda ()
             (setq lsp-modeline-code-action-fallback-icon                         "")))
 (add-hook 'web-mode-hook (lambda ()
-                           (prism-mode)
+                           ;; (prism-mode)
+                           (rainbow-delimiters-mode)
                            (setq display-line-numbers                       t
                                  lsp-modeline-code-actions-enable           nil
                                  +format-on-save-disabled-modes (add-to-list '+format-on-save-disabled-modes 'web-mode)
                                  doom-modeline-icon                         nil)))
 (add-hook 'js-mode-hook (lambda ()
                           ;; (prism-mode)
+                          (rainbow-delimiters-mode)
                           (setq display-line-numbers                        t)))
-(add-hook 'lisp-mode-hook (lambda ()
-                            (focus-mode)
-                            ;; (prism-mode)
-                            (setq display-line-numbers                      t)))
+(add-hook 'emacs-lisp-mode-hook (lambda ()
+                                  (focus-mode)
+                                  ;; (prism-mode)
+                                  (rainbow-delimiters-mode)
+                                  (setq display-line-numbers                      t)))
 
-(add-hook 'python-mode-hook (lambda ()
-                              (focus-mode)
-                              (setq lsp-modeline-code-actions-enable nil)
-                              (setq doom-modeline-check-icon nil)
-                              (setq display-line-numbers                      t)))
+(add-hook 'python-ts-mode-hook (lambda ()
+                                 (focus-mode)
+                                 (rainbow-delimiters-mode)
+                                 (setq lsp-modeline-code-actions-enable nil)
+                                 (setq doom-modeline-check-icon nil)
+                                 (setq display-line-numbers                      t)))
 
 ;; (setq company-text-icons-add-background t)
 ;; (set-face-background 'font-lock-variable-name-face "#00e5ee")
-(add-hook 'java-mode-hook (lambda ()
-                            ;; (prism-mode)
-                            (focus-mode)
-                            (apheleia-global-mode -1)
-                            (setq-local lsp-enable-file-watchers nil)
-                            (tree-sitter-hl-mode)
-                            (indent-bars-mode 1)
-                            (setq display-line-numbers                       t
-                                  corfu-popupinfo-mode                       nil
-                                  lsp-java-compile-null-analysis-mode        "automatic"
-                                  ;; company-text-icons-format                  "%s ⇢ "
-                                  company-text-icons-add-background          t
-                                  lsp-enable-symbol-highlighting             t
-                                  lsp-completion-show-annotation             nil
-                                  lsp-completion-show-detail                 t
-                                  company-auto-update-doc                    nil
-                                  lsp-ui-doc-show-with-cursor                nil
-                                  ;; lsp-ui-sideline-enable                     nil
-                                  ;; lsp-ui-sideline-show-diagnostics           t
-                                  ;; lsp-ui-sideline-show-hover                 t
-                                  lsp-ui-sideline-enable                     nil
-                                  lsp-ui-sideline-diagnostic-max-lines       2
-                                  lsp-ui-sideline-diagnostic-max-line-length 550
-                                  lsp-ui-sideline-update-mode                'point
-                                  lsp-idle-delay                             0.1
-                                  lsp-signature-render-documentation         nil
-                                  lsp-signature-auto-activate                nil
-                                  lsp-eldoc-enable-hover                     t
-                                  lsp-eldoc-render-all                       nil
-                                  lsp-signature-auto-activate                t
-                                  lsp-java-signature-help-enabled            t
-                                  ;; lsp-signature-doc-lines                    1
-                                  ;; lsp-java-references-code-lens-enabled      t
-                                  lsp-java-implementations-code-lens-enabled t
-                                  lsp-enable-on-type-formatting              t
-                                  lsp-java-format-enabled                    t
-                                  lsp-java-format-on-type-enabled            t
-                                  lsp-java-format-comments-enabled           nil
-                                  lsp-java-save-actions-organize-imports     nil
-                                  lsp-java-maven-download-sources            "true"
-                                  lsp-java-autobuild-enabled                 t
-                                  lsp-java-inhibit-message                   nil
-                                  lsp-completion-show-kind                   nil
-                                  lsp-completion-sort-initial-results        t
-                                  lsp-java-completion-guess-method-arguments t
-                                  lsp-completion-enable-additional-text-edit t
-                                  lsp-java-progress-reports-enabled          nil
-                                  lsp-progress-prefix                        "󰫆 "
-                                  ;; lsp-completion-show-label-description      nil
-                                  lsp-modeline-diagnostics-enable            t
-                                  lsp-modeline-diagnostics-scope             :workspace
-                                  lsp-modeline-code-actions-enable           nil
-                                  lsp-lens-enable                            t)))
+;; (add-hook 'java-ts-mode-hook #'lsp)
+(add-hook 'java-ts-mode-hook (lambda ()
+                               ;; (prism-mode)
+                               (focus-mode)
+                               (lsp)
+                               (apheleia-global-mode -1)
+                               (setq-local lsp-enable-file-watchers nil)
+                               (rainbow-delimiters-mode)
+                               (indent-bars-mode 1)
+                               (setq display-line-numbers                       t
+                                     corfu-popupinfo-mode                       nil
+                                     lsp-java-compile-null-analysis-mode        "automatic"
+                                     ;; company-text-icons-format                  "%s ⇢ "
+                                     company-text-icons-add-background          t
+                                     lsp-enable-symbol-highlighting             t
+                                     lsp-completion-show-annotation             nil
+                                     lsp-completion-show-detail                 t
+                                     company-auto-update-doc                    nil
+                                     lsp-ui-doc-show-with-cursor                nil
+                                     ;; lsp-ui-sideline-enable                     nil
+                                     ;; lsp-ui-sideline-show-diagnostics           t
+                                     ;; lsp-ui-sideline-show-hover                 t
+                                     lsp-ui-sideline-enable                     nil
+                                     lsp-ui-sideline-diagnostic-max-lines       2
+                                     lsp-ui-sideline-diagnostic-max-line-length 550
+                                     lsp-ui-sideline-update-mode                'point
+                                     lsp-idle-delay                             0.1
+                                     lsp-signature-render-documentation         nil
+                                     lsp-signature-auto-activate                nil
+                                     lsp-eldoc-enable-hover                     t
+                                     lsp-eldoc-render-all                       nil
+                                     lsp-signature-auto-activate                t
+                                     lsp-java-signature-help-enabled            t
+                                     ;; lsp-signature-doc-lines                    1
+                                     ;; lsp-java-references-code-lens-enabled      t
+                                     lsp-java-implementations-code-lens-enabled t
+                                     lsp-enable-on-type-formatting              t
+                                     lsp-java-format-enabled                    t
+                                     lsp-java-format-on-type-enabled            t
+                                     lsp-java-format-comments-enabled           nil
+                                     lsp-java-save-actions-organize-imports     nil
+                                     lsp-java-maven-download-sources            "true"
+                                     lsp-java-autobuild-enabled                 t
+                                     lsp-java-inhibit-message                   nil
+                                     lsp-completion-show-kind                   nil
+                                     lsp-completion-sort-initial-results        t
+                                     lsp-java-completion-guess-method-arguments t
+                                     lsp-completion-enable-additional-text-edit t
+                                     lsp-java-progress-reports-enabled          nil
+                                     lsp-progress-prefix                        "󰫆 "
+                                     ;; lsp-completion-show-label-description      nil
+                                     lsp-modeline-diagnostics-enable            t
+                                     lsp-modeline-diagnostics-scope             :workspace
+                                     lsp-modeline-code-actions-enable           nil
+                                     lsp-lens-enable                            t)))
 (setq lsp-java-format-settings-url   (expand-file-name (concat doom-user-dir "neoemacs/eclipse-codestyle.xml"))
       lsp-java-java-path             (concat (getenv "JAVA_21_HOME") "/bin/java")
       lsp-java-server-install-dir    "~/lsp-java/"
       lsp-maven-path                 (concat (getenv "MAVEN_HOME") "/conf/settings.xml")
-      lsp-java-jdt-download-url      "http://localhost:8080/jdt-language-server-1.47.0-202505151856.tar.gz"
+      lsp-java-jdt-download-url      "http://localhost:8080/jdt-language-server-1.51.0-202509051513.tar.gz"
       ;; lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.38.0-202407151826.tar.gz"
       lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path )
-      lsp-java-vmargs                `("-XX:+UseParallelGC"
+      lsp-java-vmargs                `("--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED"
+                                       "--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED"
+                                       "--add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED"
+                                       "--add-opens=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED"
+                                       "--add-opens=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED"
+                                       "--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED"
+                                       "--add-opens=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED"
+                                       "--add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED"
+                                       "--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED"
+                                       "--add-opens=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED"
+                                       "-XX:+UseParallelGC"
                                        "-XX:GCTimeRatio=4"
                                        "-XX:AdaptiveSizePolicyWeight=90"
                                        "-Dsun.zip.disableMemoryMapping=true"
                                        "-Xmx2G"
                                        "-Xms100m",
                                        (concat "-javaagent:"
-                                               (expand-file-name (concat doom-user-dir "neoemacs/lombok1.18.38.jar"))))
+                                               (expand-file-name (concat doom-user-dir "neoemacs/lombok1.18.34.jar"))))
       )
 
 ;; ;; ;; java key setting

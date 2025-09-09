@@ -221,7 +221,7 @@
                  (if (eq evil-state 'replace) (if (display-graphic-p)    " REPLACE " " REPLACE " )
                    (if (eq evil-state 'emacs) (if (display-graphic-p)    " EMACS "   " EMACS "   )
                      (if (eq evil-state 'motion) (if (display-graphic-p) " MOTION "  " MOTION "  ))
-                     "▇")))))))
+                     "EMACS ")))))))
       (concat
        (propertize (concat "" charc "") 'face face))))
   (doom-modeline-def-segment my-custom-segment

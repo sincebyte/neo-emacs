@@ -81,6 +81,7 @@
 (package! ialign              )
 (package! powerline           )
 (package! kind-icon           )
+(package! rainbow-delimiters  )
 ;; (package! aider               )
 
 (package! uniline)
@@ -93,8 +94,8 @@
 (package! bookmark+    :recipe (:host github :repo "emacsmirror/bookmark-plus"   :branch "master" ))
 (package! emt          :recipe (:host github :repo "roife/emt"                   :branch "master" ))
 (package! pulsing-cursor :recipe (:host github :repo "jasonjckn/pulsing-cursor"))
-(package! prism        :recipe (:host github :repo "alphapapa/prism.el"          :branch "master" ))
-
+;; (package! prism        :recipe (:host github :repo "alphapapa/prism.el"          :branch "master" ))
+(package! transient :pin "aa32e0d66cc389befed7a8e8df9439d92a729daa")
 
 ;; (package! org-clock-reminder :recipe (:host github :repo "inickey/org-clock-reminder" :branch "master"))
 
@@ -102,7 +103,7 @@
 (unpin! lsp-mode)
 (unpin! lsp-java)
 (unpin! apheleia)
-(unpin! transient)
+
 ;; (package! copilot
 ;;   :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el" "dist")))
 
