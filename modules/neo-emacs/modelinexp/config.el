@@ -23,14 +23,6 @@
   (set-face-attribute 'which-key-separator-face nil :family "IBM Plex Mono"))
 
 (with-eval-after-load 'doom-modeline
-  (defface powerline-evil-normal-state   '((t (:background "nil"   :weight bold))) "")
-  (defface powerline-evil-insert-state   '((t (:background "nil"   :weight bold))) "")
-  (defface powerline-evil-replace-state  '((t (:background "nil"   :weight bold))) "")
-  (defface powerline-evil-motion-state   '((t (:background "nil"   :weight bold))) "")
-  (defface powerline-evil-visual-state   '((t (:background "nil"   :weight bold))) "")
-  (defface powerline-evil-emacs-state    '((t (:background "nil"   :weight bold))) "")
-  (custom-set-faces '(doom-modeline-panel ((t (:background unspecified :foreground "#da8548" :weight bold :height 150)))))
-
   (let ((org-level-1f (face-attribute 'outline-1 :foreground))
         (highlight-foreground (face-attribute 'org-date-selected :foreground))
         (highlight-background (face-attribute 'org-date-selected :background)))
@@ -52,67 +44,78 @@
                       :foreground (face-attribute 'org-level-3 :foreground nil t)
                       :weight 'bold)
   (set-face-attribute 'doom-modeline-evil-normal-state nil
-                      :background (face-attribute 'doom-modeline-evil-normal-state :foreground nil t)
+                      :inherit 'doom-modeline
+                      :background "#6bff81"
                       :foreground "black"
                       :weight 'bold)
   (set-face-attribute 'doom-modeline-evil-insert-state nil
-                      :background (face-attribute 'doom-modeline-evil-insert-state :foreground nil t)
+                      :inherit 'doom-modeline
+                      :background "#00bff9"
                       :foreground "black"
                       :weight 'bold)
   (set-face-attribute 'doom-modeline-evil-visual-state nil
-                      :background (face-attribute 'doom-modeline-evil-visual-state :foreground nil t)
+                      :inherit 'doom-modeline
+                      :background "#ffca28"
                       :foreground "black"
                       :weight 'bold)
   (set-face-attribute 'doom-modeline-evil-replace-state nil
-                      :background (face-attribute 'doom-modeline-evil-replace-state :foreground nil t)
+                      :inherit 'doom-modeline
+                      :background "#ef5350"
                       :foreground "black"
                       :weight 'bold)
   (set-face-attribute 'doom-modeline-evil-motion-state nil
-                      :background (face-attribute 'doom-modeline-evil-motion-state :foreground nil t)
+                      :inherit 'doom-modeline
+                      :background "#4876ae"
                       :foreground "black"
                       :weight 'bold)
-
-  (set-face-attribute 'powerline-evil-normal-state nil
-                      :background (face-attribute 'doom-modeline-evil-normal-state :background nil t)
-                      :weight 'bold)
-  (set-face-attribute 'powerline-evil-insert-state nil
-                      :background (face-attribute 'doom-modeline-evil-insert-state :background nil t)
-                      :weight 'bold)
-  (set-face-attribute 'powerline-evil-visual-state nil
-                      :background (face-attribute 'doom-modeline-evil-visual-state :background nil t)
-                      :weight 'bold)
-  (set-face-attribute 'powerline-evil-replace-state nil
-                      :background (face-attribute 'doom-modeline-evil-replace-state :background nil t)
-                      :weight 'bold)
-  (set-face-attribute 'powerline-evil-motion-state nil
-                      :background (face-attribute 'doom-modeline-evil-motion-state :background nil t)
-                      :weight 'bold)
-
-  )
-(after! doom-modeline
   (fresh/modelineconfig)
-  (add-hook '+workspace-new-hook #'fresh/modelineconfig))
-(after! dashboard
-  (fresh/modelineconfig))
-                                        ; available value of separator
-                                        ;  alternate, arrow, arrow-fade, bar, box, brace, butt,
-;; chamfer, contour, curve, rounded, roundstub, slant, wave, zigzag, and nil.
-;;
+  (add-hook '+workspace-new-hook #'fresh/modelineconfig)
+  )
 
+                                        ; available value of separator
+;; chamfer, contour, curve, rounded, roundstub, slant, wave, zigzag, and nil.
 (defun fresh/modelineconfig ()
+  (doom-modeline-def-segment my-segment
+    "My custom segment "
+    (let ((face
+           (if (doom-modeline--active)
+               (cond
+                ((eq evil-state 'normal)   'doom-modeline-evil-normal-state)
+                ((eq evil-state 'insert)   'doom-modeline-evil-insert-state)
+                ((eq evil-state 'visual)   'doom-modeline-evil-visual-state)
+                ((eq evil-state 'replace)  'doom-modeline-evil-replace-state)
+                ((eq evil-state 'motion)   'doom-modeline-evil-motion-state)
+                (t                         'doom-modeline-evil-normal-state))
+             'doom-modeline-evil-normal-state))
+          (charc
+           (cond
+            ((eq evil-state 'normal)  " NORMAL ")
+            ((eq evil-state 'insert)  " INSERT ")
+            ((eq evil-state 'visual)  " VISUAL ")
+            ((eq evil-state 'replace) " REPLACE ")
+            ((eq evil-state 'emacs)   " EMACS ")
+            ((eq evil-state 'motion)  " MOTION ")
+            (t " EMACS "))))
+      (concat
+       (propertize (concat "" charc "") 'face face))))
   (doom-modeline-def-segment powerline-evil-right
     "Insert a Powerline separator into the Doom Modeline."
     (let* ((separator 'arrow) ;; 获取当前分隔符
            (separator-fn (intern (format "powerline-%s-%s"
                                          separator
                                          (cdr powerline-default-separator-dir))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn (when (doom-modeline--active)
-                                                       (if (eq evil-state 'normal) 'powerline-evil-normal-state
-                                                         (if (eq evil-state 'insert) 'powerline-evil-insert-state
-                                                           (if (eq evil-state 'visual) 'powerline-evil-visual-state
-                                                             (if (eq evil-state 'replace) 'powerline-evil-replace-state
-                                                               (if (eq evil-state 'motion) 'powerline-evil-motion-state)
-                                                               'powerline-evil-normal-state))))) 'org-agenda-clocking )  )))
+      (propertize " " 'display (funcall separator-fn
+                                        (if (doom-modeline--active)
+                                            (cond
+                                             ((eq evil-state 'normal)   'doom-modeline-evil-normal-state)
+                                             ((eq evil-state 'insert)   'doom-modeline-evil-insert-state)
+                                             ((eq evil-state 'visual)   'doom-modeline-evil-visual-state)
+                                             ((eq evil-state 'replace)  'doom-modeline-evil-replace-state)
+                                             ((eq evil-state 'motion)   'doom-modeline-evil-motion-state)
+                                             (t                         'doom-modeline-evil-normal-state))
+                                          'doom-modeline-evil-normal-state)
+                                        'org-agenda-clocking ))))
+  ;; 不用
   (doom-modeline-def-segment powerline-evil-right-arrow
     "Insert a Powerline separator into the Doom Modeline."
     (let* ((separator 'arrow) ;; 获取当前分隔符
@@ -160,19 +163,7 @@
                                          (car powerline-default-separator-dir ))))) ;; 获取分隔符函数
       (propertize " " 'display (funcall separator-fn 'mode-line 'org-agenda-clocking ))))
 
-  (doom-modeline-def-segment powerline-evil-left
-    "Insert a Powerline separator into the Doom Modeline."
-    (let* ((separator 'arrow) ;; 获取当前分隔符
-           (separator-fn (intern (format "powerline-%s-%s"
-                                         separator
-                                         (car powerline-default-separator-dir))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-emacs-state  (when (doom-modeline--active)
-                                                                                        (if (eq evil-state 'normal) 'powerline-evil-normal-state
-                                                                                          (if (eq evil-state 'insert) 'powerline-evil-insert-state
-                                                                                            (if (eq evil-state 'visual) 'powerline-evil-visual-state
-                                                                                              (if (eq evil-state 'replace) 'powerline-evil-replace-state
-                                                                                                (if (eq evil-state 'motion) 'powerline-evil-motion-state)
-                                                                                                'powerline-evil-normal-state))))) )  )))
+
 
   (doom-modeline-def-segment my-major-mode
     "The major mode, including environment and text-scale info."
@@ -203,27 +194,7 @@
              text-scale-mode-amount))
        (doom-modeline-spc)))
      'face (doom-modeline-face 'org-block-end-line)))
-  (doom-modeline-def-segment my-segment
-    "My custom segment "
-    (let ((face
-           (when (doom-modeline--active)
-             (if (eq evil-state 'normal) 'doom-modeline-evil-normal-state
-               (if (eq evil-state 'insert) 'doom-modeline-evil-insert-state
-                 (if (eq evil-state 'visual) 'doom-modeline-evil-visual-state
-                   (if (eq evil-state 'replace) 'doom-modeline-evil-replace-state
-                     (if (eq evil-state 'emacs) 'doom-modeline-emacs-visual-state
-                       (if (eq evil-state 'motion) 'doom-modeline-motion-visual-state)
-                       'doom-modeline-evil-normal-state)))))))
-          (charc
-           (if (eq evil-state 'normal) (if (display-graphic-p)           " NORMAL "  " NORMAL "  )
-             (if (eq evil-state 'insert) (if (display-graphic-p)         " INSERT "  " INSERT "  )
-               (if (eq evil-state 'visual) (if (display-graphic-p)       " VISUAL "  " VISUAL "  )
-                 (if (eq evil-state 'replace) (if (display-graphic-p)    " REPLACE " " REPLACE " )
-                   (if (eq evil-state 'emacs) (if (display-graphic-p)    " EMACS "   " EMACS "   )
-                     (if (eq evil-state 'motion) (if (display-graphic-p) " MOTION "  " MOTION "  ))
-                     "EMACS ")))))))
-      (concat
-       (propertize (concat "" charc "") 'face face))))
+
   (doom-modeline-def-segment my-custom-segment
     (my-add-x-to-segment 'doom-modeline--major-mode-segment))
   (doom-modeline-def-segment wechat-msg-count
@@ -241,13 +212,6 @@
        ((= count 100) (propertize (concat "󰫈" "") 'face 'error) )
        (t (propertize (concat "󰫃" "") 'face 'diary)))))
 
-  (doom-modeline-def-segment hr-count
-    "A custom segment that reads content from a local file."
-    (let ((count (get-hr-count)))  ; 定义局部变量 count
-      (concat
-       (propertize " 󰐰 " 'face 'error)  ;; 图标的颜色
-       (propertize (number-to-string count) 'face 'org-todo)  ;; 数字的颜色
-       (propertize " " 'face 'org-table))))
   (doom-modeline-def-segment my-time
     "Display the current time in HH:mm:ss format."
     (propertize (format-time-string " %H:%M ")
@@ -258,12 +222,12 @@
   ;; (display-battery-mode 1)
   (display-time-mode 1)
   (doom-modeline-def-modeline 'main
-    '(my-segment powerline-evil-right powerline-evil-right-arrow empty-segment wechat-msg-count
+    '(my-segment powerline-evil-right empty-segment wechat-msg-count
       buffer-info matches parrot selection-info)
     '(misc-info minor-modes input-method buffer-encoding powerline-separator-left my-major-mode powerline-separator-left-vcs vcs
       powerline-separator-left-time-db powerline-separator-left-time my-time ))
   (doom-modeline-def-modeline 'vcs
-    '(my-segment powerline-evil-right powerline-evil-right-arrow empty-segment wechat-msg-count matches buffer-info remote-host parrot selection-info)
+    '(my-segment powerline-evil-right empty-segment wechat-msg-count matches buffer-info remote-host parrot selection-info)
     '(compilation misc-info battery irc mu4e gnus github debug minor-modes buffer-encoding major-mode process
       powerline-separator-left-time-db powerline-separator-left-time my-time ))
   (doom-modeline-def-modeline 'dashboard
@@ -293,14 +257,6 @@
              (t " 󰆄"))))
       "File not found")))
 
-(defun get-hr-count ()
-  "Read the content of a specific file and return it as a string."
-  (let ((file-path "~/.hr"))
-    (if (file-exists-p file-path)
-        (with-temp-buffer
-          (insert-file-contents file-path)
-          (string-to-number (string-trim (buffer-string)))) 46)))
-
 (defun get-eyeMonitor-count ()
   "Read the content of a specific file and return it as a number."
   (let ((file-path "~/.eyeMonitor"))
@@ -319,11 +275,11 @@
     (shell-command "osascript /Users/van/Desktop/获取微信消息数量.scpt" output-buffer)
     (display-buffer output-buffer)))
 
-(defun my-powerline-segment ()
-  "Insert a Powerline separator into the mode-line."
-  (let* ((separator (powerline-current-separator))
-         (separator-fn (intern (format "powerline-%s-%s" separator (car powerline-default-separator-dir)))))
-    (propertize " " 'display (funcall separator-fn 'doom-modeline-bar 'mode-line))))
+;; (defun my-powerline-segment ()
+;;   "Insert a Powerline separator into the mode-line."
+;;   (let* ((separator (powerline-current-separator))
+;;          (separator-fn (intern (format "powerline-%s-%s" separator (car powerline-default-separator-dir)))))
+;;     (propertize " " 'display (funcall separator-fn 'doom-modeline-bar 'mode-line))))
 (use-package powerline
   ;; :ensure t
   :config

@@ -101,11 +101,11 @@
 ;; (color-theme-sanityinc-tomorrow-night)
 ;; (setq doom-theme 'kaolin-bubblegum)
 ;; (setq doom-theme 'sanityinc-tomorrow-eighties)
-;; (setq doom-theme 'doom-winter-is-coming-dark-blue)
+(setq doom-theme 'doom-winter-is-coming-dark-blue)
 ;; (after! doom-themes
 ;;   (load-theme 'doom-winter-is-coming-dark-blue t))
 
-;(load-theme 'doom-winter-is-coming-dark-blue)
+;;(load-theme 'ef-frost)
 
 
 ;; (setq initial-frame-alist '((height . 50)))
@@ -234,3 +234,10 @@
 (use-package! db-work                             )
 (load "keymap.el")
 (setq transient-show-during-minibuffer-read t)
+
+(map! :after dired
+      :map dired-mode-map
+      :ne "J" nil)
+(map! :after dired
+      :map dired-mode-map
+      :ne "J" #'+workspace/switch-left)

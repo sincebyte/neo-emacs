@@ -16,6 +16,7 @@
 
 
 (setq ;;company-box-doc-enable                   nil
+ lsp-print-io t
  company-tooltip-limit                      7
  ;; company-auto-update-doc                    nil
  ;; company-frontends                       '(company-pseudo-tooltip-frontend company-echo-metadata-frontend)
@@ -134,10 +135,10 @@
                                      lsp-java-signature-help-enabled            t
                                      ;; lsp-signature-doc-lines                    1
                                      ;; lsp-java-references-code-lens-enabled      t
-                                     lsp-java-implementations-code-lens-enabled t
+                                     lsp-java-implementations-code-lens-enabled nil
                                      lsp-enable-on-type-formatting              t
                                      lsp-java-format-enabled                    t
-                                     lsp-java-format-on-type-enabled            t
+                                     lsp-java-format-on-type-enabled            nil
                                      lsp-java-format-comments-enabled           nil
                                      lsp-java-save-actions-organize-imports     nil
                                      lsp-java-maven-download-sources            "true"
@@ -153,30 +154,20 @@
                                      lsp-modeline-diagnostics-enable            t
                                      lsp-modeline-diagnostics-scope             :workspace
                                      lsp-modeline-code-actions-enable           nil
-                                     lsp-lens-enable                            t)))
+                                     lsp-lens-enable                            nil)))
 (setq lsp-java-format-settings-url   (expand-file-name (concat doom-user-dir "neoemacs/eclipse-codestyle.xml"))
       lsp-java-java-path             (concat (getenv "JAVA_21_HOME") "/bin/java")
       lsp-java-server-install-dir    "~/lsp-java/"
       lsp-maven-path                 (concat (getenv "MAVEN_HOME") "/conf/settings.xml")
-      lsp-java-jdt-download-url      "http://localhost:8080/jdt-language-server-1.51.0-202509051513.tar.gz"
+      lsp-java-jdt-download-url      "http://localhost:8080/jdt-language-server-1.47.0-202505151856.tar.gz"
       ;; lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.38.0-202407151826.tar.gz"
       lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path )
-      lsp-java-vmargs                `("--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED"
-                                       "--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED"
-                                       "--add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED"
-                                       "--add-opens=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED"
-                                       "--add-opens=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED"
-                                       "--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED"
-                                       "--add-opens=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED"
-                                       "--add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED"
-                                       "--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED"
-                                       "--add-opens=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED"
-                                       "-XX:+UseParallelGC"
+      lsp-java-vmargs                `("-XX:+UseParallelGC"
                                        "-XX:GCTimeRatio=4"
                                        "-XX:AdaptiveSizePolicyWeight=90"
                                        "-Dsun.zip.disableMemoryMapping=true"
                                        "-Xmx2G"
-                                       "-Xms100m",
+                                       "-Xms1G",
                                        (concat "-javaagent:"
                                                (expand-file-name (concat doom-user-dir "neoemacs/lombok1.18.34.jar"))))
       )
@@ -274,3 +265,14 @@ evil-normal-state-map
 
 ;; (add-hook 'lsp-mode-hook #'lsp-lens-mode)
 ;; (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
+
+(defun my/convert-unicode-in-region (beg end)
+  "Convert Unicode escape sequences in the selected region to characters.
+Example: \\u6587 -> 文"
+  (interactive "r")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region beg end)
+      (goto-char (point-min))
+      (while (re-search-forward "\\\\u\\([0-9a-fA-F]\\{4\\}\\)" nil t)
+        (replace-match (string (string-to-number (match-string 1) 16)) t nil)))))
