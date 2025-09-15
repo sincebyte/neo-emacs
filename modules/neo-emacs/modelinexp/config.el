@@ -114,7 +114,7 @@
                                              ((eq evil-state 'motion)   'doom-modeline-evil-motion-state)
                                              (t                         'doom-modeline-evil-normal-state))
                                           'doom-modeline-evil-normal-state)
-                                        'org-agenda-clocking ))))
+                                        'mode-line ))))
   ;; 不用
   (doom-modeline-def-segment powerline-evil-right-arrow
     "Insert a Powerline separator into the Doom Modeline."

@@ -1,14 +1,17 @@
 
 # Table of Contents
 
-1.  [Java module](#org60fd933)
-    1.  [most wanted](#orgb88ab85)
-    2.  [Dap-java Usage](#org579c823)
-    3.  [build handle](#org3678033)
+1.  [Java module](#orge2e4b70)
+    1.  [most wanted](#org9c8bb90)
+    2.  [Dap-java Usage](#org7d71e64)
+    3.  [build handle](#org0a297cd)
+    4.  [eclipse jdt server](#org0f3dbd3)
+2.  [issue](#orgdcdb8c5)
+    1.  [complete code](#org0c96138)
 
 
 
-<a id="org60fd933"></a>
+<a id="orge2e4b70"></a>
 
 # Java module
 
@@ -129,7 +132,7 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     3.  Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
 
 
-<a id="orgb88ab85"></a>
+<a id="org9c8bb90"></a>
 
 ## TODO most wanted
 
@@ -138,7 +141,7 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     1.  eldoc [lsp-java/issues/432](https://github.com/emacs-lsp/lsp-java/issues/432)
 
 
-<a id="org579c823"></a>
+<a id="org7d71e64"></a>
 
 ## TODO Dap-java Usage
 
@@ -219,11 +222,43 @@ I do not use debug for years. So be careful the documentation maybe outdated.I t
     </table>
 
 
-<a id="org3678033"></a>
+<a id="org0a297cd"></a>
 
 ## build handle
 
 because of the isuue <https://github.com/emacs-lsp/lsp-java/issues/465>  
 
     /Users/van/soft/apache-maven-3.6.1/bin/mvn -Djdt.js.server.root\=/Users/van/lsp-java/ -Djunit.runner.root\=/Users/van/.emacs.d/.local/cache/eclipse.jdt.ls/test-runner/ -Djunit.runner.fileName\=junit-platform-console-standalone.jar -Djava.debug.root\=/Users/van/lsp-java/bundles clean package -Djdt.download.url\=http\://1.117.167.195/download/jdt-language-server-1.31.0-202401111522.tar.gz -f ~/.doom.d/modules/neo-emacs/java/pom.xml
+
+
+<a id="org0f3dbd3"></a>
+
+## eclipse jdt server
+
+    /Users/van/soft/jdk/jdk-21.0.6.jdk/Contents/Home/bin/java \
+    $JAVA_17_HOME/bin/java \
+    -Declipse.application=org.eclipse.jdt.ls.core.id1 \
+    -Dosgi.bundles.defaultStartLevel=4 \
+    -Declipse.product=org.eclipse.jdt.ls.core.product \
+    -Djava.import.generatesMetadataFilesAtProjectRoot=false \
+    -Dlog.level=ALL \
+    -Xmx1G \
+    --add-modules=ALL-SYSTEM \
+    --add-opens java.base/java.util=ALL-UNNAMED \
+    --add-opens java.base/java.lang=ALL-UNNAMED \
+    -jar ./plugins/org.eclipse.equinox.launcher_1.7.0.v20250331-1702.jar \
+    -configuration ./config_mac \
+    -data ~/.config/emacs/.local/etc/java-workspace
+
+
+<a id="orgdcdb8c5"></a>
+
+# issue
+
+
+<a id="org0c96138"></a>
+
+## TODO complete code
+
+<https://github.com/emacs-lsp/lsp-mode/issues/4875>  
 

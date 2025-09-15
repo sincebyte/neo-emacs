@@ -96,12 +96,13 @@
 (package! pulsing-cursor :recipe (:host github :repo "jasonjckn/pulsing-cursor"))
 ;; (package! prism        :recipe (:host github :repo "alphapapa/prism.el"          :branch "master" ))
 (package! transient :pin "aa32e0d66cc389befed7a8e8df9439d92a729daa")
+(unpin! lsp-java)
+(unpin! lsp-mode)
+(package! lsp-mode :pin "c10b9066857d26a99fca1cb336d9be341ef3e09f")
 
 ;; (package! org-clock-reminder :recipe (:host github :repo "inickey/org-clock-reminder" :branch "master"))
 
 (unpin! dirvish)
-(unpin! lsp-mode)
-(unpin! lsp-java)
 (unpin! apheleia)
 
 ;; (package! copilot

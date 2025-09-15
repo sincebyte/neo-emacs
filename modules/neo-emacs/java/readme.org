@@ -118,3 +118,6 @@ $JAVA_17_HOME/bin/java \
 -configuration ./config_mac \
 -data ~/.config/emacs/.local/etc/java-workspace
 #+end_src
+* issue
+** TODO complete code
+https://github.com/emacs-lsp/lsp-mode/issues/4875

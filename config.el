@@ -101,7 +101,7 @@
 ;; (color-theme-sanityinc-tomorrow-night)
 ;; (setq doom-theme 'kaolin-bubblegum)
 ;; (setq doom-theme 'sanityinc-tomorrow-eighties)
-(setq doom-theme 'doom-winter-is-coming-dark-blue)
+;; (setq doom-theme 'doom-winter-is-coming-dark-blue)
 ;; (after! doom-themes
 ;;   (load-theme 'doom-winter-is-coming-dark-blue t))
 

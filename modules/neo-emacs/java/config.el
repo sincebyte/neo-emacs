@@ -17,6 +17,7 @@
 
 (setq ;;company-box-doc-enable                   nil
  lsp-print-io t
+ lsp-log-io t
  company-tooltip-limit                      7
  ;; company-auto-update-doc                    nil
  ;; company-frontends                       '(company-pseudo-tooltip-frontend company-echo-metadata-frontend)
@@ -86,8 +87,6 @@
                           (rainbow-delimiters-mode)
                           (setq display-line-numbers                        t)))
 (add-hook 'emacs-lisp-mode-hook (lambda ()
-                                  (focus-mode)
-                                  ;; (prism-mode)
                                   (rainbow-delimiters-mode)
                                   (setq display-line-numbers                      t)))
 
@@ -105,11 +104,13 @@
                                ;; (prism-mode)
                                (focus-mode)
                                (lsp)
+
                                (apheleia-global-mode -1)
                                (setq-local lsp-enable-file-watchers nil)
                                (rainbow-delimiters-mode)
                                (indent-bars-mode 1)
                                (setq display-line-numbers                       t
+                                     lsp-idle-delay nil
                                      corfu-popupinfo-mode                       nil
                                      lsp-java-compile-null-analysis-mode        "automatic"
                                      ;; company-text-icons-format                  "%s ⇢ "
@@ -154,23 +155,25 @@
                                      lsp-modeline-diagnostics-enable            t
                                      lsp-modeline-diagnostics-scope             :workspace
                                      lsp-modeline-code-actions-enable           nil
-                                     lsp-lens-enable                            nil)))
-(setq lsp-java-format-settings-url   (expand-file-name (concat doom-user-dir "neoemacs/eclipse-codestyle.xml"))
-      lsp-java-java-path             (concat (getenv "JAVA_21_HOME") "/bin/java")
-      lsp-java-server-install-dir    "~/lsp-java/"
-      lsp-maven-path                 (concat (getenv "MAVEN_HOME") "/conf/settings.xml")
-      lsp-java-jdt-download-url      "http://localhost:8080/jdt-language-server-1.47.0-202505151856.tar.gz"
-      ;; lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.38.0-202407151826.tar.gz"
-      lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path )
-      lsp-java-vmargs                `("-XX:+UseParallelGC"
-                                       "-XX:GCTimeRatio=4"
-                                       "-XX:AdaptiveSizePolicyWeight=90"
-                                       "-Dsun.zip.disableMemoryMapping=true"
-                                       "-Xmx2G"
-                                       "-Xms1G",
-                                       (concat "-javaagent:"
-                                               (expand-file-name (concat doom-user-dir "neoemacs/lombok1.18.34.jar"))))
-      )
+                                     lsp-lens-enable                            t)))
+(setq
+ ;; lsp-java-format-settings-url   (expand-file-name (concat doom-user-dir "neoemacs/eclipse-codestyle.xml"))
+ lsp-java-java-path             (concat (getenv "JAVA_21_HOME") "/bin/java")
+ lsp-java-server-install-dir    "~/lsp-java/"
+ lsp-maven-path                 (concat (getenv "MAVEN_HOME") "/conf/settings.xml")
+ lsp-java-jdt-download-url      "http://localhost:8080/jdt-language-server-1.50.0-202509041425.tar.gz"
+ ;; lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.38.0-202407151826.tar.gz"
+ lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path )
+ lsp-java-vmargs                `(
+                                  ;; "-XX:+UseParallelGC"
+                                  ;; "-XX:GCTimeRatio=4"
+                                  ;; "-XX:AdaptiveSizePolicyWeight=90"
+                                  ;; "-Dsun.zip.disableMemoryMapping=true"
+                                  "-Xmx2G"
+                                  "-Xms1G",
+                                  (concat "-javaagent:"
+                                          (expand-file-name (concat doom-user-dir "neoemacs/lombok1.18.38.jar"))))
+ )
 
 ;; ;; ;; java key setting
 (map! :nve "; c"     'comment-line                        )
