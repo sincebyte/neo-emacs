@@ -1,17 +1,18 @@
 
 # Table of Contents
 
-1.  [Java module](#orge2e4b70)
-    1.  [most wanted](#org9c8bb90)
-    2.  [Dap-java Usage](#org7d71e64)
-    3.  [build handle](#org0a297cd)
-    4.  [eclipse jdt server](#org0f3dbd3)
-2.  [issue](#orgdcdb8c5)
-    1.  [complete code](#org0c96138)
+1.  [Java module](#org06476d3)
+    1.  [most wanted](#org1434f58)
+    2.  [Dap-java Usage](#org818b7ee)
+    3.  [build handle](#org97e4320)
+    4.  [eclipse jdt server](#orgf7320a5)
+2.  [python lsp](#org4c5334f)
+3.  [issue](#org55e99c7)
+    1.  [complete code](#org462cf34)
 
 
 
-<a id="orge2e4b70"></a>
+<a id="org06476d3"></a>
 
 # Java module
 
@@ -132,7 +133,7 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     3.  Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
 
 
-<a id="org9c8bb90"></a>
+<a id="org1434f58"></a>
 
 ## TODO most wanted
 
@@ -141,7 +142,7 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     1.  eldoc [lsp-java/issues/432](https://github.com/emacs-lsp/lsp-java/issues/432)
 
 
-<a id="org7d71e64"></a>
+<a id="org818b7ee"></a>
 
 ## TODO Dap-java Usage
 
@@ -222,7 +223,7 @@ I do not use debug for years. So be careful the documentation maybe outdated.I t
     </table>
 
 
-<a id="org0a297cd"></a>
+<a id="org97e4320"></a>
 
 ## build handle
 
@@ -231,7 +232,7 @@ because of the isuue <https://github.com/emacs-lsp/lsp-java/issues/465>
     /Users/van/soft/apache-maven-3.6.1/bin/mvn -Djdt.js.server.root\=/Users/van/lsp-java/ -Djunit.runner.root\=/Users/van/.emacs.d/.local/cache/eclipse.jdt.ls/test-runner/ -Djunit.runner.fileName\=junit-platform-console-standalone.jar -Djava.debug.root\=/Users/van/lsp-java/bundles clean package -Djdt.download.url\=http\://1.117.167.195/download/jdt-language-server-1.31.0-202401111522.tar.gz -f ~/.doom.d/modules/neo-emacs/java/pom.xml
 
 
-<a id="org0f3dbd3"></a>
+<a id="orgf7320a5"></a>
 
 ## eclipse jdt server
 
@@ -251,12 +252,19 @@ because of the isuue <https://github.com/emacs-lsp/lsp-java/issues/465>
     -data ~/.config/emacs/.local/etc/java-workspace
 
 
-<a id="orgdcdb8c5"></a>
+<a id="org4c5334f"></a>
+
+# python lsp
+
+use pyright for completion and ruff for code format  
+
+
+<a id="org55e99c7"></a>
 
 # issue
 
 
-<a id="org0c96138"></a>
+<a id="org462cf34"></a>
 
 ## TODO complete code
 
