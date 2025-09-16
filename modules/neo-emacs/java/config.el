@@ -93,6 +93,7 @@
 (add-hook 'python-ts-mode-hook (lambda ()
                                  (focus-mode)
                                  (rainbow-delimiters-mode)
+                                 (setq lsp-modeline-code-action-icons-enable nil)
                                  (setq lsp-modeline-code-actions-enable nil)
                                  (setq doom-modeline-check-icon nil)
                                  (setq display-line-numbers                      t)))
@@ -103,8 +104,8 @@
 (with-eval-after-load 'lsp-mode
             (focus-mode)
             (apheleia-global-mode -1)
-            (setq-local lsp-enable-file-watchers nil)
-            (setq-local lsp-modeline-code-actions-enable nil)
+            (setq-local lsp-enable-file-watchers nil
+                        lsp-modeline-code-actions-enable nil)
             (rainbow-delimiters-mode)
             (indent-bars-mode 1)
             (customize-set-variable 'lsp-ui-sideline-enable nil)
@@ -153,6 +154,7 @@
                   lsp-modeline-diagnostics-enable            t
                   lsp-modeline-diagnostics-scope             :workspace
                   lsp-modeline-code-actions-enable           nil
+                  lsp-modeline-code-action-icons-enable      nil
                   lsp-lens-enable                            t))
 
 (setq

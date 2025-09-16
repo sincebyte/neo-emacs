@@ -50,6 +50,8 @@
 ;; 设置不同模式下的字体
 (defun my-set-font-for-mode ()
   (cond
+   ((derived-mode-p 'python-mode)
+    (setq-local face-remapping-alist '((default (:family "Fira Code" :height 170) default))))
    ((derived-mode-p 'java-ts-mode)
     (setq-local face-remapping-alist '((default (:family "Fira Code" :height 170) default))))
    ((derived-mode-p 'dired-mode)
