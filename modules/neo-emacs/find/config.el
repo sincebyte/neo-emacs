@@ -84,12 +84,6 @@
         projectile-root-top-down
         projectile-root-top-down-recurring))
 
-
-(add-hook 'dired-mode-hook
-          (lambda ()
-            (buffer-face-set
-             '(:family "M PLUS Code Latin 50" :height 140))))
-
 (defun jump-to-java-error ()
   "从当前日志行中提取文件名和行号，跳转到对应的 Java 文件和行号。"
   (interactive)

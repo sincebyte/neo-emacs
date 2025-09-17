@@ -55,7 +55,7 @@
    ((derived-mode-p 'java-ts-mode)
     (setq-local face-remapping-alist '((default (:family "Fira Code" :height 170) default))))
    ((derived-mode-p 'dired-mode)
-    (setq-local face-remapping-alist '((default (:family "M PLUS Code Latin 50" :height 180) default))))
+    (setq-local face-remapping-alist '((default (:family "JetBrains Mono" :height 170) default))))
    ((derived-mode-p 'vterm-mode)
     (setq-local face-remapping-alist '((default (:family "Kode Mono" :height 160) default))))
    ))
