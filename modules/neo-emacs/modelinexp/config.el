@@ -45,7 +45,7 @@
                       :weight 'bold)
   (set-face-attribute 'doom-modeline-evil-normal-state nil
                       :inherit 'doom-modeline
-                      :background "#6bff81"
+                      :background "#6fb593"
                       :foreground "black"
                       :weight 'bold)
   (set-face-attribute 'doom-modeline-evil-insert-state nil
@@ -55,7 +55,7 @@
                       :weight 'bold)
   (set-face-attribute 'doom-modeline-evil-visual-state nil
                       :inherit 'doom-modeline
-                      :background "#ffca28"
+                      :background "#9d81ba"
                       :foreground "black"
                       :weight 'bold)
   (set-face-attribute 'doom-modeline-evil-replace-state nil
