@@ -18,7 +18,7 @@
 
 (use-package transwin
   :config
-  (setq transwin--record-toggle-frame-transparency 70)
+  (setq transwin--record-toggle-frame-transparency 80)
   (setq transwin-delta-alpha 5)
   (setq transwin-parameter-alpha 'alpha-background))
 

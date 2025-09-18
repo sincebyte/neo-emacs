@@ -56,7 +56,7 @@
                       :weight 'bold)
   (defface doom-modeline-evil-normal-alpha-state
     '((t :inherit doom-modeline
-       :background "#578a71"
+       :background "#619c80"
        :foreground "black"
        :weight bold))
     "Face for evil normal state in doom-modeline (alpha variant)."
@@ -68,7 +68,7 @@
                       :weight 'bold)
   (defface doom-modeline-evil-insert-alpha-state
     '((t :inherit doom-modeline
-       :background "#0392bd"
+       :background "#02a3d4"
        :foreground "black"
        :weight bold))
     "Face for evil normal state in doom-modeline (alpha variant)."
@@ -80,7 +80,7 @@
                       :weight 'bold)
   (defface doom-modeline-evil-visual-alpha-state
     '((t :inherit doom-modeline
-       :background "#78638e"
+       :background "#8770a0"
        :foreground "black"
        :weight bold))
     "Face for evil normal state in doom-modeline (alpha variant)."
@@ -92,7 +92,7 @@
                       :weight 'bold)
   (defface doom-modeline-evil-replace-alpha-state
     '((t :inherit doom-modeline
-       :background "#b64240"
+       :background "#ca4b49"
        :foreground "black"
        :weight bold))
     "Face for evil normal state in doom-modeline (alpha variant)."
@@ -203,7 +203,7 @@
            (separator-fn (intern (format "powerline-%s-%s"
                                          separator
                                          (car powerline-default-separator-dir))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-visual-alpha-state 'mode-line)  )))
+      (propertize " " 'display (funcall separator-fn 'org-agenda-clocking 'doom-modeline-evil-normal-alpha-state)  )))
 
   (doom-modeline-def-segment powerline-separator-left-time
     "Insert a Powerline separator into the Doom Modeline."
@@ -219,7 +219,15 @@
            (separator-fn (intern (format "powerline-%s-%s"
                                          separator
                                          (car powerline-default-separator-dir ))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn 'mode-line 'org-agenda-clocking ))))
+      (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-normal-alpha-state 'org-agenda-clocking ))))
+
+  (doom-modeline-def-segment powerline-separator-left-git-empty
+    "Insert a Powerline separator into the Doom Modeline."
+    (let* ((separator 'arrow) ;; 获取当前分隔符
+           (separator-fn (intern (format "powerline-%s-%s"
+                                         separator
+                                         (car powerline-default-separator-dir ))))) ;; 获取分隔符函数
+      (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-visual-alpha-state 'org-agenda-clocking ))))
 
 
 
@@ -302,7 +310,18 @@ to disambiguate."
      'face (if (buffer-modified-p)
                'doom-modeline-buffer-modified
              'doom-modeline-buffer-file)))
-
+  (defun my-git-branch-with-dirty ()
+    "Return git branch name, with * if buffer or repo is modified."
+    (when-let* ((file (buffer-file-name))
+                (backend (vc-backend file))
+                ((eq backend 'Git))
+                (branch (vc-git--symbolic-ref file)))
+      (let ((state (vc-state file)))
+        (concat " " branch (if (eq state 'up-to-date) "" "*") " "))))
+  (doom-modeline-def-segment my-git-branch
+    "Show git branch, with * if modified."
+    (when-let ((branch (my-git-branch-with-dirty)))
+      (propertize branch 'face 'doom-modeline-evil-normal-state)))
 
   (doom-modeline-def-segment empty-segment
     (propertize (concat " " "") 'face 'doom-modeline-evil-emacs-state))
@@ -310,7 +329,7 @@ to disambiguate."
   (display-time-mode 1)
   (doom-modeline-def-modeline 'main
     '(my-segment powerline-evil-right powerline-filename-right-1 my-filename powerline-filename-right-2 wechat-msg-count matches parrot selection-info)
-    '(misc-info minor-modes input-method buffer-encoding powerline-separator-left my-major-mode powerline-separator-left-vcs vcs
+    '(misc-info minor-modes input-method buffer-encoding powerline-separator-left my-major-mode powerline-separator-left-git-empty powerline-separator-left-vcs my-git-branch
       powerline-separator-left-time-db powerline-separator-left-time my-time ))
   (doom-modeline-def-modeline 'vcs
     '(my-segment powerline-evil-right empty-segment wechat-msg-count matches buffer-info remote-host parrot selection-info)
