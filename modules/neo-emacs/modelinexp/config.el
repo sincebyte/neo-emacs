@@ -40,12 +40,21 @@
                       :foreground (face-attribute 'org-level-2 :foreground nil t)
                       :background (face-attribute 'doom-modeline-evil-insert-state :foreground nil t)
                       :weight 'bold)
+
+  (defun my/create-modeline-fontset ()
+    (create-fontset-from-fontset-spec
+     "-*-JetBrains Mono-normal-*-*-*-17-*-*-*-*-*-fontset-modeline,
+     han:-*-方正悠宋+ GBK-normal-*-*-*-19-*-*-*-*-*-*,
+     cjk-misc:-*-方正悠宋+ GBK-normal-*-*-*-19-*-*-*-*-*-*"))
+
   (set-face-attribute 'doom-modeline-buffer-file nil
+                      :fontset (my/create-modeline-fontset)
                       :foreground "black"
                       :background "#9d81ba"
                       :weight 'bold)
   (set-face-attribute 'doom-modeline-buffer-modified nil
-                      :foreground "#b64240"
+                      :fontset (my/create-modeline-fontset)
+                      :foreground "gold"
                       :background "#9d81ba"
                       :weight 'bold)
 
@@ -338,7 +347,6 @@ to disambiguate."
   (doom-modeline-def-modeline 'dashboard
     '(modals buffer-default-directory-simple remote-host)
     '(my-segment)))
-
 
 (defun get-message-count ()
   "Read the content of a specific file and return it as a string."
