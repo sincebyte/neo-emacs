@@ -327,12 +327,13 @@ to disambiguate."
              'doom-modeline-buffer-file)))
   (defun my-git-branch-with-dirty ()
     "Return git branch name, with * if buffer or repo is modified."
-    (when-let* ((file (buffer-file-name))
+    (if-let* ((file (buffer-file-name))
                 (backend (vc-backend file))
                 ((eq backend 'Git))
                 (branch (vc-git--symbolic-ref file)))
       (let ((state (vc-state file)))
-        (concat " " branch (if (eq state 'up-to-date) "" "*") " "))))
+        (concat " " branch (if (eq state 'up-to-date) "" "꙳") " "))
+      " nil "))
   (doom-modeline-def-segment my-git-branch
     "Show git branch, with * if modified."
     (when-let ((branch (my-git-branch-with-dirty)))
