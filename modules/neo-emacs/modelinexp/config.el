@@ -186,9 +186,7 @@
   (doom-modeline-def-segment powerline-filename-right-2
     "Insert a Powerline separator into the Doom Modeline."
     (let* ((separator 'arrow) ;; 获取当前分隔符
-           (separator-fn (intern (format "powerline-%s-%s"
-                                         separator
-                                         (cdr powerline-default-separator-dir ))))) ;; 获取分隔符函数
+           (separator-fn (intern (format "powerline-%s-%s" separator (cdr powerline-default-separator-dir )))))
       (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-visual-alpha-state 'mode-line ))))
 
   (doom-modeline-def-segment powerline-separator-right-vert
@@ -205,14 +203,16 @@
            (separator-fn (intern (format "powerline-%s-%s"
                                          separator
                                          (car powerline-default-separator-dir))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn 'org-code 'doom-modeline-evil-visual-alpha-state )  )))
+      (propertize " " 'display (funcall separator-fn 'org-code 'doom-modeline-evil-visual-alpha-state )
+                  'face (doom-modeline-face 'doom-modeline-evil-visual-state))))
+
   (doom-modeline-def-segment powerline-separator-left-vcs
     "Insert a Powerline separator into the Doom Modeline."
     (let* ((separator 'arrow) ;; 获取当前分隔符
            (separator-fn (intern (format "powerline-%s-%s"
                                          separator
                                          (car powerline-default-separator-dir))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn 'org-agenda-clocking 'doom-modeline-evil-normal-alpha-state)  )))
+      (propertize " " 'display (funcall separator-fn 'mode-line 'doom-modeline-evil-normal-alpha-state)  )))
 
   (doom-modeline-def-segment powerline-separator-left-time
     "Insert a Powerline separator into the Doom Modeline."
@@ -220,7 +220,7 @@
            (separator-fn (intern (format "powerline-%s-%s"
                                          separator
                                          (car powerline-default-separator-dir))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn 'org-agenda-clocking 'doom-modeline-evil-insert-alpha-state )  )))
+      (propertize " " 'display (funcall separator-fn 'mode-line 'doom-modeline-evil-insert-alpha-state )  )))
 
   (doom-modeline-def-segment powerline-separator-left-time-db
     "Insert a Powerline separator into the Doom Modeline."
@@ -228,7 +228,7 @@
            (separator-fn (intern (format "powerline-%s-%s"
                                          separator
                                          (car powerline-default-separator-dir ))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-normal-alpha-state 'org-agenda-clocking ))))
+      (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-normal-alpha-state 'mode-line ))))
 
   (doom-modeline-def-segment powerline-separator-left-git-empty
     "Insert a Powerline separator into the Doom Modeline."
@@ -236,7 +236,7 @@
            (separator-fn (intern (format "powerline-%s-%s"
                                          separator
                                          (car powerline-default-separator-dir ))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-visual-alpha-state 'org-agenda-clocking ))))
+      (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-visual-alpha-state 'mode-line ))))
 
 
 
