@@ -230,14 +230,20 @@
                                          (car powerline-default-separator-dir ))))) ;; 获取分隔符函数
       (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-normal-alpha-state 'mode-line ))))
 
+  ;; (doom-modeline-def-segment powerline-separator-left-git-empty
+  ;;   "Insert a Powerline separator into the Doom Modeline."
+  ;;   (let* ((separator 'arrow) ;; 获取当前分隔符
+  ;;          (separator-fn (intern (format "powerline-%s-%s"
+  ;;                                        separator
+  ;;                                        (car powerline-default-separator-dir ))))) ;; 获取分隔符函数
+  ;;     (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-visual-alpha-state 'mode-line ))))
+
   (doom-modeline-def-segment powerline-separator-left-git-empty
     "Insert a Powerline separator into the Doom Modeline."
-    (let* ((separator 'arrow) ;; 获取当前分隔符
-           (separator-fn (intern (format "powerline-%s-%s"
-                                         separator
-                                         (car powerline-default-separator-dir ))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-visual-alpha-state 'mode-line ))))
-
+    (propertize " " 'display
+        (powerline-arrow-right
+                'doom-modeline-evil-visual-alpha-state
+                'mode-line)))
 
 
   (doom-modeline-def-segment my-major-mode
@@ -268,7 +274,7 @@
                " (%-d)")
              text-scale-mode-amount))
        (doom-modeline-spc)))
-     'face (doom-modeline-face 'doom-modeline-evil-visual-state)))
+     'face 'doom-modeline-evil-visual-state))
 
   (doom-modeline-def-segment my-custom-segment
     (my-add-x-to-segment 'doom-modeline--major-mode-segment))
