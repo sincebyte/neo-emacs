@@ -348,9 +348,9 @@ to disambiguate."
     '(misc-info minor-modes input-method buffer-encoding powerline-separator-left my-major-mode
       powerline-separator-left-git-empty powerline-separator-left-vcs my-git-branch powerline-separator-left-time-db powerline-separator-left-time my-time ))
   (doom-modeline-def-modeline 'vcs
-    '(my-segment powerline-evil-right powerline-filename-right-1 my-filename powerline-filename-right-2 wechat-msg-count matches parrot selection-info)
+    '(my-segment powerline-evil-right wechat-msg-count matches parrot selection-info)
     '(compilation misc-info battery irc mu4e gnus github debug minor-modes buffer-encoding process empty-segment powerline-separator-left my-major-mode
-      powerline-separator-left-git-empty powerline-separator-left-vcs my-git-branch powerline-separator-left-time-db powerline-separator-left-time my-time ))
+      powerline-separator-left-git-empty powerline-separator-left-time my-time ))
   (doom-modeline-def-modeline 'dashboard
     '(modals buffer-default-directory-simple remote-host)
     '(my-segment)))
