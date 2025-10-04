@@ -410,10 +410,16 @@ to disambiguate."
   (if doom-big-font-mode
       (progn
         (custom-set-faces
+         '(indent-bars-face                  ((t (:family "Kode Mono" :height 210))))
+         '(line-number                       ((t (:family "JetBrains Mono" :weight bold :slant italic :height 210))))
+         '(line-number-current-line          ((t (:family "JetBrains Mono" :weight bold :slant italic :foreground "white" :height 210))))
          '(mode-line ((t (:family "IBM Plex Mono" :box nil :height 175))))
          '(mode-line-inactive ((t (:family "IBM Plex Mono" :box nil :height 175))))))
     (progn
       (custom-set-faces
+       '(indent-bars-face                  ((t (:family "Kode Mono" :height 170))))
+       '(line-number                       ((t (:family "JetBrains Mono" :weight bold :slant italic :height 170))))
+       '(line-number-current-line          ((t (:family "JetBrains Mono" :weight bold :slant italic :foreground "white" :height 170))))
        '(mode-line ((t (:family "IBM Plex Mono" :box nil :height 150))))
        '(mode-line-inactive ((t (:family "IBM Plex Mono" :box nil :height 150))))))
     (setq powerline-scale (if doom-big-font-mode 1.5 1))
