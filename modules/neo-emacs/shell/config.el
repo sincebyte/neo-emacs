@@ -16,6 +16,8 @@
     (map! :n  "SPC r r"  'quickrun-shell                                       )
     (map! :ne "SPC v v" 'projectile-run-vterm                                  )))
 
+(add-hook 'eshell-mode-hook #'hide-mode-line-mode)
+
 ;; win fzf fg exec Home dir
 (defun shell/configOnWin()
   (progn

@@ -100,7 +100,10 @@
 
 ;; (setq company-text-icons-add-background t)
 ;; (set-face-background 'font-lock-variable-name-face "#00e5ee")
-(add-hook 'java-ts-mode-hook #'lsp)
+(add-hook 'java-ts-mode-hook
+          (lambda ()
+            (lsp)
+            (setq display-line-numbers t)))
 (after! lsp-mode
   (setq lsp-modeline-code-action-icons-enable nil
         lsp-modeline-code-actions-enable nil))

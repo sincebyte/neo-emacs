@@ -27,15 +27,13 @@
         (highlight-foreground (face-attribute 'org-date-selected :foreground))
         (highlight-background (face-attribute 'org-date-selected :background)))
     (custom-set-faces  '(indent-bars-face                  ((t (:family "Kode Mono" ))))
-                       '(line-number                       ((t (:family "JetBrains Mono" :weight bold :slant italic))))
-                       `(line-number-current-line          ((t (:family "JetBrains Mono" :weight bold :slant italic :foreground ,org-level-1f ))))
-                       `(org-block-begin-line              ((t (:family "IBM Plex Mono" :box nil :foreground ,org-level-1f :weight bold))))
-                       `(org-block-end-line                ((t (:family "IBM Plex Mono" :box nil :foreground ,org-level-1f :weight bold))))
-                       `(org-modern-indent-bracket-line    ((t (:family "Kode Mono"     :box nil :foreground ,org-level-1f))))
+                       ;; '(line-number                       ((t (:family "JetBrains Mono" :weight bold :slant italic))))
+                       ;; `(line-number-current-line          ((t (:family "JetBrains Mono" :weight bold :slant italic :foreground ,org-level-1f ))))
+                       ;; `(org-block-begin-line              ((t (:family "IBM Plex Mono" :box nil :foreground ,org-level-1f :weight bold))))
+                       ;; `(org-block-end-line                ((t (:family "IBM Plex Mono" :box nil :foreground ,org-level-1f :weight bold))))
+                       ;; `(org-modern-indent-bracket-line    ((t (:family "Kode Mono"     :box nil :foreground ,org-level-1f))))
                        `(+workspace-tab-selected-face      ((t (:family "IBM Plex Mono" :box nil :foreground "black" :background ,highlight-foreground :weight bold))))
-                       '(+workspace-tab-face               ((t (:family "IBM Plex Mono" :box nil :weight bold))))
-                       '(mode-line                         ((t (:family "IBM Plex Mono" :box nil :height 150 :underline nil))))  ;; 去掉 modeline 的边框
-                       '(mode-line-inactive                ((t (:family "IBM Plex Mono" :box nil :height 150 :underline nil)))))) ;; 去掉非活动 modeline 的边框
+                       '(+workspace-tab-face               ((t (:family "IBM Plex Mono" :box nil :weight bold))))))
   (set-face-attribute 'doom-modeline-time nil
                       :foreground (face-attribute 'org-level-2 :foreground nil t)
                       :background (face-attribute 'doom-modeline-evil-insert-state :foreground nil t)
@@ -63,7 +61,7 @@
                       :background "#6fb593"
                       :foreground "black"
                       :weight 'bold)
-  (defface doom-modeline-evil-normal-alpha-state
+  (defface doom-modeline-evil-normal-alpha-state 
     '((t :inherit doom-modeline
        :background "#619c80"
        :foreground "black"
@@ -177,66 +175,52 @@
 
   (doom-modeline-def-segment powerline-filename-right-1
     "Insert a Powerline separator into the Doom Modeline."
-    (let* ((separator 'arrow) ;; 获取当前分隔符
-           (separator-fn (intern (format "powerline-%s-%s"
-                                         separator
-                                         (cdr powerline-default-separator-dir ))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn 'mode-line 'doom-modeline-evil-visual-alpha-state ))))
+    (propertize " " 'display
+                (powerline-arrow-left
+                 'mode-line
+                 'doom-modeline-evil-visual-alpha-state)))
 
   (doom-modeline-def-segment powerline-filename-right-2
     "Insert a Powerline separator into the Doom Modeline."
-    (let* ((separator 'arrow) ;; 获取当前分隔符
-           (separator-fn (intern (format "powerline-%s-%s" separator (cdr powerline-default-separator-dir )))))
-      (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-visual-alpha-state 'mode-line ))))
+    (propertize " " 'display
+                (powerline-arrow-left
+                 'doom-modeline-evil-visual-alpha-state
+                 'mode-line)))
 
   (doom-modeline-def-segment powerline-separator-right-vert
     "Insert a Powerline separator into the Doom Modeline."
-    (let* ((separator 'arrow) ;; 获取当前分隔符
-           (separator-fn (intern (format "powerline-%s-%s"
-                                         separator
-                                         (cdr powerline-default-separator-dir ))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-emacs-state 'mode-line ))))
+    (propertize " " 'display
+                (powerline-arrow-right
+                 'doom-modeline-evil-emacs-alpha-state
+                 'mode-line)))
 
   (doom-modeline-def-segment powerline-separator-left
     "Insert a Powerline separator into the Doom Modeline."
-    (let* ((separator 'arrow) ;; 获取当前分隔符
-           (separator-fn (intern (format "powerline-%s-%s"
-                                         separator
-                                         (car powerline-default-separator-dir))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn 'org-code 'doom-modeline-evil-visual-alpha-state )
-                  'face (doom-modeline-face 'doom-modeline-evil-visual-state))))
+    (propertize " " 'display
+        (powerline-arrow-right
+                'mode-line
+                'doom-modeline-evil-visual-alpha-state)))
 
   (doom-modeline-def-segment powerline-separator-left-vcs
     "Insert a Powerline separator into the Doom Modeline."
-    (let* ((separator 'arrow) ;; 获取当前分隔符
-           (separator-fn (intern (format "powerline-%s-%s"
-                                         separator
-                                         (car powerline-default-separator-dir))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn 'mode-line 'doom-modeline-evil-normal-alpha-state)  )))
+    (propertize " " 'display
+        (powerline-arrow-right
+                'mode-line
+                'doom-modeline-evil-normal-alpha-state)))
 
   (doom-modeline-def-segment powerline-separator-left-time
     "Insert a Powerline separator into the Doom Modeline."
-    (let* ((separator 'arrow) ;; 获取当前分隔符
-           (separator-fn (intern (format "powerline-%s-%s"
-                                         separator
-                                         (car powerline-default-separator-dir))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn 'mode-line 'doom-modeline-evil-insert-alpha-state )  )))
+    (propertize " " 'display
+        (powerline-arrow-right
+                'mode-line
+                'doom-modeline-evil-insert-alpha-state)))
 
   (doom-modeline-def-segment powerline-separator-left-time-db
     "Insert a Powerline separator into the Doom Modeline."
-    (let* ((separator 'arrow) ;; 获取当前分隔符
-           (separator-fn (intern (format "powerline-%s-%s"
-                                         separator
-                                         (car powerline-default-separator-dir ))))) ;; 获取分隔符函数
-      (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-normal-alpha-state 'mode-line ))))
-
-  ;; (doom-modeline-def-segment powerline-separator-left-git-empty
-  ;;   "Insert a Powerline separator into the Doom Modeline."
-  ;;   (let* ((separator 'arrow) ;; 获取当前分隔符
-  ;;          (separator-fn (intern (format "powerline-%s-%s"
-  ;;                                        separator
-  ;;                                        (car powerline-default-separator-dir ))))) ;; 获取分隔符函数
-  ;;     (propertize " " 'display (funcall separator-fn 'doom-modeline-evil-visual-alpha-state 'mode-line ))))
+    (propertize " " 'display
+        (powerline-arrow-right
+                'doom-modeline-evil-normal-alpha-state
+                'mode-line)))
 
   (doom-modeline-def-segment powerline-separator-left-git-empty
     "Insert a Powerline separator into the Doom Modeline."
@@ -411,15 +395,15 @@ to disambiguate."
       (progn
         (custom-set-faces
          '(indent-bars-face                  ((t (:family "Kode Mono" :height 210))))
-         '(line-number                       ((t (:family "JetBrains Mono" :weight bold :slant italic :height 210))))
-         '(line-number-current-line          ((t (:family "JetBrains Mono" :weight bold :slant italic :foreground "white" :height 210))))
+         ;; '(line-number                       ((t (:family "JetBrains Mono" :weight bold :slant italic :height 210))))
+         ;; '(line-number-current-line          ((t (:family "JetBrains Mono" :weight bold :slant italic :foreground "white" :height 210))))
          '(mode-line ((t (:family "IBM Plex Mono" :box nil :height 175))))
          '(mode-line-inactive ((t (:family "IBM Plex Mono" :box nil :height 175))))))
     (progn
       (custom-set-faces
        '(indent-bars-face                  ((t (:family "Kode Mono" :height 170))))
-       '(line-number                       ((t (:family "JetBrains Mono" :weight bold :slant italic :height 170))))
-       '(line-number-current-line          ((t (:family "JetBrains Mono" :weight bold :slant italic :foreground "white" :height 170))))
+       ;; '(line-number                       ((t (:family "JetBrains Mono" :weight bold :slant italic :height 170))))
+       ;; '(line-number-current-line          ((t (:family "JetBrains Mono" :weight bold :slant italic :foreground "white" :height 170))))
        '(mode-line ((t (:family "IBM Plex Mono" :box nil :height 150))))
        '(mode-line-inactive ((t (:family "IBM Plex Mono" :box nil :height 150))))))
     (setq powerline-scale (if doom-big-font-mode 1.5 1))
