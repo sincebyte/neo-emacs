@@ -22,18 +22,36 @@
   (set-face-attribute 'which-key-command-description-face nil :family "IBM Plex Mono")
   (set-face-attribute 'which-key-separator-face nil :family "IBM Plex Mono"))
 
+
+(defun color-alpha (color alpha &optional bg)
+  "返回 COLOR 按 ALPHA 混合到 BG（默认黑色）的标准 #RRGGBB 颜色，可用于 Emacs face。"
+  (let* ((bg (or bg "#000000"))
+         ;; 如果 color 已经是 #RRGGBB，就手动解析
+         (parse-hex
+          (lambda (hex)
+            (list (/ (string-to-number (substring hex 1 3) 16) 255.0)
+                  (/ (string-to-number (substring hex 3 5) 16) 255.0)
+                  (/ (string-to-number (substring hex 5 7) 16) 255.0))))
+         (fg-rgb (funcall parse-hex color))
+         (bg-rgb (funcall parse-hex bg))
+         ;; 混合每个通道
+         (r (+ (* alpha (nth 0 fg-rgb)) (* (- 1 alpha) (nth 0 bg-rgb))))
+         (g (+ (* alpha (nth 1 fg-rgb)) (* (- 1 alpha) (nth 1 bg-rgb))))
+         (b (+ (* alpha (nth 2 fg-rgb)) (* (- 1 alpha) (nth 2 bg-rgb)))))
+    ;; 转回 #RRGGBB
+    (format "#%02x%02x%02x"
+            (floor (* r 255))
+            (floor (* g 255))
+            (floor (* b 255)))))
+(add-hook 'doom-load-theme-hook
+(lambda ()
 (with-eval-after-load 'doom-modeline
-  (let ((org-level-1f (face-attribute 'outline-1 :foreground))
-        (highlight-foreground (face-attribute 'org-date-selected :foreground))
+  (let ((highlight-foreground (face-attribute 'org-date-selected :foreground))
         (highlight-background (face-attribute 'org-date-selected :background)))
     (custom-set-faces  '(indent-bars-face                  ((t (:family "Kode Mono" ))))
-                       ;; '(line-number                       ((t (:family "JetBrains Mono" :weight bold :slant italic))))
-                       ;; `(line-number-current-line          ((t (:family "JetBrains Mono" :weight bold :slant italic :foreground ,org-level-1f ))))
-                       ;; `(org-block-begin-line              ((t (:family "IBM Plex Mono" :box nil :foreground ,org-level-1f :weight bold))))
-                       ;; `(org-block-end-line                ((t (:family "IBM Plex Mono" :box nil :foreground ,org-level-1f :weight bold))))
-                       ;; `(org-modern-indent-bracket-line    ((t (:family "Kode Mono"     :box nil :foreground ,org-level-1f))))
                        `(+workspace-tab-selected-face      ((t (:family "IBM Plex Mono" :box nil :foreground "black" :background ,highlight-foreground :weight bold))))
                        '(+workspace-tab-face               ((t (:family "IBM Plex Mono" :box nil :weight bold))))))
+
   (set-face-attribute 'doom-modeline-time nil
                       :foreground (face-attribute 'org-level-2 :foreground nil t)
                       :background (face-attribute 'doom-modeline-evil-insert-state :foreground nil t)
@@ -57,29 +75,33 @@
                       :weight 'bold)
 
   (set-face-attribute 'doom-modeline-evil-normal-state nil
-                      :inherit 'doom-modeline
-                      :background "#6fb593"
-                      :foreground "black"
-                      :weight 'bold)
-  (defface doom-modeline-evil-normal-alpha-state 
-    '((t :inherit doom-modeline
-       :background "#619c80"
-       :foreground "black"
-       :weight bold))
-    "Face for evil normal state in doom-modeline (alpha variant)."
+                    :inherit 'doom-modeline
+                    :background (face-foreground 'font-lock-string-face)
+                    :foreground "black"
+                    :weight 'bold)
+  (defface doom-modeline-evil-normal-alpha-state
+    '((t :inherit doom-modeline))
+    "group doc"
     :group 'doom-modeline)
+  (set-face-attribute 'doom-modeline-evil-normal-alpha-state nil
+                    :background (color-alpha (face-background 'doom-modeline-evil-normal-state ) 0.9)
+                    :foreground "black"
+                    :weight 'bold)
+
   (set-face-attribute 'doom-modeline-evil-insert-state nil
                       :inherit 'doom-modeline
-                      :background "#00bff9"
+                      :background (face-foreground 'font-lock-keyword-face )
                       :foreground "black"
                       :weight 'bold)
   (defface doom-modeline-evil-insert-alpha-state
-    '((t :inherit doom-modeline
-       :background "#02a3d4"
-       :foreground "black"
-       :weight bold))
-    "Face for evil normal state in doom-modeline (alpha variant)."
+    '((t :inherit doom-modeline))
+    "group doc"
     :group 'doom-modeline)
+  (set-face-attribute 'doom-modeline-evil-insert-alpha-state nil
+                    :background (color-alpha (face-background 'doom-modeline-evil-insert-state ) 0.9)
+                    :foreground "black"
+                    :weight 'bold)
+
   (set-face-attribute 'doom-modeline-evil-visual-state nil
                       :inherit 'doom-modeline
                       :background "#9d81ba"
@@ -90,7 +112,7 @@
        :background "#8770a0"
        :foreground "black"
        :weight bold))
-    "Face for evil normal state in doom-modeline (alpha variant)."
+    "group doc"
     :group 'doom-modeline)
   (set-face-attribute 'doom-modeline-evil-replace-state nil
                       :inherit 'doom-modeline
@@ -102,7 +124,7 @@
        :background "#ca4b49"
        :foreground "black"
        :weight bold))
-    "Face for evil normal state in doom-modeline (alpha variant)."
+    "group doc"
     :group 'doom-modeline)
   (set-face-attribute 'doom-modeline-evil-motion-state nil
                       :inherit 'doom-modeline
@@ -114,22 +136,14 @@
        :background "#395b84"
        :foreground "black"
        :weight bold))
-    "Face for evil normal state in doom-modeline (alpha variant)."
+    "group doc"
     :group 'doom-modeline)
 
   (fresh/modelineconfig)
   (add-hook '+workspace-new-hook #'fresh/modelineconfig)
-  )
+  )))
 
-(defface doom-modeline-meow-motion-alpha-state
-  '((t :inherit doom-modeline
-     :background "#395b84"
-     :foreground "black"
-     :weight bold))
-  "Face for evil normal state in doom-modeline (alpha variant)."
-  :group 'doom-modeline)
-
-                                        ; available value of separator
+; available value of separator
 ;; chamfer, contour, curve, rounded, roundstub, slant, wave, zigzag, and nil.
 (defun fresh/modelineconfig ()
   (doom-modeline-def-segment my-segment

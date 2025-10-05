@@ -123,7 +123,7 @@
 ;; (after! doom-themes
 ;;   (load-theme 'doom-winter-is-coming-dark-blue t))
 
-(load-theme 'kaolin-dark t)
+;; (load-theme 'kaolin-dark t)
 
 
 ;; (setq initial-frame-alist '((height . 50)))
