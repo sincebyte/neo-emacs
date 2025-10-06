@@ -46,39 +46,39 @@
   (dolist (charset '(kana han symbol cjk-misc bopomofo))
     (set-fontset-font t charset (font-spec :family "方正悠宋+ GBK" :size 24 ))
     ;; (my-set-big-font-for-mode)
-))
+    ))
 (add-hook 'doom-big-font-mode-hook #'my/setup-big-cjk-fonts)
 
 
 ;; 设置不同模式下的字体
 (defun my-set-font-for-mode ()
   (if (bound-and-true-p doom-big-font-mode)
-  (cond
-   ((derived-mode-p 'python-mode)
+      (cond
+       ((derived-mode-p 'python-mode)
     (setq-local face-remapping-alist '((default (:family "Fira Code" :height 210) default))))
-   ((derived-mode-p 'java-ts-mode)
+       ((derived-mode-p 'java-ts-mode)
     (setq-local face-remapping-alist '((default (:family "Fira Code" :height 210) default))))
-   ;; ((derived-mode-p 'dired-mode)
-   ;;  (setq-local face-remapping-alist '((default (:family "JetBrains Mono" :height 210) default))))
-   ((derived-mode-p 'vterm-mode)
+       ;; ((derived-mode-p 'dired-mode)
+       ;;  (setq-local face-remapping-alist '((default (:family "JetBrains Mono" :height 210) default))))
+       ((derived-mode-p 'vterm-mode)
     (setq-local face-remapping-alist '((default (:family "Kode Mono" :height 210) default)))))
-  (cond
-   ((derived-mode-p 'python-mode)
+    (cond
+     ((derived-mode-p 'python-mode)
     (setq-local face-remapping-alist '((default (:family "Fira Code" :height 170) default))))
-   ((derived-mode-p 'java-ts-mode)
+     ((derived-mode-p 'java-ts-mode)
     (setq-local face-remapping-alist '((default (:family "Fira Code" :height 170) default))))
-   ;; ((derived-mode-p 'dired-mode)
-   ;;  (setq-local face-remapping-alist '((default (:family "JetBrains Mono" :height 170) default))))
-   ((derived-mode-p 'vterm-mode)
+     ;; ((derived-mode-p 'dired-mode)
+     ;;  (setq-local face-remapping-alist '((default (:family "JetBrains Mono" :height 170) default))))
+     ((derived-mode-p 'vterm-mode)
     (setq-local face-remapping-alist '((default (:family "Kode Mono" :height 160) default)))))
-))
+    ))
 (add-hook 'after-change-major-mode-hook #'my-set-font-for-mode)
 
 
 ;; 设置 minibuffer 中的字体
 (defun my-set-font-for-minibuffer ()
   (if (bound-and-true-p doom-big-font-mode)
-    (setq-local face-remapping-alist '((default (:family "M PLUS Code Latin 50" :height 210) default)))
+      (setq-local face-remapping-alist '((default (:family "M PLUS Code Latin 50" :height 210) default)))
     (setq-local face-remapping-alist '((default (:family "M PLUS Code Latin 50" :height 170) default))))
   (redraw-frame (selected-frame)))
 (add-hook 'minibuffer-setup-hook #'my-set-font-for-minibuffer)
@@ -123,7 +123,7 @@
 ;; (after! doom-themes
 ;;   (load-theme 'doom-winter-is-coming-dark-blue t))
 
-;; (load-theme 'kaolin-dark t)
+;; (load-theme 'doom-feather-dark t)
 
 
 ;; (setq initial-frame-alist '((height . 50)))

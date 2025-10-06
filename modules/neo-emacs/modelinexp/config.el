@@ -66,12 +66,12 @@
   (set-face-attribute 'doom-modeline-buffer-file nil
                       :fontset (my/create-modeline-fontset)
                       :foreground "black"
-                      :background "#9d81ba"
+                      :background (face-foreground 'font-lock-builtin-face )
                       :weight 'bold)
   (set-face-attribute 'doom-modeline-buffer-modified nil
                       :fontset (my/create-modeline-fontset)
-                      :foreground "gold"
-                      :background "#9d81ba"
+                      :foreground (face-foreground 'font-lock-string-face )
+                      :background (face-foreground 'font-lock-builtin-face )
                       :weight 'bold)
 
   (set-face-attribute 'doom-modeline-evil-normal-state nil
@@ -104,40 +104,45 @@
 
   (set-face-attribute 'doom-modeline-evil-visual-state nil
                       :inherit 'doom-modeline
-                      :background "#9d81ba"
+                      :background (face-foreground 'font-lock-builtin-face )
                       :foreground "black"
                       :weight 'bold)
   (defface doom-modeline-evil-visual-alpha-state
-    '((t :inherit doom-modeline
-       :background "#8770a0"
-       :foreground "black"
-       :weight bold))
+    '((t :inherit doom-modeline))
     "group doc"
     :group 'doom-modeline)
+  (set-face-attribute 'doom-modeline-evil-visual-alpha-state nil
+                    :background (color-alpha (face-background 'doom-modeline-evil-visual-state ) 0.9)
+                    :foreground "black"
+                    :weight 'bold)
+
   (set-face-attribute 'doom-modeline-evil-replace-state nil
                       :inherit 'doom-modeline
-                      :background "#ef5350"
+                      :background (face-foreground 'font-lock-variable-name-face)
                       :foreground "black"
                       :weight 'bold)
   (defface doom-modeline-evil-replace-alpha-state
-    '((t :inherit doom-modeline
-       :background "#ca4b49"
-       :foreground "black"
-       :weight bold))
+    '((t :inherit doom-modeline))
     "group doc"
     :group 'doom-modeline)
+  (set-face-attribute 'doom-modeline-evil-replace-alpha-state nil
+                    :background (color-alpha (face-background 'doom-modeline-evil-replace-state ) 0.9)
+                    :foreground "black"
+                    :weight 'bold)
+
   (set-face-attribute 'doom-modeline-evil-motion-state nil
                       :inherit 'doom-modeline
-                      :background "#4876ae"
+                      :background (face-foreground 'font-lock-type-face)
                       :foreground "black"
                       :weight 'bold)
-  (defface doom-modeline-meow-motion-alpha-state
-    '((t :inherit doom-modeline
-       :background "#395b84"
-       :foreground "black"
-       :weight bold))
+  (defface doom-modeline-evil-motion-alpha-state
+    '((t :inherit doom-modeline))
     "group doc"
     :group 'doom-modeline)
+  (set-face-attribute 'doom-modeline-evil-motion-alpha-state nil
+                    :background (color-alpha (face-background 'doom-modeline-evil-motion-state ) 0.9)
+                    :foreground "black"
+                    :weight 'bold)
 
   (fresh/modelineconfig)
   (add-hook '+workspace-new-hook #'fresh/modelineconfig)
