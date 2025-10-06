@@ -66,13 +66,28 @@
   (set-face-attribute 'doom-modeline-buffer-file nil
                       :fontset (my/create-modeline-fontset)
                       :foreground "black"
-                      :background (face-foreground 'font-lock-builtin-face )
+                      :background (face-foreground 'font-lock-type-face )
                       :weight 'bold)
   (set-face-attribute 'doom-modeline-buffer-modified nil
                       :fontset (my/create-modeline-fontset)
-                      :foreground (face-foreground 'font-lock-string-face )
-                      :background (face-foreground 'font-lock-builtin-face )
-                      :weight 'bold)
+                      :foreground "red"
+                      :background (face-foreground 'font-lock-type-face )
+                      :weight 'normal)
+  (defface doom-modeline-buffer-file-alpha
+    '((t :inherit doom-modeline))
+    "group doc"
+    :group 'doom-modeline)
+  (set-face-attribute 'doom-modeline-buffer-file-alpha nil
+                    :background (color-alpha (face-background 'doom-modeline-buffer-file ) 0.9)
+                    :foreground "black"
+                    :weight 'bold)
+
+  (defface doom-modeline-alpha-bg
+    '((t :inherit doom-modeline))
+    "group doc"
+    :group 'doom-modeline)
+  (set-face-attribute 'doom-modeline-alpha-bg nil
+                    :background (color-alpha (face-background 'default) 0.9))
 
   (set-face-attribute 'doom-modeline-evil-normal-state nil
                     :inherit 'doom-modeline
@@ -104,8 +119,8 @@
 
   (set-face-attribute 'doom-modeline-evil-visual-state nil
                       :inherit 'doom-modeline
-                      :background (face-foreground 'font-lock-builtin-face )
                       :foreground "black"
+                      :background (face-foreground 'font-lock-builtin-face )
                       :weight 'bold)
   (defface doom-modeline-evil-visual-alpha-state
     '((t :inherit doom-modeline))
@@ -197,14 +212,14 @@
     (propertize " " 'display
                 (powerline-arrow-left
                  'mode-line
-                 'doom-modeline-evil-visual-alpha-state)))
+                 'doom-modeline-buffer-file-alpha)))
 
   (doom-modeline-def-segment powerline-filename-right-2
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
                 (powerline-arrow-left
-                 'doom-modeline-evil-visual-alpha-state
-                 'mode-line)))
+                 'doom-modeline-buffer-file-alpha
+                 'doom-modeline-alpha-bg)))
 
   (doom-modeline-def-segment powerline-separator-right-vert
     "Insert a Powerline separator into the Doom Modeline."
@@ -217,7 +232,7 @@
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
         (powerline-arrow-right
-                'mode-line
+                'doom-modeline-alpha-bg
                 'doom-modeline-evil-visual-alpha-state)))
 
   (doom-modeline-def-segment powerline-separator-left-vcs
