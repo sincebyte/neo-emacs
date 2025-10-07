@@ -45,7 +45,6 @@
   "Setup CJK fonts for Doom Big Font Mode."
   (dolist (charset '(kana han symbol cjk-misc bopomofo))
     (set-fontset-font t charset (font-spec :family "方正悠宋+ GBK" :size 24 ))
-    ;; (my-set-big-font-for-mode)
     ))
 (add-hook 'doom-big-font-mode-hook #'my/setup-big-cjk-fonts)
 
@@ -123,7 +122,7 @@
 ;; (after! doom-themes
 ;;   (load-theme 'doom-winter-is-coming-dark-blue t))
 
-;; (load-theme 'doom-feather-dark t)
+(load-theme 'doom-badger t)
 
 
 ;; (setq initial-frame-alist '((height . 50)))

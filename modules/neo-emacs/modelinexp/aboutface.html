@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2025-10-06 Mon 17:35 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>aboutface</title>
+<meta name="author" content="van" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<script src  = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src  = "https://emacs-1308440781.cos.ap-chengdu.myqcloud.com/classic/scroll.js"></script>
+<script src  = "https://emacs-1308440781.cos.ap-chengdu.myqcloud.com/classic/tex-mml-chtml.js"></script>
+<link   href = "https://emacs-1308440781.cos.ap-chengdu.myqcloud.com/classic/base.css" rel="stylesheet" type="text/css"></link>
+</head>
+<body>
+<div id="preamble" class="status">
+<p>Made ✐︎ by 
+</div>
+<div id="content" class="content">
+<h1 class="title">aboutface
+<br />
+<span class="subtitle">this is subtitle</span>
+</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org0495632">1. outline</a>
+<ul>
+<li><a href="#org316e8b2">1.1. 样式</a></li>
+<li><a href="#org61f05b6">1.2. 字体</a></li>
+<li><a href="#org68d09f4">1.3. powerline</a></li>
+<li><a href="#org81b304a">1.4. 透明度问题</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org0495632" class="outline-2">
+<h2 id="org0495632"><span class="section-number-2">1.</span> outline</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+这篇文章介绍下关于 neo face 相关的配置。<br />
+</p>
+</div>
+<div id="outline-container-org316e8b2" class="outline-3">
+<h3 id="org316e8b2"><span class="section-number-3">1.1.</span> 样式</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+emacs 使用 defface 定义一个新样式，使用 set-face-attribute 来修改样式的属性。set-face-attribute 可以通过使用 face-background 与 face-foreground 来动态获取样式的属性。<br />
+</p>
+<div class="org-src-container">
+<pre class="src src-elisp">&#9474; <span style="color: #51afef;">(</span><span style="color: #51afef;">defface</span> <span style="color: #dcaeea;">doom-modeline-buffer-file-alpha</span>
+&#9474; &#9474; <span style="color: #51afef;">'</span><span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>t <span style="color: #c678dd;">:inherit</span> doom-modeline<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+&#9474; &#9474; <span style="color: #83898d;">"group doc"</span>
+&#9474; &#9474; <span style="color: #c678dd;">:group</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">doom-modeline</span><span style="color: #51afef;">)</span>
+&#9474; <span style="color: #51afef;">(</span><span style="color: #a9a1e1;">set-face-attribute</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">doom-modeline-buffer-file-alpha</span> nil
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; <span style="color: #c678dd;">:background</span> <span style="color: #c678dd;">(</span><span style="color: #c678dd;">color-alpha</span> <span style="color: #98be65;">(</span><span style="color: #a9a1e1;">face-background</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">doom-modeline-buffer-file</span> <span style="color: #98be65;">)</span> 0.9<span style="color: #c678dd;">)</span>
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; <span style="color: #c678dd;">:foreground</span> <span style="color: #98be65;">"black"</span>
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; <span style="color: #c678dd;">:weight</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">bold</span><span style="color: #51afef;">)</span>
+
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org61f05b6" class="outline-3">
+<h3 id="org61f05b6"><span class="section-number-3">1.2.</span> 字体</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+在 Emacs 中，配置默认字体是字体显示设置的基础，它为所有字符提供了统一的显示基准，确保界面整体的视觉一致性。<br />
+</p>
+
+<p>
+特别需要注意的是，为了实现中英文混排时的最佳显示效果，建议为 Emacs 单独配置与英文字体等宽的 CJK 字体。由于不同字体设计存在差异，英文字体与 CJK 字体在设置为等宽时，往往需要调整各自的字号大小以保持对齐协调。<br />
+</p>
+
+<p>
+以 neoemacs 配置为例，通过将 JetBrains Mono（英文字体）与方正悠宋+ GBK（中文字体）进行合理搭配，并在适当的字号设置下，即可实现中英文字符的完美等宽对齐。这一设置对于 Org mode 中的表格显示尤为重要，能够有效避免因字符宽度不一致导致的表格错位问题，提升编辑和阅读体验。<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">progn</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">set-selection-coding-system</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">utf-16le-dos</span><span style="color: #c678dd;">)</span>
+&#9474; &#9474; &#9474; &#9474; &#9474;<span style="color: #c678dd;">(</span><span style="color: #51afef;">setq</span> <span style="color: #dcaeea;">doom-font</span> <span style="color: #98be65;">(</span><span style="color: #a9a1e1;">font-spec</span> <span style="color: #c678dd;">:family</span> <span style="color: #98be65;">"JetBrains Mono"</span> <span style="color: #c678dd;">:size</span> 17 <span style="color: #98be65;">)</span>
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474;cjk-font <span style="color: #98be65;">"&#26041;&#27491;&#24736;&#23435;+ GBK"</span> 
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474;cjk-font-size 20<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474;
+<span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">init-cjk-fonts</span><span style="color: #c678dd;">()</span>
+&#9474; <span style="color: #c678dd;">(</span><span style="color: #51afef;">when</span> <span style="color: #98be65;">(</span><span style="color: #a9a1e1;">display-graphic-p</span><span style="color: #98be65;">)</span> <span style="color: #98be65;">(</span><span style="color: #a9a1e1;">eq</span> <span style="color: #a9a1e1;">(</span><span style="color: #a9a1e1;">framep</span> <span style="color: #4db5bd;">(</span><span style="color: #a9a1e1;">selected-frame</span><span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">x</span><span style="color: #98be65;">)</span>
+&#9474; &#9474; &#9474; &#9474; <span style="color: #98be65;">(</span><span style="color: #51afef;">dolist</span> <span style="color: #a9a1e1;">(</span>charset <span style="color: #51afef;">'</span><span style="color: #4db5bd;">(</span>kana han cjk-misc bopomofo<span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span>
+&#9474; &#9474; &#9474; &#9474; &#9474; <span style="color: #a9a1e1;">(</span><span style="color: #a9a1e1;">set-fontset-font</span> <span style="color: #4db5bd;">(</span><span style="color: #a9a1e1;">frame-parameter</span> nil <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">font</span><span style="color: #4db5bd;">)</span>
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; charset <span style="color: #4db5bd;">(</span><span style="color: #a9a1e1;">font-spec</span> <span style="color: #c678dd;">:family</span> cjk-font <span style="color: #c678dd;">:size</span> cjk-font-size<span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<span style="color: #51afef;">(</span><span style="color: #a9a1e1;">add-hook</span> <span style="color: #51afef;">'</span><span style="color: #dcaeea;">doom-init-ui-hook</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">init-cjk-fonts</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<p>
+我的工作流需要在1080P与2K显示器之间频繁切换。由于2K屏幕像素密度更高，默认字体在显示时会显得过小，尤其在录制屏幕内容时，过小的字体会严重影响观看效果。而若通过降低系统分辨率来适配字体大小，又会导致录制视频无法达到真正的2K画质。<br />
+</p>
+
+<p>
+Doom Emacs中的doom-big-font配置项为此提供了优雅的解决方案。通过为高分辨率显示器单独设定更大的字号，即可使字体在不同分辨率的屏幕上保持基本一致的视觉大小，既兼顾了录制时的清晰度，也确保了跨设备工作体验的一致性。<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #5B6268;">;; </span><span style="color: #5B6268;">&#35774;&#32622;&#22823;&#23383;&#20307;
+</span><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> <span style="color: #dcaeea;">doom-big-font</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">font-spec</span> <span style="color: #c678dd;">:family</span> <span style="color: #98be65;">"JetBrains Mono"</span> <span style="color: #c678dd;">:size</span> 20 <span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">my/setup-big-cjk-fonts</span> <span style="color: #c678dd;">()</span>
+&#9474; <span style="color: #83898d;">"Setup CJK fonts for Doom Big Font Mode."</span>
+&#9474; <span style="color: #c678dd;">(</span><span style="color: #51afef;">dolist</span> <span style="color: #98be65;">(</span>charset <span style="color: #51afef;">'</span><span style="color: #a9a1e1;">(</span>kana han symbol cjk-misc bopomofo<span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
+&#9474; &#9474; <span style="color: #98be65;">(</span><span style="color: #a9a1e1;">set-fontset-font</span> t charset <span style="color: #a9a1e1;">(</span><span style="color: #a9a1e1;">font-spec</span> <span style="color: #c678dd;">:family</span> <span style="color: #98be65;">"&#26041;&#27491;&#24736;&#23435;+ GBK"</span> <span style="color: #c678dd;">:size</span> 24 <span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<span style="color: #51afef;">(</span><span style="color: #a9a1e1;">add-hook</span> <span style="color: #51afef;">'</span><span style="color: #dcaeea;">doom-big-font-mode-hook</span> <span style="color: #51afef;">#'</span><span style="color: #ECBE7B;">my/setup-big-cjk-fonts</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<p>
+在实现了基础字体设置后，还可以进一步为不同模式定制专用字体。例如，让 java mode 使用另一款等宽字体。在此过程中，关键注意事项是让这些字体的字号能响应 doom-big-font-mode 的变化，从而在不同分辨率下都能保持协调的视觉大小。<br />
+</p>
+
+<p>
+除了主编辑区，Emacs 底部的 Minibuffer（命令输入框）也是一个需要单独处理样式的元素。为其设定独特的字体和样式，能有效提升这个高频交互区域的辨识度和使用体验。<br />
+</p>
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #5B6268;">;; </span><span style="color: #5B6268;">&#35774;&#32622;&#19981;&#21516;&#27169;&#24335;&#19979;&#30340;&#23383;&#20307;
+</span><span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">my-set-font-for-mode</span> <span style="color: #c678dd;">()</span>
+&#9474; <span style="color: #c678dd;">(</span><span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span><span style="color: #51afef;">bound-and-true-p</span> <span style="color: #dcaeea;">doom-big-font-mode</span><span style="color: #98be65;">)</span>
+&#9474; &#9474; &#9474; <span style="color: #98be65;">(</span><span style="color: #51afef;">cond</span>
+&#9474; &#9474; &#9474; &#9474;<span style="color: #a9a1e1;">(</span><span style="color: #4db5bd;">(</span><span style="color: #a9a1e1;">derived-mode-p</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">python-mode</span><span style="color: #4db5bd;">)</span>
+&#9474; &#9474; <span style="color: #4db5bd;">(</span><span style="color: #51afef;">setq-local</span> <span style="color: #dcaeea;">face-remapping-alist</span> <span style="color: #51afef;">'</span><span style="color: #51afef;">(</span><span style="color: #c678dd;">(</span>default <span style="color: #98be65;">(</span><span style="color: #c678dd;">:family</span> <span style="color: #98be65;">"Fira Code"</span> <span style="color: #c678dd;">:height</span> 210<span style="color: #98be65;">)</span> default<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span><span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span>
+&#9474; &#9474; &#9474; &#9474;<span style="color: #a9a1e1;">(</span><span style="color: #4db5bd;">(</span><span style="color: #a9a1e1;">derived-mode-p</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">java-ts-mode</span><span style="color: #4db5bd;">)</span>
+&#9474; &#9474; <span style="color: #4db5bd;">(</span><span style="color: #51afef;">setq-local</span> <span style="color: #dcaeea;">face-remapping-alist</span> <span style="color: #51afef;">'</span><span style="color: #51afef;">(</span><span style="color: #c678dd;">(</span>default <span style="color: #98be65;">(</span><span style="color: #c678dd;">:family</span> <span style="color: #98be65;">"Fira Code"</span> <span style="color: #c678dd;">:height</span> 210<span style="color: #98be65;">)</span> default<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span><span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span>
+&#9474; &#9474; &#9474; &#9474;<span style="color: #a9a1e1;">(</span><span style="color: #4db5bd;">(</span><span style="color: #a9a1e1;">derived-mode-p</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">vterm-mode</span><span style="color: #4db5bd;">)</span>
+&#9474; &#9474; <span style="color: #4db5bd;">(</span><span style="color: #51afef;">setq-local</span> <span style="color: #dcaeea;">face-remapping-alist</span> <span style="color: #51afef;">'</span><span style="color: #51afef;">(</span><span style="color: #c678dd;">(</span>default <span style="color: #98be65;">(</span><span style="color: #c678dd;">:family</span> <span style="color: #98be65;">"Kode Mono"</span> <span style="color: #c678dd;">:height</span> 210<span style="color: #98be65;">)</span> default<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span><span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
+&#9474; &#9474; <span style="color: #98be65;">(</span><span style="color: #51afef;">cond</span>
+&#9474; &#9474; &#9474;<span style="color: #a9a1e1;">(</span><span style="color: #4db5bd;">(</span><span style="color: #a9a1e1;">derived-mode-p</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">python-mode</span><span style="color: #4db5bd;">)</span>
+&#9474; &#9474; <span style="color: #4db5bd;">(</span><span style="color: #51afef;">setq-local</span> <span style="color: #dcaeea;">face-remapping-alist</span> <span style="color: #51afef;">'</span><span style="color: #51afef;">(</span><span style="color: #c678dd;">(</span>default <span style="color: #98be65;">(</span><span style="color: #c678dd;">:family</span> <span style="color: #98be65;">"Fira Code"</span> <span style="color: #c678dd;">:height</span> 170<span style="color: #98be65;">)</span> default<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span><span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span>
+&#9474; &#9474; &#9474;<span style="color: #a9a1e1;">(</span><span style="color: #4db5bd;">(</span><span style="color: #a9a1e1;">derived-mode-p</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">java-ts-mode</span><span style="color: #4db5bd;">)</span>
+&#9474; &#9474; <span style="color: #4db5bd;">(</span><span style="color: #51afef;">setq-local</span> <span style="color: #dcaeea;">face-remapping-alist</span> <span style="color: #51afef;">'</span><span style="color: #51afef;">(</span><span style="color: #c678dd;">(</span>default <span style="color: #98be65;">(</span><span style="color: #c678dd;">:family</span> <span style="color: #98be65;">"Fira Code"</span> <span style="color: #c678dd;">:height</span> 170<span style="color: #98be65;">)</span> default<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span><span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span>
+&#9474; &#9474; &#9474;<span style="color: #a9a1e1;">(</span><span style="color: #4db5bd;">(</span><span style="color: #a9a1e1;">derived-mode-p</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">vterm-mode</span><span style="color: #4db5bd;">)</span>
+&#9474; &#9474; <span style="color: #4db5bd;">(</span><span style="color: #51afef;">setq-local</span> <span style="color: #dcaeea;">face-remapping-alist</span> <span style="color: #51afef;">'</span><span style="color: #51afef;">(</span><span style="color: #c678dd;">(</span>default <span style="color: #98be65;">(</span><span style="color: #c678dd;">:family</span> <span style="color: #98be65;">"Kode Mono"</span> <span style="color: #c678dd;">:height</span> 160<span style="color: #98be65;">)</span> default<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span><span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
+&#9474; &#9474; <span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<span style="color: #51afef;">(</span><span style="color: #a9a1e1;">add-hook</span> <span style="color: #51afef;">'</span><span style="color: #dcaeea;">after-change-major-mode-hook</span> <span style="color: #51afef;">#'</span><span style="color: #ECBE7B;">my-set-font-for-mode</span><span style="color: #51afef;">)</span>
+
+<span style="color: #5B6268;">;; </span><span style="color: #5B6268;">&#35774;&#32622; minibuffer &#20013;&#30340;&#23383;&#20307;
+</span><span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">my-set-font-for-minibuffer</span> <span style="color: #c678dd;">()</span>
+&#9474; <span style="color: #c678dd;">(</span><span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span><span style="color: #51afef;">bound-and-true-p</span> <span style="color: #dcaeea;">doom-big-font-mode</span><span style="color: #98be65;">)</span>
+&#9474; &#9474; &#9474; <span style="color: #98be65;">(</span><span style="color: #51afef;">setq-local</span> <span style="color: #dcaeea;">face-remapping-alist</span> <span style="color: #51afef;">'</span><span style="color: #a9a1e1;">(</span><span style="color: #4db5bd;">(</span>default <span style="color: #51afef;">(</span><span style="color: #c678dd;">:family</span> <span style="color: #98be65;">"M PLUS Code Latin 50"</span> <span style="color: #c678dd;">:height</span> 210<span style="color: #51afef;">)</span> default<span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
+&#9474; &#9474; <span style="color: #98be65;">(</span><span style="color: #51afef;">setq-local</span> <span style="color: #dcaeea;">face-remapping-alist</span> <span style="color: #51afef;">'</span><span style="color: #a9a1e1;">(</span><span style="color: #4db5bd;">(</span>default <span style="color: #51afef;">(</span><span style="color: #c678dd;">:family</span> <span style="color: #98be65;">"M PLUS Code Latin 50"</span> <span style="color: #c678dd;">:height</span> 170<span style="color: #51afef;">)</span> default<span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+&#9474; <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">redraw-frame</span> <span style="color: #98be65;">(</span><span style="color: #a9a1e1;">selected-frame</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<span style="color: #51afef;">(</span><span style="color: #a9a1e1;">add-hook</span> <span style="color: #51afef;">'</span><span style="color: #dcaeea;">minibuffer-setup-hook</span> <span style="color: #51afef;">#'</span><span style="color: #ECBE7B;">my-set-font-for-minibuffer</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<p>
+给 face 设置字体，create-fontset-from-fontset-spec 函数可以为一个样式的分别设定不同的字体及字号。<br />
+</p>
+<div class="org-src-container">
+<pre class="src src-elisp">&#9474; <span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">my/create-modeline-fontset</span> <span style="color: #c678dd;">()</span>
+&#9474; &#9474; <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">create-fontset-from-fontset-spec</span>
+&#9474; &#9474; &#9474;<span style="color: #98be65;">"-*-JetBrains Mono-normal-*-*-*-17-*-*-*-*-*-fontset-modeline,
+&#9474; &#9474; &#9474;han:-*-&#26041;&#27491;&#24736;&#23435;+ GBK-normal-*-*-*-19-*-*-*-*-*-*,
+&#9474; &#9474; &#9474;cjk-misc:-*-&#26041;&#27491;&#24736;&#23435;+ GBK-normal-*-*-*-19-*-*-*-*-*-*"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+&#9474; &#9474; &#9474;
+&#9474; <span style="color: #51afef;">(</span><span style="color: #a9a1e1;">set-face-attribute</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">doom-modeline-buffer-file</span> nil
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; <span style="color: #c678dd;">:fontset</span> <span style="color: #c678dd;">(</span><span style="color: #c678dd;">my/create-modeline-fontset</span><span style="color: #c678dd;">)</span>
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; <span style="color: #c678dd;">:foreground</span> <span style="color: #98be65;">"black"</span>
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; <span style="color: #c678dd;">:background</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">face-foreground</span> <span style="color: #51afef;">'</span><span style="color: #dcaeea;">font-lock-type-face</span> <span style="color: #c678dd;">)</span>
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; <span style="color: #c678dd;">:weight</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">bold</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org68d09f4" class="outline-3">
+<h3 id="org68d09f4"><span class="section-number-3">1.3.</span> powerline</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+使用 powerline-arrow-left 可以定义一个箭头状的分隔符。其中：<br />
+</p>
+<ul class="org-ul">
+<li>箭头样式：通过参数指定，可选值包括 chamfer, contour, curve, rounded, roundstub, slant, wave, zigzag 等。<br /></li>
+<li>箭头方向：由函数名中的 left 或 right 决定，分别生成指向左或右的箭头。<br /></li>
+<li>颜色设置：函数最后的两个 face 参数，分别用于指定箭头的前景色与背景色。<br /></li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-elisp">&#9474; <span style="color: #51afef;">(</span><span style="color: #51afef;">doom-modeline-def-segment</span> <span style="color: #a9a1e1;">powerline-filename-right-1</span>
+&#9474; &#9474; <span style="color: #83898d;">"Insert a Powerline separator into the Doom Modeline."</span>
+&#9474; &#9474; <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">propertize</span> <span style="color: #98be65;">" "</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">display</span>
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; <span style="color: #98be65;">(</span><span style="color: #c678dd;">powerline-arrow-left</span>
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474;<span style="color: #51afef;">'</span><span style="color: #ECBE7B;">mode-line</span>
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474;<span style="color: #51afef;">'</span><span style="color: #ECBE7B;">doom-modeline-buffer-file-alpha</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org81b304a" class="outline-3">
+<h3 id="org81b304a"><span class="section-number-3">1.4.</span> 透明度问题</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+Neo Emacs 应用了背景透明补丁，该补丁会为 Emacs 内字体的前景色设置透明度，但此效果对 Powerline 分隔符无效。为确保 Powerline 在透明背景下视觉协调，我们需要为其分隔符单独设置一次颜色。为此，我们通过大模型生成了一个函数，可将颜色值转换为带透明度的格式，以解决此适配问题。<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">color-alpha</span> <span style="color: #c678dd;">(</span>color alpha <span style="color: #ECBE7B;">&amp;optional</span> bg<span style="color: #c678dd;">)</span>
+&#9474; <span style="color: #83898d;">"&#36820;&#22238; COLOR &#25353; ALPHA &#28151;&#21512;&#21040; BG&#65288;&#40664;&#35748;&#40657;&#33394;&#65289;&#30340;&#26631;&#20934; #RRGGBB &#39068;&#33394;&#65292;&#21487;&#29992;&#20110; Emacs face&#12290;"</span>
+&#9474; <span style="color: #c678dd;">(</span><span style="color: #51afef;">let*</span> <span style="color: #98be65;">(</span><span style="color: #a9a1e1;">(</span>bg <span style="color: #4db5bd;">(</span><span style="color: #51afef;">or</span> bg <span style="color: #98be65;">"#000000"</span><span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span>
+&#9474; &#9474; &#9474; &#9474; &#9474;<span style="color: #5B6268;">;; </span><span style="color: #5B6268;">&#22914;&#26524; color &#24050;&#32463;&#26159; #RRGGBB&#65292;&#23601;&#25163;&#21160;&#35299;&#26512;
+&#9474;</span> &#9474; &#9474; &#9474; &#9474;<span style="color: #a9a1e1;">(</span>parse-hex
+&#9474; &#9474; &#9474; &#9474; &#9474; <span style="color: #4db5bd;">(</span><span style="color: #51afef;">lambda</span> <span style="color: #51afef;">(</span>hex<span style="color: #51afef;">)</span>
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; <span style="color: #51afef;">(</span><span style="color: #a9a1e1;">list</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">/</span> <span style="color: #98be65;">(</span><span style="color: #a9a1e1;">string-to-number</span> <span style="color: #a9a1e1;">(</span><span style="color: #a9a1e1;">substring</span> hex 1 3<span style="color: #a9a1e1;">)</span> 16<span style="color: #98be65;">)</span> 255.0<span style="color: #c678dd;">)</span>
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">/</span> <span style="color: #98be65;">(</span><span style="color: #a9a1e1;">string-to-number</span> <span style="color: #a9a1e1;">(</span><span style="color: #a9a1e1;">substring</span> hex 3 5<span style="color: #a9a1e1;">)</span> 16<span style="color: #98be65;">)</span> 255.0<span style="color: #c678dd;">)</span>
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">/</span> <span style="color: #98be65;">(</span><span style="color: #a9a1e1;">string-to-number</span> <span style="color: #a9a1e1;">(</span><span style="color: #a9a1e1;">substring</span> hex 5 7<span style="color: #a9a1e1;">)</span> 16<span style="color: #98be65;">)</span> 255.0<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span><span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span>
+&#9474; &#9474; &#9474; &#9474; &#9474;<span style="color: #a9a1e1;">(</span>fg-rgb <span style="color: #4db5bd;">(</span><span style="color: #a9a1e1;">funcall</span> parse-hex color<span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span>
+&#9474; &#9474; &#9474; &#9474; &#9474;<span style="color: #a9a1e1;">(</span>bg-rgb <span style="color: #4db5bd;">(</span><span style="color: #a9a1e1;">funcall</span> parse-hex bg<span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span>
+&#9474; &#9474; &#9474; &#9474; &#9474;<span style="color: #5B6268;">;; </span><span style="color: #5B6268;">&#28151;&#21512;&#27599;&#20010;&#36890;&#36947;
+&#9474;</span> &#9474; &#9474; &#9474; &#9474;<span style="color: #a9a1e1;">(</span>r <span style="color: #4db5bd;">(</span><span style="color: #a9a1e1;">+</span> <span style="color: #51afef;">(</span><span style="color: #a9a1e1;">*</span> alpha <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">nth</span> 0 fg-rgb<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">(</span><span style="color: #a9a1e1;">*</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">-</span> 1 alpha<span style="color: #c678dd;">)</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">nth</span> 0 bg-rgb<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span><span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span>
+&#9474; &#9474; &#9474; &#9474; &#9474;<span style="color: #a9a1e1;">(</span>g <span style="color: #4db5bd;">(</span><span style="color: #a9a1e1;">+</span> <span style="color: #51afef;">(</span><span style="color: #a9a1e1;">*</span> alpha <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">nth</span> 1 fg-rgb<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">(</span><span style="color: #a9a1e1;">*</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">-</span> 1 alpha<span style="color: #c678dd;">)</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">nth</span> 1 bg-rgb<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span><span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span>
+&#9474; &#9474; &#9474; &#9474; &#9474;<span style="color: #a9a1e1;">(</span>b <span style="color: #4db5bd;">(</span><span style="color: #a9a1e1;">+</span> <span style="color: #51afef;">(</span><span style="color: #a9a1e1;">*</span> alpha <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">nth</span> 2 fg-rgb<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">(</span><span style="color: #a9a1e1;">*</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">-</span> 1 alpha<span style="color: #c678dd;">)</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">nth</span> 2 bg-rgb<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span><span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
+&#9474; &#9474; <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">&#36716;&#22238; #RRGGBB
+&#9474;</span> &#9474; <span style="color: #98be65;">(</span><span style="color: #a9a1e1;">format</span> <span style="color: #98be65;">"#%02x%02x%02x"</span>
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; <span style="color: #a9a1e1;">(</span><span style="color: #a9a1e1;">floor</span> <span style="color: #4db5bd;">(</span><span style="color: #a9a1e1;">*</span> r 255<span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span>
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; <span style="color: #a9a1e1;">(</span><span style="color: #a9a1e1;">floor</span> <span style="color: #4db5bd;">(</span><span style="color: #a9a1e1;">*</span> g 255<span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span>
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; <span style="color: #a9a1e1;">(</span><span style="color: #a9a1e1;">floor</span> <span style="color: #4db5bd;">(</span><span style="color: #a9a1e1;">*</span> b 255<span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474;
+&#9474; <span style="color: #51afef;">(</span><span style="color: #51afef;">defface</span> <span style="color: #dcaeea;">doom-modeline-buffer-file-alpha</span>
+&#9474; &#9474; <span style="color: #51afef;">'</span><span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>t <span style="color: #c678dd;">:inherit</span> doom-modeline<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+&#9474; &#9474; <span style="color: #83898d;">"group doc"</span>
+&#9474; &#9474; <span style="color: #c678dd;">:group</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">doom-modeline</span><span style="color: #51afef;">)</span>
+&#9474; <span style="color: #51afef;">(</span><span style="color: #a9a1e1;">set-face-attribute</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">doom-modeline-buffer-file-alpha</span> nil
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; <span style="color: #c678dd;">:background</span> <span style="color: #c678dd;">(</span><span style="color: #c678dd;">color-alpha</span> <span style="color: #98be65;">(</span><span style="color: #a9a1e1;">face-background</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">doom-modeline-buffer-file</span> <span style="color: #98be65;">)</span> 0.9<span style="color: #c678dd;">)</span>
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; <span style="color: #c678dd;">:foreground</span> <span style="color: #98be65;">"black"</span>
+&#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; &#9474; <span style="color: #c678dd;">:weight</span> <span style="color: #51afef;">'</span><span style="color: #ECBE7B;">bold</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2025-10-06 Mon 16:43</p>
+<p class="author">Author: van</p>
+<p class="date">Created: 2025-10-06 Mon 17:35</p>
+</div>
+</body>
+</html>

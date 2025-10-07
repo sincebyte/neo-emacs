@@ -70,9 +70,9 @@
                       :weight 'bold)
   (set-face-attribute 'doom-modeline-buffer-modified nil
                       :fontset (my/create-modeline-fontset)
-                      :foreground "red"
+                      :foreground "#45556C"
                       :background (face-foreground 'font-lock-type-face )
-                      :weight 'normal)
+                      :weight 'bold)
   (defface doom-modeline-buffer-file-alpha
     '((t :inherit doom-modeline))
     "group doc"
@@ -81,13 +81,6 @@
                     :background (color-alpha (face-background 'doom-modeline-buffer-file ) 0.9)
                     :foreground "black"
                     :weight 'bold)
-
-  (defface doom-modeline-alpha-bg
-    '((t :inherit doom-modeline))
-    "group doc"
-    :group 'doom-modeline)
-  (set-face-attribute 'doom-modeline-alpha-bg nil
-                    :background (color-alpha (face-background 'default) 0.9))
 
   (set-face-attribute 'doom-modeline-evil-normal-state nil
                     :inherit 'doom-modeline
@@ -164,7 +157,7 @@
   )))
 
 ; available value of separator
-;; chamfer, contour, curve, rounded, roundstub, slant, wave, zigzag, and nil.
+;; arrow, arrow, arrow, arrow, arrow, arrow, wave, arrow, and nil.
 (defun fresh/modelineconfig ()
   (doom-modeline-def-segment my-segment
     "My custom segment "
@@ -219,7 +212,7 @@
     (propertize " " 'display
                 (powerline-arrow-left
                  'doom-modeline-buffer-file-alpha
-                 'doom-modeline-alpha-bg)))
+                 'mode-line)))
 
   (doom-modeline-def-segment powerline-separator-right-vert
     "Insert a Powerline separator into the Doom Modeline."
@@ -232,7 +225,7 @@
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
         (powerline-arrow-right
-                'doom-modeline-alpha-bg
+                'mode-line
                 'doom-modeline-evil-visual-alpha-state)))
 
   (doom-modeline-def-segment powerline-separator-left-vcs
@@ -339,7 +332,7 @@ to disambiguate."
   (doom-modeline-def-segment my-filename
     "Show buffer filename with disambiguation if needed."
     (propertize
-     (concat " " (my-buffer-file-name) " ")
+     (concat " " (my-buffer-file-name) (if (buffer-modified-p) "꙳" "") " ")
      'face (if (buffer-modified-p)
                'doom-modeline-buffer-modified
              'doom-modeline-buffer-file)))
@@ -364,7 +357,9 @@ to disambiguate."
   (doom-modeline-def-modeline 'main
     '(my-segment powerline-evil-right powerline-filename-right-1 my-filename powerline-filename-right-2 wechat-msg-count matches parrot selection-info)
     '(misc-info minor-modes input-method buffer-encoding powerline-separator-left my-major-mode
-      powerline-separator-left-git-empty powerline-separator-left-vcs my-git-branch powerline-separator-left-time-db powerline-separator-left-time my-time ))
+      powerline-separator-left-git-empty powerline-separator-left-vcs my-git-branch 
+        powerline-separator-left-time-db 
+        powerline-separator-left-time my-time ))
   (doom-modeline-def-modeline 'vcs
     '(my-segment powerline-evil-right wechat-msg-count matches parrot selection-info)
     '(compilation misc-info battery irc mu4e gnus github debug minor-modes buffer-encoding process empty-segment powerline-separator-left my-major-mode
@@ -424,30 +419,24 @@ to disambiguate."
   (setq powerline-default-separator 'arrow) ;; 分隔符样式
   (setq powerline-default-separator-dir '(right . left)))
 
-(defun my-change-fonts-on-big-font-mode ()
+(defun my-modeline-fonts-on-big-font-mode ()
   (if doom-big-font-mode
       (progn
         (custom-set-faces
          '(indent-bars-face                  ((t (:family "Kode Mono" :height 210))))
-         ;; '(line-number                       ((t (:family "JetBrains Mono" :weight bold :slant italic :height 210))))
-         ;; '(line-number-current-line          ((t (:family "JetBrains Mono" :weight bold :slant italic :foreground "white" :height 210))))
          '(mode-line ((t (:family "IBM Plex Mono" :box nil :height 175))))
          '(mode-line-inactive ((t (:family "IBM Plex Mono" :box nil :height 175))))))
     (progn
       (custom-set-faces
        '(indent-bars-face                  ((t (:family "Kode Mono" :height 170))))
-       ;; '(line-number                       ((t (:family "JetBrains Mono" :weight bold :slant italic :height 170))))
-       ;; '(line-number-current-line          ((t (:family "JetBrains Mono" :weight bold :slant italic :foreground "white" :height 170))))
        '(mode-line ((t (:family "IBM Plex Mono" :box nil :height 150))))
-       '(mode-line-inactive ((t (:family "IBM Plex Mono" :box nil :height 150))))))
-    (setq powerline-scale (if doom-big-font-mode 1.5 1))
-    (powerline-reset)))
+       '(mode-line-inactive ((t (:family "IBM Plex Mono" :box nil :height 150))))))))
 (defun my-update-powerline-scale ()
   "Adjust powerline scale based on doom-big-font-mode."
   (setq powerline-scale (if doom-big-font-mode 1.5 1))
   (powerline-reset))
 
-(add-hook 'doom-big-font-mode-hook 'my-change-fonts-on-big-font-mode)
+(add-hook 'doom-big-font-mode-hook 'my-modeline-fonts-on-big-font-mode)
 (add-hook 'doom-big-font-mode-hook 'my-update-powerline-scale)
 
 
@@ -459,7 +448,6 @@ to disambiguate."
             (setq doom-modeline-wspc ""))) ; 替换宽空格
 
 (run-with-timer 0 1 'force-mode-line-update)
-                                        ;(doom-modeline-refresh-bars)
 (add-hook 'after-init-hook
           (lambda ()
             (setq-local line-spacing nil)))
