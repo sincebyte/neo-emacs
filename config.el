@@ -43,9 +43,11 @@
       doom-variable-pitch-font (font-spec :family "JetBrains Mono"))
 (defun my/setup-big-cjk-fonts ()
   "Setup CJK fonts for Doom Big Font Mode."
+  (if (bound-and-true-p doom-big-font-mode) 
   (dolist (charset '(kana han symbol cjk-misc bopomofo))
-    (set-fontset-font t charset (font-spec :family "方正悠宋+ GBK" :size 24 ))
-    ))
+    (set-fontset-font t charset (font-spec :family "方正悠宋+ GBK" :size 24 )))
+  (dolist (charset '(kana han symbol cjk-misc bopomofo))
+    (set-fontset-font t charset (font-spec :family "方正悠宋+ GBK" :size 20 )))))
 (add-hook 'doom-big-font-mode-hook #'my/setup-big-cjk-fonts)
 
 

@@ -43,6 +43,18 @@
             (floor (* r 255))
             (floor (* g 255))
             (floor (* b 255)))))
+
+(defun my/create-modeline-fontset ()
+  (create-fontset-from-fontset-spec
+   "-*-JetBrains Mono-normal-*-*-*-17-*-*-*-*-*-fontset-modeline,
+   han:-*-Noto Serif CJK SC-bold-*-*-*-16-*-*-*-*-*-*,
+   cjk-misc:-*-Noto Serif CJK SC-bold-*-*-*-16-*-*-*-*-*-*"))
+
+(defun my/create-modeline-big-fontset ()
+  (create-fontset-from-fontset-spec
+   "-*-JetBrains Mono-normal-*-*-*-20-*-*-*-*-*-fontset-modeline,
+   han:-*-Noto Serif CJK SC-bold-*-*-*-19-*-*-*-*-*-*,
+   cjk-misc:-*-Noto Serif CJK SC-bold-*-*-*-19-*-*-*-*-*-*"))
 (add-hook 'doom-load-theme-hook
 (lambda ()
 (with-eval-after-load 'doom-modeline
@@ -57,11 +69,6 @@
                       :background (face-attribute 'doom-modeline-evil-insert-state :foreground nil t)
                       :weight 'bold)
 
-  (defun my/create-modeline-fontset ()
-    (create-fontset-from-fontset-spec
-     "-*-JetBrains Mono-normal-*-*-*-17-*-*-*-*-*-fontset-modeline,
-     han:-*-方正悠宋+ GBK-normal-*-*-*-19-*-*-*-*-*-*,
-     cjk-misc:-*-方正悠宋+ GBK-normal-*-*-*-19-*-*-*-*-*-*"))
 
   (set-face-attribute 'doom-modeline-buffer-file nil
                       :fontset (my/create-modeline-fontset)
@@ -419,18 +426,28 @@ to disambiguate."
   (setq powerline-default-separator 'arrow) ;; 分隔符样式
   (setq powerline-default-separator-dir '(right . left)))
 
+
+;  (set-face-attribute 'doom-modeline-buffer-file nil :fontset (my/create-modeline-fontset))
+;  (set-face-attribute 'doom-modeline-buffer-modified nil :fontset (my/create-modeline-fontset))
+
 (defun my-modeline-fonts-on-big-font-mode ()
   (if doom-big-font-mode
       (progn
         (custom-set-faces
          '(indent-bars-face                  ((t (:family "Kode Mono" :height 210))))
          '(mode-line ((t (:family "IBM Plex Mono" :box nil :height 175))))
-         '(mode-line-inactive ((t (:family "IBM Plex Mono" :box nil :height 175))))))
+         '(mode-line-inactive ((t (:family "IBM Plex Mono" :box nil :height 175)))))
+        (set-face-attribute 'doom-modeline-buffer-file nil :fontset (my/create-modeline-big-fontset))
+        (set-face-attribute 'doom-modeline-buffer-modified nil :fontset (my/create-modeline-big-fontset)))
     (progn
       (custom-set-faces
        '(indent-bars-face                  ((t (:family "Kode Mono" :height 170))))
        '(mode-line ((t (:family "IBM Plex Mono" :box nil :height 150))))
-       '(mode-line-inactive ((t (:family "IBM Plex Mono" :box nil :height 150))))))))
+       '(mode-line-inactive ((t (:family "IBM Plex Mono" :box nil :height 150)))))
+      (set-face-attribute 'doom-modeline-buffer-file nil :fontset (my/create-modeline-fontset))
+      (set-face-attribute 'doom-modeline-buffer-modified nil :fontset (my/create-modeline-fontset)))
+    (setq powerline-scale (if doom-big-font-mode 1.5 1))
+    (powerline-reset)))
 (defun my-update-powerline-scale ()
   "Adjust powerline scale based on doom-big-font-mode."
   (setq powerline-scale (if doom-big-font-mode 1.5 1))
