@@ -105,6 +105,8 @@
             (lsp)
             (setq display-line-numbers t)))
 (after! lsp-mode
+  (set-face-attribute 'lsp-face-highlight-read nil :slant 'normal)
+  (set-face-attribute 'lsp-face-highlight-write nil :slant 'normal)
   (setq lsp-modeline-code-action-icons-enable nil
         lsp-modeline-code-actions-enable nil))
 
