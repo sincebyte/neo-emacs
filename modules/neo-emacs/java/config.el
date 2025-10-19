@@ -35,8 +35,9 @@
  ;; lsp-pylsp-plugins-rope-autoimport-code-actions-enabled  t
  ;; lsp-pylsp-plugins-rope-autoimport-enabled  t
  ;; lsp-pylsp-plugins-pydocstyle-enabled       nil
- +format-on-save-disabled-modes             (add-to-list '+format-on-save-disabled-modes 'c++-mode)
- +format-on-save-disabled-modes             (add-to-list '+format-on-save-disabled-modes 'c-mode))
+ ;; +format-on-save-disabled-modes             (add-to-list '+format-on-save-disabled-modes 'c++-mode)
+ ;; +format-on-save-disabled-modes             (add-to-list '+format-on-save-disabled-modes 'c-mode))
+ )
 (use-package kind-icon
   :ensure t
   :after corfu
@@ -80,7 +81,7 @@
                            (rainbow-delimiters-mode)
                            (setq display-line-numbers                       t
                                  lsp-modeline-code-actions-enable           nil
-                                 +format-on-save-disabled-modes (add-to-list '+format-on-save-disabled-modes 'web-mode)
+                                 ;; +format-on-save-disabled-modes (add-to-list '+format-on-save-disabled-modes 'web-mode)
                                  doom-modeline-icon                         nil)))
 (add-hook 'js-mode-hook (lambda ()
                           ;; (prism-mode)

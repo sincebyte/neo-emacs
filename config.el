@@ -237,7 +237,7 @@
 (with-eval-after-load 'npm-mode
   (add-to-list 'warning-suppress-types '(cl-functions)))
 
-(setq +format-on-save-disabled-modes (add-to-list '+format-on-save-disabled-modes 'web-mode))
+;; (setq +format-on-save-disabled-modes (add-to-list '+format-on-save-disabled-modes 'web-mode))
 (transwin-toggle)
 
 (use-package ultra-scroll
