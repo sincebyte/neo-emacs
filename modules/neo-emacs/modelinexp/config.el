@@ -85,7 +85,7 @@
     "group doc"
     :group 'doom-modeline)
   (set-face-attribute 'doom-modeline-buffer-file-alpha nil
-                    :background (color-alpha (face-background 'doom-modeline-buffer-file ) 0.9)
+                    :background (color-alpha (face-background 'doom-modeline-buffer-file ) 1)
                     :foreground "black"
                     :weight 'bold)
 
@@ -99,7 +99,7 @@
     "group doc"
     :group 'doom-modeline)
   (set-face-attribute 'doom-modeline-evil-normal-alpha-state nil
-                    :background (color-alpha (face-background 'doom-modeline-evil-normal-state ) 0.9)
+                    :background (color-alpha (face-background 'doom-modeline-evil-normal-state ) 1)
                     :foreground "black"
                     :weight 'bold)
 
@@ -113,7 +113,7 @@
     "group doc"
     :group 'doom-modeline)
   (set-face-attribute 'doom-modeline-evil-insert-alpha-state nil
-                    :background (color-alpha (face-background 'doom-modeline-evil-insert-state ) 0.9)
+                    :background (color-alpha (face-background 'doom-modeline-evil-insert-state ) 1)
                     :foreground "black"
                     :weight 'bold)
 
@@ -127,7 +127,7 @@
     "group doc"
     :group 'doom-modeline)
   (set-face-attribute 'doom-modeline-evil-visual-alpha-state nil
-                    :background (color-alpha (face-background 'doom-modeline-evil-visual-state ) 0.9)
+                    :background (color-alpha (face-background 'doom-modeline-evil-visual-state ) 1)
                     :foreground "black"
                     :weight 'bold)
 
@@ -141,7 +141,7 @@
     "group doc"
     :group 'doom-modeline)
   (set-face-attribute 'doom-modeline-evil-replace-alpha-state nil
-                    :background (color-alpha (face-background 'doom-modeline-evil-replace-state ) 0.9)
+                    :background (color-alpha (face-background 'doom-modeline-evil-replace-state ) 1)
                     :foreground "black"
                     :weight 'bold)
 
@@ -155,7 +155,7 @@
     "group doc"
     :group 'doom-modeline)
   (set-face-attribute 'doom-modeline-evil-motion-alpha-state nil
-                    :background (color-alpha (face-background 'doom-modeline-evil-motion-state ) 0.9)
+                    :background (color-alpha (face-background 'doom-modeline-evil-motion-state ) 1)
                     :foreground "black"
                     :weight 'bold)
 
