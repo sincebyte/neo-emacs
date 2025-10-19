@@ -1,7 +1,8 @@
 #+title: java packcage readme
-#+subtitle:
-#+author: vanniuner
-#+SETUPFILE: ~/.doom.d/org-head.setup
+#+subtitle: this is subtitle
+#+author: van
+#+date: <2025-10-19 13:27>
+#+SETUPFILE: ~/.doom.d/org-classic-head.setup
 
 * Java module
 Neo-Emacs will automatically download the jdtls from `lsp-java-jdt-download-url`, and now it's located at [[https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.22.0/jdt-language-server-1.22.0-202304131553.tar.gz][jdt-language-server-1.22.0]].After that you could use all the features powered by eclipse.
@@ -117,6 +118,24 @@ $JAVA_17_HOME/bin/java \
 -jar ./plugins/org.eclipse.equinox.launcher_1.7.0.v20250331-1702.jar \
 -configuration ./config_mac \
 -data ~/.config/emacs/.local/etc/java-workspace
+#+end_src
+** fix lsp error
+file: ~/.config/emacs/.local/straight/repos/lsp-mode/lsp-mode.el
+*** diff
+#+begin_src diff
+       (let ((params (if args
+                         (list :command command :arguments args)
+                       (list :command command))))
+-        (lsp-request "workspace/executeCommand" params))
+-    (error
+-     (error "`workspace/executeCommand' with `%s' failed.\n\n%S"
+-            command err))))
++        (lsp-request-async "workspace/executeCommand" params
++                (lambda (result) (message "Command executed."))
++                :error-handler (lambda (err) (message "Error: %s" err))))))
+ 
+ (defun lsp-send-execute-command (command &optional args)
+   "Create and send a `workspace/executeCommand' message having command COMMAND
 #+end_src
 * python lsp
 use pyright for completion and ruff for code format
