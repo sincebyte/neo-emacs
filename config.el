@@ -50,6 +50,28 @@
     (set-fontset-font t charset (font-spec :family "方正悠宋+ GBK" :size 20 )))))
 (add-hook 'doom-big-font-mode-hook #'my/setup-big-cjk-fonts)
 
+;; Set the padding between lines
+(defvar line-padding 0.8)
+(defun add-line-padding ()
+  "Add extra padding between lines"
+
+  ; remove padding overlays if they already exist
+  (let ((overlays (overlays-at (point-min))))
+    (while overlays
+      (let ((overlay (car overlays)))
+        (if (overlay-get overlay 'is-padding-overlay)
+            (delete-overlay overlay)))
+      (setq overlays (cdr overlays))))
+
+  ; add a new padding overlay
+  (let ((padding-overlay (make-overlay (point-min) (point-max))))
+    (overlay-put padding-overlay 'is-padding-overlay t)
+    (overlay-put padding-overlay 'line-spacing (* .1 line-padding))
+    (overlay-put padding-overlay 'line-height (+ 1 (* .1 line-padding))))
+  (setq mark-active nil))
+
+(add-hook 'buffer-list-update-hook 'add-line-padding)
+
 
 ;; 设置不同模式下的字体
 (defun my-set-font-for-mode ()
