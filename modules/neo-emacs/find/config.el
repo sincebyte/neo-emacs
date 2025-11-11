@@ -27,10 +27,11 @@
 
 (map! :after dired
       :map dired-mode-map
-      :ne "J" nil)
+      :n "J" nil
+      "J" nil)
 (map! :after dired
       :map dired-mode-map
-      :ne "J" #'+workspace/switch-left)
+      :n "J" #'+workspace/switch-left)
 (after! dired
   (map! :map dired-mode-map
         :n "c" nil
@@ -44,7 +45,6 @@
 (map! :after dired
       :map dired-mode-map
       :ne "l" #'dired-find-file)
-
 (map! :after magit
       :map magit-mode-map
       :ne "K" nil)

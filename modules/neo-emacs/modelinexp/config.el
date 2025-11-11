@@ -315,26 +315,35 @@
     "Display the current time in HH:mm:ss format."
     (propertize (format-time-string " %H:%M ")
                 'face 'doom-modeline-evil-insert-state))
-  (defun my-buffer-file-name ()
-    "Return a short file name for current buffer.
+(defun my-buffer-file-name ()
+  "Return a short file name for current buffer.
 If another buffer has the same file name, include one parent directory
 to disambiguate."
-    (let* ((filename (buffer-file-name))
-           (basename (file-name-nondirectory filename)))
-      (if (not filename)
-          (buffer-name)
-        (if (seq-some (lambda (buf)
-                        (let ((other (buffer-file-name buf)))
-                          (and other
-                               (not (eq buf (current-buffer)))
-                               (string= basename (file-name-nondirectory other)))))
-                      (buffer-list))
-            ;; 文件名重复 → 显示 上级目录/文件名
-            (concat (file-name-nondirectory
-                     (directory-file-name (file-name-directory filename)))
-                    "/" basename)
-          ;; 否则只显示文件名
-          basename))))
+  (let ((filename (buffer-file-name)))
+    (cond
+     ;; 情况1：没有关联文件 → 返回缓冲区名
+     ((not filename)
+      (buffer-name))
+
+     ;; 情况2：有文件名
+     (t
+      (let* ((basename (file-name-nondirectory filename))
+             (dir (file-name-directory filename))
+             (parent-dir (when dir
+                           (file-name-nondirectory
+                            (directory-file-name dir)))))
+        ;; 检查是否有重复的文件名
+        (if (and dir
+                 (seq-some (lambda (buf)
+                             (let ((other-file (buffer-file-name buf)))
+                               (and other-file
+                                    (not (eq buf (current-buffer)))
+                                    (string= basename (file-name-nondirectory other-file)))))
+                           (buffer-list)))
+            ;; 有重复 → 显示 父目录/文件名
+            (concat parent-dir "/" basename)
+          ;; 无重复 → 只显示文件名
+          basename))))))
 
   (doom-modeline-def-segment my-filename
     "Show buffer filename with disambiguation if needed."

@@ -1,18 +1,21 @@
 ;;; neoemacs/rime/config.el -*- lexical-binding: t; -*-
 
-(setq rime-user-data-dir             "/Applications/Emacs.app/rime"                     ;; rime config input method setting
-      rime-user-data-dir             "~/Library/Rime/"                               ;; rime config input method setting
-      rime-librime-root              (concat doom-user-dir "neoemacs/rime-macos/dist")  ;; emacs-rime/blob/master/INSTALLATION.org
-      rime-emacs-module-header-root  "/opt/homebrew/opt/emacs-plus@31/include"           ;; for emacs rime, brew do not needed
-      ;; rime-emacs-module-header-root  "/Applications/Emacs.app"                          ;; for emacs rime, brew do not needed
+(setq rime-user-data-dir             "~/Library/Rime/"                               ;; rime config input method setting
+      ;; rime-librime-root              (concat doom-user-dir "neoemacs/rime-macos/dist")  ;; emacs-rime/blob/master/INSTALLATION.org
+      rime-librime-root (concat "" "/opt/homebrew/Cellar/librime/1.14.0")
+      rime-emacs-module-header-root  "/Applications/Emacs.app/Contents/Resources/include"           ;; for emacs rime, brew do not needed
+      ;; rime-emacs-module-header-root  "/Applications/Emacs.app/Contents/Resources/include"                          ;; for emacs rime, brew do not needed
       )
 ;; just install emacs first https://rime.im
 (use-package! rime
   :defer t
   :config
+  (setq rime-user-data-dir             "~/Library/Rime")
   (setq rime-show-candidate 'minibuffer)
   (setq rime-translate-keybindings '("C-n" "C-p" "<left>" "<right>" "<up>" "<down>"))
   :custom
+  (setq rime-librime-root "/opt/homebrew/Cellar/librime/1.14.0/"
+        rime-emacs-module-header-root  "/Applications/Emacs.app/Contents/Resources/include")
   ;; (rime-emacs-module-header-root emacs-module-root)
   (default-input-method "rime"))
 (setq mode-line-mule-info   '((:eval (rime-lighter)))

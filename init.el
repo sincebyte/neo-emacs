@@ -208,7 +208,7 @@
        ;; modeline         ; modeline
        modelinexp          ; Expand doom doom modeline
        elfeed              ; rss reader
-       alpha               ; make emacs background transparent
+       ;; alpha               ; make emacs background transparent
        git                 ; magit wit
        ;; addspace            ; add space when typing
        telega              ; use telega

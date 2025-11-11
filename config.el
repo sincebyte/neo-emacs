@@ -1,25 +1,3 @@
-;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
-
-;; Place your private configuration here! Remember, you do not need to run 'doom
-;; sync' after modifying this file!
-
-
-;; Some functionality uses this to identify you, e.g. GPG configuration, email
-;; clients, file templates and snippets. It is optional.
-;; (setq user-full-name "John Doe"
-;;       user-mail-address "john@doe.com")
-
-;; Doom exposes five (optional) variables for controlling fonts in Doom:
-;;
-;; - `doom-font' -- the primary font to use
-;; emacs header line title setting
-;; (setq-default default-frame-alist '((undecorated . t)))
-(add-to-list 'default-frame-alist '(ns-transparent-titlebar . nil))
-
-;; (add-to-list 'default-frame-alist '(ns-appearance . light))
-(setq-default frame-title-format nil)
-(setq ns-use-proxy-icon nil)
-
 
 ;; max width and height but not fullscreen
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -51,27 +29,27 @@
 (add-hook 'doom-big-font-mode-hook #'my/setup-big-cjk-fonts)
 
 ;; Set the padding between lines
-(defvar line-padding 0.8)
-(defun add-line-padding ()
-  "Add extra padding between lines"
+;; (defvar line-padding 0.8)
+;; (defun add-line-padding ()
+;;   "Add extra padding between lines"
 
-  ; remove padding overlays if they already exist
-  (let ((overlays (overlays-at (point-min))))
-    (while overlays
-      (let ((overlay (car overlays)))
-        (if (overlay-get overlay 'is-padding-overlay)
-            (delete-overlay overlay)))
-      (setq overlays (cdr overlays))))
+;;   ; remove padding overlays if they already exist
+;;   (let ((overlays (overlays-at (point-min))))
+;;     (while overlays
+;;       (let ((overlay (car overlays)))
+;;         (if (overlay-get overlay 'is-padding-overlay)
+;;             (delete-overlay overlay)))
+;;       (setq overlays (cdr overlays))))
 
-  ; add a new padding overlay
-  (let ((padding-overlay (make-overlay (point-min) (point-max))))
-    (overlay-put padding-overlay 'is-padding-overlay t)
-    (overlay-put padding-overlay 'line-spacing (* .1 line-padding))
-    (overlay-put padding-overlay 'line-height (+ 1 (* .1 line-padding))))
-  (setq mark-active nil))
+;;   ; add a new padding overlay
+;;   (let ((padding-overlay (make-overlay (point-min) (point-max))))
+;;     (overlay-put padding-overlay 'is-padding-overlay t)
+;;     (overlay-put padding-overlay 'line-spacing (* .1 line-padding))
+;;     (overlay-put padding-overlay 'line-height (+ 1 (* .1 line-padding))))
+;;   (setq mark-active nil))
 
-(add-hook 'buffer-list-update-hook 'add-line-padding)
-
+;; (add-hook 'buffer-list-update-hook 'add-line-padding)
+;;
 
 ;; 设置不同模式下的字体
 (defun my-set-font-for-mode ()
@@ -80,7 +58,7 @@
        ((derived-mode-p 'python-mode)
     (setq-local face-remapping-alist '((default (:family "Fira Code" :height 210) default))))
        ((derived-mode-p 'java-ts-mode)
-    (setq-local face-remapping-alist '((default (:family "Fira Code" :height 210) default))))
+    (setq-local face-remapping-alist '((default (:family "Noto Sans Mono" :height 210) default))))
        ;; ((derived-mode-p 'dired-mode)
        ;;  (setq-local face-remapping-alist '((default (:family "JetBrains Mono" :height 210) default))))
        ((derived-mode-p 'vterm-mode)
@@ -89,7 +67,7 @@
      ((derived-mode-p 'python-mode)
     (setq-local face-remapping-alist '((default (:family "Fira Code" :height 170) default))))
      ((derived-mode-p 'java-ts-mode)
-    (setq-local face-remapping-alist '((default (:family "Fira Code" :height 170) default))))
+    (setq-local face-remapping-alist '((default (:family "Noto Sans Mono" :height 170) default))))
      ;; ((derived-mode-p 'dired-mode)
      ;;  (setq-local face-remapping-alist '((default (:family "JetBrains Mono" :height 170) default))))
      ((derived-mode-p 'vterm-mode)
@@ -260,7 +238,7 @@
   (add-to-list 'warning-suppress-types '(cl-functions)))
 
 ;; (setq +format-on-save-disabled-modes (add-to-list '+format-on-save-disabled-modes 'web-mode))
-(transwin-toggle)
+;; (transwin-toggle)
 
 (use-package ultra-scroll
   :load-path "~/.doom.d/neoemacs/ultra-scroll/"
@@ -274,7 +252,6 @@
 (add-to-list 'load-path          "~/.doom.d/"     )
 (use-package! db-work                             )
 (load "keymap.el")
-(setq transient-show-during-minibuffer-read t)
 
 (map! :after dired
       :map dired-mode-map
@@ -282,3 +259,8 @@
 (map! :after dired
       :map dired-mode-map
       :ne "J" #'+workspace/switch-left)
+
+;; (setq transient-show-during-minibuffer-read t)
+(let ((lfile (concat doom-local-dir "straight/repos/transient/lisp/transient.el")))
+  (if (file-exists-p lfile)
+      (load lfile)))
