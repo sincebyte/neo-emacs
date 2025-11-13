@@ -2,6 +2,6 @@
 # name: modify
 # key: modify
 # --
-<select name='modify'>
+<select name='modify $0'>
  ALTER TABLE $0 MODIFY user_name varchar(200)  NOT NULL DEFAULT '-1' COMMENT '';
 </select>

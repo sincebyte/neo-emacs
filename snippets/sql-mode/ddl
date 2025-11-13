@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: ddl
+# key: ddl
+# --
+<select name='ddl $0`(yank)`'>
+SHOW CREATE TABLE $0`(yank)`;
+</select>

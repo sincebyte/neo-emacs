@@ -2,6 +2,6 @@
 # name: ejc
 # key: ejc
 # --
-<select name='select'>
+<select name='$0 select'>
  SELECT * FROM $0 LIMIT 1
 </select>

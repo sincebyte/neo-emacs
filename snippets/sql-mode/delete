@@ -3,7 +3,7 @@
 # key: delete
 # --
 
-<select name='delete'>
+<select name='delete $0'>
  DELETE FROM $0`(yank)`
  WHERE id=$1
  LIMIT 1

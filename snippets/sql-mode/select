@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: select
-# key: select
-# --
-
-<select name='select'>
- SELECT * FROM $0`(yank)` limit 1
-</select>

@@ -2,6 +2,6 @@
 # name: update
 # key: update
 # --
-<select name='update'>
+<select name='update $0'>
  UPDATE $0 SET id=$1 WHERE id=$2;
 </select>

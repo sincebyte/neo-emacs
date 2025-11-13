@@ -2,6 +2,6 @@
 # name: showindex
 # key: showindex
 # --
-<select name='show index'>
+<select name='show $0 index '>
 SHOW INDEX FROM $0
 </select>
