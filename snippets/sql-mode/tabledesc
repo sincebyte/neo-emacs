@@ -2,8 +2,8 @@
 # name: tc
 # key: tc
 # --
-<select name='查看表 $0 注释'>
+<select name='查看表 $0`(yank)` 注释'>
 SELECT TABLE_NAME , table_comment
 FROM information_schema.TABLES
-WHERE TABLE_NAME LIKE '%$0%'
+WHERE TABLE_NAME LIKE '%$0`(yank)`%'
 </select>

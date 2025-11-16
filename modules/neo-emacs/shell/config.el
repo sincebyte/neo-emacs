@@ -7,6 +7,8 @@
     (setenv "MAVEN_HOME"         "~/soft/apache-maven-3.6.1"                   )
     (setenv "DYLD_LIBRARY_PATH"  "/Applications/Emacs.app/"                    ) ;; rime config path
     (setenv "PATH"       (concat "/Applications/Emacs.app/:" (getenv "PATH" )) ) ;; maven exec, fzf , rg
+    (setenv "https_proxy"        "http://vpn.local.com:10887"          )
+    (setenv "http_proxy"         "http://vpn.local.com:10887"          )
     (add-to-list 'exec-path      "/Applications/Emacs.app/"                    )
     (setq shell-file-name (executable-find "bash"))
     (setq-default vterm-shell "/opt/homebrew/bin/fish")
@@ -24,6 +26,8 @@
     (setenv "JAVA_HOME"     "c:/Java/jdk-17/"                     )
     (setenv "JAVA_17_HOME"  "c:/Java/jdk-17/"                     )
     (setenv "MAVEN_HOME"    "c:/Java/apache-maven"                )
+    (setenv "https_proxy"   "http://vpn.local.com:10887"          )
+    (setenv "http_proxy"    "http://vpn.local.com:10887"          )
     (add-to-list 'exec-path (concat (getenv "MAVEN_HOME") "/bin") ) ;; maven exec
     (map! :n  "SPC r r" 'quickrun-shell                           )
     (map! :ne "SPC v v" 'project-eshell                           )))

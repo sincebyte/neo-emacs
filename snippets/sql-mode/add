@@ -2,7 +2,7 @@
 # name: add
 # key: add
 # --
-<select name='$0 alter_add'>
- ALTER TABLE $0 ADD typec   tinyint    NOT NULL COMMENT '权限数据类型 1. 组织 2. 员工 ';
- ALTER TABLE $0 ADD data_id bigint(20) NOT NULL COMMENT '数据id';
+<select name='$0`(yank)` alter_add'>
+ ALTER TABLE $0`(yank)` ADD typec   tinyint    NOT NULL COMMENT '权限数据类型 1. 组织 2. 员工 ';
+ ALTER TABLE $0`(yank)` ADD data_id bigint(20) NOT NULL COMMENT '数据id';
 </select>
