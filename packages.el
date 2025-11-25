@@ -82,6 +82,7 @@
 (package! powerline           )
 (package! kind-icon           )
 (package! rainbow-delimiters  )
+(package! benchmark-init      )
 ;; (package! aider               )
 
 
@@ -97,7 +98,7 @@
 ;; (package! prism        :recipe (:host github :repo "alphapapa/prism.el"          :branch "master" ))
 (unpin! lsp-java)
 (unpin! lsp-mode)
-(package! lsp-mode :pin "c10b9066857d26a99fca1cb336d9be341ef3e09f")
+;; (package! lsp-mode :pin "c10b9066857d26a99fca1cb336d9be341ef3e09f")
 
 ;; (package! org-clock-reminder :recipe (:host github :repo "inickey/org-clock-reminder" :branch "master"))
 

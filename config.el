@@ -241,6 +241,7 @@
 ;; (transwin-toggle)
 
 (use-package ultra-scroll
+  :defer 5
   :load-path "~/.doom.d/neoemacs/ultra-scroll/"
   :init
   (setq scroll-conservatively 101 ; important!

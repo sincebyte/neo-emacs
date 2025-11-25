@@ -290,3 +290,35 @@ Example: \\u6587 -> 文"
       (goto-char (point-min))
       (while (re-search-forward "\\\\u\\([0-9a-fA-F]\\{4\\}\\)" nil t)
         (replace-match (string (string-to-number (match-string 1) 16)) t nil)))))
+
+(defun +java-to-xml-mapper ()
+  "Jump from a Java mapper file to the corresponding XML mapper file in Spring Boot project."
+  (interactive)
+  (let* ((java-file (buffer-file-name))
+         (project-root (locate-dominating-file java-file "pom.xml")) ; 找到项目根目录
+         (java-file-name (file-name-nondirectory java-file)) ; 获取Java文件名
+         (base-name (file-name-sans-extension java-file-name)) ; 去掉扩展名
+         ;; 构建XML文件路径
+         (xml-file (when project-root
+                     (expand-file-name
+                      (format "src/main/resources/mapper/%s.xml" base-name)
+                      project-root)))
+         (method-name (thing-at-point 'symbol t)))
+
+    (message "Java file: %s" java-file)
+    (message "Project root: %s" project-root)
+    (message "Looking for XML: %s" xml-file)
+
+    (cond
+     ((not project-root)
+      (message "Could not find project root (pom.xml)"))
+
+     ((not (file-exists-p xml-file))
+      (message "XML file not found: %s" xml-file))
+
+     (t
+      (find-file xml-file)
+      (goto-char (point-min))
+      (if (and method-name (re-search-forward (format "id=\"%s\"" method-name) nil t))
+          (message "Jumped to method: %s" method-name)
+        (message "Opened XML file, but method '%s' not found" method-name))))))

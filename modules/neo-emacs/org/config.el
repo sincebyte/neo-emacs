@@ -1,7 +1,4 @@
 ;;; neoemacs/org/config.el -*- lexical-binding: t; -*-
-(use-package! dotsk :defer t)
-(use-package! ds2   :defer t)
-;; common setting
 (setq
  org-display-custom-times      t
  org-plantuml-executable-path  (expand-file-name (concat doom-user-dir "neoemacs/plantuml.jar"))

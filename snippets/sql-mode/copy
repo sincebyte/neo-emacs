@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: copy
+# key: copy
+# --
+<select name='$0`(yank)` copy'>
+  INSERT INTO `(yank)`
+  SELECT
+  id
+  FROM `(yank)`
+  where id=
+  LIMIT 1;
+</select>

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: ble
+# key: ble
+# --
+<select name='empty block'>
+   $0
+</select>

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: bl
+# key: bl
+# --
+<select name='select block'>
+ SELECT * FROM $0 LIMIT 1
+</select>
