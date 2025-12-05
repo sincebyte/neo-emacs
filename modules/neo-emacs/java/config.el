@@ -149,7 +149,7 @@
         lsp-java-implementations-code-lens-enabled nil
         lsp-enable-on-type-formatting              t
         lsp-java-format-enabled                    t
-        lsp-java-format-on-type-enabled            nil
+        lsp-java-format-on-type-enabled            t
         lsp-java-format-comments-enabled           nil
         lsp-java-save-actions-organize-imports     nil
         lsp-java-maven-download-sources            "true"
@@ -165,6 +165,7 @@
         lsp-modeline-diagnostics-scope             :workspace
         lsp-modeline-code-actions-enable           nil
         lsp-modeline-code-action-icons-enable      nil
+        lsp-java-completion-overwrite              nil
         lsp-lens-enable                            t))
 
 (setq
@@ -206,9 +207,10 @@ evil-normal-state-map
       :v "SPC c f" #'lsp-format-region
       :v "SPC f g" #'lsp-format-region
       :n "; i"     #'lsp-java-add-import
-      :n "; s"     #'lsp-signature-activate
+      :v "; l"     #'lsp-java-extract-to-local-variable
+      :v "; s"     #'lsp-java-extract-to-local-variable
+      :v "; m"     #'lsp-java-extract-method
       :n "SPC t e" #'lsp-treemacs-java-deps-list
-      :n "; p"     #'(lambda () (interactive) (lsp-ui-find-workspace-symbol (concat "@/")))
       :n "SPC t s" #'lsp-workspace-restart)
 
 
