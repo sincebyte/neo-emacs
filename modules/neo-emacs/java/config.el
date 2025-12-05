@@ -205,7 +205,7 @@ evil-normal-state-map
       :n "SPC f b" #'lsp-format-buffer
       :v "SPC c f" #'lsp-format-region
       :v "SPC f g" #'lsp-format-region
-      :n "; i"     #'lsp-java-organize-imports
+      :n "; i"     #'lsp-java-add-import
       :n "; s"     #'lsp-signature-activate
       :n "SPC t e" #'lsp-treemacs-java-deps-list
       :n "; p"     #'(lambda () (interactive) (lsp-ui-find-workspace-symbol (concat "@/")))

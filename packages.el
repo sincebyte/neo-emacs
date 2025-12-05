@@ -83,6 +83,8 @@
 (package! kind-icon           )
 (package! rainbow-delimiters  )
 (package! benchmark-init      )
+(package! drag-stuff          )
+
 ;; (package! aider               )
 
 

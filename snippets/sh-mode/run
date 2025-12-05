@@ -2,21 +2,17 @@
 # name: run
 # key: run
 # --
+#!/bin/bash
 set -e
-mvn clean -T 1C package -f ../pom.xml -Dmaven.test.skip=true dependency:purge-local-repository
-java $HOTSWAP_OPTS \
--Xms1024m -Xmx1024m \
--Dspring.application.name=your_app_name \
--Dspring.cloud.nacos.config.file-extension=yml \
--Dspring.cloud.nacos.config.server-addr=nacos:8848 \
--Dspring.cloud.nacos.config.namespace=0318af8a-cd8f-4554-92ab \
--Dspring.cloud.nacos.discovery.server-addr=nacos:8848 \
--Dspring.cloud.nacos.discovery.namespace=0318af8a-cd8f-4554-92ab \
--Dspring.config.import[0]=nacos:longda-center-common \
--Dspring.config.import[1]=nacos:longda-archetype \
--Dlogging.config=/var/pb/logback-spring.xml \
--Dspring.cloud.nacos.discovery.register-enabled=false \
+ps -ef | grep app | awk '{print $2}' | xargs kill -9
+mvnj11 clean package -U -DskipTests
+
+$JAVA_11_ARM_HOME/bin/java \
+-Xms124m -Xmx512m \
+-agentpath:/Users/van/ZY/workspace/jrebel/lib/libjrebel64.dylib \
+--spring.profiles.active=local \
+--spring.cloud.nacos.config.enabled=false \
+--spring.cloud.nacos.discovery.enabled=false \
 -Dlogging.level.com.baomidou.mybatisplus=DEBUG \
 -Dmybatis-plus.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl \
--Duser.timezone=GMT+08 \
--jar jar.jar
+-jar target/app-1.0.0-SNAPSHOT.jar

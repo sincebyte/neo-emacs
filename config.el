@@ -198,7 +198,6 @@
 (map! :ve  "; q"      'quit-window                           )
 (map! :ne  "; f"      'dirvish                               )
 (map! :map dirvish-mode-map :ne "; f" #'+dired/quit-all      )
-(map! :ne  "; o"      'neotree-projectile-action             )
 (map! :n   "SPC t n"  '+workspace/new                        )
 (map! :n   "K"        '+workspace/switch-right               )
 (map! :n   "J"        '+workspace/switch-left                )

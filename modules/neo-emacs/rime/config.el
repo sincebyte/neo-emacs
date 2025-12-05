@@ -2,7 +2,7 @@
 
 (setq rime-user-data-dir             "~/Library/Rime/"                               ;; rime config input method setting
       ;; rime-librime-root              (concat doom-user-dir "neoemacs/rime-macos/dist")  ;; emacs-rime/blob/master/INSTALLATION.org
-      rime-librime-root (concat "" "/opt/homebrew/Cellar/librime/1.14.0")
+      rime-librime-root (concat "" "/opt/homebrew/Cellar/librime/1.15.0")
       rime-emacs-module-header-root  "/Applications/Emacs.app/Contents/Resources/include"           ;; for emacs rime, brew do not needed
       ;; rime-emacs-module-header-root  "/Applications/Emacs.app/Contents/Resources/include"                          ;; for emacs rime, brew do not needed
       )
