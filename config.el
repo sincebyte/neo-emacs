@@ -54,27 +54,28 @@
 ;; 设置不同模式下的字体
 (defun my-set-font-for-mode ()
   (if (bound-and-true-p doom-big-font-mode)
-      (cond
-       ((derived-mode-p 'python-mode)
-    (setq-local face-remapping-alist '((default (:family "Fira Code" :height 210) default))))
-       ((derived-mode-p 'java-ts-mode)
-    (setq-local face-remapping-alist '((default (:family "Noto Sans Mono" :height 210) default))))
-       ;; ((derived-mode-p 'dired-mode)
-       ;;  (setq-local face-remapping-alist '((default (:family "JetBrains Mono" :height 210) default))))
-       ((derived-mode-p 'vterm-mode)
-    (setq-local face-remapping-alist '((default (:family "Kode Mono" :height 210) default)))))
+    ;; 大号字
     (cond
      ((derived-mode-p 'python-mode)
-    (setq-local face-remapping-alist '((default (:family "Fira Code" :height 170) default))))
+      (setq-local face-remapping-alist '((default (:family "Fira Code" :height 210) default))))
      ((derived-mode-p 'java-ts-mode)
-    (setq-local face-remapping-alist '((default (:family "Noto Sans Mono" :height 170) default))))
-     ;; ((derived-mode-p 'dired-mode)
-     ;;  (setq-local face-remapping-alist '((default (:family "JetBrains Mono" :height 170) default))))
+      (setq-local face-remapping-alist '((default (:family "Noto Sans Mono" :height 210) default))))
+     ((derived-mode-p 'sparkweather-mode)
+      (setq-local face-remapping-alist '((default (:family "SF Mono" :height 210) default))))
      ((derived-mode-p 'vterm-mode)
-    (setq-local face-remapping-alist '((default (:family "Kode Mono" :height 160) default)))))
-    ))
-(add-hook 'after-change-major-mode-hook #'my-set-font-for-mode)
+      (setq-local face-remapping-alist '((default (:family "Kode Mono" :height 210) default)))))
+    ;; 小号字
+    (cond
+     ((derived-mode-p 'python-mode)
+      (setq-local face-remapping-alist '((default (:family "Fira Code" :height 170) default))))
+     ((derived-mode-p 'java-ts-mode)
+      (setq-local face-remapping-alist '((default (:family "Noto Sans Mono" :height 170) default))))
+     ((derived-mode-p 'sparkweather-mode)
+      (setq-local face-remapping-alist '((default (:family "SF Mono" :height 160) default))))
+     ((derived-mode-p 'vterm-mode)
+      (setq-local face-remapping-alist '((default (:family "Kode Mono" :height 160) default)))))))
 
+(add-hook 'after-change-major-mode-hook #'my-set-font-for-mode)
 
 ;; 设置 minibuffer 中的字体
 (defun my-set-font-for-minibuffer ()
@@ -264,3 +265,6 @@
 (let ((lfile (concat doom-local-dir "straight/repos/transient/lisp/transient.el")))
   (if (file-exists-p lfile)
       (load lfile)))
+
+(setq calendar-latitude 30.6
+      calendar-longitude 104.1)
