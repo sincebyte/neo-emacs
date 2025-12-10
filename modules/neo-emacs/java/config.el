@@ -166,6 +166,8 @@
         lsp-modeline-code-actions-enable           nil
         lsp-modeline-code-action-icons-enable      nil
         lsp-java-completion-overwrite              nil
+        lsp-enable-file-watchers                   t
+        lsp-file-watch-threshold                   2000
         lsp-lens-enable                            t))
 
 (setq
@@ -184,8 +186,7 @@
                                   ;; "-Xmx1G"
                                   "-Xms128m",
                                   (concat "-javaagent:"
-                                          (expand-file-name (concat doom-user-dir "neoemacs/lombok1.18.38.jar"))))
- )
+                                          (expand-file-name (concat doom-user-dir "neoemacs/lombok1.18.38.jar")))))
 
 ;; ;; ;; java key setting
 (map! :nve "; c"     'comment-line                        )
@@ -272,12 +273,17 @@ evil-normal-state-map
   (setq lsp-file-watch-ignored-directories
         '("[/\\\\]\\.git$"
           "[/\\\\]\\.m2$"
+          "[/\\\\]logs$"
+          "[/\\\\]resources$"
           "[/\\\\]node_modules$"
           "[/\\\\]\\.classpath$"
           "[/\\\\]\\.project$"
           "[/\\\\]\\.settings$"
           "[/\\\\]target$"
           "[/\\\\]build$")))
+(with-eval-after-load 'lsp-java
+  (add-to-list 'lsp-file-watch-ignored-files
+        "[/\\\\][^/\\\\]*\\.\\(json\\|html\\|xml\\|md\\|txt\\|sql\\|sh\\|org\\|yaml\\)$"))
 
 ;; (add-hook 'lsp-mode-hook #'lsp-lens-mode)
 ;; (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
