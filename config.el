@@ -1,7 +1,7 @@
-
 ;; max width and height but not fullscreen
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
-(setq frame-title-format '(""))
+(setq ns-use-proxy-icon nil)           ; 禁用代理图标
+(setq frame-title-format nil)          ; 清空标题格式
 ;; full screen
 ;; (when (display-graphic-p)
 ;;   (add-hook 'window-setup-hook #'toggle-frame-fullscreen))
