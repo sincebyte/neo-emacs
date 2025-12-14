@@ -4,6 +4,7 @@
 # --
 #!/bin/bash
 set -e
+export TZ="Asia/Shanghai"
 ps -ef | grep app | awk '{print $2}' | xargs kill -9
 mvnj11 clean package -U -DskipTests
 

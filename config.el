@@ -266,5 +266,17 @@
   (if (file-exists-p lfile)
       (load lfile)))
 
+;; sparkweaher day
 (setq calendar-latitude 30.6
       calendar-longitude 104.1)
+
+(after! evil
+  (defun +evil-normal-in-eshell-on-window-change (_win)
+    "当切换到 eshell 窗口时，自动进入 evil normal 状态。"
+    (when (derived-mode-p 'eshell-mode)
+      (delete-other-windows)
+      (evil-normal-state)))
+
+  (add-hook 'window-selection-change-functions
+            #'+evil-normal-in-eshell-on-window-change))
+
