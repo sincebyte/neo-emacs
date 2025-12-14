@@ -28,7 +28,7 @@
  company-format-margin-function             'company-text-icons-margin
  company-text-icons-format                  " %s "
  company-text-icons-add-background          t
- company-text-face-extra-attributes         '(:weight bold :family "Street Stencil")
+ ;; company-text-face-extra-attributes         '(:weight bold :family "Street Stencil")
  company-tooltip-flip-when-above            t
  company-show-quick-access                  nil
  ;; lsp-pylsp-plugins-autopep8-enabled         t
@@ -110,12 +110,25 @@
   (set-face-attribute 'lsp-face-highlight-write nil :slant 'normal)
   (setq lsp-modeline-code-action-icons-enable nil
         lsp-modeline-code-actions-enable nil))
+;; when obs capture use company
+(with-eval-after-load 'company
+  (add-hook 'company-mode-hook
+            (lambda ()
+              (when (bound-and-true-p lsp-mode)
+                (let ((fg (face-foreground 'vertico-current nil t))
+                      (bg-tooltip (face-background 'diff-hunk-header nil t))
+                      (bg (face-background 'vertico-current nil t)))
+                      (setq company-tooltip-maximum-width 90)
+                      (set-face-attribute 'company-tooltip nil :underline nil :background bg-tooltip :weight 'normal )
+                      (set-face-attribute 'company-tooltip-selection nil :foreground fg :background nil :inherit 'vertico-current)
+                      (set-face-attribute 'company-tooltip-mouse nil :foreground fg :background bg :inherit 'vertico-current)
+                      (set-face-attribute 'company-tooltip-annotation-selection nil :foreground fg :background bg :inherit 'vertico-current)
+                      (set-face-attribute 'company-tooltip-common nil :underline nil :weight 'normal )
+                      (set-face-attribute 'company-tooltip-common-selection nil :underline nil :background bg :weight 'normal ))))))
 
 (with-eval-after-load 'lsp-mode
   (focus-mode)
   (apheleia-global-mode -1)
-  (setq-local lsp-enable-file-watchers nil
-              lsp-modeline-code-actions-enable nil)
   (rainbow-delimiters-mode)
   (indent-bars-mode 1)
   (customize-set-variable 'lsp-ui-sideline-enable nil)

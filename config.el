@@ -1,6 +1,7 @@
 
 ;; max width and height but not fullscreen
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(setq frame-title-format '(""))
 ;; full screen
 ;; (when (display-graphic-p)
 ;;   (add-hook 'window-setup-hook #'toggle-frame-fullscreen))
@@ -58,6 +59,8 @@
     (cond
      ((derived-mode-p 'python-mode)
       (setq-local face-remapping-alist '((default (:family "Fira Code" :height 210) default))))
+     ((derived-mode-p 'company-mode)
+      (setq-local face-remapping-alist '((default (:family "Fira Code" :height 210) default))))
      ((derived-mode-p 'java-ts-mode)
       (setq-local face-remapping-alist '((default (:family "Noto Sans Mono" :height 210) default))))
      ((derived-mode-p 'sparkweather-mode)
@@ -67,6 +70,8 @@
     ;; 小号字
     (cond
      ((derived-mode-p 'python-mode)
+      (setq-local face-remapping-alist '((default (:family "Fira Code" :height 170) default))))
+     ((derived-mode-p 'company-mode)
       (setq-local face-remapping-alist '((default (:family "Fira Code" :height 170) default))))
      ((derived-mode-p 'java-ts-mode)
       (setq-local face-remapping-alist '((default (:family "Noto Sans Mono" :height 170) default))))

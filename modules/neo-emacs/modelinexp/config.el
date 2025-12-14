@@ -58,16 +58,16 @@
 (add-hook 'doom-load-theme-hook
 (lambda ()
 (with-eval-after-load 'doom-modeline
-  (let ((highlight-foreground (face-attribute 'org-date-selected :foreground))
-        (highlight-background (face-attribute 'org-date-selected :background)))
-    (custom-set-faces  '(indent-bars-face                  ((t (:family "Kode Mono" ))))
-                       `(+workspace-tab-selected-face      ((t (:family "IBM Plex Mono" :box nil :foreground "black" :background ,highlight-foreground :weight bold))))
-                       '(+workspace-tab-face               ((t (:family "IBM Plex Mono" :box nil :weight bold))))))
+  ;(let ((highlight-foreground (face-attribute 'org-date-selected :foreground))
+  ;      (highlight-background (face-attribute 'org-date-selected :background)))
+  ;  (custom-set-faces  '(indent-bars-face                  ((t (:family "Kode Mono" ))))
+  ;                     `(+workspace-tab-selected-face      ((t (:family "IBM Plex Mono" :box nil :foreground "black" :background ,highlight-foreground :weight bold))))
+  ;                     '(+workspace-tab-face               ((t (:family "IBM Plex Mono" :box nil :weight bold))))))
 
-  (set-face-attribute 'doom-modeline-time nil
-                      :foreground (face-attribute 'org-level-2 :foreground nil t)
-                      :background (face-attribute 'doom-modeline-evil-insert-state :foreground nil t)
-                      :weight 'bold)
+  ;(set-face-attribute 'doom-modeline-time nil
+  ;                    :foreground (face-attribute 'org-level-2 :foreground nil t)
+  ;                    :background (face-attribute 'doom-modeline-evil-insert-state :foreground nil t)
+  ;                    :weight 'bold)
 
 
   (set-face-attribute 'doom-modeline-buffer-file nil

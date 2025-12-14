@@ -8,7 +8,6 @@
  org-roam-graph-executable     dot-exec-path
  org-directory                 "~/org"
  org-roam-directory            "~/org/org-roam"
- ;; org-confirm-babel-evaluate    nil
  yas-indent-line               'fixed
  yas-also-auto-indent-first-line t
  global-auto-revert-mode       1
@@ -169,11 +168,10 @@
 ;;       "C-c C-c" #'verb-send-request-on-point)
 
 
-(set-company-backend! 'org-mode
-  'company-ispell 'company-yasnippet)
+;(set-company-backend! 'org-mode
+;  'company-ispell 'company-yasnippet)
 
 (setq system-time-locale "C")
-
 (add-hook 'org-mode-hook (lambda () (ws-butler-mode -1)))
 (use-package org-modern
   :hook (org-mode . org-modern-mode)
@@ -192,15 +190,12 @@
         org-modern-timestamp t
         org-modern-star 'org-modern-replace-stars
         org-modern-replace-stars    '("⁞" "⁞⁞" "⁞⁞⁞" "⁞⁞⁞⁞" "⁞⁞⁞⁞⁞")))
-;; (custom-set-faces `(org-block-begin-line ((t (:foreground "#008ED1" :background "#EAEAFF")))))
-;; (custom-set-faces `(org-block-end-line   ((t (:foreground "#008ED1" :background "#EAEAFF")))))
-
 (setq org-latex-create-formula-image-program 'dvipng)
 
-(use-package org-modern-indent
-  :load-path "~/.doom.d/neoemacs/org-modern-indent/"
-  :config
-  (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
+;(use-package org-modern-indent
+;  :load-path "~/.doom.d/neoemacs/org-modern-indent/"
+;  :config
+;  (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
 
 (defconst org-modern-indent-begin (propertize "┌"  'face 'org-modern-indent-bracket-line))
 (defconst org-modern-indent-guide (propertize "│ " 'face 'org-modern-indent-bracket-line))
@@ -212,23 +207,23 @@
 ;;   :config (setq emt-lib-path (concat doom-user-dir "neoemacs/libEMT-aarch64.dylib" )))
 
 ;; so queer there should a delay
-(defun open-company-english-helper ()
-  (run-at-time "1 sec" nil #'open-company-english-helper-dy))
-
-(defun open-company-english-helper-dy ()
-  (interactive)
-  (progn
-    (setq company-backends (remove 'company-english-helper-search company-backends))
-    ;; I need remove `company-english-helper-search' with `company-yasnippet',
-    ;; it's not enough just remove `company-english-helper-search' from `company-backends'
-    (setq company-backends (remove '(company-english-helper-search :with company-yasnippet) company-backends))
-    (setq company-english-helper-active-p nil))
-  (if (not company-mode)
-      (company-mode t))
-  (setq company-english-helper-active-p nil)
-  (add-to-list 'company-backends 'company-english-helper-search)
-  (setq company-english-helper-active-p t)
-  (message "English helper has enable."))
+;;(defun open-company-english-helper ()
+;;  (run-at-time "1 sec" nil #'open-company-english-helper-dy))
+;;
+;;(defun open-company-english-helper-dy ()
+;;  (interactive)
+;;  (progn
+;;    (setq company-backends (remove 'company-english-helper-search company-backends))
+;;    ;; I need remove `company-english-helper-search' with `company-yasnippet',
+;;    ;; it's not enough just remove `company-english-helper-search' from `company-backends'
+;;    (setq company-backends (remove '(company-english-helper-search :with company-yasnippet) company-backends))
+;;    (setq company-english-helper-active-p nil))
+;;  (if (not company-mode)
+;;      (company-mode t))
+;;  (setq company-english-helper-active-p nil)
+;;  (add-to-list 'company-backends 'company-english-helper-search)
+;;  (setq company-english-helper-active-p t)
+;;  (message "English helper has enable."))
 
 ;; (use-package company-english-helper
 ;;   :load-path "~/.doom.d/neoemacs/company-english-helper"
@@ -241,6 +236,6 @@
   (add-hook 'lsp-mode-hook 'focus-mode)
   (add-to-list 'focus-mode-to-thing '((org-mode . org-element) (lsp-mode . defun))))
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((gnuplot . t)))
+;(org-babel-do-load-languages
+; 'org-babel-load-languages
+; '((gnuplot . t)))
