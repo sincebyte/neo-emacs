@@ -144,6 +144,8 @@
         lsp-eldoc-render-all                       nil
         lsp-signature-auto-activate                t
         lsp-java-signature-help-enabled            t
+        lsp-java-workspace-dir                     (expand-file-name "lsp-java/workspace/" "~")
+        lsp-java-workspace-cache-dir               (expand-file-name "lsp-java/workspace/.cache/" "~")
         ;; lsp-signature-doc-lines                    1
         ;; lsp-java-references-code-lens-enabled      t
         lsp-java-implementations-code-lens-enabled nil
