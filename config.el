@@ -291,7 +291,7 @@
 ;;   (setq aider-args '("--model" "deepseek/deepseek-chat"))
 ;;   (require 'aider-doom))
 (use-package aidermacs
-  :bind (("SPC d" . aidermacs-transient-menu))
+  ;; :bind (("SPC d" . aidermacs-transient-menu))
   :config
   (setq aidermacs-auto-commits nil)
   (setq aidermacs-extra-args (list "--chat-language" "zh-cn"))
