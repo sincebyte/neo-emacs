@@ -205,6 +205,7 @@
 (map! :ne  "; f"      'dirvish                               )
 (map! :map dirvish-mode-map :ne "; f" #'+dired/quit-all      )
 (map! :n   "SPC t n"  '+workspace/new                        )
+(map! :n   "SPC d"    'aidermacs-transient-menu              )
 (map! :n   "K"        '+workspace/switch-right               )
 (map! :n   "J"        '+workspace/switch-left                )
 (map! :vn  "g l"      'ialign                                )
@@ -275,13 +276,28 @@
 (setq calendar-latitude 30.6
       calendar-longitude 104.1)
 
+; quickrun plug
 (after! evil
   (defun +evil-normal-in-eshell-on-window-change (_win)
     "当切换到 eshell 窗口时，自动进入 evil normal 状态。"
     (when (derived-mode-p 'eshell-mode)
       (delete-other-windows)
       (evil-normal-state)))
-
   (add-hook 'window-selection-change-functions
             #'+evil-normal-in-eshell-on-window-change))
 
+;; (use-package aider
+;;   :config
+;;   (setq aider-args '("--model" "deepseek/deepseek-chat"))
+;;   (require 'aider-doom))
+(use-package aidermacs
+  :bind (("SPC d" . aidermacs-transient-menu))
+  :config
+  (setq aidermacs-auto-commits nil)
+  (setq aidermacs-extra-args (list "--chat-language" "zh-cn"))
+  (setq aidermacs-exit-kills-buffer t)
+  (setq aidermacs-backend 'vterm)
+  :custom
+  ; See the Configuration section below
+  (aidermacs-default-chat-mode 'architect)
+  (aidermacs-default-model "deepseek/deepseek-chat"))

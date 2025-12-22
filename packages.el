@@ -84,6 +84,7 @@
 (package! rainbow-delimiters  )
 (package! benchmark-init      )
 (package! drag-stuff          )
+(package! aidermacs           )
 
 ;; (package! aider               )
 
@@ -99,6 +100,8 @@
 (package! pulsing-cursor :recipe (:host github :repo "jasonjckn/pulsing-cursor"))
 (package! sparkweather   :recipe (:host github :repo "aglet/sparkweather"          :branch "main"   ))
 ;; (package! prism        :recipe (:host github :repo "alphapapa/prism.el"          :branch "master" ))
+;; (package! aider          :recipe (:host github :repo "tninja/aider.el"))
+
 (unpin! lsp-java)
 (unpin! lsp-mode)
 ;; (package! lsp-mode :pin "c10b9066857d26a99fca1cb336d9be341ef3e09f")

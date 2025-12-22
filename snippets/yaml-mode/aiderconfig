@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: aiderconf
+# key: aiderconf
+# --
+
+no-auto-commits: true
+max-chat-history: 6
+
+read:
+  - CONVENTIONS.md
+
+model: deepseek/deepseek-chat

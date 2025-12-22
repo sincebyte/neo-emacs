@@ -7,3 +7,4 @@ custom.el
 
 modules/neo-emacs/modelinexp/error.log
 nohup.out
+.aider*

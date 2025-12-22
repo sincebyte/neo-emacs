@@ -192,10 +192,10 @@
         org-modern-replace-stars    '("⁞" "⁞⁞" "⁞⁞⁞" "⁞⁞⁞⁞" "⁞⁞⁞⁞⁞")))
 (setq org-latex-create-formula-image-program 'dvipng)
 
-;(use-package org-modern-indent
-;  :load-path "~/.doom.d/neoemacs/org-modern-indent/"
-;  :config
-;  (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
+(use-package org-modern-indent
+  :load-path "~/.doom.d/neoemacs/org-modern-indent/"
+  :config
+  (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
 
 (defconst org-modern-indent-begin (propertize "┌"  'face 'org-modern-indent-bracket-line))
 (defconst org-modern-indent-guide (propertize "│ " 'face 'org-modern-indent-bracket-line))
