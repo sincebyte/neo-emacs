@@ -130,7 +130,7 @@
 ;; (after! doom-themes
 ;;   (load-theme 'doom-winter-is-coming-dark-blue t))
 
-(load-theme 'kaolin-dark t)
+;; (load-theme 'kaolin-dark t)
 
 
 ;; (setq initial-frame-alist '((height . 50)))
@@ -205,7 +205,7 @@
 (map! :ne  "; f"      'dirvish                               )
 (map! :map dirvish-mode-map :ne "; f" #'+dired/quit-all      )
 (map! :n   "SPC t n"  '+workspace/new                        )
-(map! :n   "SPC d"    'aidermacs-transient-menu              )
+(map! :nv  "SPC d"    'aidermacs-transient-menu              )
 (map! :n   "K"        '+workspace/switch-right               )
 (map! :n   "J"        '+workspace/switch-left                )
 (map! :vn  "g l"      'ialign                                )
@@ -294,9 +294,32 @@
   ;; :bind (("SPC d" . aidermacs-transient-menu))
   :config
   (setq aidermacs-auto-commits nil)
+  (setq aidermacs-subtree-only nil)
   (setq aidermacs-extra-args (list "--chat-language" "zh-cn"))
   (setq aidermacs-exit-kills-buffer t)
-  (setq aidermacs-backend 'vterm)
+  (setopt aidermacs-vterm-use-theme-colors t)
+  (setq aidermacs-global-read-only-files '("~/CONVENTIONS.md"))
+  ;; 设置 face-remapping-alist 来覆盖
+  ;; 隐藏 aidermacs 聊天 buffer 的 modeline 并设置滚动边距
+  (defun my/hide-modeline-in-aidermacs ()
+    "Hide modeline in aidermacs chat buffers and set scroll margin."
+    ;; 使用定时器延迟执行，确保 buffer 已完全创建
+    (run-with-timer 0.1 nil
+                    (lambda ()
+                      (when (buffer-live-p (current-buffer))
+                       (setq-local face-remapping-alist
+                                   (append face-remapping-alist
+                                           '((aidermacs-command-text . font-lock-escape-face))))
+                        (hide-mode-line-mode t)
+                        ;; 设置滚动边距，保留底部8行空白
+                        (setq-local scroll-margin 8)
+                        ;; 确保滚动时保持光标在可见区域内
+                        (setq-local scroll-conservatively 101)
+                        ;; 设置最大滚动步长
+                        (setq-local scroll-step 1)
+                        ;; 确保窗口滚动时光标位置合适
+                        (setq-local scroll-preserve-screen-position t)))))
+  (add-hook 'aidermacs-before-run-backend-hook #'my/hide-modeline-in-aidermacs)
   :custom
   ; See the Configuration section below
   (aidermacs-default-chat-mode 'architect)
