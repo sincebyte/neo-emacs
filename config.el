@@ -295,9 +295,8 @@
   :config
   (setq aidermacs-auto-commits nil)
   (setq aidermacs-subtree-only nil)
-  (setq aidermacs-extra-args (list "--chat-language" "zh-cn"))
+  (setq aidermacs-extra-args (list "--chat-language" "zh-cn" "--no-show-model-warnings"))
   (setq aidermacs-exit-kills-buffer t)
-  (setopt aidermacs-vterm-use-theme-colors t)
   (setq aidermacs-global-read-only-files '("~/CONVENTIONS.md"))
   ;; 设置 face-remapping-alist 来覆盖
   ;; 隐藏 aidermacs 聊天 buffer 的 modeline 并设置滚动边距
@@ -309,7 +308,7 @@
                       (when (buffer-live-p (current-buffer))
                        (setq-local face-remapping-alist
                                    (append face-remapping-alist
-                                           '((aidermacs-command-text . font-lock-escape-face))))
+                                           '((aidermacs-command-text . font-lock-string-face))))
                         (hide-mode-line-mode t)
                         ;; 设置滚动边距，保留底部8行空白
                         (setq-local scroll-margin 8)
@@ -323,4 +322,4 @@
   :custom
   ; See the Configuration section below
   (aidermacs-default-chat-mode 'architect)
-  (aidermacs-default-model "deepseek/deepseek-chat"))
+  (aidermacs-default-model "anthropic/glm-4.6"))
