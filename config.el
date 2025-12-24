@@ -298,6 +298,8 @@
   (setq aidermacs-extra-args (list "--chat-language" "zh-cn" "--no-show-model-warnings"))
   (setq aidermacs-exit-kills-buffer t)
   (setq aidermacs-global-read-only-files '("~/CONVENTIONS.md"))
+  (setq aidermacs-show-diff-after-change nil)
+
   ;; 设置 face-remapping-alist 来覆盖
   ;; 隐藏 aidermacs 聊天 buffer 的 modeline 并设置滚动边距
   (defun my/hide-modeline-in-aidermacs ()
