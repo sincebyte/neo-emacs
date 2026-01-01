@@ -325,3 +325,7 @@
   ; See the Configuration section below
   (aidermacs-default-chat-mode 'architect)
   (aidermacs-default-model "anthropic/glm-4.6"))
+
+(setq inhibit-compacting-font-caches t)
+(setq frame-inhibit-implied-resize t)
+(setq mouse-avoidance-mode 'banish)

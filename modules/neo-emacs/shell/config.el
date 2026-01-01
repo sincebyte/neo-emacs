@@ -10,7 +10,6 @@
     (setenv "PATH"       (concat "/Applications/Emacs.app/:" (getenv "PATH" )) ) ;; maven exec, fzf , rg
     (setenv "https_proxy"        "http://vpn.local.com:10887"          )
     (setenv "http_proxy"         "http://vpn.local.com:10887"          )
-    ;; (setenv "no_proxy"           "10.100.10.10,127.0.0.1,localhost,vpn.local.com,tencent.local,local.com.cn,qq.com,101.204.228.227,1.117.167.195,101.32.194.73,*.aliyun.com,192.168.0.0/16,10.5.0.0/16,10.100.0.0/16,10.10.0.0/16,172.17.0.0/16,172.16.0.0/16,117.139.166.182,.minexiot.com,.youdao.com,dict.youdao.com,repo1.maven.org,106.12.165.75,es-flight-api-cn.djigate.com,*.sina.com.cn,api.deepseek.com,cloudtech-test.minexiot.com"          )
     (add-to-list 'exec-path      "/Applications/Emacs.app/"                    )
     (setq shell-file-name (executable-find "bash"))
     (setq quickrun-focus-p t)
