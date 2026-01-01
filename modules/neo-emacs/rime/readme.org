@@ -2,32 +2,18 @@
 #+author: vanniuner
 #+SETUPFILE: ~/.doom.d/org-head.setup
 
-
 * Use system input rime 
-Use system input method get a more unify experience, the control chain like  C-; -hammerspoon-> shift space -> switch rime ascii.
-** evil hook
-#+begin_src lisp
-(defun my/mac-switch-to-english ()
-  "切换到系统英文输入法"
-  (call-process "macism" nil 0 nil
-                "com.apple.keylayout.ABC"))
+Use system input method get a more unify experience, the control chain like C-; -hammerspoon-> shift space -> switch rime ascii.
+** hammerspoon
+use hammerspoon to switch input method on macos
+- `hs.keycodes.currentSourceID("im.rime.inputmethod.Squirrel.Hans")` to rime Squirrel
+- `hs.keycodes.currentSourceID("com.apple.keylayout.ABC")` to en 
 
-(defun my/mac-switch-to-chinese ()
-  "切换到系统中文输入法（Squirrel / Rime）"
-  (call-process "macism" nil 0 nil
-                "im.rime.inputmethod.Squirrel.Hans"))
-
-(with-eval-after-load 'evil
-  ;; 进入 insert → 中文
-  (add-hook 'evil-insert-state-entry-hook
-            #'my/mac-switch-to-chinese)
-
-  ;; 退出 insert → 英文
-  (add-hook 'evil-insert-state-exit-hook
-            #'my/mac-switch-to-english))
-
-#+end_src
-** hammerspoon.config
+config hammerspoon 
+- in Emacs C-; -> shift-space
+- other C-; -> C-z
+  
+config file：
 #+begin_src lua
 hs.hotkey.bind({"ctrl"}, ";", function()
     local win = hs.window.frontmostWindow()
@@ -35,68 +21,72 @@ hs.hotkey.bind({"ctrl"}, ";", function()
         local appName = win:application():name()
         if appName == "Emacs" then
             hs.eventtap.keyStroke({"shift"}, "space")
-            -- hs.eventtap.keyStroke({"ctrl"}, "z")
         else
             hs.eventtap.keyStroke({"ctrl"}, "z")
         end
     end
 end)
 #+end_src
-** install macism
-#+begin_src shell
-brew tap laishulu/homebrew
-brew install macism
-#+end_src
 
-** rime keybinding config
+** rime config
+- 配置不显示中英文弹框
+- 配置 ; 选择第二个词
+- 配置 C-p 选择下一个候选项
+- 配置 C-n 选择上一个候选项
+- 配置 C-h 删除上一个单词
+- 配置 Shift+space 选择切换中英输入法
+- 配置每次切换后都重置输入法, reset: false 则会记住历史中英模式。因为emacs中经常会切换至minibuffer ，而minibuffer以英文输入情况居多，据切换后强制设置为英文模式.
+  
+配置：
 #+begin_src yaml
+# options: always | never | appropriate
+show_notifications_when: never
+
 # 快捷键
 key_binder:
   bindings:
-    # Tab / Shift+Tab 切换光标至下/上一个拼音
-    #- { when: composing, accept: Shift+Tab, send: Shift+Left }
-    #- { when: composing, accept: Tab, send: Shift+Right }
-    # Tab / Shift+Tab 翻页
-    # - { when: has_menu, accept: Shift+Tab, send: Page_Up }
-    # - { when: has_menu, accept: Tab, send: Page_Down }
-    # Option/Alt + ←/→ 切换光标至下/上一个拼音
     - { when: composing, accept: ";", send: "2" }
-    - { when: composing, accept: Alt+Left, send: Shift+Left }
-    - { when: composing, accept: Alt+Right, send: Shift+Right }
-    # emacs_editing:
     - { when: composing, accept: Control+p, send: Left }
     - { when: composing, accept: Control+n, send: Right }
-    # 实现无论在 macos 系统中还是在 emacs 内部都可以使用 C-p 与 C-n 来实现选词。
-    # macos 系统使用下面两行将 rime 加载好(系统只会加载rime配置一次)，然后再注释掉，emacs 使用上面的配置。
-    - { when: composing, accept: Up, send: Left }
-    - { when: composing, accept: Down, send: Right }
-    # numbered_mode_switch:
-    # - { when: always, select: .next, accept: Control+Shift+1 }                  # 在最近的两个方案之间切换
-    # - { when: always, select: .next, accept: Control+Shift+exclam }             # 在最近的两个方案之间切换
-    # - { when: always, toggle: ascii_mode, accept: Control+Shift+2 }             # 切换中英
-    # - { when: always, toggle: ascii_mode, accept: Control+Shift+at }            # 切换中英
-    # - { when: always, toggle: full_shape, accept: Control+Shift+5 }             # 切换全半角
-    # - { when: always, toggle: full_shape, accept: Control+Shift+percent }       # 切换全半角
-
-    # emacs_editing:
-    # - { when: composing, accept: Control+p, send: Up }
-    # - { when: composing, accept: Control+n, send: Down }
-    # - { when: composing, accept: Control+b, send: Left }
-    # - { when: composing, accept: Control+f, send: Right }
-    # - { when: composing, accept: Control+a, send: Home }
-    # - { when: composing, accept: Control+e, send: End }
-    # - { when: composing, accept: Control+d, send: Delete }
-    # - { when: composing, accept: Control+k, toggle: xxxxx } #释放Ctrl+k=ctrl+del 万象用来调序，且删除属于低频场景，建议双手操作
-    # - { when: composing, accept: Control+h, send: BackSpace }
-    # - { when: composing, accept: Control+g, send: Escape }
-    # - { when: composing, accept: Control+bracketleft, send: Escape }
-    # - { when: composing, accept: Control+y, send: Page_Up }
-    # - { when: composing, accept: Alt+v, send: Page_Up }
-    # - { when: composing, accept: Control+v, send: Page_Down }
-
-    # optimized_mode_switch:
-    # - { when: always, accept: Control+Shift+space, select: .next }
+    - { when: composing, accept: Control+h, send: BackSpace }
     - { when: always, accept: Shift+space, toggle: ascii_mode }
+    
+patch:
+  switches:
+    - name: ascii_mode
+      reset: true
+#+end_src
+
+** emacs config
+- 配置切换输入法的函数
+- 针对rime的entry和exit切换输入法
+- 针对minibuffer的setup和exit切换输入法
+  
+配置：
+#+begin_src lisp
+(defun my/mac-switch-to-abc ()
+  (interactive)
+  (start-process
+   "hs-abc"
+   nil
+   "hs"
+   "-c"
+   "hs.keycodes.currentSourceID(\"com.apple.keylayout.ABC\")"))
+
+(defun my/mac-switch-to-rime ()
+  (interactive)
+  (start-process
+   "hs-rime"
+   nil
+   "hs"
+   "-c"
+   "hs.keycodes.currentSourceID(\"im.rime.inputmethod.Squirrel.Hans\")"))
+
+(with-eval-after-load 'evil
+  (add-hook 'evil-insert-state-entry-hook #'my/mac-switch-to-rime)
+  (add-hook 'evil-insert-state-exit-hook #'my/mac-switch-to-abc)
+  (add-hook 'minibuffer-setup-hook #'my/mac-switch-to-rime)
+  (add-hook 'minibuffer-exit-hook #'my/mac-switch-to-abc))
 #+end_src
 * Install Librime
 ** how to get librime on mac?
