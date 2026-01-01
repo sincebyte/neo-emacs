@@ -33,21 +33,40 @@
 ;; (map! :map (minibuffer-local-map)
 ;;       "C-," 'toggle-input-method)
 
-(defun my/mac-switch-to-english ()
-  "切换到系统英文输入法"
-  (call-process "macism" nil 0 nil
-                "com.apple.keylayout.ABC"))
+;; (defun my/mac-switch-to-english ()
+;;   "切换到系统英文输入法"
+;;   (call-process "macism" nil 0 nil
+;;                 "com.apple.keylayout.ABC"))
 
-(defun my/mac-switch-to-chinese ()
-  "切换到系统中文输入法（Squirrel / Rime）"
-  (call-process "macism" nil 0 nil
-                "im.rime.inputmethod.Squirrel.Hans"))
+;; (defun my/mac-switch-to-chinese ()
+;;   "切换到系统中文输入法（Squirrel / Rime）"
+;;   (call-process "macism" nil 0 nil
+;;                 "im.rime.inputmethod.Squirrel.Hans"))
+(defun my/mac-switch-to-abc ()
+  (interactive)
+  (start-process
+   "hs-abc"   ; 进程名
+   nil               ; buffer（nil = 不输出）
+   "hs"
+   "-c"
+   "hs.keycodes.currentSourceID(\"com.apple.keylayout.ABC\")"))
+
+(defun my/mac-switch-to-rime ()
+  (interactive)
+  (start-process
+   "hs-rime"   ; 进程名
+   nil               ; buffer（nil = 不输出）
+   "hs"
+   "-c"
+   "hs.keycodes.currentSourceID(\"im.rime.inputmethod.Squirrel.Hans\")"))
 
 (with-eval-after-load 'evil
-  ;; 进入 insert → 中文
+  ;; ;; 进入 insert → 中文
   (add-hook 'evil-insert-state-entry-hook
-            #'my/mac-switch-to-chinese)
+            #'my/mac-switch-to-rime)
 
   ;; 退出 insert → 英文
   (add-hook 'evil-insert-state-exit-hook
-            #'my/mac-switch-to-english))
+            #'my/mac-switch-to-abc))
+
+;; (global-set-key (kbd "C-,") 'my/hs-ctrl-comma)
