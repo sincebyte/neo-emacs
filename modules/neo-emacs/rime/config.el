@@ -45,8 +45,8 @@
 (defun my/mac-switch-to-abc ()
   (interactive)
   (start-process
-   "hs-abc"   ; 进程名
-   nil               ; buffer（nil = 不输出）
+   "hs-abc"
+   nil
    "hs"
    "-c"
    "hs.keycodes.currentSourceID(\"com.apple.keylayout.ABC\")"))
@@ -54,19 +54,14 @@
 (defun my/mac-switch-to-rime ()
   (interactive)
   (start-process
-   "hs-rime"   ; 进程名
-   nil               ; buffer（nil = 不输出）
+   "hs-rime"
+   nil
    "hs"
    "-c"
    "hs.keycodes.currentSourceID(\"im.rime.inputmethod.Squirrel.Hans\")"))
 
 (with-eval-after-load 'evil
-  ;; ;; 进入 insert → 中文
-  (add-hook 'evil-insert-state-entry-hook
-            #'my/mac-switch-to-rime)
-
-  ;; 退出 insert → 英文
-  (add-hook 'evil-insert-state-exit-hook
-            #'my/mac-switch-to-abc))
-
-;; (global-set-key (kbd "C-,") 'my/hs-ctrl-comma)
+  (add-hook 'evil-insert-state-entry-hook #'my/mac-switch-to-rime)
+  (add-hook 'evil-insert-state-exit-hook #'my/mac-switch-to-abc)
+  (add-hook 'minibuffer-setup-hook #'my/mac-switch-to-rime)
+  (add-hook 'minibuffer-exit-hook #'my/mac-switch-to-abc))
