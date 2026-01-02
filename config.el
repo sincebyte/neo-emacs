@@ -285,10 +285,6 @@
   (add-hook 'window-selection-change-functions
             #'+evil-normal-in-eshell-on-window-change))
 
-;; (use-package aider
-;;   :config
-;;   (setq aider-args '("--model" "deepseek/deepseek-chat"))
-;;   (require 'aider-doom))
 (use-package aidermacs
   ;; :bind (("SPC d" . aidermacs-transient-menu))
   :config
@@ -296,35 +292,22 @@
   (setq aidermacs-subtree-only nil)
   (setq aidermacs-extra-args (list "--chat-language" "zh-cn" "--no-show-model-warnings"))
   (setq aidermacs-exit-kills-buffer t)
-  (setq aidermacs-global-read-only-files '("~/CONVENTIONS.md"))
+  (setq aidermacs-global-read-only-files '("~/CONVENTIONS.org"))
+  (setq aidermacs-backend 'vterm)
   (setq aidermacs-show-diff-after-change nil)
-
-  ;; 设置 face-remapping-alist 来覆盖
-  ;; 隐藏 aidermacs 聊天 buffer 的 modeline 并设置滚动边距
-  (defun my/hide-modeline-in-aidermacs ()
-    "Hide modeline in aidermacs chat buffers and set scroll margin."
-    ;; 使用定时器延迟执行，确保 buffer 已完全创建
-    (run-with-timer 0.1 nil
-                    (lambda ()
-                      (when (buffer-live-p (current-buffer))
-                       (setq-local face-remapping-alist
-                                   (append face-remapping-alist
-                                           '((aidermacs-command-text . font-lock-string-face))))
-                        (hide-mode-line-mode t)
-                        ;; 设置滚动边距，保留底部8行空白
-                        (setq-local scroll-margin 8)
-                        ;; 确保滚动时保持光标在可见区域内
-                        (setq-local scroll-conservatively 101)
-                        ;; 设置最大滚动步长
-                        (setq-local scroll-step 1)
-                        ;; 确保窗口滚动时光标位置合适
-                        (setq-local scroll-preserve-screen-position t)))))
-  (add-hook 'aidermacs-before-run-backend-hook #'my/hide-modeline-in-aidermacs)
   :custom
   ; See the Configuration section below
   (aidermacs-default-chat-mode 'architect)
   (aidermacs-default-model "anthropic/glm-4.6"))
 
-(setq inhibit-compacting-font-caches t)
-(setq frame-inhibit-implied-resize t)
-(setq mouse-avoidance-mode 'banish)
+(defun aidermacs-vterm--evil-normal-state-entry-hook ()
+  "Send vterm-stop when entering evil normal state in vterm."
+    (vterm-send-stop))
+
+(defun aidermacs-vterm--evil-insert-state-entry-hook ()
+  "Send vterm-send-start when entering evil insert state in vterm."
+    (vterm-send-start))
+
+;;;###autoload
+(add-hook 'evil-normal-state-entry-hook #'aidermacs-vterm--evil-normal-state-entry-hook)
+(add-hook 'evil-insert-state-entry-hook #'aidermacs-vterm--evil-insert-state-entry-hook)

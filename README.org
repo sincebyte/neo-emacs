@@ -12,13 +12,14 @@
 #+MACRO: latexred @@latex:{\color{red}@@@@latex:}@@
 #+latex:\newpage
 
-[[https://img.shields.io/badge/neo_emacs-v3.0-green.svg]]  [[https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0]]  [[https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1]] [[https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&color=3498DB]]
-[[https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&color=2C2255]] [[https://img.shields.io/badge/supports-Emacs_27.1_to_30.0-red.svg?logo=gnuemacs&color=7F5AB6]]
+[[https://img.shields.io/badge/neo_emacs-v3.1-green.svg]]  [[https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0]]  [[https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1]] [[https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&color=3498DB]]
+[[https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&color=2C2255]] [[https://img.shields.io/badge/supports-Emacs_27.1_to_31.0-red.svg?logo=gnuemacs&color=7F5AB6]]
 
 [[file:./images/image-use.png]]
 * About
 Neo emacs is a configuration framework for GNU Emacs which is based on doom emacs and focuses on the java web application coding environment. Neo emacs has the following features:
 - Code completion: Lsp-java supports maven and gradle project.
+- Agent tool: aidermacs a code editing assistant through llm.
 - Program debugging: Dap-java supports program debugging.
 - Http client: Rest-client is a tool to manually explore and test HTTP REST webservices just like Postman.
 - Http client*: verb a package for Emacs which allows you to organize and send HTTP requests.
@@ -266,6 +267,71 @@ Neo-Emacs will automatically download the jdtls from `lsp-java-jdt-download-url`
   2. Download the lastest jdt-language-server from https://download.eclipse.org/jdtls/milestones.
   3. Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
 
+** Aidermacs
+aidermacs a code editing assistant through llm.
+Start through 'space d' and display using vterm.
+use aider-ce
+#+begin_src yaml
+alias aider="aider-ce"
+#+end_src
+config aider
+#+begin_src yaml
+model: deepseek/deepseek-chat
+auto-commits: false
+max-chat-history: 6
+read:
+  - ~/CONVENTIONS.md
+aiderignore: .aiderignore
+auto-lint: false
+test: false
+pretty: true
+
+# for aider-ce
+check-update: false
+enable-context-compaction: true
+debug: false
+use-enhanced-map: true
+tui: false
+context-compaction-max-tokens: 64000
+agent-config:
+  large_file_token_threshold: 12500
+  skip_cli_confirmations: true
+#+end_src
+config mcp tool
+#+begin_src json
+{
+  "mcpServers": {
+    "context7": {
+      "transport": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "ctx7sk-d8ff275f-5c0a-4abf-b6e4-b9ef5ab53aac"
+      }
+    },
+    "skytechdb-test-readonly": {
+      "command": "uv",
+      "args": [
+        "run",
+        "mysql_mcp_server"
+      ],
+      "env": {
+        "MYSQL_HOST": "your host",
+        "MYSQL_PORT": "3306",
+        "MYSQL_USER": "mcp_readonly_user",
+        "MYSQL_PASSWORD": "mcp_readonly_password",
+        "MYSQL_DATABASE": "skytech"
+      }
+    },
+    "kubernetes-zhongying": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-server-kubernetes"
+      ]
+    }
+  }
+}
+#+end_src
 ** Vterm Shell
 You'd better install vterm in a terminal environment case there might have error incompatible architecture.
 

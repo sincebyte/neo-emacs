@@ -1,16 +1,15 @@
-![img](https://img.shields.io/badge/neo_emacs-v3.0-green.svg)  ![img](https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0)  ![img](https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1) ![img](https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&color=3498DB)  
-![img](https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&color=2C2255) ![img](https://img.shields.io/badge/supports-Emacs_27.1_to_30.0-red.svg?logo=gnuemacs&color=7F5AB6)  
+![img](https://img.shields.io/badge/neo_emacs-v3.1-green.svg)  ![img](https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0)  ![img](https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1) ![img](https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&color=3498DB)  
+![img](https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&color=2C2255) ![img](https://img.shields.io/badge/supports-Emacs_27.1_to_31.0-red.svg?logo=gnuemacs&color=7F5AB6)  
 
 ![img](./images/image-use.png)  
 
-
-<a id="orgcd00b71"></a>
 
 # About
 
 Neo emacs is a configuration framework for GNU Emacs which is based on doom emacs and focuses on the java web application coding environment. Neo emacs has the following features:  
 
 -   Code completion: Lsp-java supports maven and gradle project.
+-   Agent tool: aidermacs a code editing assistant through llm.
 -   Program debugging: Dap-java supports program debugging.
 -   Http client: Rest-client is a tool to manually explore and test HTTP REST webservices just like Postman.
 -   Http client\*: verb a package for Emacs which allows you to organize and send HTTP requests.
@@ -20,12 +19,8 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   Knowledge management system: Org-roam borrows principles from the Zettelkasten method, providing a solution for non-hierarchical note-taking.
 
 
-<a id="orgf24f5b9"></a>
-
 # How to install
 
-
-<a id="org910bf22"></a>
 
 ## Install emacs
 
@@ -66,8 +61,6 @@ After emacs installation, set environment variables which names EMACS ,this depe
     export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs
 
 
-<a id="org95ae5d8"></a>
-
 ## Clone project
 
 clone doom-emacs and neo-emacs from github.  
@@ -75,8 +68,6 @@ clone doom-emacs and neo-emacs from github.
     git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs
     git clone --depth 1 https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
-
-<a id="org2983c33"></a>
 
 ## Doom Install
 
@@ -97,7 +88,7 @@ Make sure there have Cmake lib or install it.
         sudo apt install libtool-bin
 -   MacOs  
     
-        brew install cmake libtool gnuplot d2 ripgrep fzf terrastruct/tap/tala graphviz
+        brew install cmake libtool gnuplot d2 ripgrep fzf terrastruct/tap/tala graphviz vips
 
 At last run below, this will take few minutes. And it depends on the quality of your network.  
 
@@ -105,20 +96,14 @@ At last run below, this will take few minutes. And it depends on the quality of 
     ~/.emacs.doom/bin/doom.cmd install
 
 
-<a id="org198e266"></a>
-
 # How to update
 
-
-<a id="org2a29d62"></a>
 
 ## For brew
 
     brew upgrade
     brew update && brew upgrade emacs-mac && brew cleanup emacs-mac
 
-
-<a id="orga0fe57f"></a>
 
 ## For doom project
 
@@ -128,12 +113,8 @@ At last run below, this will take few minutes. And it depends on the quality of 
     sh ~/.emacs.d/bin/doom sync
 
 
-<a id="orgcce6469"></a>
-
 # Patches
 
-
-<a id="orgd62e483"></a>
 
 ## transparent patch
 
@@ -149,14 +130,10 @@ It offer a window transparent solution which could transparent background but th
       ("C-M-0" . transwin-toggle))
 
 
-<a id="orgd013db1"></a>
-
 ## cursor animation
 
 The awesome patch could make cursor more funny.But there have a bug,If you shift to full screen from a window state , there will remain a shadow of the current cursor which will stay here forever.I will make cursor in replace mode before shifting to full screen.This might makes it effect less more.  
 
-
-<a id="org103d361"></a>
 
 ## how to
 
@@ -181,14 +158,10 @@ Here have a [tutorial](https://neoemacs.com/posts/emacs-patches/) to apply patch
 3.  Just install emacs plus, you could use \`brew reinstall\`
 
 
-<a id="org42d581b"></a>
-
 # Private setting
 
 Customize your private setting config in the config.el ; use `setq`  
 
-
-<a id="org67de225"></a>
 
 ## Font setting
 
@@ -279,8 +252,6 @@ Cause different platform have different font name,after font installed there nee
     </tbody>
     </table>
 
-
-<a id="org9b21547"></a>
 
 ## Basic setting
 
@@ -400,12 +371,8 @@ Cause different platform have different font name,after font installed there nee
 > recentfile save default dir: ~/.emacs.d/.local/cache/recentf  
 
 
-<a id="orga9990ee"></a>
-
 # Neoemacs modules
 
-
-<a id="org17c14c5"></a>
 
 ## Lsp Java
 
@@ -500,13 +467,78 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     3.  Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
 
 
-<a id="org96097a3"></a>
+## Aidermacs
+
+aidermacs a code editing assistant through llm.  
+Start through &rsquo;space d&rsquo; and display using vterm.  
+use aider-ce  
+
+    alias aider="aider-ce"
+
+config aider  
+
+    model: deepseek/deepseek-chat
+    auto-commits: false
+    max-chat-history: 6
+    read:
+      - ~/CONVENTIONS.md
+    aiderignore: .aiderignore
+    auto-lint: false
+    test: false
+    pretty: true
+    
+    # for aider-ce
+    check-update: false
+    enable-context-compaction: true
+    debug: false
+    use-enhanced-map: true
+    tui: false
+    context-compaction-max-tokens: 64000
+    agent-config:
+      large_file_token_threshold: 12500
+      skip_cli_confirmations: true
+
+config mcp tool  
+
+    {
+      "mcpServers": {
+        "context7": {
+          "transport": "http",
+          "url": "https://mcp.context7.com/mcp",
+          "headers": {
+            "CONTEXT7_API_KEY": "ctx7sk-d8ff275f-5c0a-4abf-b6e4-b9ef5ab53aac"
+          }
+        },
+        "skytechdb-test-readonly": {
+          "command": "uv",
+          "args": [
+            "run",
+            "mysql_mcp_server"
+          ],
+          "env": {
+            "MYSQL_HOST": "your host",
+            "MYSQL_PORT": "3306",
+            "MYSQL_USER": "mcp_readonly_user",
+            "MYSQL_PASSWORD": "mcp_readonly_password",
+            "MYSQL_DATABASE": "skytech"
+          }
+        },
+        "kubernetes-zhongying": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "mcp-server-kubernetes"
+          ]
+        }
+      }
+    }
+
 
 ## Vterm Shell
 
 You&rsquo;d better install vterm in a terminal environment case there might have error incompatible architecture.  
 
-<div class="notice-warning" id="orgf7e2106">
+<div class="notice-warning" id="org5c710e5">
 <p>
 Vterm is not available on windows.<br />
 Thus windows user have to use eshell as a downgrade plan.<br />
@@ -623,8 +655,6 @@ Thus windows user have to use eshell as a downgrade plan.<br />
         </table>
 
 
-<a id="orge702c60"></a>
-
 ## Ejc Sql
 
 -   The privacy configuration  
@@ -696,8 +726,6 @@ Thus windows user have to use eshell as a downgrade plan.<br />
     </table>
 
 
-<a id="org715b510"></a>
-
 ## Emacs Rime
 
 [Emacs Rime](https://github.com/DogLooksGood/emacs-rime) which makes to embedding an input method be possible whthin the emacs.Emacs could benefit form the flexible configuration of [rime](https://rime.im/).  
@@ -733,8 +761,6 @@ So there have a variable which named `rime-user-data-dir` , And another importan
 
 [futher more rime readme](./modules/neo-emacs/rime/readme.md)  
 
-
-<a id="orga01eb6e"></a>
 
 ## Org mode
 
@@ -781,8 +807,6 @@ So there have a variable which named `rime-user-data-dir` , And another importan
         ln -s ~/org/org-roam/image any_where/image
 
 
-<a id="org9235eeb"></a>
-
 ## Restclient
 
 Restclient provide a test suite for HTTP REST in Emacs.The official repository here [restclient.el](https://github.com/pashky/restclient.el).  
@@ -806,14 +830,10 @@ Fortunately we have solution for other mime type, it&rsquo;s restclient-set-var,
 About the variables infomation in current buffer, we could use `C-c Tab` to show them.  
 
 
-<a id="orgc87faa0"></a>
-
 ## Verb
 
 Verb is a new package for http client,becase the restclient is out of date and the author no longger maintain it on github.Fortunately there have a alternative one named verb which is more powerful and customizable. Verb support url template which makes you change different environment more conveniently.Also verb supports variables and picture query and upload.In org mode start verb just use \`C-c C-r\` as a previous command,example \`C-c C-r C-f\` will execute http request with your config,So verb is really fancy right?  
 
-
-<a id="org7688c00"></a>
 
 ## iredis
 
@@ -837,8 +857,6 @@ Verb is a new package for http client,becase the restclient is out of date and t
         iredis -d wvp-test
         10.100.10.70:6379[7]> get VMP_MEDIA_SERVER:000000:zlm_fragment | jq .
 
-
-<a id="org00b59ac"></a>
 
 ## Bookmark
 
@@ -879,8 +897,6 @@ Verb is a new package for http client,becase the restclient is out of date and t
     </table>
 
 
-<a id="org1396cbf"></a>
-
 ## Elpa Offline
 
 rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa  
@@ -892,16 +908,12 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="orga454864"></a>
-
 ## Vue
 
 as a full stack developer u need vue support, so here it comes.  
 
     npm install vls -g
 
-
-<a id="orgb1df3b0"></a>
 
 ## startup workspace
 
@@ -924,16 +936,12 @@ You could customization startup inital workspace and their buffer.No need to ope
     (add-hook 'window-setup-hook #'open-my-workspaces)
 
 
-<a id="org8ed87ff"></a>
-
 # About the Release
 
 This step can help you compile neo emacs faster,It only takes 3 minutes to install using the release package on my Mac laptop. Otherwise it would take me 15 minutes. The release installation package is a better choice for users with unstable networks and those who need to frequently reinstall neoemacs.  
 Release package contains the git repository of related dependencies.The compiled directory files are removed and the .git directory is retained,So that you can perform subsequent upgrades.  
 I will update the Release package once a month, And test them in advance and revise them for compatibility with upstream projects.  
 
-
-<a id="orgbc02c3f"></a>
 
 # Customize Farther
 

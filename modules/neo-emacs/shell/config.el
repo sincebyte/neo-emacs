@@ -14,6 +14,7 @@
     (setq shell-file-name (executable-find "bash"))
     (setq quickrun-focus-p t)
     (setq quickrun-timeout-seconds nil)
+    (setq vterm-kill-buffer-on-exit t)
     (setq-default vterm-shell "/opt/homebrew/bin/fish")
     (setq-default explicit-shell-file-name "/opt/homebrew/bin/fish")
     ;; (setq-default vterm-shell (executable-find "fish"))
@@ -61,3 +62,11 @@
     (my/vterm-with-dir-and-file-name)
     (run-with-idle-timer
      0.1 nil 'vterm-reset-cursor-point)))
+
+(add-hook 'vterm-mode-hook #'evil-collection-vterm-escape-stay)
+(advice-add 'set-window-vscroll :after
+  (defun me/vterm-toggle-scroll (&rest _)
+    (when (eq major-mode 'vterm-mode)
+      (if (> (window-end) (buffer-size))
+          (when vterm-copy-mode (vterm-copy-mode-done nil))
+        (vterm-copy-mode 1)))))
