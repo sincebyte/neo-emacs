@@ -290,15 +290,17 @@
   :config
   (setq aidermacs-auto-commits nil)
   (setq aidermacs-subtree-only nil)
-  (setq aidermacs-extra-args (list "--chat-language" "zh-cn" "--no-show-model-warnings"))
+  (setq aidermacs-extra-args (list "--chat-language" "zh-cn" "--no-show-model-warnings" "--no-tui" "--cecli-ignore" "~/.aiderignore" "--yes-always"))
   (setq aidermacs-exit-kills-buffer t)
+  (setq vterm-auto-scroll nil)
   (setq aidermacs-global-read-only-files '("~/CONVENTIONS.org"))
   (setq aidermacs-backend 'vterm)
   (setq aidermacs-show-diff-after-change nil)
+  (setq aidermacs-vterm-multiline-newline-key "S-<return>")
   :custom
   ; See the Configuration section below
   (aidermacs-default-chat-mode 'architect)
-  (aidermacs-default-model "anthropic/glm-4.6"))
+  (aidermacs-default-model "anthropic/glm-4.7"))
 
 (defun aidermacs-vterm--evil-normal-state-entry-hook ()
   "Send vterm-stop when entering evil normal state in vterm."
@@ -311,3 +313,11 @@
 ;;;###autoload
 (add-hook 'evil-normal-state-entry-hook #'aidermacs-vterm--evil-normal-state-entry-hook)
 (add-hook 'evil-insert-state-entry-hook #'aidermacs-vterm--evil-insert-state-entry-hook)
+
+(require 'acp)
+(require 'agent-shell)
+
+(add-to-list 'load-path "/Users/van/.doom.d/neoemacs/emacs-tramp-rpc/lisp")
+(require 'tramp-rpc)
+(setq tramp-rpc-deploy-prefer-build t)
+(setq tramp-rpc-deploy-local-cache-directory "~/.doom.d/neoemacs/tramp-rpc-binaries")

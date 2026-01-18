@@ -9,3 +9,4 @@ modules/neo-emacs/modelinexp/error.log
 nohup.out
 .aider*
 modules/neo-emacs/modelinexp/getWechatMessageCount.scpt
+.cecli*

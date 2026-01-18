@@ -85,6 +85,10 @@
 (package! benchmark-init      )
 (package! drag-stuff          )
 (package! aidermacs           )
+(package! shell-maker)
+(package! acp)
+(package! agent-shell)
+
 
 ;; (package! aider               )
 
@@ -99,6 +103,7 @@
 (package! emt            :recipe (:host github :repo "roife/emt"                   :branch "master" ))
 (package! pulsing-cursor :recipe (:host github :repo "jasonjckn/pulsing-cursor"))
 (package! sparkweather   :recipe (:host github :repo "aglet/sparkweather"          :branch "main"   ))
+;; (package! tramp-rpc      :recipe (:host github :repo "ArthurHeymans/emacs-tramp-rpc" :branch "master"   ))
 ;; (package! prism        :recipe (:host github :repo "alphapapa/prism.el"          :branch "master" ))
 ;; (package! aider          :recipe (:host github :repo "tninja/aider.el"))
 
