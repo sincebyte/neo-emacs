@@ -204,7 +204,8 @@
 (map! :ne  "; f"      'dirvish                               )
 (map! :map dirvish-mode-map :ne "; f" #'+dired/quit-all      )
 (map! :n   "SPC t n"  '+workspace/new                        )
-(map! :nv  "SPC d"    'aidermacs-transient-menu              )
+(map! :n   "SPC f n"  'copy-buffer-file-name                 )
+;; (map! :nv  "SPC d"    'aidermacs-transient-menu              )
 (map! :n   "K"        '+workspace/switch-right               )
 (map! :n   "J"        '+workspace/switch-left                )
 (map! :vn  "g l"      'ialign                                )
@@ -285,39 +286,25 @@
   (add-hook 'window-selection-change-functions
             #'+evil-normal-in-eshell-on-window-change))
 
-(use-package aidermacs
-  ;; :bind (("SPC d" . aidermacs-transient-menu))
-  :config
-  (setq aidermacs-auto-commits nil)
-  (setq aidermacs-subtree-only nil)
-  (setq aidermacs-extra-args (list "--chat-language" "zh-cn" "--no-show-model-warnings" "--no-tui" "--cecli-ignore" "~/.aiderignore" "--yes-always"))
-  (setq aidermacs-exit-kills-buffer t)
-  (setq vterm-auto-scroll nil)
-  (setq aidermacs-global-read-only-files '("~/CONVENTIONS.org"))
-  (setq aidermacs-backend 'vterm)
-  (setq aidermacs-show-diff-after-change nil)
-  (setq aidermacs-vterm-multiline-newline-key "S-<return>")
-  :custom
-  ; See the Configuration section below
-  (aidermacs-default-chat-mode 'architect)
-  (aidermacs-default-model "anthropic/glm-4.7"))
-
-(defun aidermacs-vterm--evil-normal-state-entry-hook ()
-  "Send vterm-stop when entering evil normal state in vterm."
-    (vterm-send-stop))
-
-(defun aidermacs-vterm--evil-insert-state-entry-hook ()
-  "Send vterm-send-start when entering evil insert state in vterm."
-    (vterm-send-start))
-
-;;;###autoload
-(add-hook 'evil-normal-state-entry-hook #'aidermacs-vterm--evil-normal-state-entry-hook)
-(add-hook 'evil-insert-state-entry-hook #'aidermacs-vterm--evil-insert-state-entry-hook)
-
 (require 'acp)
 (require 'agent-shell)
 
-(add-to-list 'load-path "/Users/van/.doom.d/neoemacs/emacs-tramp-rpc/lisp")
-(require 'tramp-rpc)
-(setq tramp-rpc-deploy-prefer-build t)
-(setq tramp-rpc-deploy-local-cache-directory "~/.doom.d/neoemacs/tramp-rpc-binaries")
+;; (add-to-list 'load-path "/Users/van/.doom.d/neoemacs/emacs-tramp-rpc/lisp")
+;; (require 'tramp-rpc)
+;; (setq tramp-rpc-deploy-prefer-build t)
+;; (setq tramp-rpc-deploy-local-cache-directory "~/.doom.d/neoemacs/tramp-rpc-binaries")
+
+
+(add-hook 'agent-shell-mode-hook (lambda () (hide-mode-line-mode)))
+(add-hook 'opencode-session-mode-hook (lambda () (hide-mode-line-mode)))
+(defun copy-buffer-file-name ()
+  "Copy current buffer's file name (without path) to kill-ring."
+  (interactive)
+  (when (buffer-file-name)
+    (kill-new (file-name-nondirectory (buffer-file-name)))
+    (message "Copied: %s" (file-name-nondirectory (buffer-file-name)))))
+
+;; (add-to-list 'load-path "/Users/van/.doom.d/neoemacs/animation.el/")
+;; (require 'text-glow)
+;; (text-glow-mode 1)
+;; (metal-loader-load "/Users/van/.doom.d/neoemacs/animation.el/glitch-effect.metallib")
