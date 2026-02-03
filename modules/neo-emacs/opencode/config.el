@@ -65,20 +65,25 @@
                           (string-match-p "OpenCode" (symbol-name major-mode)))
                   (opencode-setup-beautify))))))
 
-;; Redefine opencode-insert-logo to also print agent name
+ ;; Redefine opencode-insert-logo to also print agent name and current model
  (defun opencode-insert-logo ()
-    "Insert the opencode logo with the current agent name."
-    (let ((logo '("░█▀█░█▀█░█▀▀░█▀█░█▀▀░█▀█░█▀▄░█▀▀░"
-                  "░█░█░█▀▀░█▀▀░█░█░█░░░█░█░█░█░█▀▀░"
-                  "░▀▀▀░▀░░░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀▀░░▀▀▀░")))
-      (cl-loop for line in logo
-               do
-               (opencode--output (propertize line 'face 'shadow))
-               (opencode--output "\n"))
-      (when opencode-session-agent
-        (let-alist opencode-session-agent
-          (opencode--output (propertize (format "Active Agent: %s\n" .name) 'face 'font-lock-function-name-face))))
-      (opencode--output "\n")))
+   "Insert the opencode logo with the current agent and model name."
+   (let ((logo '("░█▀█░█▀█░█▀▀░█▀█░█▀▀░█▀█░█▀▄░█▀▀░"
+                 "░█░█░█▀▀░█▀▀░█░█░█░░░█░█░█░█░█▀▀░"
+                 "░▀▀▀░▀░░░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀▀░░▀▀▀░")))
+     (cl-loop for line in logo
+              do
+              (opencode--output (propertize line 'face 'shadow))
+              (opencode--output "\n"))
+     (when opencode-session-agent
+       (let-alist opencode-session-agent
+         (opencode--output (propertize (format "Active Agent: %s\n" .name) 'face 'font-lock-function-name-face))
+         ;; Add current model name if available
+         (let ((model-info (opencode--current-model)))
+           (when (and model-info (alist-get 'name model-info))
+             (opencode--output (propertize (format "Current Model: %s" (alist-get 'name model-info))
+                                         'face 'font-lock-type-face))))))
+     (opencode--output "\n")))
 
 ;; Optional: Set up key bindings for opencode functionality
 (map! :nv "SPC d a" 'open-opencode-session-right)
