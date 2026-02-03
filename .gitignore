@@ -11,5 +11,5 @@ nohup.out
 modules/neo-emacs/modelinexp/getWechatMessageCount.scpt
 .cecli*
 
-opencode
+# opencode
 .agent-shell

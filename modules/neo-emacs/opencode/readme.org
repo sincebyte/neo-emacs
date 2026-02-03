@@ -1,0 +1,38 @@
+# Opencode Module for Neo Emacs
+
+This module provides integration with Opencode, a powerful AI agent orchestration system for Emacs that enables seamless interaction with Large Language Models (LLMs) and various development tools.
+
+## Features
+
+- Integration with Opencode AI agents
+- MCP (Model Context Protocol) server support
+- Enhanced AI-assisted development workflows
+- Context-aware code completion and suggestions
+
+## Configuration
+
+The module is preconfigured with sensible defaults. Additional configuration can be added to your private config.el file.
+
+## Key Bindings
+
+Currently no default key bindings are set. You can add your preferred bindings to your private configuration:
+
+#+begin_src emacs-lisp
+  (map! :leader
+        :prefix ("o" . "opencode")
+        :desc "Start opencode session" "o" #'opencode-start-session
+        :desc "Opencode chat" "c" #'opencode-chat
+        :desc "Opencode edit" "e" #'opencode-edit)
+#+end_src
+
+## Customization
+
+You can customize the following variables in your config.el:
+
+- `opencode-enable-auto-sync`: Enable automatic synchronization
+- `opencode-default-model`: Set default AI model to use
+- `opencode-mcp-servers`: Configure MCP servers
+
+## Dependencies
+
+This module depends on the `opencode` package which is fetched from `codeberg.org/sczi/opencode.el`.
