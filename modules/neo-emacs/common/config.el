@@ -26,3 +26,31 @@
 (menu-bar-mode -1)
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
+
+(defvar toggle-one-window-window-configuration nil
+  "The window configuration use for `toggle-one-window'.")
+(defun toggle-one-window ()
+  "Toggle between window layout and one window, keeping cursor in the restored window."
+  (interactive)
+  (if (equal (length (cl-remove-if #'window-dedicated-p (window-list))) 1)
+      (if toggle-one-window-window-configuration
+          (let ((current-window (selected-window)))
+            ;; 恢复窗口配置
+            (set-window-configuration toggle-one-window-window-configuration)
+            ;; 清空配置变量
+            (setq toggle-one-window-window-configuration nil)
+            ;; 如果当前窗口和之前保存的是同一个，则切换到另一个窗口
+            (when (eq (selected-window) current-window)
+              (other-window 1)))
+        (message "No other windows exist."))
+    ;; 保存当前窗口配置
+    (setq toggle-one-window-window-configuration (current-window-configuration))
+    ;; 删除其他窗口
+    (delete-other-windows)))
+
+(defun copy-buffer-file-name ()
+  "Copy current buffer's file name (without path) to kill-ring."
+  (interactive)
+  (when (buffer-file-name)
+    (kill-new (file-name-nondirectory (buffer-file-name)))
+    (message "Copied: %s" (file-name-nondirectory (buffer-file-name)))))

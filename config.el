@@ -199,13 +199,14 @@
 (map! :ne  "M-k"      'drag-stuff-up                         )
 (map! :ne  "; w"      'save-buffer                           )
 (map! :ne  "; b"      'switch-to-buffer                      )
-(map! :ne  "; d"      'delete-other-windows                  )
+(map! :ne  "; d"      'toggle-one-window                     )
 (map! :ne  "; q"      'ace-window       )
 (map! :ne  "; f"      'dirvish                               )
 (map! :map dirvish-mode-map :ne "; f" #'+dired/quit-all      )
 (map! :n   "SPC t n"  '+workspace/new                        )
 (map! :n   "SPC f n"  'copy-buffer-file-name                 )
 ;; (map! :nv  "SPC d"    'aidermacs-transient-menu              )
+
 (map! :n   "K"        '+workspace/switch-right               )
 (map! :n   "J"        '+workspace/switch-left                )
 (map! :vn  "g l"      'ialign                                )
@@ -294,15 +295,6 @@
 ;; (setq tramp-rpc-deploy-prefer-build t)
 ;; (setq tramp-rpc-deploy-local-cache-directory "~/.doom.d/neoemacs/tramp-rpc-binaries")
 
-
-(add-hook 'agent-shell-mode-hook (lambda () (hide-mode-line-mode)))
-(add-hook 'opencode-session-mode-hook (lambda () (hide-mode-line-mode)))
-(defun copy-buffer-file-name ()
-  "Copy current buffer's file name (without path) to kill-ring."
-  (interactive)
-  (when (buffer-file-name)
-    (kill-new (file-name-nondirectory (buffer-file-name)))
-    (message "Copied: %s" (file-name-nondirectory (buffer-file-name)))))
 
 ;; (add-to-list 'load-path "/Users/van/.doom.d/neoemacs/animation.el/")
 ;; (require 'text-glow)
