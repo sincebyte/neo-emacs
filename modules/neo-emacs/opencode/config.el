@@ -37,7 +37,7 @@
   (run-with-timer 0.1 nil
                   (lambda ()
                     (condition-case nil
-                        (let ((desired-width 40))
+                        (let ((desired-width 60))
                           (when (window-parent)
                             (window-resize (selected-window) (- desired-width (window-total-width)) t)))
                       (error nil)))))
@@ -45,11 +45,11 @@
 (add-hook 'opencode-session-mode-hook 'opencode-setup-beautify)
 
 (defun open-opencode-session-right ()
-  "Open a new opencode session in a new window on the right with width 40."
+  "Open a new opencode session in a new window on the right with width 60."
   (interactive)
   (let* ((split-width-threshold nil)  ; 确保垂直分割
          (split-height-threshold 0)   ; 确保垂直分割优先
-         (right-window (split-window-right 40)))
+         (right-window (split-window-right 60)))
     (opencode-new-session)
     ;; Wait briefly to let the new session buffer be created, then apply beautify
     (run-with-timer 0.1 nil 
