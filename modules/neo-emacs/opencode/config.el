@@ -42,19 +42,22 @@
                             (window-resize (selected-window) (- desired-width (window-total-width)) t)))
                       (error nil)))))
 (add-hook 'agent-shell-mode-hook (lambda () (hide-mode-line-mode)))
-(add-hook 'opencode-session-mode-hook 'opencode-setup-beautify)
+(add-hook 'agent-shell-completion-mode-hook 'opencode-setup-beautify)
 
 (defun open-opencode-session-right ()
   "Open a new opencode session in a new window on the right with width 60."
   (interactive)
-  (let* ((split-width-threshold nil)  ; 确保垂直分割
+  (let* ((current-win (selected-window))
+         (split-width-threshold nil)  ; 确保垂直分割
          (split-height-threshold 0)   ; 确保垂直分割优先
          (right-window (split-window-right 60)))
-    (opencode-new-session)
-    ;; Wait briefly to let the new session buffer be created, then apply beautify
-    (run-with-timer 0.1 nil 
+    (select-window right-window)
+    (agent-shell-opencode-start-agent)
+    ;; 切换到新创建的 opencode 会话窗口，然后应用美化设置
+    (run-with-timer 0.2 nil 
                     (lambda ()
-                      (when (string-match-p "^\\*OpenCode:" (buffer-name))
+                      (when (window-live-p right-window)
+                        (select-window right-window)
                         (opencode-setup-beautify))))))
 
 (add-hook 'doom-switch-window-hook
@@ -85,5 +88,27 @@
                                          'face 'font-lock-type-face))))))
      (opencode--output "\n")))
 
-;; Optional: Set up key bindings for opencode functionality
-(map! :nv "SPC d a" 'open-opencode-session-right)
+  ;; Alternative function that forces the session to open in the right-side window
+  (defun open-opencode-session-in-right-window ()
+    "Force opencode session to start in a right-side window."
+    (interactive)
+    (let* ((initial-window (selected-window))
+           (main-width (window-total-width))
+           (target-width 60)
+           (left-width (- main-width target-width))
+           (left-window initial-window))
+      ;; Split the window horizontally, keeping the left window at calculated width
+      (delete-other-windows)
+      (split-window-horizontally left-width)
+      (other-window 1)  ; Move to the newly created right window
+      ;; Start opencode session in the right Apply
+      (setq agent-shell-show-welcome-message nil)
+      (agent-shell-opencode-start-agent)
+      ;; window beautify settings in a more delayed manner to ensure setup completes
+      (run-with-timer 0.3 nil
+                      (lambda ()
+                        (when (derived-mode-p 'opencode-mode)
+                          (opencode-setup-beautify))))))
+
+ ;; Optional: Set up key bindings for opencode functionality
+ (map! :nv "SPC d a" 'open-opencode-session-in-right-window)
