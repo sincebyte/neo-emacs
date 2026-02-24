@@ -1,3 +1,8 @@
+;;; Ensure Common Lisp extensions and sequence library are available
+(require 'cl-lib)
+(require 'seq)
+
+
 ;; max width and height but not fullscreen
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (setq ns-use-proxy-icon nil)           ; 禁用代理图标

@@ -108,8 +108,7 @@
 (after! lsp-mode
   (set-face-attribute 'lsp-face-highlight-read nil :slant 'normal)
   (set-face-attribute 'lsp-face-highlight-write nil :slant 'normal)
-  (setq lsp-modeline-code-action-icons-enable nil
-        lsp-modeline-code-actions-enable nil))
+  (setq lsp-modeline-code-actions-enable nil))
 ;; when obs capture use company
 (with-eval-after-load 'company
   (add-hook 'company-mode-hook
@@ -240,9 +239,9 @@ evil-normal-state-map
 
 (setq-hook! 'web-mode-hook indent-tabs-mode nil)
 
-(after! lsp-mode
-  (setq doom-modeline-icon nil)
-  (setq lsp-disabled-clients '(xmlls)))
+;; (after! lsp-mode
+;;   (setq doom-modeline-icon nil)
+;;   (setq lsp-disabled-clients '(xmlls)))
 
 ;;(add-hook 'java-mode-hook #'(lambda () (add-hook 'post-command-hook #'my-java-hook-function nil t)))
 ;; (defun my-java-hook-function () (lsp-signature-activate))
