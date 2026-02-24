@@ -103,7 +103,7 @@
 (package! emt            :recipe (:host github :repo "roife/emt"                   :branch "master" ))
 (package! pulsing-cursor :recipe (:host github :repo "jasonjckn/pulsing-cursor"))
 (package! sparkweather   :recipe (:host github :repo "aglet/sparkweather"          :branch "main"   ))
-(package! opencode       :recipe (:host codeberg :repo "sczi/opencode.el"))
+;; (package! opencode       :recipe (:host codeberg :repo "sczi/opencode.el"))
 ;; (package! tramp-rpc      :recipe (:host github :repo "ArthurHeymans/emacs-tramp-rpc" :branch "master"   ))
 ;; (package! prism        :recipe (:host github :repo "alphapapa/prism.el"          :branch "master" ))
 ;; (package! aider          :recipe (:host github :repo "tninja/aider.el"))

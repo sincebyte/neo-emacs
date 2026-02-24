@@ -6,30 +6,6 @@
 ;; seamless integration with LLMs, MCP servers, and various development tools.
 ;; This configuration sets up opencode for optimal use in the neo-emacs environment.
 
-(use-package opencode
-  :ensure t
-  :init
-  ;; Enable opencode global minor mode if desired
-  ;; (opencode-mode 1)
-  
-  :config
-  ;; Configure basic opencode settings
-  (setq opencode-enable-auto-sync t)
-  
-  ;; Set default model if needed
-  ;; (setq opencode-default-model "gpt-4")
-  
-  ;; Configure MCP servers (if any are available)
-  ;; For example, if you have context7 API key configured:
-  ;; (setq opencode-mcp-servers
-  ;;       '(("context7" .
-  ;;          '((transport . "http")
-  ;;            (url . "https://mcp.context7.com/mcp")
-  ;;            (headers . (("CONTEXT7_API_KEY" . "your-key-here")))))))
-  
-  ;; Additional configuration can go here
-  (message "Opencode configuration loaded"))
-
 ;; Setup beautify effects: hide mode-line and adjust window size
 (defun opencode-setup-beautify ()
   "Setup美化效果：隐藏mode-line并调整窗口大小"
@@ -68,25 +44,6 @@
                           (string-match-p "OpenCode" (symbol-name major-mode)))
                   (opencode-setup-beautify))))))
 
- ;; Redefine opencode-insert-logo to also print agent name and current model
- (defun opencode-insert-logo ()
-   "Insert the opencode logo with the current agent and model name."
-   (let ((logo '("░█▀█░█▀█░█▀▀░█▀█░█▀▀░█▀█░█▀▄░█▀▀░"
-                 "░█░█░█▀▀░█▀▀░█░█░█░░░█░█░█░█░█▀▀░"
-                 "░▀▀▀░▀░░░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀▀░░▀▀▀░")))
-     (cl-loop for line in logo
-              do
-              (opencode--output (propertize line 'face 'shadow))
-              (opencode--output "\n"))
-     (when opencode-session-agent
-       (let-alist opencode-session-agent
-         (opencode--output (propertize (format "Active Agent: %s\n" .name) 'face 'font-lock-function-name-face))
-         ;; Add current model name if available
-         (let ((model-info (opencode--current-model)))
-           (when (and model-info (alist-get 'name model-info))
-             (opencode--output (propertize (format "Current Model: %s" (alist-get 'name model-info))
-                                         'face 'font-lock-type-face))))))
-     (opencode--output "\n")))
 
   ;; Alternative function that forces the session to open in the right-side window
   (defun open-opencode-session-in-right-window ()
