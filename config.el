@@ -204,7 +204,7 @@
 (map! :ne  "M-k"      'drag-stuff-up                         )
 (map! :ne  "; w"      'save-buffer                           )
 (map! :ne  "; b"      'switch-to-buffer                      )
-(map! :ne  "; d"      'toggle-one-window                     )
+(map! :ne  "; d"      'popwin-window-layout-toggle-all-windows )
 (map! :ne  "; q"      'ace-window       )
 (map! :ne  "; f"      'dirvish                               )
 (map! :map dirvish-mode-map :ne "; f" #'+dired/quit-all      )
@@ -295,6 +295,9 @@
 (require 'acp)
 (require 'agent-shell)
 
+
+;; Window Management with Popwin
+(load! "window-management")
 
 ;; (add-to-list 'load-path "/Users/van/.doom.d/neoemacs/emacs-tramp-rpc/lisp")
 ;; (require 'tramp-rpc)

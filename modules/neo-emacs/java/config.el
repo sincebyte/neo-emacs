@@ -92,7 +92,7 @@
                                   (setq display-line-numbers                      t)))
 
 (add-hook 'python-ts-mode-hook (lambda ()
-                                 (focus-mode)
+                                 (focus-mode nil)
                                  (rainbow-delimiters-mode)
                                  (setq lsp-modeline-code-action-icons-enable nil)
                                  (setq lsp-modeline-code-actions-enable nil)
@@ -104,6 +104,7 @@
 (add-hook 'java-ts-mode-hook
           (lambda ()
             (lsp)
+            (focus-mode)
             (setq display-line-numbers t)))
 (after! lsp-mode
   (set-face-attribute 'lsp-face-highlight-read nil :slant 'normal)
@@ -126,7 +127,7 @@
                       (set-face-attribute 'company-tooltip-common-selection nil :underline nil :background bg :weight 'normal ))))))
 
 (with-eval-after-load 'lsp-mode
-  (focus-mode)
+  ;; (focus-mode)
   (apheleia-global-mode -1)
   (rainbow-delimiters-mode)
   (indent-bars-mode 1)
