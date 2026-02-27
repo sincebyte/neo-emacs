@@ -278,10 +278,6 @@
   (if (file-exists-p lfile)
       (load lfile)))
 
-;; sparkweaher day
-(setq calendar-latitude 30.6
-      calendar-longitude 104.1)
-
 ; quickrun plug
 (after! evil
   (defun +evil-normal-in-eshell-on-window-change (_win)
@@ -294,10 +290,6 @@
 
 (require 'acp)
 (require 'agent-shell)
-
-
-;; Window Management with Popwin
-(load! "window-management")
 
 ;; (add-to-list 'load-path "/Users/van/.doom.d/neoemacs/emacs-tramp-rpc/lisp")
 ;; (require 'tramp-rpc)

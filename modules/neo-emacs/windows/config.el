@@ -13,24 +13,29 @@
 (defun popwin-window-layout-toggle-all-windows ()
   "Toggle between normal window layout and single window (all other closed).
    When switching to single window, stores the current window configuration.
-   When switching back, restores the stored configuration."
+   When switching back, restores the stored configuration but keeps current buffer selected."
   (interactive)
   (if popwin-window-layout--is-toggled
-      ;; Restore original layout
+      ;; Restore original layout but preserve current buffer
       (progn
         (when popwin-window-layout--original-config
-          (set-window-configuration popwin-window-layout--original-config)
-          (setq popwin-window-layout--original-config nil))
+          ;; Save the current buffer before restoring
+          (let ((current-buffer (current-buffer)))
+            (set-window-configuration popwin-window-layout--original-config)
+            ;; Switch to the current buffer while keeping the restored layout
+            (unless (eq (current-buffer) current-buffer)
+              (switch-to-buffer current-buffer))))
+        (setq popwin-window-layout--original-config nil)
         (setq popwin-window-layout--is-toggled nil)
         (setq popwin-window-layout--last-selected-window nil)
-        (message "Restored original window layout"))
+        (message "Restored original window layout, staying in current buffer"))
     ;; Store current layout and go to single window
     (progn
       (setq popwin-window-layout--original-config (current-window-configuration))
       (setq popwin-window-layout--last-selected-window (selected-window))
       (delete-other-windows)
       (setq popwin-window-layout--is-toggled t)
-      (message "Closed other windows, press again to restore"))))
+      (message "Closed other windows, press again to restore")))
 
 (defun popwin-window-layout-open-right (buffer-name &optional width)
   "Open BUFFER-NAME in a popup window on the right side of the frame.
@@ -106,6 +111,11 @@ WIDTH is the width of the popup window (default 60 chars)."
   ;; Enable popwin mode
   (popwin-mode 1))
   
+
+  ;; Set default position to right for popwin
+  (setq popwin:popup-window-position 'right)
+  (setq popwin:popup-window-width 60)
+)
   ;; Set default position to right for popwin
   (setq popwin:popup-window-position 'right)
   (setq popwin:popup-window-width 60)
