@@ -89,6 +89,8 @@
 (package! acp)
 (package! agent-shell)
 (package! popwin)
+(package! zygospore         )
+
 
 
 ;; (package! aider               )
@@ -103,6 +105,10 @@
 (package! bookmark+      :recipe (:host github :repo "emacsmirror/bookmark-plus"   :branch "master" ))
 (package! emt            :recipe (:host github :repo "roife/emt"                   :branch "master" ))
 (package! pulsing-cursor :recipe (:host github :repo "jasonjckn/pulsing-cursor"))
+(package! msgpack)
+(package! tramp-rpc :recipe (:host github :repo "ArthurHeymans/emacs-tramp-rpc"))
+
+
 ;; (package! sparkweather   :recipe (:host github :repo "aglet/sparkweather"          :branch "main"   ))
 ;; (package! opencode       :recipe (:host codeberg :repo "sczi/opencode.el"))
 ;; (package! tramp-rpc      :recipe (:host github :repo "ArthurHeymans/emacs-tramp-rpc" :branch "master"   ))

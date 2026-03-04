@@ -204,12 +204,13 @@
 (map! :ne  "M-k"      'drag-stuff-up                         )
 (map! :ne  "; w"      'save-buffer                           )
 (map! :ne  "; b"      'switch-to-buffer                      )
-(map! :ne  "; d"      'popwin-window-layout-toggle-all-windows )
+(map! :ne "; d"       'zygospore-toggle-delete-other-windows )
 (map! :ne  "; q"      'ace-window       )
 (map! :ne  "; f"      'dirvish                               )
 (map! :map dirvish-mode-map :ne "; f" #'+dired/quit-all      )
 (map! :n   "SPC t n"  '+workspace/new                        )
 (map! :n   "SPC f n"  'copy-buffer-file-name                 )
+(map! :v   "SPC f n"  'copy-buffer-file-name                 )
 ;; (map! :nv  "SPC d"    'aidermacs-transient-menu              )
 
 (map! :n   "K"        '+workspace/switch-right               )
@@ -291,8 +292,8 @@
 (require 'acp)
 (require 'agent-shell)
 
-;; (add-to-list 'load-path "/Users/van/.doom.d/neoemacs/emacs-tramp-rpc/lisp")
-;; (require 'tramp-rpc)
+(use-package! msgpack)
+(use-package! tramp-rpc)
 ;; (setq tramp-rpc-deploy-prefer-build t)
 ;; (setq tramp-rpc-deploy-local-cache-directory "~/.doom.d/neoemacs/tramp-rpc-binaries")
 

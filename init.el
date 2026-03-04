@@ -211,7 +211,7 @@
         ;; alpha            ; make emacs background transparent
         git                 ; magit wit
         opencode            ; opencode ai integration
-        windows             ; toggle window by popwin
+        ;; windows             ; toggle window by popwin
         ;; addspace         ; add space when typing
         ;; telega           ; use telega
        :config
