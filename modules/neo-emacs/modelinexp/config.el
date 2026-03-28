@@ -474,6 +474,8 @@ to disambiguate."
             (setq doom-modeline-spc "")    ; 替换普通分隔符
             (setq doom-modeline-wspc ""))  ; 替换宽空格
             (custom-set-faces
+            '(+workspace-tab-face ((t (:family "IBM Plex Mono" :box nil :weight bold))))
+            '(+workspace-tab-selected-face ((t (:family "IBM Plex Mono" :box nil :foreground "black" :background "Pink" :weight bold))))
             '(mode-line ((t (:family "IBM Plex Mono" :box nil :height 150 :underline nil))))
             '(mode-line-inactive ((t (:family "IBM Plex Mono" :box nil :height 150 :underline nil))))))
 
