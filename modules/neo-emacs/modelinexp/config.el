@@ -472,7 +472,10 @@ to disambiguate."
           (lambda ()
             (setq doom-modeline-battery nil)
             (setq doom-modeline-spc "")    ; 替换普通分隔符
-            (setq doom-modeline-wspc ""))) ; 替换宽空格
+            (setq doom-modeline-wspc ""))  ; 替换宽空格
+            (custom-set-faces
+            '(mode-line ((t (:family "IBM Plex Mono" :box nil :height 150 :underline nil))))
+            '(mode-line-inactive ((t (:family "IBM Plex Mono" :box nil :height 150 :underline nil))))))
 
 (run-with-timer 0 1 'force-mode-line-update)
 (add-hook 'after-init-hook

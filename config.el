@@ -2,7 +2,7 @@
 (require 'cl-lib)
 (require 'seq)
 
-
+(setq custom-file null-device)
 ;; max width and height but not fullscreen
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (setq ns-use-proxy-icon nil)           ; 禁用代理图标
@@ -88,7 +88,8 @@
 (add-hook 'after-change-major-mode-hook #'my-set-font-for-mode)
 
 (defun my/fix-line-number-face ()
-  (set-face-attribute 'line-number-current-line nil :weight 'normal :slant 'italic :background "#222225"))
+  (set-face-attribute 'line-number nil :family "JetBrains Mono" :weight 'normal :slant 'italic )
+  (set-face-attribute 'line-number-current-line nil :family "JetBrains Mono" :weight 'normal :slant 'italic :background "#222225"))
 (add-hook 'display-line-numbers-mode-hook #'my/fix-line-number-face)
 
 ;; 设置 minibuffer 中的字体
