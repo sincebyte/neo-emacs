@@ -48,7 +48,13 @@
 (map! :after magit
       :map magit-mode-map
       :ne "K" nil)
+(map! :after evil
+      :map evil-normal-state-map
+      :ne "K" nil)
 (map! :after magit
+      :map magit-mode-map
+      :ne "K" #'+workspace/switch-right)
+(map! :after evil
       :map magit-mode-map
       :ne "K" #'+workspace/switch-right)
 (map! :after magit

@@ -110,6 +110,21 @@
   (set-face-attribute 'lsp-face-highlight-read nil :slant 'normal)
   (set-face-attribute 'lsp-face-highlight-write nil :slant 'normal)
   (setq lsp-modeline-code-actions-enable nil))
+
+(defun my/lsp--execute-command-around (orig-fn command &optional args)
+  (if (and (derived-mode-p 'java-mode)
+           (string= command "java.completion.onDidSelect"))
+      (let ((params (if args
+                        (list :command command :arguments args)
+                      (list :command command))))
+        (lsp-request-async
+         "workspace/executeCommand"
+         params
+         (lambda (_result) nil)
+         :error-handler (lambda (_err) nil)))
+    (funcall orig-fn command args)))
+(advice-add 'lsp-send-execute-command :around #'my/lsp--execute-command-around)
+
 ;; when obs capture use company
 (with-eval-after-load 'company
   (add-hook 'company-mode-hook
@@ -187,10 +202,10 @@
 
 (setq
  ;; lsp-java-format-settings-url   (expand-file-name (concat doom-user-dir "neoemacs/eclipse-codestyle.xml"))
- lsp-java-java-path             (concat (getenv "JAVA_21_HOME") "/bin/java")
+ lsp-java-java-path             (concat (getenv "JAVA_26_HOME") "/bin/java")
  lsp-java-server-install-dir    "~/lsp-java/"
  lsp-maven-path                 (concat (getenv "MAVEN_HOME") "/conf/settings.xml")
- lsp-java-jdt-download-url      "http://localhost:8080/jdt-language-server-1.50.0-202509041425.tar.gz"
+ lsp-java-jdt-download-url      "http://localhost:8080/jdt-language-server-1.57.0-202602261110.tar.gz"
  ;; lsp-java-jdt-download-url      "http://1.117.167.195/download/jdt-language-server-1.38.0-202407151826.tar.gz"
  lsp-java-configuration-maven-user-settings (expand-file-name lsp-maven-path )
  lsp-java-vmargs                `(
