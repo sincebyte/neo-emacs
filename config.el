@@ -86,8 +86,10 @@
       (setq-local face-remapping-alist '((default (:family "Kode Mono" :height 160) default)))))))
 
 (add-hook 'after-change-major-mode-hook #'my-set-font-for-mode)
-(advice-add 'load-theme :after (lambda (&rest _)
-              (set-face-attribute 'line-number-current-line nil :weight 'normal :slant 'italic)))
+
+(defun my/fix-line-number-face ()
+  (set-face-attribute 'line-number-current-line nil :weight 'normal :slant 'italic :background "#222225"))
+(add-hook 'display-line-numbers-mode-hook #'my/fix-line-number-face)
 
 ;; 设置 minibuffer 中的字体
 (defun my-set-font-for-minibuffer ()
