@@ -72,3 +72,16 @@
       (if (> (window-end) (buffer-size))
           (when vterm-copy-mode (vterm-copy-mode-done nil))
         (vterm-copy-mode 1)))))
+
+;; Remap C-k and C-j in eshell to use evil-scroll instead of default prompt navigation
+;; These bindings will work in evil normal mode in eshell
+(defun my-eshell-override-keys ()
+  "Override eshell key bindings for evil normal mode."
+  (define-key eshell-mode-map (kbd "C-k") nil) ; Remove old binding for eshell-previous-prompt
+  (define-key eshell-mode-map (kbd "C-j") nil) ; Remove old binding for eshell-next-prompt
+  (evil-define-key 'normal eshell-mode-map (kbd "C-k") #'evil-scroll-up)
+  (evil-define-key 'normal eshell-mode-map (kbd "C-j") #'evil-scroll-down))
+
+(with-eval-after-load 'eshell
+  (with-eval-after-load 'evil
+    (add-hook 'eshell-mode-hook #'my-eshell-override-keys)))
