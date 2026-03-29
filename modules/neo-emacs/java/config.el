@@ -76,17 +76,6 @@
 (add-hook 'go-mode-hook
           (lambda ()
             (setq lsp-modeline-code-action-fallback-icon                         "")))
-(add-hook 'web-mode-hook (lambda ()
-                           ;; (prism-mode)
-                           (rainbow-delimiters-mode)
-                           (setq display-line-numbers                       t
-                                 lsp-modeline-code-actions-enable           nil
-                                 ;; +format-on-save-disabled-modes (add-to-list '+format-on-save-disabled-modes 'web-mode)
-                                 doom-modeline-icon                         nil)))
-(add-hook 'js-mode-hook (lambda ()
-                          ;; (prism-mode)
-                          (rainbow-delimiters-mode)
-                          (setq display-line-numbers                        t)))
 (add-hook 'emacs-lisp-mode-hook (lambda ()
                                   (rainbow-delimiters-mode)
                                   (setq display-line-numbers                      t)))
@@ -142,7 +131,6 @@
                       (set-face-attribute 'company-tooltip-common-selection nil :underline nil :background bg :weight 'normal ))))))
 
 (with-eval-after-load 'lsp-mode
-  ;; (focus-mode)
   (apheleia-global-mode -1)
   (rainbow-delimiters-mode)
   (indent-bars-mode 1)
@@ -253,7 +241,6 @@ evil-normal-state-map
 
 ;; (company-posframe-mode 1)
 
-(setq-hook! 'web-mode-hook indent-tabs-mode nil)
 
 ;; (after! lsp-mode
 ;;   (setq doom-modeline-icon nil)
@@ -263,12 +250,6 @@ evil-normal-state-map
 ;; (defun my-java-hook-function () (lsp-signature-activate))
 ;;(add-to-list 'lsp-language-id-configuration '(".*\\.html\\.erb$" .(setq tab-always-indent ‘complete)
 
-(use-package web-mode
-  :defer t
-  :custom
-  (web-mode-markup-indent-offset 2)
-  (web-mode-css-indent-offset 2)
-  (web-mode-code-indent-offset 2))
 
 (after! tramp
   (setq explicit-shell-file-name "/bin/bash"))
@@ -360,3 +341,4 @@ Example: \\u6587 -> 文"
       (if (and method-name (re-search-forward (format "id=\"%s\"" method-name) nil t))
           (message "Jumped to method: %s" method-name)
         (message "Opened XML file, but method '%s' not found" method-name))))))
+
