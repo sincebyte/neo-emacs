@@ -5,6 +5,8 @@
     (setenv "JAVA_11_ARM_HOME"   "/Users/van/soft/jdk/zulu11.52.13-ca-jdk11.0.13-macosx_aarch64"     )
     (setenv "JAVA_17_HOME"       "~/soft/jdk/jdk-17.0.6.jdk/Contents/Home"     )
     (setenv "JAVA_21_HOME"       "~/soft/jdk/jdk-21.0.6.jdk/Contents/Home"     )
+    (setenv "JAVA_25_HOME"       "~/soft/jdk/jdk-25.0.2.jdk/Contents/Home"     )
+    (setenv "JAVA_26_HOME"       "~/soft/jdk/jdk-26.jdk/Contents/Home/"        )
     (setenv "MAVEN_HOME"         "~/soft/apache-maven-3.6.1"                   )
     (setenv "DYLD_LIBRARY_PATH"  "/Applications/Emacs.app/"                    ) ;; rime config path
     (setenv "PATH"       (concat "/Applications/Emacs.app/:" (getenv "PATH" )) ) ;; maven exec, fzf , rg

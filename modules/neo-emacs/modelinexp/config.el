@@ -479,6 +479,10 @@ to disambiguate."
             '(mode-line ((t (:family "IBM Plex Mono" :box nil :height 150 :underline nil))))
             '(mode-line-inactive ((t (:family "IBM Plex Mono" :box nil :height 150 :underline nil))))))
 
+(after! indent-bars
+  (custom-set-faces '(indent-bars-face ((t (:family "JetBrains Mono"))) t))
+  (setq indent-bars-highlight-current-depth '(:blend 0.7 :bold t)))
+
 (run-with-timer 0 1 'force-mode-line-update)
 (add-hook 'after-init-hook
           (lambda ()
