@@ -93,100 +93,48 @@
 
 
 (defun jump-to-class-at-point ()
-  "从当前光标所在行提取类名和行号，使用改进的文件搜索方法跳转到指定行。"
+  "从当前光标位置提取类名和行号，跳转到指定行。"
   (interactive)
-  (let ((line (thing-at-point 'line t)))  ;; 获取当前光标所在行
-    (when line
-      ;; 尝试匹配多种格式：类名#行号、类名:行号、Class.java:行号等等，以及日志格式
-      (let ((patterns '("\\(?:[0-9-]+ [0-9:.]+ \\[[^]]+\\] [A-Z]+ +\\)?\\([A-Za-z_][A-Za-z0-9_.]*\\):\\([0-9]+\\)" ; 日志格式: 2026-03-29 11:16:24.665 [http-nio-8080-exec-8] INFO com.skytech.domain.uav.service.MqttGatewayPublish:53 
-                        "\\([A-Za-z_][A-Za-z0-9_.]*\\)[#:.:]\\([0-9]+\\)"     ; Class#123, Class:123, Class.123
-                        "\\([A-Za-z_][A-Za-z0-9_]*\\.java\\):\\([0-9]+\\)"   ; Class.java:123
-                        "\\([A-Za-z_][A-Za-z0-9_]*\\.py\\):\\([0-9]+\\)"     ; Class.py:123
-                        "\\([A-Za-z_][A-Za-z0-9_]*\\.js\\):\\([0-9]+\\)"     ; Class.js:123
-                        "\\([A-Za-z_][A-Za-z0-9_]*\\.ts\\):\\([0-9]+\\)"     ; Class.ts:123
-                        "\\([A-Za-z_][A-Za-z0-9_]*\\.c\\):\\([0-9]+\\)"      ; Class.c:123
-                        "\\([A-Za-z_][A-Za-z0-9_]*\\.cpp\\):\\([0-9]+\\)"    ; Class.cpp:123
-                        "\\([A-Za-z_][A-Za-z0-9_]*\\.h\\):\\([0-9]+\\)"      ; Class.h:123
-                        "\\([A-Za-z_][A-Za-z0-9_]*\\.hpp\\):\\([0-9]+\\)"    ; Class.hpp:123
-                        "\\([A-Za-z_][A-Za-z0-9_]*\\.cc\\):\\([0-9]+\\)"     ; Class.cc:123
-                        "\\([^ \t\n\r\f\v:]+\\):\\([0-9]+\\)"                ; 任意路径:行号
-                        )))
-        (catch 'found
-          (dolist (pattern patterns)
-            (when (string-match pattern line)
-              (let* ((file-name-or-class (match-string 1 line))
-                     (line-number (string-to-number (match-string 2 line)))
-                     ;; 如果匹配的是完整路径，则直接使用文件名部分
-                     (search-term (if (string-match "[/\\]" file-name-or-class)
-                                      (file-name-nondirectory file-name-or-class)
-                                    file-name-or-class))
-                     ;; 如果是Java包风格的类名（含点号），尝试转换为文件路径
-                     (file-search-term (if (string-match "\\." file-name-or-class)
-                                           (concat (replace-regexp-in-string "\\." "/" file-name-or-class) ".java")
-                                         search-term)))
-                (message "Attempting to find: %s at line: %d" search-term line-number)
-                ;; 替换 projectile-find-file 调用，因为该函数不接受参数预填搜索框
-                (let* ((project-root (projectile-project-root))
-                       (all-project-files (projectile-current-project-files))
-                       ;; 直接使用文件名搜索
-                       (matching-files (cl-remove-if-not 
-                                       (lambda (f) 
-                                         (or 
-                                          (string= (file-name-nondirectory f) search-term) ; 完全匹配文件名
-                                          (string-match (concat ".*" (regexp-quote search-term) ".*") (file-name-nondirectory f)) ; 部分匹配
-                                          (string-match (concat "/" (regexp-quote search-term) "$") f)   ; 路径末尾匹配
-                                          (string-match (concat "\\\\" (regexp-quote search-term) "$") f) ; Windows路径匹配
-                                          ;; 如果是Java包格式，也检查转换后的路径
-                                          (let ((converted-path (replace-regexp-in-string "\\." "/" search-term)))
-                                            (or 
-                                             (string-match (regexp-quote converted-path) f)
-                                             (string-match (concat "/" (regexp-quote converted-path) "\\.java$") f)))))
-                                       all-project-files)))
-                  ;; 打印搜索结果
-                  (if matching-files
-                      (progn
-                        (message "Found %d matching files for '%s':" (length matching-files) search-term)
-                        (dolist (file matching-files)
-                          (message "  - %s" file)))
-                    (message "No matches found for '%s'" search-term))
-                  
-                  (cond
-                   ;; 如果找到了确切匹配的文件
-                   ((= (length matching-files) 1)
-                    (find-file (expand-file-name (car matching-files) project-root))
-                    (goto-line line-number)
-                    (throw 'found t))
-                   ;; 如果找到多个匹配文件，让用户选择
-                   ((> (length matching-files) 1)
-                    (let ((selected-file (completing-read "Select file from matches: " matching-files)))
-                      (find-file (expand-file-name selected-file project-root))
-                      (goto-line line-number)
-                      (throw 'found t)))
-                   ;; 如果失败，尝试使用更具体的搜索
-                   (t
-                    (message "Attempting alternatives for: %s" search-term)
-                    (let* ((project-files (projectile-current-project-files))
-                           (more-specific-matching-files (cl-remove-if-not 
-                                                         (lambda (f) 
-                                                           (or 
-                                                            (string= (file-name-base f) (file-name-base search-term)) ; 基本名称匹配
-                                                            (string-match (concat ".*" (regexp-quote search-term) ".*") (file-name-nondirectory f)) ; 部分匹配
-                                                            (string= (file-name-nondirectory f) search-term) ; 完全匹配
-                                                            ;; 也检查是否包含转换后的路径匹配
-                                                            (string-match (concat ".*" (replace-regexp-in-string "\\." "/" (regexp-quote search-term)) ".*") f))) ; 路径匹配
-                                                         project-files)))
-                      (cond
-                       ;; 如果找到了确切匹配的文件
-                       ((= (length more-specific-matching-files) 1)
-                        (find-file (car more-specific-matching-files))
-                        (goto-line line-number)
-                        (throw 'found t))
-                       ;; 如果找到多个匹配文件，让用户选择
-                       ((> (length more-specific-matching-files) 1)
-                        (let ((selected-file (completing-read "Select file: " more-specific-matching-files)))
-                          (find-file selected-file)
-                          (goto-line line-number)
-                          (throw 'found t)))
-                       ;; 找不到匹配文件
-                       (t
-                        (message "Could not find file matching: %s in project" search-term)))))))))))))))
+  (let* ((current-symbol (thing-at-point 'symbol t))
+         (raw-class-name (when current-symbol
+                          (replace-regexp-in-string "[^A-Za-z0-9_.]" "" current-symbol)))
+         class-name
+         ;; 在当前行查找光标后的第一个数字
+         (line-rest (buffer-substring-no-properties (point) (line-end-position)))
+         (line-number (when (string-match "[0-9]+" line-rest)
+                        (string-to-number (match-string 0 line-rest)))))
+    
+    ;; 如果原始类名包含点号（包.类格式），只取最后一个点号后的部分作为类名
+    (when raw-class-name
+      (setq class-name 
+            (if (string-match "\\." raw-class-name)
+                (car (last (split-string raw-class-name "\\.")))  ; 取最后一个点号后的部分
+              raw-class-name)))
+    
+    (if (and class-name line-number)
+        (let* ((project-root (projectile-project-root))
+               (all-project-files (projectile-current-project-files))
+               ;; 搜索项只使用类名，不需要转换为路径
+               (search-term (concat class-name ".java"))
+               (matching-files (cl-remove-if-not 
+                               (lambda (f) 
+                                 (or 
+                                  (string= (file-name-nondirectory f) search-term) ; 完全匹配文件名
+                                  (string-match (concat ".*" (regexp-quote class-name) ".*\\.java$") (file-name-nondirectory f)))) ; 部分匹配
+                               all-project-files)))
+          (if matching-files
+              (progn
+                (message "Found %d matching files for '%s'" (length matching-files) search-term)
+                (cond
+                 ;; 如果找到了确切匹配的文件
+                 ((= (length matching-files) 1)
+                  (find-file (expand-file-name (car matching-files) project-root))
+                  (goto-line line-number)
+                  (message "Jumped to %s at line %d" search-term line-number))
+                 ;; 如果找到多个匹配文件，让用户选择
+                 ((> (length matching-files) 1)
+                  (let ((selected-file (completing-read "Select file from matches: " matching-files)))
+                    (find-file (expand-file-name selected-file project-root))
+                    (goto-line line-number)))))
+            (message "No matches found for '%s'" search-term)))
+      (message "Cannot find class name and line number at cursor position. Found: class=%s, line=%s" class-name line-number))))
