@@ -25,6 +25,11 @@
   (interactive)
   (open-opencode-session-in-right-window))
 
+(defun open-cursor-session-right ()
+  "Open a new cursor session in a new window on the right with width 60."
+  (interactive)
+  (open-cursor-session-in-right-window))
+
 (add-hook 'doom-switch-window-hook
           (lambda (&optional frame)
             (let ((current-buffer (window-buffer (selected-window))))
@@ -56,6 +61,28 @@
                       (lambda ()
                         (when (derived-mode-p 'opencode-mode)
                           (opencode-setup-beautify))))))
+
+  ;; Alternative function that forces the cursor agent session to open in the right-side window
+  (defun open-cursor-session-in-right-window ()
+    "Force cursor agent session to start in a right-side window."
+    (interactive)
+    (let* ((initial-window (selected-window))
+           (main-width (window-total-width))
+           (target-width 60)
+           (left-width (- main-width target-width))
+           (left-window initial-window))
+      ;; Split the window horizontally, keeping the left window at calculated width
+      (delete-other-windows)
+      (split-window-horizontally left-width)
+      (other-window 1)  ; Move to the newly created right window
+      ;; Start cursor agent session in the right window
+      (setq agent-shell-show-welcome-message nil)
+      (setq agent-shell-session-strategy 'new)
+      (agent-shell-cursor-start-agent)
+      ;; Apply window beautify settings after the agent buffer finishes initializing
+      (run-with-timer 0.3 nil
+                      (lambda ()
+                        (opencode-setup-beautify)))))
 ;; Optional: Set up key bindings for opencode functionality
 (map! :nv "SPC d a" 'open-opencode-session-in-right-window)
-
+(map! :nv "SPC d c" 'open-cursor-session-in-right-window)

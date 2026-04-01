@@ -14,3 +14,4 @@ modules/neo-emacs/modelinexp/getWechatMessageCount.scpt
 # opencode
 .agent-shell
 flycheck_*.el
+.tmp_npm
