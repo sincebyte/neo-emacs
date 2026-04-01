@@ -211,7 +211,7 @@
         ;; elfeed           ; rss reader
         ;; alpha            ; make emacs background transparent
         git                 ; magit wit
-        opencode            ; opencode ai integration
+        agentshell          ; ai integration
         ;; windows             ; toggle window by popwin
         ;; addspace         ; add space when typing
         ;; telega           ; use telega

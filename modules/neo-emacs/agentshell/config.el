@@ -1,4 +1,4 @@
-;;; $DOOMDIR/modules/neo-emacs/opencode/config.el -*- lexical-binding: t; -*-
+;;; $DOOMDIR/modules/neo-emacs/agentshell/config.el -*- lexical-binding: t; -*-
 
 ;; Opencode Configuration
 ;;

@@ -14,9 +14,10 @@
 (use-package web-mode
   :defer t
   :custom
-  (web-mode-markup-indent-offset 2)
-  (web-mode-css-indent-offset 2)
-  (web-mode-code-indent-offset 2))
+  (lsp-enable-file-watchers       t)
+  (web-mode-markup-indent-offset  2)
+  (web-mode-css-indent-offset     2)
+  (web-mode-code-indent-offset    2))
 
 ;; fornt setting
 (after! lsp-mode
