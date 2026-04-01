@@ -58,3 +58,4 @@
                           (opencode-setup-beautify))))))
 ;; Optional: Set up key bindings for opencode functionality
 (map! :nv "SPC d a" 'open-opencode-session-in-right-window)
+

@@ -13,6 +13,7 @@
     (setenv "https_proxy"        "http://vpn.local.com:10887"          )
     (setenv "http_proxy"         "http://vpn.local.com:10887"          )
     (add-to-list 'exec-path      "/Applications/Emacs.app/"                    )
+    (add-to-list 'exec-path      "~/.config/emacs/bin/.tmp_npm/bin/")
     (setq shell-file-name (executable-find "bash"))
     (setq quickrun-focus-p t)
     (setq quickrun-timeout-seconds nil)

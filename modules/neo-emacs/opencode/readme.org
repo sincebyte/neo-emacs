@@ -36,3 +36,10 @@ You can customize the following variables in your config.el:
 ## Dependencies
 
 This module depends on the `opencode` package which is fetched from `codeberg.org/sczi/opencode.el`.
+
+
+cursor agent acp
+#+begin_src shell
+curl https://cursor.com/install -fsS | bash
+npm install -g @blowmage/cursor-agent-acp
+#+end_src
