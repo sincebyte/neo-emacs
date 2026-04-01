@@ -6,8 +6,17 @@
 
 * Install your lsp server
 For html css JavaScript just install corresponding services.
+
 #+begin_src shell
+npm install -g @volar/vue-language-server
+
 M-x lsp-install-server
 css-ls
 jsts-ls
+ts-ls
+#+end_src
+
+* create a vue project
+#+begin_src shell
+vue create hello-world
 #+end_src
