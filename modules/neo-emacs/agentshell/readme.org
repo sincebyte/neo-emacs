@@ -37,9 +37,13 @@ You can customize the following variables in your config.el:
 
 This module depends on the `opencode` package which is fetched from `codeberg.org/sczi/opencode.el`.
 
-
-cursor agent acp
+* cursor
+Make sure cursor-agent-acp and cursor-agent is available in shell.
 #+begin_src shell
 curl https://cursor.com/install -fsS | bash
 npm install -g @blowmage/cursor-agent-acp
 #+end_src
+** config cursor-agent-acp 
+Case some huge project loading with a long time，config timeout is indeed.
+
+
