@@ -195,11 +195,13 @@
 (use-package org-modern-indent
   :load-path "~/.doom.d/neoemacs/org-modern-indent/"
   :config
-  (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
-
-(defconst org-modern-indent-begin (propertize "┌"  'face 'org-modern-indent-bracket-line))
-(defconst org-modern-indent-guide (propertize "│ " 'face 'org-modern-indent-bracket-line))
-(defconst org-modern-indent-end   (propertize "└"  'face 'org-modern-indent-bracket-line))
+  (add-hook 'org-mode-hook #'org-modern-indent-mode 90)
+  ;; 与 #+begin 行一致：继承 org-block-begin-line 的前景/背景（须在 require 之后）
+  (set-face-attribute 'org-modern-indent-bracket-line nil
+                      :inherit '(org-block-begin-line))
+  (setq org-modern-indent-begin (propertize "┌" 'face 'org-modern-indent-bracket-line)
+        org-modern-indent-guide (propertize "│ " 'face 'org-modern-indent-bracket-line)
+        org-modern-indent-end   (propertize "└" 'face 'org-modern-indent-bracket-line)))
 
 ;; (use-package emt
 ;;   :defer t

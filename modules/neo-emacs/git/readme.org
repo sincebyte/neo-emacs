@@ -4,3 +4,15 @@ https://dandavison.github.io/delta/installation.html
 #+begin_src shell
 brew install git-delta
 #+end_src
+
+* magit messy code (乱码)
+The octal escape "\346\226\207\346\241\243.org" indicates that Git/Magit did not display the file name as UTF-8 normally, but instead fallback it to a escaped string.
+This is a classic problem of garbled Chinese characters in Emacs Magit. It can basically be determined that the output encoding of Git is inconsistent with the decoding of Emacs.
+
+Disable Git's escape of non-ASCII file names
+
+  #+begin_src shell
+  git config --global core.quotepath false
+  #+end_src
+  
+
