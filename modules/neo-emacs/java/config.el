@@ -101,7 +101,7 @@
   (setq lsp-modeline-code-actions-enable nil))
 
 (defun my/lsp--execute-command-around (orig-fn command &optional args)
-  (if (and (derived-mode-p 'java-mode)
+  (if (and (derived-mode-p 'java-mode 'java-ts-mode)
            (string= command "java.completion.onDidSelect"))
       (let ((params (if args
                         (list :command command :arguments args)
@@ -184,7 +184,7 @@
         lsp-modeline-code-actions-enable           nil
         lsp-modeline-code-action-icons-enable      nil
         lsp-java-completion-overwrite              nil
-        lsp-enable-file-watchers                   t
+        lsp-enable-file-watchers                   nil
         lsp-file-watch-threshold                   2000
         lsp-lens-enable                            t))
 
@@ -295,6 +295,22 @@ evil-normal-state-map
 (with-eval-after-load 'lsp-java
   (add-to-list 'lsp-file-watch-ignored-files
         "[/\\\\][^/\\\\]*\\.\\(json\\|html\\|xml\\|md\\|txt\\|sql\\|sh\\|org\\|yaml\\)$"))
+
+(defun my/java-ts-mode-for-jdt-decompiled ()
+  "对 JDT 反编译缓存中的文件启用 `java-ts-mode'.
+`lsp-java--get-filename' 对部分 jdt:// URI 会生成无 .java 后缀的缓存名
+（例如 \"Foo(bar)\"），`+lookup/definition' 打开后不会命中 `auto-mode-alist'."
+  (when (and buffer-file-name
+             (boundp 'lsp-java-workspace-cache-dir)
+             lsp-java-workspace-cache-dir
+             (not (derived-mode-p 'java-ts-mode 'java-mode)))
+    (let ((cache (file-name-as-directory (expand-file-name lsp-java-workspace-cache-dir)))
+          (file (expand-file-name buffer-file-name)))
+      (when (and (string-prefix-p cache file)
+                 (not (string-suffix-p ".metadata" file)))
+        (java-ts-mode)))))
+
+(add-hook 'find-file-hook #'my/java-ts-mode-for-jdt-decompiled)
 
 ;; (add-hook 'lsp-mode-hook #'lsp-lens-mode)
 ;; (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)

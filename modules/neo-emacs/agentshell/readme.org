@@ -38,12 +38,60 @@ You can customize the following variables in your config.el:
 This module depends on the `opencode` package which is fetched from `codeberg.org/sczi/opencode.el`.
 
 * cursor
+** Install 
 Make sure cursor-agent-acp and cursor-agent is available in shell.
 #+begin_src shell
-curl https://cursor.com/install -fsS | bash
+# Install Cursor CLI
+curl https://cursor.com/install -fsSL | bash
+
+# Authenticate with your Cursor account
+cursor-agent login
+
+# Install cursor-agent-acp
 npm install -g @blowmage/cursor-agent-acp
 #+end_src
 ** config cursor-agent-acp 
 Case some huge project loading with a long time，config timeout is indeed.
+#+begin_src elisp
+  (setq agent-shell-cursor-acp-command '("cursor-agent-acp" "-t" "90000"))
+#+end_src
 
+** lsp server
+https://oraios.github.io/serena/02-usage/050_configuration.html#modes
 
+NOTE 1: You need use cursor-agent first to allow mcp service command.
+NOTE 2: You need config `export GIT_PROXY_COMMAND="git -c http.proxy=http://127.0.0.1:10887"` make sure serena install successful.
+NOTE 3: You need config cursor mcp.json to use serena
+
+#+begin_src mcp.json -n 10
+{
+  "mcpServers": {
+    "gitnexus": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "gitnexus@latest",
+        "mcp"
+      ]
+    },
+    "mcp-language-server": {
+      "type": "stdio",
+      "command": "/Users/van/.pyenv/shims/uvx",
+      "args": [
+          "--from",
+          "git+https://github.com/oraios/serena",
+          "serena",
+          "start-mcp-server",
+          "--context",
+          "ide",
+          "--project",
+          "~/ZY/workspace/skytech/skytech-app/",
+          "--language-backend",
+          "LSP",
+          "--log-level",
+          "DEBUG"
+      ]
+    }
+  }
+}
+#+end_src
