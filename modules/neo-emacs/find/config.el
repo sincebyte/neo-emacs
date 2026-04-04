@@ -93,9 +93,30 @@
 
 
 (defun jump-to-class-at-point ()
-  "基于光标位置提取类名和行号，并跳转到项目中的 Java 文件。"
+  "基于光标位置提取类名和行号，并跳转到项目中的 Java 文件。
+在 `java-mode' / `java-ts-mode' 下解析 Mapper 方法名并调用
+`+java-jump-to-mapper-xml'：唯一匹配直接打开 XML；多匹配时 minibuffer 选择。"
   (interactive)
-  (let* ((line-start (line-beginning-position))
+  (if (derived-mode-p 'java-mode 'java-ts-mode)
+      (progn
+        (unless (fboundp '+java-mapper-method-name-at-point)
+          (user-error "+java-mapper-method-name-at-point 未定义，请确保 neo-emacs/java 已加载"))
+        (unless (fboundp '+java-jump-to-mapper-xml)
+          (user-error "+java-jump-to-mapper-xml 未定义，请确保 neo-emacs/java 已加载"))
+        (let* ((java-file (buffer-file-name))
+               (project-root
+                (or (locate-dominating-file java-file "pom.xml")
+                    (locate-dominating-file java-file "build.gradle")
+                    (locate-dominating-file java-file "build.gradle.kts")))
+               (method-name (+java-mapper-method-name-at-point)))
+          (unless java-file
+            (user-error "当前缓冲区未关联文件"))
+          (unless project-root
+            (user-error "未找到项目根目录（pom.xml / build.gradle）"))
+          (unless (and method-name (> (length method-name) 0))
+            (user-error "未能解析 Mapper 方法名，请将光标放在方法声明或参数列表附近"))
+          (+java-jump-to-mapper-xml (expand-file-name project-root) method-name)))
+    (let* ((line-start (line-beginning-position))
          (line-end (line-end-position))
          (current-line (buffer-substring-no-properties line-start line-end))
          (point-in-line (- (point) line-start))
@@ -176,4 +197,4 @@
                                (format " at line %d" line-number)
                              "")))))
             (message "No matches found for '%s'" search-term)))
-      (message "No class symbol found at point."))))
+      (message "No class symbol found at point.")))))

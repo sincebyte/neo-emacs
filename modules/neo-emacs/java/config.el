@@ -326,35 +326,128 @@ Example: \\u6587 -> 文"
       (while (re-search-forward "\\\\u\\([0-9a-fA-F]\\{4\\}\\)" nil t)
         (replace-match (string (string-to-number (match-string 1) 16)) t nil)))))
 
+(defun +java-mapper-method-name-at-point ()
+  "从 Mapper 接口方法声明附近解析方法名。
+支持光标在「返回类型 + 方法名」行、仅方法名行、或 @Param 等参数行；
+若行内出现 `(` 且非注解行，则取参数列表 `(` 之前的最后一个标识符；
+否则取当前行末尾的标识符（如方法名单独成行时）。"
+  (save-excursion
+    (let ((result nil)
+          (attempts 0))
+      (while (and (not result) (< attempts 12))
+        (setq attempts (1+ attempts))
+        (let* ((line (buffer-substring-no-properties
+                      (line-beginning-position) (line-end-position)))
+               (trimmed (string-trim line)))
+          (cond
+           ((string-empty-p trimmed)
+            (if (> (line-number-at-pos) 1)
+                (forward-line -1)
+              (setq attempts 100)))
+           ((string-match-p "^@\\w" trimmed)
+            (if (> (line-number-at-pos) 1)
+                (forward-line -1)
+              (setq attempts 100)))
+           ((string-match-p "^(" trimmed)
+            (if (> (line-number-at-pos) 1)
+                (forward-line -1)
+              (setq attempts 100)))
+           (t
+            (let ((paren (string-match "(" line)))
+              (setq result
+                    (if (and paren (not (string-match-p "^\\s*@\\w" line)))
+                        (let ((before (string-trim-right (substring line 0 paren))))
+                          (when (string-match "\\([a-zA-Z_][a-zA-Z0-9_]*\\)\\s-*\\'" before)
+                            (match-string 1 before)))
+                      (let ((tr (string-trim-right line)))
+                        (when (string-match "\\([a-zA-Z_][a-zA-Z0-9_]*\\)\\s-*\\'" tr)
+                          (match-string 1 tr))))))
+            (unless result
+              (if (> (line-number-at-pos) 1)
+                  (forward-line -1)
+                (setq attempts 100)))))))
+      (or result (thing-at-point 'symbol t)))))
+
+(defun +java--rg-xml-matches (root pattern)
+  "在 ROOT 下对 PATTERN 执行 rg，返回 ((FILE LINE PREVIEW) ...) 列表。"
+  (let ((root (directory-file-name (expand-file-name root)))
+        out)
+    (with-temp-buffer
+      (let ((status
+             (apply #'call-process
+                    "rg" nil t nil
+                    (append (list "-n" "--no-heading" "--color" "never" "-F"
+                                  "-g" "*.xml" "-g" "!**/target/**" "-g" "!**/build/**"
+                                  pattern)
+                            (list root)))))
+        (unless (member status '(0 1))
+          (user-error "rg 失败（退出码 %S）" status))
+        (when (zerop status)
+          (goto-char (point-min))
+          (while (not (eobp))
+            (let ((l (buffer-substring-no-properties
+                      (line-beginning-position) (line-end-position))))
+              (when (string-match "\\`\\([^:]+\\):\\([0-9]+\\):\\(.*\\)\\'" l)
+                (push (list (expand-file-name (match-string 1 l) root)
+                            (string-to-number (match-string 2 l))
+                            (match-string 3 l))
+                      out)))
+            (forward-line 1)))))
+    (nreverse out)))
+
+(defun +java-jump-to-mapper-xml (project-root method-name)
+  "在 PROJECT-ROOT 的 *.xml 中定位 METHOD-NAME 对应 Mapper。
+优先匹配 MyBatis `id='…'`，仅一处时直接 `find-file' 并定位行；多处时用 `completing-read' 选择。
+（不使用 `consult-ripgrep'，因其为交互式搜索 UI，不会自动打开文件。）"
+  (unless (executable-find "rg" t)
+    (user-error "未找到 ripgrep (rg)，请先安装"))
+  (let* ((root (expand-file-name project-root))
+         (matches
+          (or (+java--rg-xml-matches root (format "id=\"%s\"" method-name))
+              (+java--rg-xml-matches root (format "id='%s'" method-name))
+              (+java--rg-xml-matches root method-name))))
+    (unless matches
+      (user-error "未在 *.xml 中找到方法 %S（已尝试 id= 与全文）" method-name))
+    (if (= (length matches) 1)
+        (pcase-let ((`(,file ,line ,_) (car matches)))
+          (find-file file)
+          (goto-char (point-min))
+          (forward-line (1- line))
+          (message "已跳转: %s:%d" (file-relative-name file root) line))
+      (let* ((pairs
+              (mapcar
+               (lambda (m)
+                 (pcase-let ((`(,file ,line ,preview) m))
+                   (cons (format "%s:%d  %s"
+                                 (file-relative-name file root) line
+                                 (string-trim preview))
+                         m)))
+               matches))
+             (pick (completing-read "Mapper XML: " (mapcar #'car pairs) nil t))
+             (chosen (cdr (assoc pick pairs))))
+        (unless chosen
+          (user-error "未选中有效条目"))
+        (pcase-let ((`(,file ,line ,_) chosen))
+          (find-file file)
+          (goto-char (point-min))
+          (forward-line (1- line))
+          (message "已跳转: %s:%d" (file-relative-name file root) line))))))
+
 (defun +java-to-xml-mapper ()
-  "Jump from a Java mapper file to the corresponding XML mapper file in Spring Boot project."
+  "从 Java Mapper 接口光标处解析方法名，在项目 *.xml 中定位对应 SQL。
+单条结果直接跳转；多条时 minibuffer 选择。不使用 consult 的实时搜索界面。"
   (interactive)
   (let* ((java-file (buffer-file-name))
-         (project-root (locate-dominating-file java-file "pom.xml")) ; 找到项目根目录
-         (java-file-name (file-name-nondirectory java-file)) ; 获取Java文件名
-         (base-name (file-name-sans-extension java-file-name)) ; 去掉扩展名
-         ;; 构建XML文件路径
-         (xml-file (when project-root
-                     (expand-file-name
-                      (format "src/main/resources/mapper/%s.xml" base-name)
-                      project-root)))
-         (method-name (thing-at-point 'symbol t)))
-
-    (message "Java file: %s" java-file)
-    (message "Project root: %s" project-root)
-    (message "Looking for XML: %s" xml-file)
-
-    (cond
-     ((not project-root)
-      (message "Could not find project root (pom.xml)"))
-
-     ((not (file-exists-p xml-file))
-      (message "XML file not found: %s" xml-file))
-
-     (t
-      (find-file xml-file)
-      (goto-char (point-min))
-      (if (and method-name (re-search-forward (format "id=\"%s\"" method-name) nil t))
-          (message "Jumped to method: %s" method-name)
-        (message "Opened XML file, but method '%s' not found" method-name))))))
+         (project-root
+          (or (locate-dominating-file java-file "pom.xml")
+              (locate-dominating-file java-file "build.gradle")
+              (locate-dominating-file java-file "build.gradle.kts")))
+         (method-name (+java-mapper-method-name-at-point)))
+    (unless java-file
+      (user-error "当前缓冲区未关联文件"))
+    (unless project-root
+      (user-error "未找到项目根目录（pom.xml / build.gradle）"))
+    (unless (and method-name (> (length method-name) 0))
+      (user-error "未能解析 Mapper 方法名，请将光标放在方法声明或参数列表附近"))
+    (+java-jump-to-mapper-xml (expand-file-name project-root) method-name)))
 
