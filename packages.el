@@ -72,7 +72,7 @@
 (package! magit-delta         )
 (package! gptel               )
 (package! telega              )
-(package! undo-tree           )
+;; (package! undo-tree           )
 (package! transwin            )
 (package! verb                )
 (package! pdf-tools           )

@@ -1,4 +1,3 @@
-
 ;;; neoemacs/java/config.el -*- lexical-binding: t; -*-
 ;;;
 (setenv "XMLLINT_INDENT" "    ")

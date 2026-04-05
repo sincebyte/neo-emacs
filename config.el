@@ -89,7 +89,13 @@
 
 (defun my/fix-line-number-face ()
   (set-face-attribute 'line-number nil :family "JetBrains Mono" :weight 'normal :slant 'italic )
-  (set-face-attribute 'line-number-current-line nil :family "JetBrains Mono" :weight 'normal :slant 'italic :background "#222225"))
+  (let* ((hl-bg (face-attribute 'hl-line :background nil t))
+         (bg (if (memq hl-bg '(unspecified nil))
+                 (or (face-attribute 'default :background nil t) "#222225")
+               hl-bg)))
+    (set-face-attribute 'line-number-current-line nil
+                        :family "JetBrains Mono" :weight 'normal :slant 'italic
+                        :background bg)))
 (add-hook 'display-line-numbers-mode-hook #'my/fix-line-number-face)
 
 ;; 设置 minibuffer 中的字体
@@ -140,7 +146,7 @@
 ;; (after! doom-themes
 ;;   (load-theme 'doom-winter-is-coming-dark-blue t))
 
-(load-theme 'kaolin-dark t)
+(load-theme 'doom-one-light t)
 
 
 ;; (setq initial-frame-alist '((height . 50)))
