@@ -66,7 +66,18 @@
     (run-with-idle-timer
      0.1 nil 'vterm-reset-cursor-point)))
 
+(defun my/force-hide-vterm-modeline ()
+  "强制隐藏 vterm 的 modeline"
+  (setq mode-line-format nil)
+  (setq mode-line-cache nil))
+
 (add-hook 'vterm-mode-hook #'evil-collection-vterm-escape-stay)
+(add-hook 'vterm-mode-hook (lambda () 
+  (add-hook 'after-change-major-mode-hook #'my/force-hide-vterm-modeline nil t)))
+(add-hook 'buffer-list-update-hook (lambda ()
+  (when (and (derived-mode-p 'vterm-mode) (not (eq mode-line-format nil)))
+    (my/force-hide-vterm-modeline))))
+
 (advice-add 'set-window-vscroll :after
   (defun me/vterm-toggle-scroll (&rest _)
     (when (eq major-mode 'vterm-mode)

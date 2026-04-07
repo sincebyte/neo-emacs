@@ -95,3 +95,9 @@ NOTE 3: You need config cursor mcp.json to use serena
   }
 }
 #+end_src
+** Use cursor official ACP
+About https://github.com/xenodium/agent-shell/pull/394
+
+Override
+/Users/van/.config/emacs/.local/straight/repos/agent-shell/agent-shell-cursor.el
+https://github.com/Lenbok/agent-shell/blob/011d56841d813b7c211549a4e616d85c61ce6e46/agent-shell-cursor.el

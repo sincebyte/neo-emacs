@@ -78,7 +78,7 @@
       ;; Start cursor agent session in the right window
       (setq agent-shell-show-welcome-message nil)
       (setq agent-shell-session-strategy 'new)
-      (setq agent-shell-cursor-acp-command '("cursor-agent-acp" "-t" "90000"))
+      ;; (setq agent-shell-cursor-acp-command '("cursor-agent-acp" "-t" "120000"))
       (agent-shell-cursor-start-agent)
       ;; Apply window beautify settings after the agent buffer finishes initializing
       (run-with-timer 0.3 nil

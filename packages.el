@@ -87,7 +87,6 @@
 ;; (package! aidermacs           )
 (package! shell-maker)
 (package! acp)
-(package! agent-shell)
 (package! popwin)
 (package! zygospore         )
 
@@ -107,6 +106,8 @@
 (package! pulsing-cursor :recipe (:host github :repo "jasonjckn/pulsing-cursor"))
 (package! msgpack)
 (package! tramp-rpc :recipe (:host github :repo "ArthurHeymans/emacs-tramp-rpc"))
+(package! agent-shell)
+;; (package! agent-shell  :recipe (:host github :repo "xenodium/agent-shell") :pin "011d56841d813b7c211549a4e616d85c61ce6e46")
 
 
 ;; (package! sparkweather   :recipe (:host github :repo "aglet/sparkweather"          :branch "main"   ))

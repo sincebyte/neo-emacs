@@ -12,6 +12,7 @@
 (setq-default buffer-file-coding-system 'utf-8-unix)
 ;; (global-undo-tree-mode)
 ;; (add-hook 'evil-local-mode-hook 'turn-on-undo-tree-mode)
+(setq undo-tree-auto-save-history nil)
 
 (setq gc-cons-threshold 100000000) ; Increase garbage collection threshold
 (setq read-process-output-max (* 1024 1024)) ; Increase the
