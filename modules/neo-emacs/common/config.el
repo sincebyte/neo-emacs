@@ -16,6 +16,12 @@
 
 (setq gc-cons-threshold 100000000) ; Increase garbage collection threshold
 (setq read-process-output-max (* 1024 1024)) ; Increase the
+(setq max-specpdl-size 5000)      ; 限制调用栈深度
+(setq max-lisp-eval-depth 5000)   ; 限制递归深度
+(setq gc-cons-threshold 100000000); 临时提高 GC 阈值
+(setq font-lock-maximum-decoration nil)
+(setq font-lock-maximum-size 500000)  ; 限制大小
+
 
 (map! :after evil
       :map evil-normal-state-map

@@ -97,3 +97,9 @@
 (with-eval-after-load 'eshell
   (with-eval-after-load 'evil
     (add-hook 'eshell-mode-hook #'my-eshell-override-keys)))
+
+(defun my-vterm-evil-cursor ()
+  (when (derived-mode-p 'vterm-mode)
+    (setq cursor-type
+          (if (evil-insert-state-p) 'bar 'box))))
+(add-hook 'post-command-hook #'my-vterm-evil-cursor)

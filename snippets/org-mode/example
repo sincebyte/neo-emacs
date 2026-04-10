@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: example
+# key: example
+# --
+
+#+begin_notice-example
+
+#+end_notice-example

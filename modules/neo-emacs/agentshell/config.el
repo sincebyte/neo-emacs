@@ -43,6 +43,7 @@
   (defun open-opencode-session-in-right-window ()
     "Force opencode session to start in a right-side window."
     (interactive)
+    (setq agent-shell-thought-process-expand-by-default t)
     (let* ((initial-window (selected-window))
            (main-width (window-total-width))
            (target-width 60)
@@ -66,6 +67,7 @@
   (defun open-cursor-session-in-right-window ()
     "Force cursor agent session to start in a right-side window."
     (interactive)
+    (setq agent-shell-thought-process-expand-by-default t)
     (let* ((initial-window (selected-window))
            (main-width (window-total-width))
            (target-width 60)

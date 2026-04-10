@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: warning
+# key: warning
+# --
+
+#+begin_notice-warning
+
+#+end_notice-warning

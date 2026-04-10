@@ -180,6 +180,8 @@
         lsp-progress-prefix                        "󰫆 "
         lsp-modeline-diagnostics-enable            t
         lsp-modeline-diagnostics-scope             :workspace
+        lsp-semantic-highlighting-max-files 10
+        lsp-ui-doc-enable nil
         lsp-modeline-code-actions-enable           nil
         lsp-modeline-code-action-icons-enable      nil
         lsp-java-completion-overwrite              nil

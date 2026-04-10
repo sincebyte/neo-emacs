@@ -198,3 +198,10 @@
                              "")))))
             (message "No matches found for '%s'" search-term)))
       (message "No class symbol found at point.")))))
+
+;; 禁用 Dired 的某些功能
+(setq dired-auto-revert-buffer nil)
+(setq dired-recursive-copies 'never)
+
+;; 如果问题频繁出现，完全禁用某些 overlay 功能
+(setq dired-hide-details-mode nil)
