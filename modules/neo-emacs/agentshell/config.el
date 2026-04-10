@@ -56,6 +56,7 @@
       ;; Start opencode session in the right Apply
       (setq agent-shell-show-welcome-message nil)
       (setq agent-shell-session-strategy 'new)
+      (setq agent-shell-header-style 'text)
       (agent-shell-opencode-start-agent)
       ;; window beautify settings in a more delayed manner to ensure setup completes
       (run-with-timer 0.3 nil
@@ -80,6 +81,7 @@
       ;; Start cursor agent session in the right window
       (setq agent-shell-show-welcome-message nil)
       (setq agent-shell-session-strategy 'new)
+      (setq agent-shell-header-style 'text)
       ;; (setq agent-shell-cursor-acp-command '("cursor-agent-acp" "-t" "120000"))
       (agent-shell-cursor-start-agent)
       ;; Apply window beautify settings after the agent buffer finishes initializing
