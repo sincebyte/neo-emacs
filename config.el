@@ -313,3 +313,7 @@
 ;; (require 'text-glow)
 ;; (text-glow-mode 1)
 ;; (metal-loader-load "/Users/van/.doom.d/neoemacs/animation.el/glitch-effect.metallib")
+(add-to-list 'load-path "/path/to/clutch")
+(require 'clutch)
+
+
