@@ -158,7 +158,7 @@
        ;;ocaml             ; an objective camel
        (org +roam2 )      ; organize your plain life in plain text
        ;;php               ; perl's insecure younger brother
-       ;; plantuml          ; diagrams for confusing people more
+       plantuml          ; diagrams for confusing people more
        ;; purescript        ; javascript, but functional
        (python +lsp +pyright +tree-sitter)       ; beautiful is better than ugly
        ;;qt                ; the 'cutest' gui framework ever
@@ -192,7 +192,7 @@
        ;;(rss +org)        ; emacs as an RSS reader
        ;;twitter           ; twitter client https://twitter.com/vnought
 
-        :neo-emacs
+       :neo-emacs
         frontend            ; frontend setting
         java                ; lsp java setting
         shell               ; shell config for vterm & eshell

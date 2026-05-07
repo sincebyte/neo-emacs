@@ -60,7 +60,6 @@
 (package! d2-mode             )
 (package! gnuplot             )
 (package! string-inflection   )
-(package! ejc-sql             )
 (package! kaolin-themes       )
 (package! company-posframe    )
 (package! xml-format          )

@@ -9,7 +9,7 @@
 ;; Setup beautify effects: hide mode-line and adjust window size
 (defun opencode-setup-beautify ()
   "Setup美化效果：隐藏mode-line并调整窗口大小"
-  (hide-mode-line-mode)
+  (setq-local mode-line-format nil)
   (run-with-timer 0.1 nil
                   (lambda ()
                     (condition-case nil
@@ -17,7 +17,7 @@
                           (when (window-parent)
                             (window-resize (selected-window) (- desired-width (window-total-width)) t)))
                       (error nil)))))
-(add-hook 'agent-shell-mode-hook (lambda () (hide-mode-line-mode)))
+(add-hook 'agent-shell-mode-hook (lambda () (interactive) (setq-local mode-line-format nil)))
 (add-hook 'agent-shell-completion-mode-hook 'opencode-setup-beautify)
 
 (defun open-opencode-session-right ()

@@ -1,7 +1,4 @@
 ;; close the modeline default
-;; (add-hook 'buffer-list-update-hook (lambda ()
-;;                                      (unless (active-minibuffer-window)
-;;                                        (hide-mode-line-mode))))
 (use-package! awesome-tray
   :config
   (setq awesome-tray-git-show-status t
@@ -48,7 +45,8 @@
         ("belong"     . (my-awesome-tray-nil-info awesome-tray-module-battery-face              ))))
 
 ;; (map! :ne "; v"     'vc-refresh-state                          )
-(map! :ne "; ;"     'hide-mode-line-mode                       )
+;; (map! :ne "; ;" (lambda () (interactive) (setq-local mode-line-format nil)))
+
 (awesome-tray-mode 1)
 
 

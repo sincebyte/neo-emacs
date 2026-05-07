@@ -487,3 +487,5 @@ to disambiguate."
 (add-hook 'after-init-hook
           (lambda ()
             (setq-local line-spacing nil)))
+
+(map! :ne "; ;" (lambda () (interactive) (setq-local mode-line-format nil)))
