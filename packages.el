@@ -49,8 +49,6 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
                                         ;(unpin! t)
 
-(unpin!   restclient          )
-(unpin!   restclient-jq       )
 (unpin!   npm-mode            )
 (package! org-appear          )
 (package! org-roam-ui         )
@@ -69,7 +67,6 @@
 (package! yaml-mode           )
 (package! docker-compose-mode )
 (package! magit-delta         )
-(package! gptel               )
 (package! telega              )
 ;; (package! undo-tree           )
 (package! transwin            )

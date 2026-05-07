@@ -19,11 +19,9 @@
 * About
 Neo emacs is a configuration framework for GNU Emacs which is based on doom emacs and focuses on the java web application coding environment. Neo emacs has the following features:
 - Code completion: Lsp-java supports maven and gradle project.
-- Agent tool: aidermacs a code editing assistant through llm.
-- Program debugging: Dap-java supports program debugging.
-- Http client: Rest-client is a tool to manually explore and test HTTP REST webservices just like Postman.
-- Http client*: verb a package for Emacs which allows you to organize and send HTTP requests.
-- SQL client: Ejc-sql turns Emacs into a simple SQL client which supports various databases.
+- Agent-shell: A native Emacs shell to interact with LLM agents powered by ACP
+- Http client: verb a package for Emacs which allows you to organize and send HTTP requests.
+- SQL client: clutch — Interactive Database Client for Emacs.
 - Redis client: [[https://github.com/laixintao/iredis][IRedis]] is a terminal client for redis with auto-completion and syntax highlighting.
 - Terminal emulator: Emacs-libvterm (vterm) is fully-fledged terminal emulator inside GNU Emacs based on libvterm.
 - Knowledge management system: Org-roam borrows principles from the Zettelkasten method, providing a solution for non-hierarchical note-taking.
@@ -413,7 +411,7 @@ If you are using fish shell ,fortunately there have some optimize config prepare
    | SPC v v | projectile-run-vterm | open vterm window base on the project root path |
    | SPC v p | vterm-send-start     | enable vterm screen roll                        |
    | SPC v s | vterm-send-stop      | disable vterm screen roll                       |
-** Ejc Sql
+** Clutch Sql
 - The privacy configuration
    In here you could save any connections in your setting config.
    But where should the setting located especially for our Emacs config project with a public github repository? There have a privacy path which is excluded in the public repository named *user-private-dir*, You could config your connection's account/password here for safely.
@@ -425,21 +423,18 @@ If you are using fish shell ,fortunately there have some optimize config prepare
 - Config your particular db connection
    #+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
    #+begin_src lisp
-   (use-package ejc-sql
-   :commands ejc-sql-mode ejc-connect
-   :config
-   (setq clomacs-httpd-default-port 18090)
-   (ejc-create-connection "connection-name"
-           :classpath      "~/.m2/repository/mysql/mysql-connector-java/8.0.17/
-               mysql-connector-java-8.0.17.jar"
-           :connection-uri "jdbc:mysql://localhost/user?useSSL=false&user=root&password=pwd"
-           :separator      "</?\.*>" )
-   )
+    (setq clutch-connection-alist
+          '(("test"  . (:backend mysql
+                              :host "127.0.0.1" :port 3306
+                              :user "root" :password "****"
+                              :database "test"
+                              :connect-timeout 5
+                              :read-idle-timeout 60))))
    (provide 'db-work)
    #+end_src
   #+latex:\newpage
 - Write Sql file
-   Before try to use ejc sql, firstly create a sql file which named with a suffix *.sql*, cause emacs will turn on the sql minor mode so that ejc-sql could works well. And then use ~SPC e c~ to connect a particular database which you have configurated. Emacs will popup a minibuffer listing candidates which show you the *connection-name*.
+   Before try to use clutch , firstly create a sql file which named with a suffix *.sql*, cause emacs will turn on the clutch-mode so that clutch could works well. And then use ~SPC e c~ to connect a particular database which you have configurated. Emacs will popup a minibuffer listing candidates which show you the *connection-name*.
    Secondarily, write your testing sql content which surrounded by a tag, cause we have configurated *:separator* by a syntax meaning tag in order to execute a single sql rather than to choose it.For sure you could make any comment with the tag's schema.
    Further more, you could use delimiter sign for batch execution. the delimiter could customization by any character.
    Finnaly, use ~C-c C-c~ to execute it. It's just execute the content which surrounded by a tag in your cusor.
@@ -447,7 +442,6 @@ If you are using fish shell ,fortunately there have some optimize config prepare
    <SELECT name='select all org'>
    SELECT * FROM TABLE_ORG
    </SELECT>
-
    <SELECT>
    delimiter ;
    COMMENT ON COLUMN TABLE_ORG.PROJECT_CODE IS '项目编码';
@@ -455,20 +449,14 @@ If you are using fish shell ,fortunately there have some optimize config prepare
    </SELECT>
    #+END_SRC
 - key binding
-    | <l>     | <l>            | <l>                        |
-    | KEY     | FUNCTION       | description                |
-    | SPC e c | ejc-connection | choose connection with ivy |
-    | C-c C-c | ejc-execute    | execute the sql            |
-** Emacs Rime
-[[https://github.com/DogLooksGood/emacs-rime][Emacs Rime]] which makes to embedding an input method be possible whthin the emacs.Emacs could benefit form the flexible configuration of [[https://rime.im/][rime]].
-On macos it's required to install *Squirrel* which is one of rime's distribution. *Squirrel* is installed in your os system as a input method.
-Note that the configuration of rime located at home/Library/Rime/. We want to sharing this configuration between Eamcs rime and os rime.
-So there have a variable which named ~rime-user-data-dir~ , And another important variable is ~rime-librime-root~ which configed the librime location.
-| variable           | required |
-| rime-user-data-dir | true     |
-| rime-librime-root  | true     |
+    | <l>     | <l>                      | <l>                        |
+    | KEY     | FUNCTION                 | description                |
+    | SPC e c | clutch-connection        | choose connection with ivy |
+    | C-c C-c | my-clutch-exec-xml-inner | execute the sql            |
+    | ?       | clutch-dispatch          | clutch menu                |
+** Input method
+[[https://neoemacs.com/posts/emacs_%E5%88%87%E6%8D%A2%E7%B3%BB%E7%BB%9F%E8%BE%93%E5%85%A5%E6%B3%95/][shift system input method on macos]]
 
-[[./modules/neo-emacs/rime/readme.org][futher more rime readme]]
 ** Org mode
 [[./modules/neo-emacs/org/readme.org][futher more org readme]]
 *** Install Dependency
@@ -505,33 +493,9 @@ Make the image directory as your screenshot file's saving location.
 #+begin_src shell
 ln -s ~/org/org-roam/image any_where/image
 #+end_src
-** Restclient
-Restclient provide a test suite for HTTP REST in Emacs.The official repository here [[https://github.com/pashky/restclient.el][restclient.el]].
-Yea, a pretty old old project.Fortunately doom emacs have integrated it.We just need open it with ~(rest +jq)~.
-*+jq* makes restclient have the ability to parse a particular response which Content-Type equalable application/json.
-The amazing feature is restclient support set variables or make a part of response being a variables which one could as a request part for another HTTP REST.
-
-Here we take the value from results as a variables which named count.
-#+begin_src restclient
-GET https://www.zhihu.com/api/v3/oauth/sms/supported_countries
--> jq-set-var :count .count
-#+end_src
-#+begin_quote
-Only *jq-set-var* could works when the content-type equal to application/json MIME type
-#+end_quote
-
-Fortunately we have solution for other mime type, it's restclient-set-var, you could use elisp to parse the response;
-#+begin_src restclient
-GET https://www.baidu.com/sugrec
--> run-hook (restclient-set-var ":queryid" (cdr (assq 'queryid (json-read))))
-Content-Type: application/x-www-form-urlencoded; charset=utf-8
-#+end_src
-
-About the variables infomation in current buffer, we could use ~C-c Tab~ to show them.
-
 ** Verb
 Verb is a new package for http client,becase the restclient is out of date and the author no longger maintain it on github.Fortunately there have a alternative one named verb which is more powerful and customizable. Verb support url template which makes you change different environment more conveniently.Also verb supports variables and picture query and upload.In org mode start verb just use `C-c C-r` as a previous command,example `C-c C-r C-f` will execute http request with your config,So verb is really fancy right?
-** iredis
+** Iredis
 *** install
 #+begin_src shell
 brew install iredis
@@ -582,9 +546,6 @@ You could customization startup inital workspace and their buffer.No need to ope
   (interactive)
   (+workspace/new " IDE")
   (find-file "yourexpect.java")
-  (+workspace/new " GPT")
-  (gptel "wangshenzhi/llama3-8b-chinese-chat-ollama-q8")
-  (switch-to-buffer "wangshenzhi/llama3-8b-chinese-chat-ollama-q8")
   (+workspace/new " SQL")
   (find-file "yourexpect.sql")
   (+workspace/new " HTTP")

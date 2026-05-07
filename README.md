@@ -1,26 +1,64 @@
+
+# Table of Contents
+
+1.  [About](#org8d997d1)
+2.  [How to install](#orgd8167ff)
+    1.  [Install emacs](#org61539e5)
+    2.  [Clone project](#org3eaf695)
+    3.  [Doom Install](#org37bd251)
+3.  [How to update](#org43bdcef)
+    1.  [For brew](#orga381644)
+    2.  [For doom project](#orge00d5af)
+4.  [Patches](#org72b286e)
+    1.  [transparent patch](#org1bd8a4e)
+    2.  [cursor animation](#orgc390afb)
+    3.  [how to](#org8ccec92)
+5.  [Private setting](#orgf59fc7c)
+    1.  [Font setting](#org57bcbae)
+    2.  [Basic setting](#org0f44e09)
+6.  [Neoemacs modules](#org099f564)
+    1.  [Lsp Java](#orge7e05f6)
+    2.  [Aidermacs](#org72ce4f0)
+    3.  [Vterm Shell](#orgdf2390b)
+    4.  [Clutch Sql](#org25e13ba)
+    5.  [Input method](#orga2a4d4b)
+    6.  [Org mode](#org51581c7)
+    7.  [Verb](#orge90bfc3)
+    8.  [Iredis](#orgbcd501c)
+    9.  [Bookmark](#org97652c2)
+    10. [Elpa Offline](#org13c1d2a)
+    11. [Vue](#org584213a)
+    12. [startup workspace](#org73e5ae5)
+7.  [About the Release](#org5ac449c)
+8.  [Customize Farther](#org60f8f7f)
+
 ![img](https://img.shields.io/badge/neo_emacs-v3.1-green.svg)  ![img](https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0)  ![img](https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1) ![img](https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&color=3498DB)  
 ![img](https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&color=2C2255) ![img](https://img.shields.io/badge/supports-Emacs_27.1_to_31.0-red.svg?logo=gnuemacs&color=7F5AB6)  
 
 ![img](./images/image-use.png)  
 
 
+<a id="org8d997d1"></a>
+
 # About
 
 Neo emacs is a configuration framework for GNU Emacs which is based on doom emacs and focuses on the java web application coding environment. Neo emacs has the following features:  
 
 -   Code completion: Lsp-java supports maven and gradle project.
--   Agent tool: aidermacs a code editing assistant through llm.
--   Program debugging: Dap-java supports program debugging.
--   Http client: Rest-client is a tool to manually explore and test HTTP REST webservices just like Postman.
--   Http client\*: verb a package for Emacs which allows you to organize and send HTTP requests.
--   SQL client: Ejc-sql turns Emacs into a simple SQL client which supports various databases.
+-   Agent-shell: A native Emacs shell to interact with LLM agents powered by ACP
+-   Http client: verb a package for Emacs which allows you to organize and send HTTP requests.
+-   SQL client: clutch — Interactive Database Client for Emacs.
 -   Redis client: [IRedis](https://github.com/laixintao/iredis) is a terminal client for redis with auto-completion and syntax highlighting.
 -   Terminal emulator: Emacs-libvterm (vterm) is fully-fledged terminal emulator inside GNU Emacs based on libvterm.
 -   Knowledge management system: Org-roam borrows principles from the Zettelkasten method, providing a solution for non-hierarchical note-taking.
 
 
+<a id="orgd8167ff"></a>
+
 # How to install
 
+
+<a id="org61539e5"></a>
 
 ## Install emacs
 
@@ -61,6 +99,8 @@ After emacs installation, set environment variables which names EMACS ,this depe
     export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs
 
 
+<a id="org3eaf695"></a>
+
 ## Clone project
 
 clone doom-emacs and neo-emacs from github.  
@@ -68,6 +108,8 @@ clone doom-emacs and neo-emacs from github.
     git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs
     git clone --depth 1 https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
+
+<a id="org37bd251"></a>
 
 ## Doom Install
 
@@ -96,14 +138,20 @@ At last run below, this will take few minutes. And it depends on the quality of 
     ~/.emacs.doom/bin/doom.cmd install
 
 
+<a id="org43bdcef"></a>
+
 # How to update
 
+
+<a id="orga381644"></a>
 
 ## For brew
 
     brew upgrade
     brew update && brew upgrade emacs-mac && brew cleanup emacs-mac
 
+
+<a id="orge00d5af"></a>
 
 ## For doom project
 
@@ -113,8 +161,12 @@ At last run below, this will take few minutes. And it depends on the quality of 
     sh ~/.emacs.d/bin/doom sync
 
 
+<a id="org72b286e"></a>
+
 # Patches
 
+
+<a id="org1bd8a4e"></a>
 
 ## transparent patch
 
@@ -130,10 +182,14 @@ It offer a window transparent solution which could transparent background but th
       ("C-M-0" . transwin-toggle))
 
 
+<a id="orgc390afb"></a>
+
 ## cursor animation
 
 The awesome patch could make cursor more funny.But there have a bug,If you shift to full screen from a window state , there will remain a shadow of the current cursor which will stay here forever.I will make cursor in replace mode before shifting to full screen.This might makes it effect less more.  
 
+
+<a id="org8ccec92"></a>
 
 ## how to
 
@@ -158,10 +214,14 @@ Here have a [tutorial](https://neoemacs.com/posts/emacs-patches/) to apply patch
 3.  Just install emacs plus, you could use \`brew reinstall\`
 
 
+<a id="orgf59fc7c"></a>
+
 # Private setting
 
 Customize your private setting config in the config.el ; use `setq`  
 
+
+<a id="org57bcbae"></a>
 
 ## Font setting
 
@@ -253,6 +313,8 @@ Cause different platform have different font name,after font installed there nee
     </table>
 
 
+<a id="org0f44e09"></a>
+
 ## Basic setting
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
@@ -340,7 +402,7 @@ Cause different platform have different font name,after font installed there nee
 
 <tr>
 <td class="org-left">lsp-java-java-path</td>
-<td class="org-left">&#xa0;</td>
+<td class="org-left">&nbsp;</td>
 <td class="org-left">modules/neo-emacs/java/config.el</td>
 <td class="org-left">java11        exec path</td>
 </tr>
@@ -371,8 +433,12 @@ Cause different platform have different font name,after font installed there nee
 > recentfile save default dir: ~/.emacs.d/.local/cache/recentf  
 
 
+<a id="org099f564"></a>
+
 # Neoemacs modules
 
+
+<a id="orge7e05f6"></a>
 
 ## Lsp Java
 
@@ -467,6 +533,8 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     3.  Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
 
 
+<a id="org72ce4f0"></a>
+
 ## Aidermacs
 
 aidermacs a code editing assistant through llm.  
@@ -534,11 +602,13 @@ config mcp tool
     }
 
 
+<a id="orgdf2390b"></a>
+
 ## Vterm Shell
 
 You&rsquo;d better install vterm in a terminal environment case there might have error incompatible architecture.  
 
-<div class="notice-warning" id="org5c710e5">
+<div class="notice-warning" id="org88b78c6">
 <p>
 Vterm is not available on windows.<br />
 Thus windows user have to use eshell as a downgrade plan.<br />
@@ -655,7 +725,9 @@ Thus windows user have to use eshell as a downgrade plan.<br />
         </table>
 
 
-## Ejc Sql
+<a id="org25e13ba"></a>
+
+## Clutch Sql
 
 -   The privacy configuration  
     In here you could save any connections in your setting config.  
@@ -666,19 +738,16 @@ Thus windows user have to use eshell as a downgrade plan.<br />
         (use-package! db-work                    )
 -   Config your particular db connection  
     
-        (use-package ejc-sql
-        :commands ejc-sql-mode ejc-connect
-        :config
-        (setq clomacs-httpd-default-port 18090)
-        (ejc-create-connection "connection-name"
-                :classpath      "~/.m2/repository/mysql/mysql-connector-java/8.0.17/
-                    mysql-connector-java-8.0.17.jar"
-                :connection-uri "jdbc:mysql://localhost/user?useSSL=false&user=root&password=pwd"
-                :separator      "</?\.*>" )
-        )
+         (setq clutch-connection-alist
+               '(("test"  . (:backend mysql
+                                   :host "127.0.0.1" :port 3306
+                                   :user "root" :password "****"
+                                   :database "test"
+                                   :connect-timeout 5
+                                   :read-idle-timeout 60))))
         (provide 'db-work)
 -   Write Sql file  
-    Before try to use ejc sql, firstly create a sql file which named with a suffix **.sql**, cause emacs will turn on the sql minor mode so that ejc-sql could works well. And then use `SPC e c` to connect a particular database which you have configurated. Emacs will popup a minibuffer listing candidates which show you the **connection-name**.  
+    Before try to use clutch , firstly create a sql file which named with a suffix **.sql**, cause emacs will turn on the clutch-mode so that clutch could works well. And then use `SPC e c` to connect a particular database which you have configurated. Emacs will popup a minibuffer listing candidates which show you the **connection-name**.  
     Secondarily, write your testing sql content which surrounded by a tag, cause we have configurated **:separator** by a syntax meaning tag in order to execute a single sql rather than to choose it.For sure you could make any comment with the tag&rsquo;s schema.  
     Further more, you could use delimiter sign for batch execution. the delimiter could customization by any character.  
     Finnaly, use `C-c C-c` to execute it. It&rsquo;s just execute the content which surrounded by a tag in your cusor.  
@@ -686,12 +755,11 @@ Thus windows user have to use eshell as a downgrade plan.<br />
         1     <SELECT name='select all org'>
         2     SELECT * FROM TABLE_ORG
         3     </SELECT>
-        4  
-        5     <SELECT>
-        6     delimiter ;
-        7     COMMENT ON COLUMN TABLE_ORG.PROJECT_CODE IS '项目编码';
-        8     COMMENT ON COLUMN TABLE_ORG.PERIOD IS '期间';
-        9     </SELECT>
+        4     <SELECT>
+        5     delimiter ;
+        6     COMMENT ON COLUMN TABLE_ORG.PROJECT_CODE IS '项目编码';
+        7     COMMENT ON COLUMN TABLE_ORG.PERIOD IS '期间';
+        8     </SELECT>
 -   key binding  
     
     <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
@@ -713,54 +781,33 @@ Thus windows user have to use eshell as a downgrade plan.<br />
     
     <tr>
     <td class="org-left">SPC e c</td>
-    <td class="org-left">ejc-connection</td>
+    <td class="org-left">clutch-connection</td>
     <td class="org-left">choose connection with ivy</td>
     </tr>
     
     <tr>
     <td class="org-left">C-c C-c</td>
-    <td class="org-left">ejc-execute</td>
+    <td class="org-left">my-clutch-exec-xml-inner</td>
     <td class="org-left">execute the sql</td>
+    </tr>
+    
+    <tr>
+    <td class="org-left">?</td>
+    <td class="org-left">clutch-dispatch</td>
+    <td class="org-left">clutch menu</td>
     </tr>
     </tbody>
     </table>
 
 
-## Emacs Rime
+<a id="orga2a4d4b"></a>
 
-[Emacs Rime](https://github.com/DogLooksGood/emacs-rime) which makes to embedding an input method be possible whthin the emacs.Emacs could benefit form the flexible configuration of [rime](https://rime.im/).  
-On macos it&rsquo;s required to install **Squirrel** which is one of rime&rsquo;s distribution. **Squirrel** is installed in your os system as a input method.  
-Note that the configuration of rime located at home/Library/Rime/. We want to sharing this configuration between Eamcs rime and os rime.  
-So there have a variable which named `rime-user-data-dir` , And another important variable is `rime-librime-root` which configed the librime location.  
+## Input method
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+[shift system input method on macos](https://neoemacs.com/posts/emacs_%E5%88%87%E6%8D%A2%E7%B3%BB%E7%BB%9F%E8%BE%93%E5%85%A5%E6%B3%95/)  
 
 
-<colgroup>
-<col  class="org-left" />
-
-<col  class="org-left" />
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">variable</td>
-<td class="org-left">required</td>
-</tr>
-
-<tr>
-<td class="org-left">rime-user-data-dir</td>
-<td class="org-left">true</td>
-</tr>
-
-<tr>
-<td class="org-left">rime-librime-root</td>
-<td class="org-left">true</td>
-</tr>
-</tbody>
-</table>
-
-[futher more rime readme](./modules/neo-emacs/rime/readme.md)  
-
+<a id="org51581c7"></a>
 
 ## Org mode
 
@@ -807,35 +854,16 @@ So there have a variable which named `rime-user-data-dir` , And another importan
         ln -s ~/org/org-roam/image any_where/image
 
 
-## Restclient
-
-Restclient provide a test suite for HTTP REST in Emacs.The official repository here [restclient.el](https://github.com/pashky/restclient.el).  
-Yea, a pretty old old project.Fortunately doom emacs have integrated it.We just need open it with `(rest +jq)`.  
-**+jq** makes restclient have the ability to parse a particular response which Content-Type equalable application/json.  
-The amazing feature is restclient support set variables or make a part of response being a variables which one could as a request part for another HTTP REST.  
-
-Here we take the value from results as a variables which named count.  
-
-    GET https://www.zhihu.com/api/v3/oauth/sms/supported_countries
-    -> jq-set-var :count .count
-
-> Only **jq-set-var** could works when the content-type equal to application/json MIME type  
-
-Fortunately we have solution for other mime type, it&rsquo;s restclient-set-var, you could use elisp to parse the response;  
-
-    GET https://www.baidu.com/sugrec
-    -> run-hook (restclient-set-var ":queryid" (cdr (assq 'queryid (json-read))))
-    Content-Type: application/x-www-form-urlencoded; charset=utf-8
-
-About the variables infomation in current buffer, we could use `C-c Tab` to show them.  
-
+<a id="orge90bfc3"></a>
 
 ## Verb
 
 Verb is a new package for http client,becase the restclient is out of date and the author no longger maintain it on github.Fortunately there have a alternative one named verb which is more powerful and customizable. Verb support url template which makes you change different environment more conveniently.Also verb supports variables and picture query and upload.In org mode start verb just use \`C-c C-r\` as a previous command,example \`C-c C-r C-f\` will execute http request with your config,So verb is really fancy right?  
 
 
-## iredis
+<a id="orgbcd501c"></a>
+
+## Iredis
 
 1.  install
 
@@ -857,6 +885,8 @@ Verb is a new package for http client,becase the restclient is out of date and t
         iredis -d wvp-test
         10.100.10.70:6379[7]> get VMP_MEDIA_SERVER:000000:zlm_fragment | jq .
 
+
+<a id="org97652c2"></a>
 
 ## Bookmark
 
@@ -897,6 +927,8 @@ Verb is a new package for http client,becase the restclient is out of date and t
     </table>
 
 
+<a id="org13c1d2a"></a>
+
 ## Elpa Offline
 
 rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa  
@@ -908,12 +940,16 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
+<a id="org584213a"></a>
+
 ## Vue
 
 as a full stack developer u need vue support, so here it comes.  
 
     npm install vls -g
 
+
+<a id="org73e5ae5"></a>
 
 ## startup workspace
 
@@ -924,9 +960,6 @@ You could customization startup inital workspace and their buffer.No need to ope
       (interactive)
       (+workspace/new " IDE")
       (find-file "yourexpect.java")
-      (+workspace/new " GPT")
-      (gptel "wangshenzhi/llama3-8b-chinese-chat-ollama-q8")
-      (switch-to-buffer "wangshenzhi/llama3-8b-chinese-chat-ollama-q8")
       (+workspace/new " SQL")
       (find-file "yourexpect.sql")
       (+workspace/new " HTTP")
@@ -936,12 +969,16 @@ You could customization startup inital workspace and their buffer.No need to ope
     (add-hook 'window-setup-hook #'open-my-workspaces)
 
 
+<a id="org5ac449c"></a>
+
 # About the Release
 
 This step can help you compile neo emacs faster,It only takes 3 minutes to install using the release package on my Mac laptop. Otherwise it would take me 15 minutes. The release installation package is a better choice for users with unstable networks and those who need to frequently reinstall neoemacs.  
 Release package contains the git repository of related dependencies.The compiled directory files are removed and the .git directory is retained,So that you can perform subsequent upgrades.  
 I will update the Release package once a month, And test them in advance and revise them for compatibility with upstream projects.  
 
+
+<a id="org60f8f7f"></a>
 
 # Customize Farther
 
