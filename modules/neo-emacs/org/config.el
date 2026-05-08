@@ -66,7 +66,7 @@
   (setq org-log-done 'time)
   (setq org-display-custom-times t)
   (setq org-time-stamp-formats '("<%Y-%m-%d %H:%M>" . "<%Y-%m-%d>"))
-
+  (setq org-table-shrunk-column-indicator "・")
   (setq org-todo-keywords
         '((sequence "TODO" "DOING" "BLOCK" "TEST" "DONE" "REPORT")))
   (+org/close-all-folds)

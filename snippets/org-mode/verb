@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
-# name: vb
-# key: vb
+# name: verb
+# key: verb
 # --
 #+begin_src verb -n :wrap src ob-verb-response
 
