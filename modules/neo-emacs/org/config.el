@@ -73,6 +73,11 @@
   (verb-mode)
   (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
 
+(map! :after org
+      :map evil-org-mode-map
+      :n "RET" #'org-table-edit-field)
+
+
 ;; (add-to-list 'load-path (expand-file-name (concat doom-user-dir "neoemacs/company-english-helper")))
 ;; (require 'company-english-helper)
 
@@ -241,3 +246,9 @@
 ;(org-babel-do-load-languages
 ; 'org-babel-load-languages
 ; '((gnuplot . t)))
+
+(advice-add 'org-ctrl-c-ctrl-c :after
+            (lambda (&rest _)
+              (when (org-at-table-p)
+                (org-table-shrink))))  ; 不传参数，或传 nil
+

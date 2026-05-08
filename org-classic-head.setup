@@ -3,6 +3,7 @@
 #+HTML_HEAD: <script src  = "https://cdn.minexiot.com/file/ems/tex-mml-chtml.js"></script>
 #+HTML_HEAD: <link   href = "https://cdn.minexiot.com/file/ems/base.css" rel="stylesheet" type="text/css"></link>
 #+OPTIONS: prop:nil timestamp:t \n:t ^:nil f:t toc:t author:t num:t H:2
+#+STARTUP: shrink
 #+LATEX_COMPILER: xelatex
 #+LATEX_CLASS: elegantpaper
 #+latex:\newpage
