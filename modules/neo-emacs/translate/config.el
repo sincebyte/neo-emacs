@@ -9,4 +9,4 @@
   (setq gt-default-translator
       (gt-translator :engines (gt-youdao-dict-engine)
                      :render (list (gt-insert-render  :if 'not-word )
-                                   (gt-posframe-pop-render :if 'word     )))))
+                                   (gt-render :if 'word     )))))
