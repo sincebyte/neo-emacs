@@ -4,4 +4,11 @@
 # --
 #+begin_src verb -n :wrap src ob-verb-response
 
+  POST /
+  Content-Type: application/json
+
+  {
+    "lng": 103.468353,
+    "lat": 27.983563
+  }
 #+end_src

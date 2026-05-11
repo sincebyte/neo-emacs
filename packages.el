@@ -88,6 +88,7 @@
 
 
 
+
 ;; (package! aider               )
 
 
@@ -104,6 +105,7 @@
 (package! tramp-rpc :recipe (:host github :repo "ArthurHeymans/emacs-tramp-rpc"))
 (package! agent-shell)
 (package! clutch :recipe (:host github :repo "LuciusChen/clutch" :branch "main"))
+(package! neoscroll :recipe (:host github :repo "0WD0/neoscroll.el" :branch "master"))
 ;; (package! agent-shell  :recipe (:host github :repo "xenodium/agent-shell") :pin "011d56841d813b7c211549a4e616d85c61ce6e46")
 
 
