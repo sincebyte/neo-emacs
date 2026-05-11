@@ -1,9 +1,10 @@
 ;;; neoemacs/org/config.el -*- lexical-binding: t; -*-
 (setq
  org-display-custom-times      t
- org-plantuml-executable-path  (expand-file-name (concat doom-user-dir "neoemacs/plantuml.jar"))
+ plantuml-executable-path      (expand-file-name (concat doom-user-dir "neoemacs/plantuml.jar"))
  org-plantuml-args             '("-headless")
- org-plantuml-jar-path         (expand-file-name (concat doom-user-dir "neoemacs/plantuml.jar"))
+ plantuml-jar-path             (expand-file-name (concat doom-user-dir "neoemacs/plantuml.jar"))
+ plantuml-default-exec-mode    'jar
  dot-exec-path                 "/opt/homebrew/bin/dot"                                  ;; dot           exec path
  org-roam-graph-executable     dot-exec-path
  org-directory                 "~/org"
