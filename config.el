@@ -305,8 +305,8 @@
 
 (use-package! msgpack)
 (use-package! tramp-rpc)
-;; (setq tramp-rpc-deploy-prefer-build t)
-;; (setq tramp-rpc-deploy-local-cache-directory "~/.doom.d/neoemacs/tramp-rpc-binaries")
+(setq tramp-rpc-deploy-git-build-policy 'release)
+(setq tramp-rpc-deploy-local-cache-directory "~/.doom.d/neoemacs/tramp-rpc-binaries")
 
 
 ;; (add-to-list 'load-path "/Users/van/.doom.d/neoemacs/animation.el/")
@@ -316,3 +316,14 @@
 (add-to-list 'load-path "/path/to/clutch")
 (require 'clutch)
 
+(use-package! neoscroll
+  :config
+  ;; Configure smooth scrolling parameters
+  (setq neoscroll-easing 'quadratic)
+  (setq neoscroll-scroll-duration 0.0001)
+  (setq neoscroll-page-duration 0.0001)
+  (setq neoscroll-line-duration 0.0001)
+  (setq neoscroll-line-step 1)  ; Scroll 3 lines with C-y/C-e
+
+  ;; Enable neoscroll mode
+  (neoscroll-mode 1))
