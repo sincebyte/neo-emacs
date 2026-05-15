@@ -72,6 +72,7 @@
         '((sequence "TODO" "DOING" "BLOCK" "TEST" "DONE" "REPORT")))
   (+org/close-all-folds)
   (verb-mode)
+  (remove-hook 'org-mode-hook #'org-lint)
   (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
 
 (map! :after org

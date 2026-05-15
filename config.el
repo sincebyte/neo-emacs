@@ -327,3 +327,12 @@
 
   ;; Enable neoscroll mode
   (neoscroll-mode 1))
+(after! neoscroll
+  (advice-add
+   'neoscroll--scroll-one-step
+   :around
+   (lambda (fn &rest args)
+     (condition-case nil
+         (apply fn args)
+       ((beginning-of-buffer end-of-buffer)
+        nil)))))
