@@ -71,6 +71,9 @@
   (setq org-todo-keywords
         '((sequence "TODO" "DOING" "BLOCK" "TEST" "DONE" "REPORT")))
   (+org/close-all-folds)
+  (setq org-element-use-cache t)
+  (setq org-element-cache-persistent t)
+  (setq flycheck-disabled-checkers '(org-lint))
   (verb-mode)
   (remove-hook 'org-mode-hook #'org-lint)
   (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
@@ -253,4 +256,3 @@
             (lambda (&rest _)
               (when (org-at-table-p)
                 (org-table-shrink))))  ; 不传参数，或传 nil
-
