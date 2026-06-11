@@ -103,3 +103,28 @@
     (setq cursor-type
           (if (evil-insert-state-p) 'bar 'box))))
 (add-hook 'post-command-hook #'my-vterm-evil-cursor)
+
+(after! quickrun
+  (defun my/quickrun-eshell-keep-editable ()
+    "quickrun-shell 结束后保持 eshell buffer 可编辑，保留 q 返回源窗口。"
+    (when (derived-mode-p 'eshell-mode)
+      (read-only-mode -1)
+      (use-local-map eshell-mode-map)
+      ;; 使用 quickrun 的退出函数，或者自定义
+      (local-set-key (kbd "q") 
+                     (lambda ()
+                       (interactive)
+                       (kill-buffer (current-buffer))
+                       (quickrun--eshell-window-restore-original-window)))))
+
+  (advice-add 'quickrun--eshell-post-hook :after #'my/quickrun-eshell-keep-editable))
+
+(after! quickrun
+  (defun my/quickrun-eshell-keep-editable ()
+    (when (derived-mode-p 'eshell-mode)
+      (read-only-mode -1)
+      (use-local-map eshell-mode-map)
+      (evil-insert-state)  ; 进入 insert mode
+      (local-set-key (kbd "q") #'quickrun--eshell-window-restore)))
+
+  (advice-add 'quickrun--eshell-post-hook :after #'my/quickrun-eshell-keep-editable))

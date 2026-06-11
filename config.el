@@ -290,7 +290,6 @@
   (if (file-exists-p lfile)
       (load lfile)))
 
-; quickrun plug
 (after! evil
   (defun +evil-normal-in-eshell-on-window-change (_win)
     "当切换到 eshell 窗口时，自动进入 evil normal 状态。"
@@ -315,24 +314,3 @@
 ;; (metal-loader-load "/Users/van/.doom.d/neoemacs/animation.el/glitch-effect.metallib")
 (add-to-list 'load-path "/path/to/clutch")
 (require 'clutch)
-
-(use-package! neoscroll
-  :config
-  ;; Configure smooth scrolling parameters
-  (setq neoscroll-easing 'quadratic)
-  (setq neoscroll-scroll-duration 0.0001)
-  (setq neoscroll-page-duration 0.0001)
-  (setq neoscroll-line-duration 0.0001)
-  (setq neoscroll-line-step 1)  ; Scroll 3 lines with C-y/C-e
-
-  ;; Enable neoscroll mode
-  (neoscroll-mode 1))
-(after! neoscroll
-  (advice-add
-   'neoscroll--scroll-one-step
-   :around
-   (lambda (fn &rest args)
-     (condition-case nil
-         (apply fn args)
-       ((beginning-of-buffer end-of-buffer)
-        nil)))))

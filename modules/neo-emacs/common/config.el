@@ -9,6 +9,13 @@
       byte-compile-warnings '(not free-vars unresolved callargs redefine obsolete noruntime cl-functions interactive-only make-local))
 
 (prefer-coding-system 'utf-8-unix)
+(set-default-coding-systems 'utf-8-unix)
+(set-terminal-coding-system 'utf-8-unix)
+(set-keyboard-coding-system 'utf-8-unix)
+(setq file-coding-system-alist
+      '(("\\.sql\\'" . utf-8)
+        ("\\.txt\\'" . utf-8)
+        ("" . utf-8)))
 (setq-default buffer-file-coding-system 'utf-8-unix)
 ;; (global-undo-tree-mode)
 ;; (add-hook 'evil-local-mode-hook 'turn-on-undo-tree-mode)
