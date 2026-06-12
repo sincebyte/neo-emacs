@@ -54,19 +54,20 @@ Strips trailing line comments and drops comment-only or blank lines."
 (defun my-clutch-exec-xml-inner ()
   "Execute SQL inside the XML tag at point, ignoring `--` comments."
   (interactive)
-  (save-excursion
-    (re-search-backward "<[^/][^>]*>")
-    (search-forward ">")
-    (let ((beg (point)))
-      (re-search-forward "</[^>]+>")
-      (let* ((end (match-beginning 0))
-             (raw (buffer-substring-no-properties beg end))
-             (sql (string-trim (my-clutch-sql-filter-comments raw))))
-        (when (string-empty-p sql)
-          (user-error "No SQL in tag (comments filtered)"))
-        (clutch--ensure-connection)
-        (clutch-execute sql))))
-  (other-window 1))
+  (let ((sql (save-excursion
+               (re-search-backward "<[^/][^>]*>")
+               (search-forward ">")
+               (let ((beg (point)))
+                 (re-search-forward "</[^>]+>")
+                 (string-trim
+                  (my-clutch-sql-filter-comments
+                   (buffer-substring-no-properties beg (match-beginning 0))))))))
+    (when (string-empty-p sql)
+      (user-error "No SQL in tag (comments filtered)"))
+    (clutch--ensure-connection)
+    (clutch-execute sql)
+    (when-let* ((win (clutch--result-window)))
+      (select-window win))))
 (map! :after clutch
       :map clutch-mode-map
       :n "C-c C-c" #'my-clutch-exec-xml-inner)
