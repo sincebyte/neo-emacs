@@ -23,15 +23,50 @@
 (map! :after clutch
       :map clutch-mode-map
       :vn "?" #'clutch-dispatch)
+(defun my-clutch-sql-strip-line-trailing-comment (line)
+  "Strip trailing `--` comment from LINE, respecting single-quoted strings."
+  (let ((pos 0)
+        (len (length line))
+        (comment-start nil))
+    (while (and (< pos len) (not comment-start))
+      (if-let* ((skip (clutch-db-sql-skip-literal-or-comment line pos)))
+          (if (and (= (aref line pos) ?-)
+                   (< (1+ pos) len)
+                   (= (aref line (1+ pos)) ?-))
+              (setq comment-start pos)
+            (setq pos skip))
+        (setq pos (1+ pos))))
+    (if comment-start
+        (string-trim-right (substring line 0 comment-start))
+      line)))
+
+(defun my-clutch-sql-filter-comments (text)
+  "Remove SQL `--` comments from TEXT.
+Strips trailing line comments and drops comment-only or blank lines."
+  (string-join
+   (seq-filter
+    (lambda (line)
+      (not (string-empty-p (string-trim line))))
+    (mapcar #'my-clutch-sql-strip-line-trailing-comment
+            (split-string text "\n")))
+   "\n"))
+
 (defun my-clutch-exec-xml-inner ()
+  "Execute SQL inside the XML tag at point, ignoring `--` comments."
   (interactive)
   (save-excursion
     (re-search-backward "<[^/][^>]*>")
     (search-forward ">")
     (let ((beg (point)))
       (re-search-forward "</[^>]+>")
-      (clutch-execute-region beg (match-beginning 0))))
-      (other-window 1))
+      (let* ((end (match-beginning 0))
+             (raw (buffer-substring-no-properties beg end))
+             (sql (string-trim (my-clutch-sql-filter-comments raw))))
+        (when (string-empty-p sql)
+          (user-error "No SQL in tag (comments filtered)"))
+        (clutch--ensure-connection)
+        (clutch-execute sql))))
+  (other-window 1))
 (map! :after clutch
       :map clutch-mode-map
       :n "C-c C-c" #'my-clutch-exec-xml-inner)
