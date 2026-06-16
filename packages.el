@@ -51,6 +51,7 @@
 
 (unpin!   npm-mode            )
 (package! org-appear          )
+(package! ob-mermaid           )
 (package! org-roam-ui         )
 ;; (package! rime                )
 ;; (package! liberime            )

@@ -6,6 +6,9 @@
  plantuml-jar-path             (expand-file-name (concat doom-user-dir "neoemacs/plantuml.jar"))
  plantuml-default-exec-mode    'jar
  dot-exec-path                 "/opt/homebrew/bin/dot"                                  ;; dot           exec path
+ mermaid-cli-exec-path         (or (executable-find "mmdc")
+                                  "/opt/homebrew/bin/mmdc"
+                                  "/usr/local/bin/mmdc")
  org-roam-graph-executable     dot-exec-path
  org-directory                 "~/org"
  org-roam-directory            "~/org/org-roam"
@@ -248,9 +251,16 @@
   ;; (add-hook 'lsp-mode-hook 'focus-mode)
   (add-to-list 'focus-mode-to-thing '((org-mode . org-element) (lsp-mode . defun))))
 
-;(org-babel-do-load-languages
-; 'org-babel-load-languages
-; '((gnuplot . t)))
+(use-package! ob-mermaid
+  :defer t
+  :after org
+  :config
+  (setq ob-mermaid-cli-path mermaid-cli-exec-path
+        ob-mermaid-default-config-file
+        (expand-file-name (concat doom-user-dir "neoemacs/mermaid-config.json")))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((mermaid . t))))
 
 (advice-add 'org-ctrl-c-ctrl-c :after
             (lambda (&rest _)

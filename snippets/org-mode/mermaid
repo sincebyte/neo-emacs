@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: mermaid
+# key: mermaid
+# --
+#+BEGIN_SRC mermaid :file ./image/diagram.png
+flowchart LR
+    A --> B
+#+END_SRC

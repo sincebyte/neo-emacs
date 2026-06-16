@@ -1,7 +1,10 @@
 (defun doom-dashboard-widget-footer () "For empty element." (insert ""))
 (setq fancy-splash-image (concat doom-user-dir "images/logo.png"))
 (set-default 'truncate-lines nil   )
-(setq-default with-editor-emacsclient-executable "emacsclient")
+(after! with-editor
+  (setq with-editor-emacsclient-executable
+        (or (with-editor-locate-emacsclient)
+            "/opt/homebrew/opt/emacs-plus@31/bin/emacsclient")))
 
 (global-set-key (kbd "<RET>" ) 'evil-ret )
 
