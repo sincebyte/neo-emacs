@@ -56,6 +56,8 @@
   (add-to-list 'corfu--frame-parameters '(vertical-scroll-bars . nil))
   (setq corfu-popupinfo-delay nil        ; 禁止延迟触发
         corfu-popupinfo-hide t           ; 隐藏可能残留的弹窗
+        corfu-auto-delay          0.1
+        corfu-auto-prefix         1
         corfu-right-margin-width  0.3
         corfu-border-width        2
         corfu-auto                t
@@ -459,3 +461,5 @@ Example: \\u6587 -> 文"
       (user-error "未能解析 Mapper 方法名，请将光标放在方法声明或参数列表附近"))
     (+java-jump-to-mapper-xml (expand-file-name project-root) method-name)))
 
+(after! lsp-ruby-lsp
+  (setq lsp-ruby-lsp-use-bundler t))

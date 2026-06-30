@@ -205,3 +205,18 @@
 
 ;; 如果问题频繁出现，完全禁用某些 overlay 功能
 (setq dired-hide-details-mode nil)
+
+;; (setq insert-directory-program
+;;       (or (executable-find "gls")
+;;           "/opt/homebrew/bin/gls"))
+;; (setq dired-use-ls-dired t)
+
+(defun my/dirvish-subtree-toggle ()
+  (interactive)
+  (let ((file (dired-get-filename nil t)))
+    (when (and file
+               (file-directory-p file))
+      (dirvish-subtree-toggle))))
+
+(map! :map dirvish-mode-map
+      "<tab>" #'my/dirvish-subtree-toggle)

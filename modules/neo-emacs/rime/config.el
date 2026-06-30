@@ -1,17 +1,13 @@
 ;;; neoemacs/rime/config.el -*- lexical-binding: t; -*-
 (defun my/mac-switch-to-abc ()
   (interactive)
-  (start-process "hs-abc" nil "hs" "-c" "hs.keycodes.currentSourceID(\"com.apple.keylayout.ABC\")"))
+  (start-process "hs-abc" nil "/opt/homebrew/bin/hs" "-c" "hs.keycodes.currentSourceID(\"com.apple.keylayout.ABC\")"))
 
-;; (defun my/mac-switch-to-rime ()
-;;   (interactive)
-;;   (start-process "hs-abc" nil "hs" "-c" "hs.keycodes.currentSourceID(\"com.apple.keylayout.ABC\")")
-;;   (start-process "hs-rime" nil "hs" "-c" "hs.keycodes.currentSourceID(\"im.rime.inputmethod.Squirrel.Hans\")"))
 (defun my/mac-switch-to-rime ()
   (interactive)
-  (start-process "hs-abc" nil "hs" "-c" "hs.keycodes.currentSourceID(\"com.apple.keylayout.ABC\")")
+  (start-process "hs-abc" nil "/opt/homebrew/bin/hs" "-c" "hs.keycodes.currentSourceID(\"com.apple.keylayout.ABC\")")
   (run-at-time 0.1 nil (lambda ()
-     (start-process "hs-rime" nil "hs" "-c" "hs.keycodes.currentSourceID(\"im.rime.inputmethod.Squirrel.Hans\")"))))
+     (start-process "hs-rime" nil "/opt/homebrew/bin/hs" "-c" "hs.keycodes.currentSourceID(\"im.rime.inputmethod.Squirrel.Hans\")"))))
 
 (defun my/switch-input-based-on-prev-char ()
   "根据光标前一个字符决定输入法。
