@@ -302,6 +302,7 @@
 (require 'acp)
 (require 'agent-shell)
 
+(use-package! redis)
 (use-package! msgpack)
 (use-package! tramp-rpc)
 (setq tramp-rpc-deploy-git-build-policy 'release)
