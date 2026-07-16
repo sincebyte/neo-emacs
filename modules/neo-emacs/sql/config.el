@@ -17,6 +17,7 @@
       clutch-result-max-rows 100
       clutch-jdbc-rpc-timeout-seconds 15)
 (add-to-list 'auto-mode-alist '("\\.sql\\'" . clutch-mode))
+(add-to-list 'auto-mode-alist '("\\.redis\\'" . clutch-redis-mode))
 (map! :after clutch
       :map clutch-mode-map
       :n "SPC e l" #'clutch-connect)

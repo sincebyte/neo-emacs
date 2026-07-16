@@ -98,8 +98,8 @@
        (eval +overlay)     ; run code, run (also, repls)
        ;;gist              ; interacting with github gists
        lookup              ; navigate your code and its documentation
-       lsp                 ; M-x vscode
-       magit             ; a git porcelain for Emacs
+       (lsp +eglot)        ; M-x vscode
+       magit              ; a git porcelain for Emacs
        ;;make              ; run make tasks from Emacs
        ;;pass              ; password manager for nerds
        ;;pdf               ; pdf enhancements
@@ -194,7 +194,8 @@
 
        :neo-emacs
         frontend            ; frontend setting
-        java                ; lsp java setting
+        ;; java             ; lsp java setting
+        eglot               ; lsp java setting
         shell               ; shell config for vterm & eshell
         common              ; neoemacs common setting
         org                 ; neoemacs org setting

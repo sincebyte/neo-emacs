@@ -100,9 +100,9 @@
   (if (derived-mode-p 'java-mode 'java-ts-mode)
       (progn
         (unless (fboundp '+java-mapper-method-name-at-point)
-          (user-error "+java-mapper-method-name-at-point 未定义，请确保 neo-emacs/java 已加载"))
+          (user-error "+java-mapper-method-name-at-point 未定义，请确保 neo-emacs/eglot 已加载"))
         (unless (fboundp '+java-jump-to-mapper-xml)
-          (user-error "+java-jump-to-mapper-xml 未定义，请确保 neo-emacs/java 已加载"))
+          (user-error "+java-jump-to-mapper-xml 未定义，请确保 neo-emacs/eglot 已加载"))
         (let* ((java-file (buffer-file-name))
                (project-root
                 (or (locate-dominating-file java-file "pom.xml")
