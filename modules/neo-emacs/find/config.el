@@ -115,6 +115,7 @@
             (user-error "未找到项目根目录（pom.xml / build.gradle）"))
           (unless (and method-name (> (length method-name) 0))
             (user-error "未能解析 Mapper 方法名，请将光标放在方法声明或参数列表附近"))
+          (better-jumper-set-jump)
           (+java-jump-to-mapper-xml (expand-file-name project-root) method-name)))
     (let* ((line-start (line-beginning-position))
          (line-end (line-end-position))
@@ -176,6 +177,7 @@
           (if matching-files
               (cond
                ((= (length matching-files) 1)
+                (better-jumper-set-jump)
                 (find-file (expand-file-name (car matching-files) project-root))
                 (when line-number
                   (goto-char (point-min))
@@ -187,6 +189,7 @@
                            "")))
                ((> (length matching-files) 1)
                 (let ((selected-file (completing-read "Select file from matches: " matching-files)))
+                  (better-jumper-set-jump)
                   (find-file (expand-file-name selected-file project-root))
                   (when line-number
                     (goto-char (point-min))
