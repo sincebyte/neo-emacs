@@ -40,6 +40,7 @@
       :map evil-normal-state-map
       :ne "K" #'+workspace/switch-right)
 
+(save-place-mode 1)
 (menu-bar-mode -1)
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
@@ -60,3 +61,4 @@
                (if (and (region-active-p) end-line (> end-line start-line))
                    (format "%s:%d,%d" filename start-line end-line)
                  (format "%s:%d" filename start-line))))))
+
