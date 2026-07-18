@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2026-07-17 Fri 16:02 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Eglot for Java: jdtls, Lombok, and Jumping into Third-Party Source</title>
+<meta name="author" content="van" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-c:before { content: 'C'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'JavaScript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<script src  = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src  = "https://cdn.minexiot.com/file/ems/scroll.js"></script>
+<script src  = "https://cdn.minexiot.com/file/ems/tex-mml-chtml.js"></script>
+<link   href = "https://cdn.minexiot.com/file/ems/base.css" rel="stylesheet" type="text/css"></link>
+</head>
+<body>
+<div id="preamble" class="status">
+<p>Made ✐︎ by 
+</div>
+<div id="content" class="content">
+<h1 class="title">Eglot for Java: jdtls, Lombok, and Jumping into Third-Party Source
+<br />
+<span class="subtitle">How neo-emacs wires Eclipse JDT LS under Eglot</span>
+</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgeb367bb">1. Eglot for Java</a>
+<ul>
+<li><a href="#org04ea874">1.1. What&rsquo;s Eglot?</a></li>
+<li><a href="#orgf57357a">1.2. Eglot workflow</a></li>
+<li><a href="#org8a9e396">1.3. Install jdtls</a></li>
+<li><a href="#org9d57874">1.4. Jumping into third-party / JDK source</a></li>
+<li><a href="#org21da994">1.5. Completion with Corfu</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgeb367bb" class="outline-2">
+<h2 id="orgeb367bb"><span class="section-number-2">1.</span> Eglot for Java</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+This note covers how neo-emacs runs Java under Eglot: picking jdtls, installing it, and making go-to-definition work for JDK / Maven classes that only exist as <code>.class</code> files.<br />
+</p>
+</div>
+<div id="outline-container-org04ea874" class="outline-3">
+<h3 id="org04ea874"><span class="section-number-3">1.1.</span> What&rsquo;s Eglot?</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Eglot is Emacs&rsquo; built-in LSP client. It does not embed language intelligence itself; it starts an external language server, speaks JSON-RPC with it, and maps the replies onto Emacs commands (<code>xref</code>, diagnostics, code actions, completion, and so on).<br />
+</p>
+
+<p>
+For Java that server is almost always <a href="https://github.com/eclipse/eclipse.jdt.ls">Eclipse JDT Language Server</a> (the <code>jdtls</code> launcher). Eglot only needs a command on <code>PATH</code> and an entry in <code>eglot-server-programs</code>.<br />
+</p>
+</div>
+</div>
+<div id="outline-container-orgf57357a" class="outline-3">
+<h3 id="orgf57357a"><span class="section-number-3">1.2.</span> Eglot workflow</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+<code>eglot-server-programs</code> maps major modes to server launch commands. For Java:<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp"><code>((<span style="color: #ab98b5;">java-mode</span> java-ts-mode)
+ . ,(<span style="color: #ab98b5;">eglot-alternatives</span> <span style="color: #80bcb6;">'</span>(<span style="color: #6fb593;">"jdtls"</span> <span style="color: #6fb593;">"java-language-server"</span>)))
+</code></pre>
+</div>
+
+<p>
+<code>eglot-alternatives</code> tries each command in order; the first executable that exists wins. In practice that means <code>jdtls</code>.<br />
+</p>
+
+<p>
+Opening a Java buffer then looks like this:<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-txt"><code>open Java file
+      │
+      ▼
+java-mode / java-ts-mode
+      │
+      ▼
+eglot-ensure
+      │
+      ▼
+look up eglot-server-programs
+      │
+      ▼
+resolve jdtls
+      │
+      ▼
+start jdtls process
+      │
+      ▼
+LSP initialize / connect
+</code></pre>
+</div>
+
+<p>
+If <code>jdtls</code> is missing from <code>PATH</code>, Eglot has nothing to start. Fix the install before debugging Emacs config.<br />
+</p>
+</div>
+</div>
+<div id="outline-container-org8a9e396" class="outline-3">
+<h3 id="org8a9e396"><span class="section-number-3">1.3.</span> Install jdtls</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+There are many ways to get jdtls (package managers, <code>lsp-java</code>&rsquo;s downloader, etc.). I prefer the <a href="https://download.eclipse.org/jdtls/">official distribution</a> so the version is explicit.<br />
+</p>
+
+<ol class="org-ol">
+<li>Download and unpack the archive somewhere stable, e.g. <code>/Users/van/lsp-java</code>.<br /></li>
+<li>Put its <code>bin</code> directory on <code>PATH</code>. In fish:<br /></li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-fish"><code>set PATH /Users/van/lsp-java/bin $PATH
+</code></pre>
+</div>
+
+<p>
+The <code>jdtls</code> entry point is a small Python script that eventually launches the OSGi-based language server JAR under a JVM. Two things usually need editing on a real machine:<br />
+</p>
+
+<ul class="org-ul">
+<li><b>JAVA_HOME for the server itself.</b> jdtls wants a recent JDK. Point the launcher at one you control.<br /></li>
+<li><b>Lombok.</b> Most Spring / enterprise codebases use it; without <code>-javaagent</code> on the server JVM, generated accessors never show up in completion or navigation.<br /></li>
+</ul>
+
+<p>
+A minimal wrapper around the stock launcher:<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><code><span style="color: #545c5e;">#!/usr/bin/env python3</span>
+<span style="color: #4d9391;">import</span> <span style="color: #968cc7;">importlib</span>.<span style="color: #968cc7;">util</span>
+<span style="color: #4d9391;">import</span> <span style="color: #968cc7;">sys</span>
+<span style="color: #4d9391;">import</span> <span style="color: #968cc7;">os</span>
+
+<span style="color: #968cc7;">os</span>.<span style="color: #968cc7;">environ</span><span style="color: #6bd9db;">[</span><span style="color: #6fb593;">"JAVA_HOME"</span><span style="color: #6bd9db;">]</span> <span style="color: #9d81ba;">=</span> <span style="color: #6fb593;">"/Users/van/soft/jdk/jdk-25.0.2.jdk/Contents/Home"</span>
+<span style="color: #968cc7;">os</span>.<span style="color: #968cc7;">environ</span><span style="color: #6bd9db;">[</span><span style="color: #6fb593;">"PATH"</span><span style="color: #6bd9db;">]</span> <span style="color: #9d81ba;">=</span> <span style="color: #968cc7;">os</span>.<span style="color: #968cc7;">path</span>.<span style="color: #80bcb6;">join</span><span style="color: #6bd9db;">(</span><span style="color: #968cc7;">os</span>.<span style="color: #968cc7;">environ</span><span style="color: #6bd9db;">[</span><span style="color: #6fb593;">"JAVA_HOME"</span><span style="color: #6bd9db;">]</span>, <span style="color: #6fb593;">"bin"</span><span style="color: #6bd9db;">)</span> <span style="color: #9d81ba;">+</span> <span style="color: #6fb593;">":"</span> <span style="color: #9d81ba;">+</span> <span style="color: #968cc7;">os</span>.<span style="color: #968cc7;">environ</span><span style="color: #6bd9db;">[</span><span style="color: #6fb593;">"PATH"</span><span style="color: #6bd9db;">]</span>
+
+<span style="color: #968cc7;">script_dir</span> <span style="color: #9d81ba;">=</span> <span style="color: #968cc7;">os</span>.<span style="color: #968cc7;">path</span>.<span style="color: #80bcb6;">dirname</span><span style="color: #6bd9db;">(</span><span style="color: #968cc7;">os</span>.<span style="color: #968cc7;">path</span>.<span style="color: #80bcb6;">realpath</span><span style="color: #6bd9db;">(</span><span style="color: #968cc7;">__file__</span><span style="color: #6bd9db;">))</span>
+<span style="color: #968cc7;">file_path</span> <span style="color: #9d81ba;">=</span> <span style="color: #968cc7;">os</span>.<span style="color: #968cc7;">path</span>.<span style="color: #80bcb6;">join</span><span style="color: #6bd9db;">(</span><span style="color: #968cc7;">script_dir</span>, <span style="color: #6fb593;">"jdtls.py"</span><span style="color: #6bd9db;">)</span>
+
+<span style="color: #968cc7;">spec</span> <span style="color: #9d81ba;">=</span> <span style="color: #968cc7;">importlib</span>.<span style="color: #968cc7;">util</span>.<span style="color: #80bcb6;">spec_from_file_location</span><span style="color: #6bd9db;">(</span><span style="color: #6fb593;">"jdtls"</span>, <span style="color: #968cc7;">file_path</span><span style="color: #6bd9db;">)</span>
+<span style="color: #968cc7;">jdtls</span> <span style="color: #9d81ba;">=</span> <span style="color: #968cc7;">importlib</span>.<span style="color: #968cc7;">util</span>.<span style="color: #80bcb6;">module_from_spec</span><span style="color: #6bd9db;">(</span><span style="color: #968cc7;">spec</span><span style="color: #6bd9db;">)</span>
+<span style="color: #968cc7;">sys</span>.<span style="color: #968cc7;">modules</span><span style="color: #6bd9db;">[</span><span style="color: #6fb593;">"jdtls"</span><span style="color: #6bd9db;">]</span> <span style="color: #9d81ba;">=</span> <span style="color: #968cc7;">jdtls</span>
+<span style="color: #968cc7;">spec</span>.<span style="color: #968cc7;">loader</span>.<span style="color: #80bcb6;">exec_module</span><span style="color: #6bd9db;">(</span><span style="color: #968cc7;">jdtls</span><span style="color: #6bd9db;">)</span>
+
+<span style="color: #968cc7;">jdtls</span>.<span style="color: #80bcb6;">main</span><span style="color: #6bd9db;">(</span><span style="color: #968cc7;">sys</span>.<span style="color: #968cc7;">argv</span><span style="color: #6bd9db;">[</span><span style="color: #cd5c60;">1</span>:<span style="color: #6bd9db;">])</span>
+</code></pre>
+</div>
+
+<p>
+Inside <code>jdtls.py</code>, the JVM argument list is where Lombok belongs:<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><code><span style="color: #968cc7;">exec_args</span> <span style="color: #9d81ba;">=</span> <span style="color: #6bd9db;">[</span><span style="color: #6fb593;">"-Declipse.application=org.eclipse.jdt.ls.core.id1"</span>,
+             <span style="color: #6fb593;">"-Dosgi.bundles.defaultStartLevel=4"</span>,
+             <span style="color: #6fb593;">"-Declipse.product=org.eclipse.jdt.ls.core.product"</span>,
+             <span style="color: #6fb593;">"-Dosgi.checkConfiguration=true"</span>,
+             <span style="color: #6fb593;">"-Dosgi.sharedConfiguration.area="</span> <span style="color: #9d81ba;">+</span> <span style="color: #968cc7;">shared_config_path</span>,
+             <span style="color: #6fb593;">"-Dosgi.sharedConfiguration.area.readOnly=true"</span>,
+             <span style="color: #6fb593;">"-Dosgi.configuration.cascaded=true"</span>,
+             <span style="color: #6fb593;">"-Xms1G"</span>,
+             <span style="color: #6fb593;">"--add-modules=ALL-SYSTEM"</span>,
+             <span style="color: #6fb593;">"-javaagent:/Users/van/.doom.d/neoemacs/lombok1.18.38.jar"</span>,
+             <span style="color: #6fb593;">"--add-opens"</span>, <span style="color: #6fb593;">"java.base/java.util=ALL-UNNAMED"</span>,
+             <span style="color: #6fb593;">"--add-opens"</span>, <span style="color: #6fb593;">"java.base/java.lang=ALL-UNNAMED"</span><span style="color: #6bd9db;">]</span> \
+            <span style="color: #9d81ba;">+</span> <span style="color: #968cc7;">known_args</span>.<span style="color: #968cc7;">jvm_arg</span> \
+            <span style="color: #9d81ba;">+</span> <span style="color: #6bd9db;">[</span><span style="color: #6fb593;">"-jar"</span>, <span style="color: #968cc7;">jar_path</span>,
+               <span style="color: #6fb593;">"-data"</span>, <span style="color: #968cc7;">known_args</span>.<span style="color: #968cc7;">data</span><span style="color: #6bd9db;">]</span> \
+            <span style="color: #9d81ba;">+</span> <span style="color: #968cc7;">args</span>
+</code></pre>
+</div>
+
+<p>
+After that, <code>which jdtls</code> should succeed and <code>M-x eglot</code> in a Java buffer should connect without complaining about a missing server.<br />
+</p>
+</div>
+</div>
+<div id="outline-container-org9d57874" class="outline-3">
+<h3 id="org9d57874"><span class="section-number-3">1.4.</span> Jumping into third-party / JDK source</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+Plain Eglot + jdtls is enough for project sources. It falls short the moment you jump to something that lives only inside a JAR — <code>String</code>, <code>List</code>, Guava, Spring, anything without a local <code>.java</code> on disk.<br />
+</p>
+
+<p>
+jdtls still knows the type. On <code>textDocument/definition</code> it returns a custom URI:<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-txt"><code>jdt://contents/rt.jar/java.lang/String.class?...
+</code></pre>
+</div>
+
+<p>
+Emacs&rsquo; default file handlers do not understand <code>jdt://</code>. Eglot opens the location as if it were a normal path, so go-to-definition appears broken even though the language server answered correctly.<br />
+</p>
+
+<p>
+neo-emacs closes that gap <b>with jdtls</b>, not by replacing it. The pieces:<br />
+</p>
+
+<ol class="org-ol">
+<li><b>Advertise class-file support.</b> On initialize we send:<br /></li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-elisp"><code>(:extendedClientCapabilities
+ (:classFileContentsSupport t)
+ :settings
+ (:java (:configuration
+         (:maven (:downloadSources t)))))
+</code></pre>
+</div>
+
+<p>
+That tells JDT LS the client can consume class contents, and asks Maven to pull <code>-sources</code> jars when available.<br />
+</p>
+
+<ol class="org-ol">
+<li><b>Register a <code>jdt://</code> file-name handler.</b> <code>file-name-handler-alist</code> gets an entry for <code>\\`jdt://</code>. When xref (or <code>find-file</code>) hits such a URI, control goes to <code>+eglot-java--jdt-uri-handler</code> instead of the filesystem.<br /></li>
+
+<li><b>Ask jdtls for the text.</b> The handler parses the URI into a stable cache path under the project root (<code>.eglot-java-jdt-cache/...</code>). On a cache miss it issues the JDT-specific request:<br /></li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-elisp"><code>(<span style="color: #ab98b5;">jsonrpc-request</span> server :java/classFileContents (<span style="color: #ab98b5;">list</span> :uri uri))
+</code></pre>
+</div>
+
+<p>
+jdtls replies with either attached source (if a sources jar was downloaded) or a decompiled view of the <code>.class</code>. The reply is written to a <code>.java</code> file and that path is returned to Emacs.<br />
+</p>
+
+<ol class="org-ol">
+<li><b>Open the cached buffer as Java.</b> <code>find-file-hook</code> turns those cache files into <code>java-ts-mode</code> so font-lock and editing feel normal.<br /></li>
+</ol>
+
+<p>
+So yes: navigation into third-party / JDK types still goes through <b>jdtls</b>. Eglot alone has no decompiler; neo-emacs only teaches Emacs how to open the <code>jdt://</code> locations jdtls already produces, and how to request <code>java/classFileContents</code> when the file is not cached yet.<br />
+</p>
+
+<p>
+Rough sequence:<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-txt"><code>xref-find-definitions on String / List / library type
+      │
+      ▼
+jdtls → Location { uri: jdt://contents/... }
+      │
+      ▼
+Emacs open jdt://...
+      │
+      ▼
++eglot-java--jdt-uri-handler
+      │
+      ├── cache hit  → open .eglot-java-jdt-cache/...java
+      │
+      └── cache miss → java/classFileContents
+                           │
+                           ▼
+                     write cache + open
+</code></pre>
+</div>
+
+<p>
+Packages such as <code>lsp-java</code> do something similar inside lsp-mode. The neo-emacs version is the same idea adapted to Eglot&rsquo;s thinner client: capability flags, a URI handler, and one custom RPC.<br />
+</p>
+</div>
+</div>
+<div id="outline-container-org21da994" class="outline-3">
+<h3 id="org21da994"><span class="section-number-3">1.5.</span> Completion with Corfu</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+Eglot&rsquo;s completion candidates plug into <code>completion-at-point-functions</code>, so they work with Corfu without a special bridge. <code>kind-icon</code> can sit on <code>corfu-margin-formatters</code> if you want LSP completion kinds drawn in the margin; that is purely cosmetic and unrelated to jdtls.<br />
+</p>
+
+<p>
+With jdtls on <code>PATH</code>, Lombok on the server JVM, and the <code>jdt://</code> handler installed, the day-to-day Java loop under Eglot is: open a file, get a server, jump across project and dependency code the same way.<br />
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2026-07-17 Fri 15:33</p>
+<p class="author">Author: van</p>
+<p class="date">Created: 2026-07-17 Fri 16:02</p>
+</div>
+</body>
+</html>

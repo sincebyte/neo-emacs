@@ -17,6 +17,22 @@
  doom-modeline-continuous-word-count-modes  '(java-mode)
  doom-modeline-enable-word-count            t  )
 
+;; doom-modeline 和 eglot (Emacs 29+) 各自都会向 mode-line-misc-info 注册
+;; eglot--managed-mode 条目，形成重复。移除全部，后续 eglot 会自行添加。
+(after! doom-modeline
+  (remove-hook 'eglot-managed-mode-hook #'doom-modeline-override-eglot)
+  (remove-hook 'doom-modeline-mode-hook #'doom-modeline-override-eglot)
+  (setq mode-line-misc-info
+        (cl-remove-if
+         (lambda (elt)
+           (eq (car-safe elt) 'eglot--managed-mode))
+         mode-line-misc-info))
+  (setq minor-mode-alist
+        (cl-remove-if
+         (lambda (elt)
+           (eq (car-safe elt) 'eglot--managed-mode))
+         minor-mode-alist)))
+
 (with-eval-after-load 'which-key
   (set-face-attribute 'which-key-key-face nil :family "IBM Plex Mono")
   (set-face-attribute 'which-key-command-description-face nil :family "IBM Plex Mono")
