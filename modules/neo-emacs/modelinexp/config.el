@@ -19,19 +19,22 @@
 
 ;; doom-modeline 和 eglot (Emacs 29+) 各自都会向 mode-line-misc-info 注册
 ;; eglot--managed-mode 条目，形成重复。移除全部，后续 eglot 会自行添加。
+;; 同时覆盖 doom-modeline-override-eglot 使其只移除不添加，防止变量监视器
+;; (doom-modeline-battery) 触发时重新添加条目。
 (after! doom-modeline
   (remove-hook 'eglot-managed-mode-hook #'doom-modeline-override-eglot)
   (remove-hook 'doom-modeline-mode-hook #'doom-modeline-override-eglot)
-  (setq mode-line-misc-info
-        (cl-remove-if
-         (lambda (elt)
-           (eq (car-safe elt) 'eglot--managed-mode))
-         mode-line-misc-info))
+  (defun doom-modeline-override-eglot ()
+    (setq mode-line-misc-info
+          (cl-remove-if
+           (lambda (elt) (eq (car-safe elt) 'eglot--managed-mode))
+           mode-line-misc-info)))
   (setq minor-mode-alist
         (cl-remove-if
          (lambda (elt)
            (eq (car-safe elt) 'eglot--managed-mode))
-         minor-mode-alist)))
+         minor-mode-alist))
+  (doom-modeline-override-eglot))
 
 (with-eval-after-load 'which-key
   (set-face-attribute 'which-key-key-face nil :family "IBM Plex Mono")
