@@ -1,44 +1,8 @@
-
-# Table of Contents
-
-1.  [About](#org8d997d1)
-2.  [How to install](#orgd8167ff)
-    1.  [Install emacs](#org61539e5)
-    2.  [Clone project](#org3eaf695)
-    3.  [Doom Install](#org37bd251)
-3.  [How to update](#org43bdcef)
-    1.  [For brew](#orga381644)
-    2.  [For doom project](#orge00d5af)
-4.  [Patches](#org72b286e)
-    1.  [transparent patch](#org1bd8a4e)
-    2.  [cursor animation](#orgc390afb)
-    3.  [how to](#org8ccec92)
-5.  [Private setting](#orgf59fc7c)
-    1.  [Font setting](#org57bcbae)
-    2.  [Basic setting](#org0f44e09)
-6.  [Neoemacs modules](#org099f564)
-    1.  [Lsp Java](#orge7e05f6)
-    2.  [Aidermacs](#org72ce4f0)
-    3.  [Vterm Shell](#orgdf2390b)
-    4.  [Clutch Sql](#org25e13ba)
-    5.  [Input method](#orga2a4d4b)
-    6.  [Org mode](#org51581c7)
-    7.  [Verb](#orge90bfc3)
-    8.  [Iredis](#orgbcd501c)
-    9.  [Bookmark](#org97652c2)
-    10. [Elpa Offline](#org13c1d2a)
-    11. [Vue](#org584213a)
-    12. [startup workspace](#org73e5ae5)
-7.  [About the Release](#org5ac449c)
-8.  [Customize Farther](#org60f8f7f)
-
 ![img](https://img.shields.io/badge/neo_emacs-v3.1-green.svg)  ![img](https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0)  ![img](https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1) ![img](https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&color=3498DB)  
 ![img](https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&color=2C2255) ![img](https://img.shields.io/badge/supports-Emacs_27.1_to_31.0-red.svg?logo=gnuemacs&color=7F5AB6)  
 
-![img](./images/image-use.png)  
+![img](./images/pic202607005749.png)  
 
-
-<a id="org8d997d1"></a>
 
 # About
 
@@ -47,18 +11,14 @@ Neo emacs is a configuration framework for GNU Emacs which is based on doom emac
 -   Code completion: Lsp-java supports maven and gradle project.
 -   Agent-shell: A native Emacs shell to interact with LLM agents powered by ACP
 -   Http client: verb a package for Emacs which allows you to organize and send HTTP requests.
--   SQL client: clutch — Interactive Database Client for Emacs.
--   Redis client: [IRedis](https://github.com/laixintao/iredis) is a terminal client for redis with auto-completion and syntax highlighting.
+-   DB client: clutch — Interactive Database Client for Emacs include redis.
+-   Lsp client: eglot, a lightweight, stable, and ready to use out of the box .
 -   Terminal emulator: Emacs-libvterm (vterm) is fully-fledged terminal emulator inside GNU Emacs based on libvterm.
 -   Knowledge management system: Org-roam borrows principles from the Zettelkasten method, providing a solution for non-hierarchical note-taking.
 
 
-<a id="orgd8167ff"></a>
-
 # How to install
 
-
-<a id="org61539e5"></a>
 
 ## Install emacs
 
@@ -99,8 +59,6 @@ After emacs installation, set environment variables which names EMACS ,this depe
     export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs
 
 
-<a id="org3eaf695"></a>
-
 ## Clone project
 
 clone doom-emacs and neo-emacs from github.  
@@ -108,8 +66,6 @@ clone doom-emacs and neo-emacs from github.
     git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs
     git clone --depth 1 https://github.com/vanniuner/neo-emacs.git ~/.doom.d/
 
-
-<a id="org37bd251"></a>
 
 ## Doom Install
 
@@ -138,20 +94,14 @@ At last run below, this will take few minutes. And it depends on the quality of 
     ~/.emacs.doom/bin/doom.cmd install
 
 
-<a id="org43bdcef"></a>
-
 # How to update
 
-
-<a id="orga381644"></a>
 
 ## For brew
 
     brew upgrade
     brew update && brew upgrade emacs-mac && brew cleanup emacs-mac
 
-
-<a id="orge00d5af"></a>
 
 ## For doom project
 
@@ -161,12 +111,8 @@ At last run below, this will take few minutes. And it depends on the quality of 
     sh ~/.emacs.d/bin/doom sync
 
 
-<a id="org72b286e"></a>
-
 # Patches
 
-
-<a id="org1bd8a4e"></a>
 
 ## transparent patch
 
@@ -182,14 +128,10 @@ It offer a window transparent solution which could transparent background but th
       ("C-M-0" . transwin-toggle))
 
 
-<a id="orgc390afb"></a>
-
 ## cursor animation
 
 The awesome patch could make cursor more funny.But there have a bug,If you shift to full screen from a window state , there will remain a shadow of the current cursor which will stay here forever.I will make cursor in replace mode before shifting to full screen.This might makes it effect less more.  
 
-
-<a id="org8ccec92"></a>
 
 ## how to
 
@@ -214,14 +156,10 @@ Here have a [tutorial](https://neoemacs.com/posts/emacs-patches/) to apply patch
 3.  Just install emacs plus, you could use \`brew reinstall\`
 
 
-<a id="orgf59fc7c"></a>
-
 # Private setting
 
 Customize your private setting config in the config.el ; use `setq`  
 
-
-<a id="org57bcbae"></a>
 
 ## Font setting
 
@@ -312,8 +250,6 @@ Cause different platform have different font name,after font installed there nee
     </tbody>
     </table>
 
-
-<a id="org0f44e09"></a>
 
 ## Basic setting
 
@@ -413,46 +349,24 @@ Cause different platform have different font name,after font installed there nee
 <td class="org-left">modules/neo-emacs/java/config.el</td>
 <td class="org-left">maven setting path</td>
 </tr>
-
-<tr>
-<td class="org-left">rime-user-data-dir</td>
-<td class="org-left">~/Library/Rime/</td>
-<td class="org-left">modules/neo-emacs/rime/config.el</td>
-<td class="org-left">rime config input</td>
-</tr>
-
-<tr>
-<td class="org-left">rime-librime-root</td>
-<td class="org-left">~/.doom.d/myconfig/rime-macos/dist</td>
-<td class="org-left">modules/neo-emacs/rime/config.el</td>
-<td class="org-left">emacs-rime/blob/master/</td>
-</tr>
 </tbody>
 </table>
 
 > recentfile save default dir: ~/.emacs.d/.local/cache/recentf  
 
 
-<a id="org099f564"></a>
-
 # Neoemacs modules
 
 
-<a id="orge7e05f6"></a>
+## Eglot
 
-## Lsp Java
-
-[futher more java readme](./modules/neo-emacs/java/readme.md)  
-Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url\`, and now it&rsquo;s located at [jdt-language-server-1.22.0](https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.22.0/jdt-language-server-1.22.0-202304131553.tar.gz).After that you could use all the features powered by eclipse.  
+[read first](./modules/neo-emacs/eglot/readme.md)  
+Download [jdt-language-server-1.22.0](https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.22.0/jdt-language-server-1.22.0-202304131553.tar.gz) make \`jdtls\` in your PATH so that eglot could find it.After that you could use all the features powered by eclipse.  
 
 -   Generate eclipse files  
     Execute mvn command for generate eclipse .project & .classpath files on your project root path.  
     
         mvn eclipse:clean eclipse:eclipse
--   Support projectlombok plugin  
-    There have a default lombok.jar in `doom-user-dir/neoemacs` which you could replace by yourself.  
-    
-        (setq  lombok-jar-path (expand-file-name (concat doom-user-dir "neoemacs/lombok.jar")
 -   Shotcuts/Key binding  
     
     <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
@@ -476,18 +390,6 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     <td class="org-left">SPC c i</td>
     <td class="org-left">find-implementations</td>
     <td class="org-left">find where sub class definition</td>
-    </tr>
-    
-    <tr>
-    <td class="org-left">SPC c I</td>
-    <td class="org-left">lsp-java-open-super-implementation</td>
-    <td class="org-left">find where sub class definition</td>
-    </tr>
-    
-    <tr>
-    <td class="org-left">SPC t e</td>
-    <td class="org-left">lsp-treemacs-java-deps-list</td>
-    <td class="org-left">find projects referenced libs</td>
     </tr>
     
     <tr>
@@ -515,7 +417,7 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
     </tr>
     
     <tr>
-    <td class="org-left">SPC c o</td>
+    <td class="org-left">; i</td>
     <td class="org-left">lsp-java-organize-imports</td>
     <td class="org-left">import require package</td>
     </tr>
@@ -530,85 +432,95 @@ Neo-Emacs will automatically download the jdtls from \`lsp-java-jdt-download-url
 -   How to upgrade jdtls  
     1.  Customization your own eclipse jdtls project version by replace it&rsquo;s binary pacage.
     2.  Download the lastest jdt-language-server from <https://download.eclipse.org/jdtls/milestones>.
-    3.  Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
+    3.  Replace it in your bash/zsh/fish
+
+<div class="notice-info" id="orgaf42845">
+<p>
+You could config jdk version and lombok in jdtls python source code.<br />
+</p>
+
+</div>
 
 
-<a id="org72ce4f0"></a>
+## agent-shell
 
-## Aidermacs
+[read first](./modules/neo-emacs/agentshell/readme.md)  
+agent shell A native Emacs shell to interact with LLM agents powered by ACP.  
+With agent-shell, you can interact with any ACP-driven agent like:  
+Claude Agent (Anthropic)  
+Codex (OpenAI)  
+Gemini CLI (Google)  
+Goose  
+Grok Build (xAI)  
+Cursor  
+Kimi Code CLI  
+CodeBuddy  
+Kiro CLI  
+Qwen Code  
+Auggie  
+Mistral Vibe  
+Factory Droid  
+Pi  
+Oh My Pi  
+Opencode  
 
-aidermacs a code editing assistant through llm.  
-Start through &rsquo;space d&rsquo; and display using vterm.  
-use aider-ce  
-
-    alias aider="aider-ce"
-
-config aider  
-
-    model: deepseek/deepseek-chat
-    auto-commits: false
-    max-chat-history: 6
-    read:
-      - ~/CONVENTIONS.md
-    aiderignore: .aiderignore
-    auto-lint: false
-    test: false
-    pretty: true
+-   shortcuts/Key binding  
     
-    # for aider-ce
-    check-update: false
-    enable-context-compaction: true
-    debug: false
-    use-enhanced-map: true
-    tui: false
-    context-compaction-max-tokens: 64000
-    agent-config:
-      large_file_token_threshold: 12500
-      skip_cli_confirmations: true
+    <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+    
+    
+    <colgroup>
+    <col  class="org-left" />
+    
+    <col  class="org-left" />
+    
+    <col  class="org-left" />
+    </colgroup>
+    <tbody>
+    <tr>
+    <td class="org-left">KEY</td>
+    <td class="org-left">FUNCTION</td>
+    <td class="org-left">DESCRIPTION</td>
+    </tr>
+    
+    <tr>
+    <td class="org-left">spc d a</td>
+    <td class="org-left">(open-opencode-session-in-right-window)</td>
+    <td class="org-left">new opencode agent session</td>
+    </tr>
+    
+    <tr>
+    <td class="org-left">spc d c</td>
+    <td class="org-left">(open-cursor-session-in-right-window)</td>
+    <td class="org-left">new cursor agent session</td>
+    </tr>
+    
+    <tr>
+    <td class="org-left">C-c RET</td>
+    <td class="org-left">(agent-shell-set-session-mode &amp;optional ON-SUCCESS)</td>
+    <td class="org-left">set session mode plan/build</td>
+    </tr>
+    
+    <tr>
+    <td class="org-left">g v</td>
+    <td class="org-left">(agent-shell-set-session-model &amp;optional ON-SUCCESS)</td>
+    <td class="org-left">set session model gpt/deepseek</td>
+    </tr>
+    
+    <tr>
+    <td class="org-left">\/</td>
+    <td class="org-left">agent skill</td>
+    <td class="org-left">choose agent skill</td>
+    </tr>
+    </tbody>
+    </table>
 
-config mcp tool  
-
-    {
-      "mcpServers": {
-        "context7": {
-          "transport": "http",
-          "url": "https://mcp.context7.com/mcp",
-          "headers": {
-            "CONTEXT7_API_KEY": "ctx7sk-d8ff275f-5c0a-4abf-b6e4-b9ef5ab53aac"
-          }
-        },
-        "skytechdb-test-readonly": {
-          "command": "uv",
-          "args": [
-            "run",
-            "mysql_mcp_server"
-          ],
-          "env": {
-            "MYSQL_HOST": "your host",
-            "MYSQL_PORT": "3306",
-            "MYSQL_USER": "mcp_readonly_user",
-            "MYSQL_PASSWORD": "mcp_readonly_password",
-            "MYSQL_DATABASE": "skytech"
-          }
-        },
-        "kubernetes-zhongying": {
-          "command": "npx",
-          "args": [
-            "-y",
-            "mcp-server-kubernetes"
-          ]
-        }
-      }
-    }
-
-
-<a id="orgdf2390b"></a>
 
 ## Vterm Shell
 
 You&rsquo;d better install vterm in a terminal environment case there might have error incompatible architecture.  
 
-<div class="notice-warning" id="org88b78c6">
+<div class="notice-warning" id="orgac6bed8">
 <p>
 Vterm is not available on windows.<br />
 Thus windows user have to use eshell as a downgrade plan.<br />
@@ -725,8 +637,6 @@ Thus windows user have to use eshell as a downgrade plan.<br />
         </table>
 
 
-<a id="org25e13ba"></a>
-
 ## Clutch Sql
 
 -   The privacy configuration  
@@ -800,14 +710,10 @@ Thus windows user have to use eshell as a downgrade plan.<br />
     </table>
 
 
-<a id="orga2a4d4b"></a>
-
 ## Input method
 
 [shift system input method on macos](https://neoemacs.com/posts/emacs_%E5%88%87%E6%8D%A2%E7%B3%BB%E7%BB%9F%E8%BE%93%E5%85%A5%E6%B3%95/)  
 
-
-<a id="org51581c7"></a>
 
 ## Org mode
 
@@ -854,39 +760,10 @@ Thus windows user have to use eshell as a downgrade plan.<br />
         ln -s ~/org/org-roam/image any_where/image
 
 
-<a id="orge90bfc3"></a>
-
 ## Verb
 
 Verb is a new package for http client,becase the restclient is out of date and the author no longger maintain it on github.Fortunately there have a alternative one named verb which is more powerful and customizable. Verb support url template which makes you change different environment more conveniently.Also verb supports variables and picture query and upload.In org mode start verb just use \`C-c C-r\` as a previous command,example \`C-c C-r C-f\` will execute http request with your config,So verb is really fancy right?  
 
-
-<a id="orgbcd501c"></a>
-
-## Iredis
-
-1.  install
-
-        brew install iredis
-
-2.  config
-
-    Here have a  [template](https://github.com/laixintao/iredis/blob/master/iredis/data/iredisrc) of iredis&rsquo; configuration.The essential point is <span class="underline">alias\_dsn</span>  
-    
-        1  [alias_dsn]
-        2  example_dsn1 = redis://[[username]:[password]]@localhost:6379/0
-        3  example_dsn2 = rediss://[[username]:[password]]@localhost:6379/0
-        4  example_dsn3 = unix://[[username]:[password]]@/path/to/socket.sock?db=0
-
-3.  usage
-
-    Use command to connect redis database.The most convenient thing is you could index your content as iredis have integrated with jq command.  
-    
-        iredis -d wvp-test
-        10.100.10.70:6379[7]> get VMP_MEDIA_SERVER:000000:zlm_fragment | jq .
-
-
-<a id="org97652c2"></a>
 
 ## Bookmark
 
@@ -927,8 +804,6 @@ Verb is a new package for http client,becase the restclient is out of date and t
     </table>
 
 
-<a id="org13c1d2a"></a>
-
 ## Elpa Offline
 
 rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa  
@@ -940,16 +815,12 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
 
 
-<a id="org584213a"></a>
-
 ## Vue
 
 as a full stack developer u need vue support, so here it comes.  
 
     npm install vls -g
 
-
-<a id="org73e5ae5"></a>
 
 ## startup workspace
 
@@ -969,16 +840,12 @@ You could customization startup inital workspace and their buffer.No need to ope
     (add-hook 'window-setup-hook #'open-my-workspaces)
 
 
-<a id="org5ac449c"></a>
-
 # About the Release
 
 This step can help you compile neo emacs faster,It only takes 3 minutes to install using the release package on my Mac laptop. Otherwise it would take me 15 minutes. The release installation package is a better choice for users with unstable networks and those who need to frequently reinstall neoemacs.  
 Release package contains the git repository of related dependencies.The compiled directory files are removed and the .git directory is retained,So that you can perform subsequent upgrades.  
 I will update the Release package once a month, And test them in advance and revise them for compatibility with upstream projects.  
 
-
-<a id="org60f8f7f"></a>
 
 # Customize Farther
 

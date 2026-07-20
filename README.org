@@ -5,7 +5,7 @@
 #+SETUPFILE: ~/.doom.d/org-classic-head.setup
 #+HTML_HEAD: <a href="https://github.com/vanniuner/neo-emacs" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#70B7FD; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
 
-#+OPTIONS: prop:nil timestamp:t \n:t ^:nil f:t toc:t author:t num:t H:2
+#+OPTIONS: prop:nil timestamp:t \n:t ^:nil f:t toc:nil author:t num:t H:2
 #+LATEX_COMPILER: xelatex
 #+LATEX_CLASS: elegantpaper
 #+MACRO: htmlred @@html:<font color="red"></font>@@
@@ -15,14 +15,14 @@
 [[https://img.shields.io/badge/neo_emacs-v3.1-green.svg]]  [[https://img.shields.io/badge/based_on-doom_emacs-red.svg?color=3152A0]]  [[https://img.shields.io/badge/macos-full_supported-red.svg?logo=macos&color=55C2E1]] [[https://img.shields.io/badge/windows-almost_supported-red.svg?logo=windows&color=3498DB]]
 [[https://img.shields.io/badge/eclipse-jdt_1.27.1-red.svg?logo=eclipse&color=2C2255]] [[https://img.shields.io/badge/supports-Emacs_27.1_to_31.0-red.svg?logo=gnuemacs&color=7F5AB6]]
 
-[[file:./images/image-use.png]]
+[[file:./images/pic202607005749.png]]
 * About
 Neo emacs is a configuration framework for GNU Emacs which is based on doom emacs and focuses on the java web application coding environment. Neo emacs has the following features:
 - Code completion: Lsp-java supports maven and gradle project.
 - Agent-shell: A native Emacs shell to interact with LLM agents powered by ACP
 - Http client: verb a package for Emacs which allows you to organize and send HTTP requests.
-- SQL client: clutch — Interactive Database Client for Emacs.
-- Redis client: [[https://github.com/laixintao/iredis][IRedis]] is a terminal client for redis with auto-completion and syntax highlighting.
+- DB client: clutch — Interactive Database Client for Emacs include redis.
+- Lsp client: eglot, a lightweight, stable, and ready to use out of the box .
 - Terminal emulator: Emacs-libvterm (vterm) is fully-fledged terminal emulator inside GNU Emacs based on libvterm.
 - Knowledge management system: Org-roam borrows principles from the Zettelkasten method, providing a solution for non-hierarchical note-taking.
 * How to install
@@ -226,110 +226,68 @@ Cause we are using multiple fonts ,here they are.
 | lsp-java-jdt-download-url | http://1.117.167.195/download           | modules/neo-emacs/java/config.el | jdt-server URL          |
 | lsp-java-java-path        |                                         | modules/neo-emacs/java/config.el | java11        exec path |
 | lsp-maven-path            | ~/.m2/settings.xml                      | modules/neo-emacs/java/config.el | maven setting path      |
-| rime-user-data-dir        | ~/Library/Rime/                         | modules/neo-emacs/rime/config.el | rime config input       |
-| rime-librime-root         | ~/.doom.d/myconfig/rime-macos/dist      | modules/neo-emacs/rime/config.el | emacs-rime/blob/master/ |
 
 #+begin_quote
 recentfile save default dir: ~/.emacs.d/.local/cache/recentf
 #+end_quote
 * Neoemacs modules
-** Lsp Java
-[[./modules/neo-emacs/java/readme.org][futher more java readme]]
-Neo-Emacs will automatically download the jdtls from `lsp-java-jdt-download-url`, and now it's located at [[https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.22.0/jdt-language-server-1.22.0-202304131553.tar.gz][jdt-language-server-1.22.0]].After that you could use all the features powered by eclipse.
+** Eglot
+[[./modules/neo-emacs/eglot/readme.org][read first]]
+Download [[https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.22.0/jdt-language-server-1.22.0-202304131553.tar.gz][jdt-language-server-1.22.0]] make `jdtls` in your PATH so that eglot could find it.After that you could use all the features powered by eclipse.
 - Generate eclipse files
   Execute mvn command for generate eclipse .project & .classpath files on your project root path.
   #+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
   #+BEGIN_SRC shell
   mvn eclipse:clean eclipse:eclipse
   #+END_SRC
-- Support projectlombok plugin
-  There have a default lombok.jar in ~doom-user-dir/neoemacs~ which you could replace by yourself.
-  #+begin_src elisp
-  (setq  lombok-jar-path (expand-file-name (concat doom-user-dir "neoemacs/lombok.jar")
-  #+end_src
 - Shotcuts/Key binding
  #+CAPTION: java mode key binding
- | <l>     | <l>                                | <l>                             |
- | KEY     | FUNCTION                           | DESCRIPTION                     |
- | SPC c i | find-implementations               | find where sub class definition |
- | SPC c I | lsp-java-open-super-implementation | find where sub class definition |
- | SPC t e | lsp-treemacs-java-deps-list        | find projects referenced libs   |
- | SPC c f | formart buffer/region              | goto type definition            |
- | SPC c a | lsp-execute-code-action            | code action                     |
- | SPC c d | lsp-jump-definition                | jump to where symbol definition |
- | SPC c D | lsp-jump-reference                 | jump to where symbol referenced |
- | SPC c o | lsp-java-organize-imports          | import require package          |
- | SPC t s | lsp-workspace-restart              | restart lsp server              |
+ | <l>     | <l>                       | <l>                             |
+ | KEY     | FUNCTION                  | DESCRIPTION                     |
+ | SPC c i | find-implementations      | find where sub class definition |
+ | SPC c f | formart buffer/region     | goto type definition            |
+ | SPC c a | lsp-execute-code-action   | code action                     |
+ | SPC c d | lsp-jump-definition       | jump to where symbol definition |
+ | SPC c D | lsp-jump-reference        | jump to where symbol referenced |
+ | ; i     | lsp-java-organize-imports | import require package          |
+ | SPC t s | lsp-workspace-restart     | restart lsp server              |
 - How to upgrade jdtls
   1. Customization your own eclipse jdtls project version by replace it's binary pacage.
   2. Download the lastest jdt-language-server from https://download.eclipse.org/jdtls/milestones.
-  3. Replace file to ~/.emacs.d/.local/etc/lsp/eclipse.jdt.ls.
+  3. Replace it in your bash/zsh/fish
+#+begin_notice-info
+You could config jdk version and lombok in jdtls python source code.
+#+end_notice-info
 
-** Aidermacs
-aidermacs a code editing assistant through llm.
-Start through 'space d' and display using vterm.
-use aider-ce
-#+begin_src yaml
-alias aider="aider-ce"
-#+end_src
-config aider
-#+begin_src yaml
-model: deepseek/deepseek-chat
-auto-commits: false
-max-chat-history: 6
-read:
-  - ~/CONVENTIONS.md
-aiderignore: .aiderignore
-auto-lint: false
-test: false
-pretty: true
+** agent-shell
+[[./modules/neo-emacs/agentshell/readme.org][read first]]
+agent shell A native Emacs shell to interact with LLM agents powered by ACP.
+With agent-shell, you can interact with any ACP-driven agent like:
+Claude Agent (Anthropic)
+Codex (OpenAI)
+Gemini CLI (Google)
+Goose
+Grok Build (xAI)
+Cursor
+Kimi Code CLI
+CodeBuddy
+Kiro CLI
+Qwen Code
+Auggie
+Mistral Vibe
+Factory Droid
+Pi
+Oh My Pi
+Opencode
 
-# for aider-ce
-check-update: false
-enable-context-compaction: true
-debug: false
-use-enhanced-map: true
-tui: false
-context-compaction-max-tokens: 64000
-agent-config:
-  large_file_token_threshold: 12500
-  skip_cli_confirmations: true
-#+end_src
-config mcp tool
-#+begin_src json
-{
-  "mcpServers": {
-    "context7": {
-      "transport": "http",
-      "url": "https://mcp.context7.com/mcp",
-      "headers": {
-        "CONTEXT7_API_KEY": "ctx7sk-d8ff275f-5c0a-4abf-b6e4-b9ef5ab53aac"
-      }
-    },
-    "skytechdb-test-readonly": {
-      "command": "uv",
-      "args": [
-        "run",
-        "mysql_mcp_server"
-      ],
-      "env": {
-        "MYSQL_HOST": "your host",
-        "MYSQL_PORT": "3306",
-        "MYSQL_USER": "mcp_readonly_user",
-        "MYSQL_PASSWORD": "mcp_readonly_password",
-        "MYSQL_DATABASE": "skytech"
-      }
-    },
-    "kubernetes-zhongying": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-server-kubernetes"
-      ]
-    }
-  }
-}
-#+end_src
+- shortcuts/Key binding
+  | <l>     | <l>                                                  | <l>                            |
+  | KEY     | FUNCTION                                             | DESCRIPTION                    |
+  | spc d a | (open-opencode-session-in-right-window)              | new opencode agent session     |
+  | spc d c | (open-cursor-session-in-right-window)                | new cursor agent session       |
+  | C-c RET | (agent-shell-set-session-mode &optional ON-SUCCESS)  | set session mode plan/build    |
+  | g v     | (agent-shell-set-session-model &optional ON-SUCCESS) | set session model gpt/deepseek |
+  | \/      | agent skill                                          | choose agent skill             |
 ** Vterm Shell
 You'd better install vterm in a terminal environment case there might have error incompatible architecture.
 
@@ -495,25 +453,6 @@ ln -s ~/org/org-roam/image any_where/image
 #+end_src
 ** Verb
 Verb is a new package for http client,becase the restclient is out of date and the author no longger maintain it on github.Fortunately there have a alternative one named verb which is more powerful and customizable. Verb support url template which makes you change different environment more conveniently.Also verb supports variables and picture query and upload.In org mode start verb just use `C-c C-r` as a previous command,example `C-c C-r C-f` will execute http request with your config,So verb is really fancy right?
-** Iredis
-*** install
-#+begin_src shell
-brew install iredis
-#+end_src
-*** config
-Here have a  [[https://github.com/laixintao/iredis/blob/master/iredis/data/iredisrc][template]] of iredis' configuration.The essential point is _alias_dsn_
-#+begin_src atom -n
-[alias_dsn]
-example_dsn1 = redis://[[username]:[password]]@localhost:6379/0
-example_dsn2 = rediss://[[username]:[password]]@localhost:6379/0
-example_dsn3 = unix://[[username]:[password]]@/path/to/socket.sock?db=0
-#+end_src
-*** usage
-Use command to connect redis database.The most convenient thing is you could index your content as iredis have integrated with jq command.
-#+begin_src shell
-iredis -d wvp-test
-10.100.10.70:6379[7]> get VMP_MEDIA_SERVER:000000:zlm_fragment | jq .
-#+end_src
 ** Bookmark
 - set a particular location for bookmark
   #+begin_src lisp
