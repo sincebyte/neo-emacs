@@ -9,7 +9,7 @@ ps -ef | grep app | awk '{print $2}' | xargs kill -9
 mvnj11 clean package -U -DskipTests
 
 $JAVA_11_ARM_HOME/bin/java \
--Xms124m -Xmx512m \
+-Xms512m -Xmx512m -XX:+UseG1GC \
 -agentpath:/Users/van/ZY/workspace/jrebel/lib/libjrebel64.dylib \
 --spring.profiles.active=local \
 --spring.cloud.nacos.config.enabled=false \

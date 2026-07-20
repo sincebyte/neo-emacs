@@ -342,10 +342,24 @@
 (defun my-java-mode-setup ()
   (eglot-ensure)
   (focus-mode 1)
+  (rainbow-delimiters-mode)
   (setq display-line-numbers t))
 
 (add-hook 'java-ts-mode-hook #'my-java-mode-setup)
 (add-hook 'java-mode-hook #'my-java-mode-setup)
+(add-hook 'go-mode-hook
+          (lambda ()
+            (setq lsp-modeline-code-action-fallback-icon                         "")))
+(add-hook 'emacs-lisp-mode-hook (lambda ()
+                                  (rainbow-delimiters-mode)
+                                  (setq display-line-numbers                      t)))
+(add-hook 'python-ts-mode-hook (lambda ()
+                                 (focus-mode nil)
+                                 (rainbow-delimiters-mode)
+                                 (setq lsp-modeline-code-action-icons-enable nil)
+                                 (setq lsp-modeline-code-actions-enable nil)
+                                 (setq doom-modeline-check-icon nil)
+                                 (setq display-line-numbers                      t)))
 
 ;; ;; ;; java key setting
 (map! :nve "; c"     'comment-line                        )
@@ -364,3 +378,10 @@
 (after! eglot
     (setq eglot-sync-connect              8
           eldoc-echo-area-use-multiline-p nil))
+
+(after! focus
+  (add-to-list 'focus-mode-to-thing '(go-mode . paragraph))
+  (add-to-list 'focus-mode-to-thing '(python-mode . paragraph))
+  (add-to-list 'focus-mode-to-thing '(java-mode . paragraph))
+  (add-to-list 'focus-mode-to-thing '(elisp-mode . paragraph))
+  )

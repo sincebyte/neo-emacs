@@ -147,6 +147,15 @@
 ;;   (load-theme 'doom-winter-is-coming-dark-blue t))
 
 (load-theme 'kaolin-dark t)
+(after! avy (set-face-attribute 'avy-lead-face nil
+                    :foreground "#000000"
+                    :weight 'bold)
+            (set-face-attribute 'avy-lead-face-0 nil
+                    :foreground "#000000"
+                    :weight 'bold)
+            (set-face-attribute 'avy-lead-face-1 nil
+                    :foreground "#000000"
+                    :weight 'bold))
 
 
 ;; (setq initial-frame-alist '((height . 50)))
