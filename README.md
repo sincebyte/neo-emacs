@@ -8,7 +8,7 @@
 
 Neo emacs is a configuration framework for GNU Emacs which is based on doom emacs and focuses on the java web application coding environment. Neo emacs has the following features:  
 
--   Code completion: Lsp-java supports maven and gradle project.
+-   Code completion: Corfu is a modern, popup completion UI that works seamlessly with LSP backends like Eglot.
 -   Agent-shell: A native Emacs shell to interact with LLM agents powered by ACP
 -   Http client: verb a package for Emacs which allows you to organize and send HTTP requests.
 -   DB client: clutch — Interactive Database Client for Emacs include redis.
@@ -413,7 +413,7 @@ Download [jdt-language-server-1.22.0](https://www.eclipse.org/downloads/download
     2.  Download the lastest jdt-language-server from <https://download.eclipse.org/jdtls/milestones>.
     3.  Replace it in your bash/zsh/fish
 
-<div class="notice-info" id="org786ad25">
+<div class="notice-info" id="org6028e92">
 <p>
 You could config jdk version and lombok in jdtls python source code.<br />
 </p>
@@ -499,7 +499,7 @@ Opencode
 
 You&rsquo;d better install vterm in a terminal environment case there might have error incompatible architecture.  
 
-<div class="notice-warning" id="org86579e4">
+<div class="notice-warning" id="orgfc1f38f">
 <p>
 Vterm is not available on windows.<br />
 Thus windows user have to use eshell as a downgrade plan.<br />
@@ -792,9 +792,6 @@ rsync -avz rsync://mirrors.tuna.tsinghua.edu.cn/elpa ~/soft/emacs-elpa
             ("org-cn"   . "/soft/emacs-elpa/org/")
             ("gnu-cn"   . "/soft/emacs-elpa/gnu/")
             ("marmalade-cn"   . "/soft/emacs-elpa//marmalade/")))
-
-
-## Vue
 
 as a full stack developer u need vue support, so here it comes.  
 
