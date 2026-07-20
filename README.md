@@ -328,27 +328,6 @@ Cause different platform have different font name,after font installed there nee
 <td class="org-left">modules/neo-emacs/org/config.el</td>
 <td class="org-left">org roam      root path</td>
 </tr>
-
-<tr>
-<td class="org-left">lsp-java-jdt-download-url</td>
-<td class="org-left"><a href="http://1.117.167.195/download">http://1.117.167.195/download</a></td>
-<td class="org-left">modules/neo-emacs/java/config.el</td>
-<td class="org-left">jdt-server URL</td>
-</tr>
-
-<tr>
-<td class="org-left">lsp-java-java-path</td>
-<td class="org-left">&nbsp;</td>
-<td class="org-left">modules/neo-emacs/java/config.el</td>
-<td class="org-left">java11        exec path</td>
-</tr>
-
-<tr>
-<td class="org-left">lsp-maven-path</td>
-<td class="org-left">~/.m2/settings.xml</td>
-<td class="org-left">modules/neo-emacs/java/config.el</td>
-<td class="org-left">maven setting path</td>
-</tr>
 </tbody>
 </table>
 
@@ -434,7 +413,7 @@ Download [jdt-language-server-1.22.0](https://www.eclipse.org/downloads/download
     2.  Download the lastest jdt-language-server from <https://download.eclipse.org/jdtls/milestones>.
     3.  Replace it in your bash/zsh/fish
 
-<div class="notice-info" id="orgaf42845">
+<div class="notice-info" id="org786ad25">
 <p>
 You could config jdk version and lombok in jdtls python source code.<br />
 </p>
@@ -520,7 +499,7 @@ Opencode
 
 You&rsquo;d better install vterm in a terminal environment case there might have error incompatible architecture.  
 
-<div class="notice-warning" id="orgac6bed8">
+<div class="notice-warning" id="org86579e4">
 <p>
 Vterm is not available on windows.<br />
 Thus windows user have to use eshell as a downgrade plan.<br />
@@ -850,6 +829,7 @@ I will update the Release package once a month, And test them in advance and rev
 # Customize Farther
 
 For customize farther, there have some documentation you need read.  
+<https://neoemacs.com/>  
 <https://github.com/hlissner/doom-emacs/blob/master/docs/getting_started.org>  
 <https://github.com/BurntSushi/ripgrep>  
 <https://github.com/junegunn/fzf>  

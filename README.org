@@ -223,9 +223,6 @@ Cause we are using multiple fonts ,here they are.
 | dot-exec-path             | /opt/homebrew/bin/dot                   | modules/neo-emacs/org/config.el  | dot           exec path |
 | pdflatex-exec-path        | /Library/TeX/texbin/pdflatex            | modules/neo-emacs/org/config.el  | pdflatex      exec path |
 | org-roam-directory        | ~/org/org-roam                          | modules/neo-emacs/org/config.el  | org roam      root path |
-| lsp-java-jdt-download-url | http://1.117.167.195/download           | modules/neo-emacs/java/config.el | jdt-server URL          |
-| lsp-java-java-path        |                                         | modules/neo-emacs/java/config.el | java11        exec path |
-| lsp-maven-path            | ~/.m2/settings.xml                      | modules/neo-emacs/java/config.el | maven setting path      |
 
 #+begin_quote
 recentfile save default dir: ~/.emacs.d/.local/cache/recentf
@@ -499,6 +496,7 @@ Release package contains the git repository of related dependencies.The compiled
 I will update the Release package once a month, And test them in advance and revise them for compatibility with upstream projects.
 * Customize Farther
 For customize farther, there have some documentation you need read.
+https://neoemacs.com/
 https://github.com/hlissner/doom-emacs/blob/master/docs/getting_started.org
 [[https://github.com/BurntSushi/ripgrep]]
 [[https://github.com/junegunn/fzf]]
