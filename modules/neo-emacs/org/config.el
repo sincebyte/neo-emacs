@@ -81,9 +81,27 @@
   (remove-hook 'org-mode-hook #'org-lint)
   (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
 
+(defun my/org-point-in-link-p ()
+  "判断光标是否在链接上。"
+  (let ((context (org-element-context)))
+    (eq (org-element-type context) 'link)))
+
+(defun my/org-return-only-table-or-link ()
+  "RET 只在表格内或链接上生效，其他地方什么都不做。"
+  (interactive)
+  (cond
+   ((org-at-table-p)                          ; 在表格内 → 编辑表格
+    (org-table-edit-field nil))
+   ((my/org-point-in-link-p)                  ; 在链接上 → 跳转链接
+    (+org/dwim-at-point nil))
+   (t                                         ; 其他地方 → 什么都不做
+    (message "Not in table or link, RET ignored"))))
+
 (map! :after org
       :map evil-org-mode-map
-      :n "RET" #'org-table-edit-field)
+      :n "RET" #'my/org-return-only-table-or-link)
+
+(setq org-return-follows-link t)
 
 
 ;; (add-to-list 'load-path (expand-file-name (concat doom-user-dir "neoemacs/company-english-helper")))
