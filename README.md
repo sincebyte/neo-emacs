@@ -103,6 +103,11 @@ At last run below, this will take few minutes. And it depends on the quality of 
     brew update && brew upgrade emacs-mac && brew cleanup emacs-mac
 
 
+## For single package
+
+Running straight-pull-package performs a git pull inside the package&rsquo;s repository at ~/.config/emacs/.local/straight/repos/PACKAGE/, and then you need to execute (doom/reload) (or M-x doom/reload) to recompile the source into .elc bytecode files (stored in ~/.config/emacs/.local/straight/build-EMACS\_VERSION/PACKAGE/) and reload the updated package, making the changes take effect.  
+
+
 ## For doom project
 
     export EMACS=/Applications/Emacs.app/Contents/MacOS/EMACS
@@ -413,7 +418,7 @@ Download [jdt-language-server-1.22.0](https://www.eclipse.org/downloads/download
     2.  Download the lastest jdt-language-server from <https://download.eclipse.org/jdtls/milestones>.
     3.  Replace it in your bash/zsh/fish
 
-<div class="notice-info" id="org6028e92">
+<div class="notice-info" id="orgeeeb6dc">
 <p>
 You could config jdk version and lombok in jdtls python source code.<br />
 </p>
@@ -421,7 +426,7 @@ You could config jdk version and lombok in jdtls python source code.<br />
 </div>
 
 
-## agent-shell
+## Agent-shell
 
 [read first](./modules/neo-emacs/agentshell/readme.md)  
 agent shell A native Emacs shell to interact with LLM agents powered by ACP.  
@@ -499,7 +504,7 @@ Opencode
 
 You&rsquo;d better install vterm in a terminal environment case there might have error incompatible architecture.  
 
-<div class="notice-warning" id="orgfc1f38f">
+<div class="notice-warning" id="org4ddc325">
 <p>
 Vterm is not available on windows.<br />
 Thus windows user have to use eshell as a downgrade plan.<br />

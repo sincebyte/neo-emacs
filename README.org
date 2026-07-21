@@ -112,6 +112,8 @@ At last run below, this will take few minutes. And it depends on the quality of 
 brew upgrade
 brew update && brew upgrade emacs-mac && brew cleanup emacs-mac
 #+end_src
+** For single package
+Running straight-pull-package performs a git pull inside the package's repository at ~/.config/emacs/.local/straight/repos/PACKAGE/, and then you need to execute (doom/reload) (or M-x doom/reload) to recompile the source into .elc bytecode files (stored in ~/.config/emacs/.local/straight/build-EMACS_VERSION/PACKAGE/) and reload the updated package, making the changes take effect.
 ** For doom project
 #+begin_src shell
 export EMACS=/Applications/Emacs.app/Contents/MacOS/EMACS
@@ -256,7 +258,7 @@ Download [[https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones
 You could config jdk version and lombok in jdtls python source code.
 #+end_notice-info
 
-** agent-shell
+** Agent-shell
 [[./modules/neo-emacs/agentshell/readme.org][read first]]
 agent shell A native Emacs shell to interact with LLM agents powered by ACP.
 With agent-shell, you can interact with any ACP-driven agent like:

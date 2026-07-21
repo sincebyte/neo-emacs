@@ -39,31 +39,25 @@ This module depends on the `opencode` package which is fetched from `codeberg.or
 
 * cursor
 ** Install 
-Make sure cursor-agent-acp and cursor-agent is available in shell.
+To ensure Cursor's official agent is available in your shell and supports the ACP protocol, follow these steps:
+Cursor's official agent provides the ACP protocol via the agent acp subcommand. You can verify it works correctly using either method:
+
 #+begin_src shell
 # Install Cursor CLI
-curl https://cursor.com/install -fsSL | bash
+brew install --cask cursor-cli
+agent --version
 
 # Authenticate with your Cursor account
-cursor-agent login
+agent login
 
-# Install cursor-agent-acp
-npm install -g @blowmage/cursor-agent-acp
+agent acp --help
 #+end_src
-** config cursor-agent-acp 
-Case some huge project loading with a long time，config timeout is indeed.
-#+begin_src elisp
-  (setq agent-shell-cursor-acp-command '("cursor-agent-acp" "-t" "90000"))
-#+end_src
-
 ** lsp server
 https://oraios.github.io/serena/02-usage/050_configuration.html#modes
 
-NOTE 1: You need use cursor-agent first to allow mcp service command.
-NOTE 2: You need config `export GIT_PROXY_COMMAND="git -c http.proxy=http://127.0.0.1:10887"` make sure serena install successful.
-NOTE 3: You need config cursor mcp.json to use serena
+In the config(located at your project/.cursor/mcp.json), --from points to a local directory (/Users/van/ZY/workspace/serena), so uvx runs the code directly from your local source instead of downloading it from PyPI.Use *git clone https://github.com/oraios/serena.git /Users/van/ZY/workspace/* download source code first.You can simply run git pull in your local serena directory (/Users/van/ZY/workspace/serena) to update the code. 
 
-#+begin_src mcp.json -n 10
+#+begin_src js
 {
   "mcpServers": {
     "gitnexus": {
@@ -74,30 +68,33 @@ NOTE 3: You need config cursor mcp.json to use serena
         "mcp"
       ]
     },
-    "mcp-language-server": {
+    "codegraph": {
+      "type": "stdio",
+      "command": "codegraph",
+      "args": ["serve", "--mcp"]
+    },
+    "lsp": {
       "type": "stdio",
       "command": "/Users/van/.pyenv/shims/uvx",
       "args": [
           "--from",
-          "git+https://github.com/oraios/serena",
+          "/Users/van/ZY/workspace/serena",
           "serena",
           "start-mcp-server",
           "--context",
           "ide",
           "--project",
-          "~/ZY/workspace/skytech/skytech-app/",
+          "/Users/van/ZY/workspace/skytech",
           "--language-backend",
-          "LSP",
-          "--log-level",
-          "DEBUG"
+          "LSP"
       ]
     }
   }
 }
 #+end_src
 ** Use cursor official ACP
-About https://github.com/xenodium/agent-shell/pull/394
+ased on the Pull Request #394 you referenced, yes, agent-shell now defaults to using Cursor's official ACP.
 
-Override
-[[/Users/van/.config/emacs/.local/straight/repos/agent-shell/agent-shell-cursor.el][agent-shell/agent-shell-cursor.el]]
+About https://github.com/xenodium/agent-shell/pull/394
+Override: [[/Users/van/.config/emacs/.local/straight/repos/agent-shell/agent-shell-cursor.el][agent-shell/agent-shell-cursor.el]]
 

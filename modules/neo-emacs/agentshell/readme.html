@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-04-02 Thu 14:50 -->
+<!-- 2026-07-21 Tue 11:05 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&lrm;</title>
@@ -204,10 +204,11 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orge792006">1. cursor</a>
+<li><a href="#orgf805464">1. cursor</a>
 <ul>
-<li><a href="#orgfd35b4e">1.1. config cursor-agent-acp</a></li>
-<li><a href="#orgf5b946f">1.2. lsp server</a></li>
+<li><a href="#org2a3e91c">1.1. Install</a></li>
+<li><a href="#orgd40a372">1.2. lsp server</a></li>
+<li><a href="#org8106075">1.3. Use cursor official ACP</a></li>
 </ul>
 </li>
 </ul>
@@ -245,11 +246,11 @@ Currently no default key bindings are set. You can add your preferred bindings t
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><code>  <span style="color: #6bd9db;">(</span><span style="color: #4d9391;">map!</span> <span style="color: #80bcb6;">:leader</span>
-        <span style="color: #80bcb6;">:prefix</span> <span style="color: #ab98b5;">(</span><span style="color: #6fb593;">"o"</span> . <span style="color: #6fb593;">"opencode"</span><span style="color: #ab98b5;">)</span>
-        <span style="color: #80bcb6;">:desc</span> <span style="color: #6fb593;">"Start opencode session"</span> <span style="color: #6fb593;">"o"</span> <span style="color: #80bcb6;">#'</span><span style="color: #4d9391;">opencode-start-session</span>
-        <span style="color: #80bcb6;">:desc</span> <span style="color: #6fb593;">"Opencode chat"</span> <span style="color: #6fb593;">"c"</span> <span style="color: #80bcb6;">#'</span><span style="color: #4d9391;">opencode-chat</span>
-        <span style="color: #80bcb6;">:desc</span> <span style="color: #6fb593;">"Opencode edit"</span> <span style="color: #6fb593;">"e"</span> <span style="color: #80bcb6;">#'</span><span style="color: #4d9391;">opencode-edit</span><span style="color: #6bd9db;">)</span>
+<pre class="src src-emacs-lisp"><code>  <span style="color: #6bd9db;">(</span>map! :leader
+        :prefix <span style="color: #ab98b5;">(</span><span style="color: #6fb593;">"o"</span> . <span style="color: #6fb593;">"opencode"</span><span style="color: #ab98b5;">)</span>
+        :desc <span style="color: #6fb593;">"Start opencode session"</span> <span style="color: #6fb593;">"o"</span> <span style="color: #80bcb6;">#'</span><span style="color: #4d9391;">opencode-start-session</span>
+        :desc <span style="color: #6fb593;">"Opencode chat"</span> <span style="color: #6fb593;">"c"</span> <span style="color: #80bcb6;">#'</span><span style="color: #4d9391;">opencode-chat</span>
+        :desc <span style="color: #6fb593;">"Opencode edit"</span> <span style="color: #6fb593;">"e"</span> <span style="color: #80bcb6;">#'</span><span style="color: #4d9391;">opencode-edit</span><span style="color: #6bd9db;">)</span>
 </code></pre>
 </div>
 
@@ -274,69 +275,99 @@ You can customize the following variables in your config.el:
 <p>
 This module depends on the `opencode` package which is fetched from `codeberg.org/sczi/opencode.el`.
 </p>
-<div id="outline-container-orge792006" class="outline-2">
-<h2 id="orge792006"><span class="section-number-2">1.</span> cursor</h2>
+<div id="outline-container-orgf805464" class="outline-2">
+<h2 id="orgf805464"><span class="section-number-2">1.</span> cursor</h2>
 <div class="outline-text-2" id="text-1">
-<p>
-Make sure cursor-agent-acp and cursor-agent is available in shell.
-</p>
-<div class="org-src-container">
-<pre class="src src-shell"><code><span style="color: #cd9575;">curl</span> https://cursor.com/install -fsS | bash
-npm install -g @blowmage/cursor-agent-acp
-</code></pre>
 </div>
-</div>
-<div id="outline-container-orgfd35b4e" class="outline-3">
-<h3 id="orgfd35b4e"><span class="section-number-3">1.1.</span> config cursor-agent-acp</h3>
+<div id="outline-container-org2a3e91c" class="outline-3">
+<h3 id="org2a3e91c"><span class="section-number-3">1.1.</span> Install</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
-Case some huge project loading with a long time，config timeout is indeed.
+To ensure Cursor&rsquo;s official agent is available in your shell and supports the ACP protocol, follow these steps:
+Cursor&rsquo;s official agent provides the ACP protocol via the agent acp subcommand. You can verify it works correctly using either method:
 </p>
-</div>
-</div>
-<div id="outline-container-orgf5b946f" class="outline-3">
-<h3 id="orgf5b946f"><span class="section-number-3">1.2.</span> lsp server</h3>
-<div class="outline-text-3" id="text-1-2">
+
 <div class="org-src-container">
-<pre class="src src-mcp.json"><code><span class="linenr">10: </span>{
-<span class="linenr">11: </span>  "mcpServers": {
-<span class="linenr">12: </span>    "gitnexus": {
-<span class="linenr">13: </span>      "command": "npx",
-<span class="linenr">14: </span>      "args": [
-<span class="linenr">15: </span>        "-y",
-<span class="linenr">16: </span>        "gitnexus@latest",
-<span class="linenr">17: </span>        "mcp"
-<span class="linenr">18: </span>      ]
-<span class="linenr">19: </span>    },
-<span class="linenr">20: </span>    "mcp-language-server": {
-<span class="linenr">21: </span>      "type": "stdio",
-<span class="linenr">22: </span>      "command": "uvx",
-<span class="linenr">23: </span>      "args": [
-<span class="linenr">24: </span>          "--from",
-<span class="linenr">25: </span>          "git+https://github.com/oraios/serena",
-<span class="linenr">26: </span>          "serena",
-<span class="linenr">27: </span>          "start-mcp-server",
-<span class="linenr">28: </span>          "--context",
-<span class="linenr">29: </span>          "ide",
-<span class="linenr">30: </span>          "--project",
-<span class="linenr">31: </span>          "~/ZY/workspace/skytech/skytech-app/",
-<span class="linenr">32: </span>          "--language-backend",
-<span class="linenr">33: </span>          "LSP",
-<span class="linenr">34: </span>          "--log-level",
-<span class="linenr">35: </span>          "DEBUG"
-<span class="linenr">36: </span>      ]
-<span class="linenr">37: </span>    }
-<span class="linenr">38: </span>  }
-<span class="linenr">39: </span>}
+<pre class="src src-shell"><code><span style="color: #545c5e;"># </span><span style="color: #545c5e;">Install Cursor CLI
+</span>brew install --cask cursor-cli
+agent --version
+
+<span style="color: #545c5e;"># </span><span style="color: #545c5e;">Authenticate with your Cursor account
+</span>agent login
+
+agent acp --help
 </code></pre>
 </div>
+</div>
+</div>
+<div id="outline-container-orgd40a372" class="outline-3">
+<h3 id="orgd40a372"><span class="section-number-3">1.2.</span> lsp server</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+<a href="https://oraios.github.io/serena/02-usage/050_configuration.html#modes">https://oraios.github.io/serena/02-usage/050_configuration.html#modes</a>
+</p>
+
+<p>
+In the config, &ndash;from points to a local directory (/Users/van/ZY/workspace/serena), so uvx runs the code directly from your local source instead of downloading it from PyPI.Use <b>git clone <a href="https://github.com/oraios/serena.git">https://github.com/oraios/serena.git</a> <i>Users/van/ZY/workspace</i></b> download source code first.You can simply run git pull in your local serena directory (/Users/van/ZY/workspace/serena) to update the code. Since your uvx command uses &ndash;from with that local path, it always runs your local source directly. After pulling, just restart your LSP client (e.g., M-x lsp-workspace-restart) for the changes to apply. Any new dependencies will be auto-installed by uvx on restart.
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-js"><code><span style="color: #6bd9db;">{</span>
+  <span style="color: #6fb593;">"mcpServers"</span>: <span style="color: #6bd9db;">{</span>
+    <span style="color: #6fb593;">"gitnexus"</span>: <span style="color: #6bd9db;">{</span>
+      <span style="color: #6fb593;">"command"</span>: <span style="color: #6fb593;">"npx"</span>,
+      <span style="color: #6fb593;">"args"</span>: <span style="color: #6bd9db;">[</span>
+        <span style="color: #6fb593;">"-y"</span>,
+        <span style="color: #6fb593;">"gitnexus@latest"</span>,
+        <span style="color: #6fb593;">"mcp"</span>
+      <span style="color: #6bd9db;">]</span>
+    <span style="color: #6bd9db;">}</span>,
+    <span style="color: #6fb593;">"codegraph"</span>: <span style="color: #6bd9db;">{</span>
+      <span style="color: #6fb593;">"type"</span>: <span style="color: #6fb593;">"stdio"</span>,
+      <span style="color: #6fb593;">"command"</span>: <span style="color: #6fb593;">"codegraph"</span>,
+      <span style="color: #6fb593;">"args"</span>: <span style="color: #6bd9db;">[</span><span style="color: #6fb593;">"serve"</span>, <span style="color: #6fb593;">"--mcp"</span><span style="color: #6bd9db;">]</span>
+    <span style="color: #6bd9db;">}</span>,
+    <span style="color: #6fb593;">"lsp"</span>: <span style="color: #6bd9db;">{</span>
+      <span style="color: #6fb593;">"type"</span>: <span style="color: #6fb593;">"stdio"</span>,
+      <span style="color: #6fb593;">"command"</span>: <span style="color: #6fb593;">"/Users/van/.pyenv/shims/uvx"</span>,
+      <span style="color: #6fb593;">"args"</span>: <span style="color: #6bd9db;">[</span>
+          <span style="color: #6fb593;">"--from"</span>,
+          <span style="color: #6fb593;">"/Users/van/ZY/workspace/serena"</span>,
+          <span style="color: #6fb593;">"serena"</span>,
+          <span style="color: #6fb593;">"start-mcp-server"</span>,
+          <span style="color: #6fb593;">"--context"</span>,
+          <span style="color: #6fb593;">"ide"</span>,
+          <span style="color: #6fb593;">"--project"</span>,
+          <span style="color: #6fb593;">"/Users/van/ZY/workspace/skytech"</span>,
+          <span style="color: #6fb593;">"--language-backend"</span>,
+          <span style="color: #6fb593;">"LSP"</span>
+      <span style="color: #6bd9db;">]</span>
+    <span style="color: #6bd9db;">}</span>
+  <span style="color: #6bd9db;">}</span>
+<span style="color: #6bd9db;">}</span>
+</code></pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org8106075" class="outline-3">
+<h3 id="org8106075"><span class="section-number-3">1.3.</span> Use cursor official ACP</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+ased on the Pull Request #394 you referenced, yes, agent-shell now defaults to using Cursor&rsquo;s official ACP.
+</p>
+
+<p>
+About <a href="https://github.com/xenodium/agent-shell/pull/394">https://github.com/xenodium/agent-shell/pull/394</a>
+Override: <a href="file:///Users/van/.config/emacs/.local/straight/repos/agent-shell/agent-shell-cursor.el">agent-shell/agent-shell-cursor.el</a>
+</p>
 </div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: minexiot</p>
-<p class="date">Created: 2026-04-02 Thu 14:50</p>
+<p class="date">Created: 2026-07-21 Tue 11:05</p>
 </div>
 </body>
 </html>
