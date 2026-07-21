@@ -63,9 +63,22 @@ There have many emacs distribution,just choose one and install it.
   open nextstep/Emacs.app
   #+end_src
 
+*** bash
 After emacs installation, set environment variables which names EMACS ,this depends on your emacs exec path.
 #+begin_src shell
+cp -rf /opt/homebrew/Cellar/emacs-plus@31/31.0.90/Emacs.app /Applications/
 export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs
+# config emacsclient
+export EMACS_APP=/opt/homebrew/Cellar/emacs-plus@31/31.0.90
+export PATH="$EMACS_APP/bin:$PATH"
+#+end_src
+*** fish
+#+begin_src shell 
+cp -rf /opt/homebrew/Cellar/emacs-plus@31/31.0.90/Emacs.app /Applications/
+set -x EMACS                /Applications/Emacs.app/Contents/MacOS/EMACS
+# config emacsclient
+set -x EMACS_APP            /opt/homebrew/Cellar/emacs-plus@31/31.0.90
+set PATH $EMACS_APP/bin $PATH
 #+end_src
 
 ** Clone project
@@ -114,6 +127,9 @@ brew update && brew upgrade emacs-mac && brew cleanup emacs-mac
 #+end_src
 ** For single package
 Running straight-pull-package performs a git pull inside the package's repository at ~/.config/emacs/.local/straight/repos/PACKAGE/, and then you need to execute (doom/reload) (or M-x doom/reload) to recompile the source into .elc bytecode files (stored in ~/.config/emacs/.local/straight/build-EMACS_VERSION/PACKAGE/) and reload the updated package, making the changes take effect.
+#+begin_src shell
+sh doom sync
+#+end_src
 ** For doom project
 #+begin_src shell
 export EMACS=/Applications/Emacs.app/Contents/MacOS/EMACS
@@ -368,7 +384,7 @@ If you are using fish shell ,fortunately there have some optimize config prepare
    | SPC v v | projectile-run-vterm | open vterm window base on the project root path |
    | SPC v p | vterm-send-start     | enable vterm screen roll                        |
    | SPC v s | vterm-send-stop      | disable vterm screen roll                       |
-** Clutch Sql
+** Clutch mode
 - The privacy configuration
    In here you could save any connections in your setting config.
    But where should the setting located especially for our Emacs config project with a public github repository? There have a privacy path which is excluded in the public repository named *user-private-dir*, You could config your connection's account/password here for safely.
@@ -450,7 +466,7 @@ Make the image directory as your screenshot file's saving location.
 #+begin_src shell
 ln -s ~/org/org-roam/image any_where/image
 #+end_src
-** Verb
+** Verb mode
 Verb is a new package for http client,becase the restclient is out of date and the author no longger maintain it on github.Fortunately there have a alternative one named verb which is more powerful and customizable. Verb support url template which makes you change different environment more conveniently.Also verb supports variables and picture query and upload.In org mode start verb just use `C-c C-r` as a previous command,example `C-c C-r C-f` will execute http request with your config,So verb is really fancy right?
 ** Bookmark
 - set a particular location for bookmark
@@ -492,7 +508,7 @@ You could customization startup inital workspace and their buffer.No need to ope
   (find-file "yourexpect.org"))
 (add-hook 'window-setup-hook #'open-my-workspaces)
 #+end_src
-* About the Release
+* About the Release (No longer Maintain 😢)
 This step can help you compile neo emacs faster,It only takes 3 minutes to install using the release package on my Mac laptop. Otherwise it would take me 15 minutes. The release installation package is a better choice for users with unstable networks and those who need to frequently reinstall neoemacs.
 Release package contains the git repository of related dependencies.The compiled directory files are removed and the .git directory is retained,So that you can perform subsequent upgrades.
 I will update the Release package once a month, And test them in advance and revise them for compatibility with upstream projects.

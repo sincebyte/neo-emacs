@@ -54,9 +54,23 @@ There have many emacs distribution,just choose one and install it.
         8    make install
         9    open nextstep/Emacs.app
 
-After emacs installation, set environment variables which names EMACS ,this depends on your emacs exec path.  
+1.  bash
 
-    export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs
+    After emacs installation, set environment variables which names EMACS ,this depends on your emacs exec path.  
+    
+        cp -rf /opt/homebrew/Cellar/emacs-plus@31/31.0.90/Emacs.app /Applications/
+        export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs
+        # config emacsclient
+        export EMACS_APP=/opt/homebrew/Cellar/emacs-plus@31/31.0.90
+        export PATH="$EMACS_APP/bin:$PATH"
+
+2.  fish
+
+        cp -rf /opt/homebrew/Cellar/emacs-plus@31/31.0.90/Emacs.app /Applications/
+        set -x EMACS                /Applications/Emacs.app/Contents/MacOS/EMACS
+        # config emacsclient
+        set -x EMACS_APP            /opt/homebrew/Cellar/emacs-plus@31/31.0.90
+        set PATH $EMACS_APP/bin $PATH
 
 
 ## Clone project
@@ -106,6 +120,8 @@ At last run below, this will take few minutes. And it depends on the quality of 
 ## For single package
 
 Running straight-pull-package performs a git pull inside the package&rsquo;s repository at ~/.config/emacs/.local/straight/repos/PACKAGE/, and then you need to execute (doom/reload) (or M-x doom/reload) to recompile the source into .elc bytecode files (stored in ~/.config/emacs/.local/straight/build-EMACS\_VERSION/PACKAGE/) and reload the updated package, making the changes take effect.  
+
+    sh doom sync
 
 
 ## For doom project
@@ -418,7 +434,7 @@ Download [jdt-language-server-1.22.0](https://www.eclipse.org/downloads/download
     2.  Download the lastest jdt-language-server from <https://download.eclipse.org/jdtls/milestones>.
     3.  Replace it in your bash/zsh/fish
 
-<div class="notice-info" id="orgeeeb6dc">
+<div class="notice-info" id="orgc14d478">
 <p>
 You could config jdk version and lombok in jdtls python source code.<br />
 </p>
@@ -504,7 +520,7 @@ Opencode
 
 You&rsquo;d better install vterm in a terminal environment case there might have error incompatible architecture.  
 
-<div class="notice-warning" id="org4ddc325">
+<div class="notice-warning" id="org80ff7e7">
 <p>
 Vterm is not available on windows.<br />
 Thus windows user have to use eshell as a downgrade plan.<br />
@@ -621,7 +637,7 @@ Thus windows user have to use eshell as a downgrade plan.<br />
         </table>
 
 
-## Clutch Sql
+## Clutch mode
 
 -   The privacy configuration  
     In here you could save any connections in your setting config.  
@@ -744,7 +760,7 @@ Thus windows user have to use eshell as a downgrade plan.<br />
         ln -s ~/org/org-roam/image any_where/image
 
 
-## Verb
+## Verb mode
 
 Verb is a new package for http client,becase the restclient is out of date and the author no longger maintain it on github.Fortunately there have a alternative one named verb which is more powerful and customizable. Verb support url template which makes you change different environment more conveniently.Also verb supports variables and picture query and upload.In org mode start verb just use \`C-c C-r\` as a previous command,example \`C-c C-r C-f\` will execute http request with your config,So verb is really fancy right?  
 
@@ -821,7 +837,7 @@ You could customization startup inital workspace and their buffer.No need to ope
     (add-hook 'window-setup-hook #'open-my-workspaces)
 
 
-# About the Release
+# About the Release (No longer Maintain 😢)
 
 This step can help you compile neo emacs faster,It only takes 3 minutes to install using the release package on my Mac laptop. Otherwise it would take me 15 minutes. The release installation package is a better choice for users with unstable networks and those who need to frequently reinstall neoemacs.  
 Release package contains the git repository of related dependencies.The compiled directory files are removed and the .git directory is retained,So that you can perform subsequent upgrades.  
