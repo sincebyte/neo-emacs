@@ -9,6 +9,10 @@
           ("https://www.ecb.europa.eu/rss/press.html" economics eu)
           ("https://drewdevault.com/blog/index.xml" drew devault)
           ("https://news.ycombinator.com/rss" ycombinator news)
+          ("https://simonwillison.net/atom/everything/" ai)
+          ("https://huggingface.co/blog/feed.xml" ai)
+          ("https://www.cursor.com/blog/rss.xml" ai)
+          ("https://lastweekin.ai/feed" ai)
           ("https://www.phoronix.com/rss.php" phoronix)))
   (define-key evil-normal-state-map (kbd "RET") 'elfeed-search-show-entry))
 

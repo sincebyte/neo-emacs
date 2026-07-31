@@ -209,7 +209,7 @@
         sql                 ; ejc sql setting
         ;; modeline         ; modeline
         modelinexp          ; Expand doom doom modeline
-        ;; elfeed           ; rss reader
+        elfeed           ; rss reader
         ;; alpha            ; make emacs background transparent
         git                 ; magit wit
         agentshell          ; ai integration
