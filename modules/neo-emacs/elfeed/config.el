@@ -14,7 +14,9 @@
           ("https://www.cursor.com/blog/rss.xml" ai)
           ("https://lastweekin.ai/feed" ai)
           ("https://www.phoronix.com/rss.php" phoronix)))
-  (define-key evil-normal-state-map (kbd "RET") 'elfeed-search-show-entry))
+  (define-key evil-normal-state-map (kbd "RET") 'elfeed-search-show-entry)
+  (add-hook 'elfeed-show-mode-hook
+            (lambda () (read-only-mode -1))))
 
 (map! :ne "; i"     #'eww   )
 (map! :ne "SPC o e" #'elfeed)
