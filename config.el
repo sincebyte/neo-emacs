@@ -2,6 +2,7 @@
 (require 'cl-lib)
 (require 'seq)
 
+(server-start)
 (setq custom-file null-device)
 ;; max width and height but not fullscreen
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
