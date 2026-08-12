@@ -4,8 +4,9 @@
 # --
 #!/bin/bash
 set -e
+git pull
 export TZ="Asia/Shanghai"
-ps -ef | grep app | awk '{print $2}' | xargs kill -9
+ps -ef | grep app | grep -v grep |awk '{print $2}' | xargs -r kill -9
 mvnj11 clean package -U -DskipTests
 
 $JAVA_11_ARM_HOME/bin/java \
