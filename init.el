@@ -213,6 +213,7 @@
         ;; alpha            ; make emacs background transparent
         git                 ; magit wit
         agentshell          ; ai integration
+        eaf                 ; emacs application framework
         ;; windows             ; toggle window by popwin
         ;; addspace         ; add space when typing
         ;; telega           ; use telega
