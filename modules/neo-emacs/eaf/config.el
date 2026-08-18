@@ -83,11 +83,13 @@
         :desc "EAF Browser" "o b" #'eaf-open-browser
         :desc "EAF Browser (history)" "o B" #'eaf-open-browser-with-history)
   (map! :leader
-        :desc "EAF open file" "o e" #'eaf-open))
+        :desc "EAF open file" "o e" #'eaf-open)
+  (map! :desc "EAF Bookmarks" "C-c b" #'eaf-open-bookmark))
 
 (defun my/eaf-enable-proxy (&rest _)
-  (when (and (boundp 'eaf-proxy-type)
-             eaf-proxy-type
-             eaf-epc-process)
-    (eaf-call-async "toggle_proxy")))
+  (ignore-errors
+    (when (and (boundp 'eaf-proxy-type)
+               eaf-proxy-type
+               eaf-epc-process)
+      (eaf-call-async "toggle_proxy"))))
 (advice-add 'eaf-open-browser :after #'my/eaf-enable-proxy)
