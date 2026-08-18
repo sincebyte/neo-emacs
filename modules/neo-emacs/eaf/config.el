@@ -2,15 +2,16 @@
 
 (use-package! eaf
   :init
-  (setenv "QTWEBENGINE_CHROMIUM_FLAGS" "--disable-gpu --no-sandbox")
+  (setenv "QTWEBENGINE_CHROMIUM_FLAGS" "--no-sandbox --disable-features=WebRtcHideLocalIpsWithMdns --enable-features=PlatformHEVCDecoderSupport --enable-gpu-rasterization --ignore-gpu-blocklist --proxy-server=http://127.0.0.1:10887 --user-agent=\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\"")
   (setenv "QTWEBENGINE_DISABLE_SANDBOX" "1")
-  (setq eaf-python-command (executable-find "python3")
+  (setq eaf-python-command "/opt/homebrew/bin/python3"
         eaf-browser-continue-where-left-off t
-        eaf-browser-enable-adblocker t)
+        eaf-browser-enable-adblocker t
+        eaf-proxy-type "http"
+        eaf-proxy-host "127.0.0.1"
+        eaf-proxy-port "10887")
   :config
   (setq browse-url-browser-function 'eaf-open-browser)
-  (setq eaf-browser-proxy-host "127.0.0.1")
-  (setq eaf-browser-proxy-port "10887")
   (defalias 'browse-web #'eaf-open-browser)
   (require 'eaf-browser)
   (eaf-setq eaf-browser-default-search-engine "google")
@@ -37,7 +38,27 @@
   (eaf-bind-key eaf-restart-process "R" eaf-browser-keybinding)
   (eaf-bind-key eaf-safe-close-buffer "Q" eaf-browser-keybinding)
 
+  (eaf-bind-key copy_text "s-c" eaf-browser-keybinding)
+  (eaf-bind-key yank_text "s-v" eaf-browser-keybinding)
+
+  (defun eaf-consult-yank-pop ()
+    "Select kill-ring entry via consult and paste into EAF."
+    (interactive)
+    (let ((text (with-temp-buffer
+                  (consult-yank-pop)
+                  (buffer-string))))
+      (when (and text (not (string-empty-p text)))
+        (eaf-call "send_key" "yank_text" text))))
+
+  (eaf-bind-key eaf-consult-yank-pop "M-y" eaf-browser-keybinding)
+
   (eaf-bind-key switch_to_input_mode "M-i" eaf-browser-keybinding)
+  (setf (map-elt eaf-browser-keybinding "i") nil)
+  (setf (map-elt eaf-browser-keybinding "f") nil)
+  (setf (map-elt eaf-browser-keybinding "m") nil)
+  (setf (map-elt eaf-browser-keybinding "p") nil)
+  (setf (map-elt eaf-browser-keybinding "t") nil)
+  (setf (map-elt eaf-browser-keybinding "x") nil)
 
   (advice-add 'eaf--monitor-buffer-kill :around
               (lambda (orig-fn &rest args)
@@ -63,3 +84,10 @@
         :desc "EAF Browser (history)" "o B" #'eaf-open-browser-with-history)
   (map! :leader
         :desc "EAF open file" "o e" #'eaf-open))
+
+(defun my/eaf-enable-proxy (&rest _)
+  (when (and (boundp 'eaf-proxy-type)
+             eaf-proxy-type
+             eaf-epc-process)
+    (eaf-call-async "toggle_proxy")))
+(advice-add 'eaf-open-browser :after #'my/eaf-enable-proxy)
