@@ -2,6 +2,8 @@
 
 (use-package! eaf
   :init
+  (setenv "QTWEBENGINE_CHROMIUM_FLAGS" "--disable-gpu --no-sandbox")
+  (setenv "QTWEBENGINE_DISABLE_SANDBOX" "1")
   (setq eaf-python-command (executable-find "python3")
         eaf-browser-continue-where-left-off t
         eaf-browser-enable-adblocker t)
@@ -34,6 +36,8 @@
   (eaf-bind-key consult-buffer "B" eaf-browser-keybinding)
   (eaf-bind-key eaf-restart-process "R" eaf-browser-keybinding)
   (eaf-bind-key eaf-safe-close-buffer "Q" eaf-browser-keybinding)
+
+  (eaf-bind-key switch_to_input_mode "M-i" eaf-browser-keybinding)
 
   (advice-add 'eaf--monitor-buffer-kill :around
               (lambda (orig-fn &rest args)
