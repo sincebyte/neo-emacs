@@ -325,3 +325,18 @@
 ;; (metal-loader-load "/Users/van/.doom.d/neoemacs/animation.el/glitch-effect.metallib")
 (add-to-list 'load-path "/path/to/clutch")
 (require 'clutch)
+
+(when (eq system-type 'darwin)
+  (defun my/refocus-emacs ()
+    (ignore-errors
+      (ns-do-applescript "tell application \"Emacs\" to activate")
+      (select-frame-set-input-focus (selected-frame))))
+  (add-hook 'window-setup-hook
+            (lambda ()
+              (run-with-idle-timer 0.5 nil #'my/refocus-emacs)
+              (run-with-idle-timer 1.5 nil #'my/refocus-emacs)
+              (run-with-idle-timer 3.0 nil #'my/refocus-emacs)))
+  (add-hook 'after-make-frame-functions
+            (lambda (frame)
+              (run-with-idle-timer 0.2 nil
+                (lambda () (select-frame-set-input-focus frame))))))
