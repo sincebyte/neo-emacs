@@ -96,39 +96,8 @@
       (eaf-call-async "toggle_proxy"))))
 (advice-add 'eaf-open-browser :after #'my/eaf-enable-proxy)
 
-(defun my/eaf-refocus-emacs (&rest _)
-  (run-with-idle-timer 0.3 nil
-    (lambda ()
-      (select-frame-set-input-focus (selected-frame)))))
-(advice-add 'eaf-open-browser :after #'my/eaf-refocus-emacs)
+(setf (alist-get "browser" eaf-app-hook-alist nil nil #'equal)
+      (lambda ()
+        (eaf-call-async "eval_function" eaf--buffer-id "switch_to_input_mode" "")))
 
-;;; Fix IME cursor position on macOS
-;;;
-;;; EAF sends fake Qt key events which don't trigger macOS input method.
-;;; The fix works at the Python level:
-;;; 1. `switch_to_input_mode' activates EAF as the frontmost application
-;;;    so real keyboard events reach the Qt widget and IME works natively.
-;;; 2. `eventFilter' skips re-activating Emacs on mouse click when in
-;;;    input mode, so EAF stays frontmost while typing.
-;;; 3. When Emacs regains focus (e.g. user clicks Emacs window), we
-;;;    exit input mode automatically.
-;;;
-;;; Usage: M-i to enter input mode (IME follows cursor), click Emacs
-;;; window to exit.
-
-(defvar my/eaf-input-mode-p nil
-  "Non-nil when EAF is in input mode.")
-
-(defun my/eaf--toggle-input-mode-advice (orig-fn buffer-id status)
-  "Track input mode state."
-  (funcall orig-fn buffer-id status)
-  (setq my/eaf-input-mode-p status))
-
-(advice-add 'eaf--toggle-input-mode :around #'my/eaf--toggle-input-mode-advice)
-
-(defun my/eaf--handle-focus-change (&optional _frame)
-  "Exit input mode when Emacs regains focus."
-  (when (and my/eaf-input-mode-p
-             (frame-focus-state))
-    (setq my/eaf-input-mode-p nil)))
-(add-function :after after-focus-change-function #'my/eaf--handle-focus-change)
+;;; IME cursor position fix on macOS
