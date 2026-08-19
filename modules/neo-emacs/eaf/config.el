@@ -65,6 +65,7 @@
   (setf (map-elt eaf-browser-keybinding ".") nil)
   (setf (map-elt eaf-browser-keybinding ";") nil)
   (setf (map-elt eaf-browser-keybinding "3") nil)
+  (setf (map-elt eaf-browser-keybinding "C-j") nil)
 
   (advice-add 'eaf--monitor-buffer-kill :around
               (lambda (orig-fn &rest args)
