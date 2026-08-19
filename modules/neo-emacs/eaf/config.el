@@ -55,6 +55,7 @@
   (eaf-bind-key eaf-consult-yank-pop "M-y" eaf-browser-keybinding)
 
   (eaf-bind-key switch_to_input_mode "M-i" eaf-browser-keybinding)
+  (setf (map-elt eaf-browser-keybinding "M-i") 'my/eaf-toggle-input-mode)
   (setf (map-elt eaf-browser-keybinding "i") nil)
   (setf (map-elt eaf-browser-keybinding "f") nil)
   (setf (map-elt eaf-browser-keybinding "m") nil)
@@ -91,13 +92,20 @@
 (defun my/eaf-enable-proxy (&rest _)
   (ignore-errors
     (when (and (boundp 'eaf-proxy-type)
-               eaf-proxy-type
-               eaf-epc-process)
+                eaf-proxy-type
+                eaf-epc-process)
       (eaf-call-async "toggle_proxy"))))
 (advice-add 'eaf-open-browser :after #'my/eaf-enable-proxy)
 
-(setf (alist-get "browser" eaf-app-hook-alist nil nil #'equal)
-      (lambda ()
-        (eaf-call-async "eval_function" eaf--buffer-id "switch_to_input_mode" "")))
+(defun my/eaf-toggle-input-mode ()
+  (interactive)
+  (when (derived-mode-p 'eaf-mode)
+    (eaf-call-async "eval_function" eaf--buffer-id "switch_to_input_mode" "")
+    (when (and (eq system-type 'darwin)
+               (boundp 'eaf-internal-process)
+               (process-live-p eaf-internal-process))
+      (let ((pid (process-id eaf-internal-process)))
+        (start-process "eaf-activate" nil "osascript" "-e"
+          (format "tell application \"System Events\" to set frontmost of first process whose unix id is %d to true" pid))))))
 
 ;;; IME cursor position fix on macOS
