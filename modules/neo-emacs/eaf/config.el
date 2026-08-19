@@ -75,6 +75,12 @@
                    (eaf--kill-python-process)
                    (eaf-start-process)))))
 
+  (defun eaf-translate-text (text)
+    "Translate TEXT using gt, or silently ignore if gt is unavailable."
+    (if (fboundp 'gt-do-translate)
+        (gt-do-translate text)
+      (ignore)))
+
   (defun eaf-safe-close-buffer ()
     "Close current EAF browser buffer safely."
     (interactive)
@@ -96,24 +102,53 @@
       (eaf-call-async "toggle_proxy"))))
 (advice-add 'eaf-open-browser :after #'my/eaf-enable-proxy)
 
+;; The newer EAF calls `eaf--toggle-input-mode' via eval_in_emacs to report the
+;; input-mode state, but the installed eaf.el does not define it. Provide it.
+(defun eaf--toggle-input-mode (buffer-id &optional state)
+  "Record EAF input-mode STATE for BUFFER-ID."
+  (ignore-errors
+    (let ((buf (eaf-get-buffer buffer-id)))
+      (when buf
+        (with-current-buffer buf
+          (setq-local eaf-buffer-input-focus (equal state "'t")))))))
+
 (defun my/eaf-auto-input-mode (&rest _)
   "Auto-enter input mode when EAF browser opens."
   (ignore-errors
     (when (and (boundp 'eaf-epc-process) eaf-epc-process)
-      (run-at-time 0.5 nil
-                   (lambda ()
-                     (eaf-call-async "eval_function" eaf--buffer-id "switch_to_input_mode" ""))))))
+      (let ((buffer-id eaf--buffer-id))
+        (run-at-time 0.5 nil
+                     (lambda ()
+                       (eaf-call-async "eval_function" buffer-id "switch_to_input_mode" "t")))))))
 (advice-add 'eaf-open-browser :after #'my/eaf-auto-input-mode)
 
 (defun my/eaf-toggle-input-mode ()
+  "Enable EAF input mode (idempotent).
+
+The event string \"t\" makes `switch_to_input_mode' enable input mode without
+toggling it back off, so a single press always hands keyboard focus to the Qt
+browser.  On macOS the newer EAF activates the EAF (Qt) application when
+enabling and re-activates Emacs when disabling (or when Emacs regains focus)."
   (interactive)
   (when (derived-mode-p 'eaf-mode)
-    (eaf-call-async "eval_function" eaf--buffer-id "switch_to_input_mode" "")
-    (when (and (eq system-type 'darwin)
-               (boundp 'eaf-internal-process)
-               (process-live-p eaf-internal-process))
-      (let ((pid (process-id eaf-internal-process)))
-        (start-process "eaf-activate" nil "osascript" "-e"
-          (format "tell application \"System Events\" to set frontmost of first process whose unix id is %d to true" pid))))))
+    (message "my/eaf-toggle-input-mode: sending switch_to_input_mode t")
+    (eaf-call-async "eval_function" eaf--buffer-id "switch_to_input_mode" "t")))
 
-;;; IME cursor position fix on macOS
+;;; Fix EAF content shifting right when Emacs loses focus (macOS)
+;;;
+;;; Root cause: EAF positions its Qt widget at `window-pixel-edges' (the window's
+;;; TOTAL edge, which includes the left fringe). But when focus is lost, EAF hides
+;;; the widget and shows a screenshot via `insert-image', which lands in the TEXT
+;;; AREA (after the left fringe). The screenshot is therefore offset right by the
+;;; fringe width (~8px), matching the observed 5-15px jump.
+;;;
+;;; Fix: Give EAF buffers zero-width fringes so the text area (where the
+;;; screenshot is drawn) coincides with the widget position.
+
+(add-hook 'eaf-mode-hook
+          (lambda ()
+            (setq-local left-fringe-width 0)
+            (setq-local right-fringe-width 0)
+            (let ((win (get-buffer-window (current-buffer) 0)))
+              (when win
+                (set-window-fringes win 0 0)))))
