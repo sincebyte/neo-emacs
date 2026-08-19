@@ -1,0 +1,843 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2026-08-19 Wed 14:00 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EAF Browser: Install &amp; Usage</title>
+<meta name="author" content="van" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-c:before { content: 'C'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'JavaScript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<script src  = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src  = "https://cdn.minexiot.com/file/ems/scroll.js"></script>
+<script src  = "https://cdn.minexiot.com/file/ems/tex-mml-chtml.js"></script>
+<link   href = "https://cdn.minexiot.com/file/ems/base.css" rel="stylesheet" type="text/css"></link>
+</head>
+<body>
+<div id="preamble" class="status">
+<p>Made ✐︎ by 
+</div>
+<div id="content" class="content">
+<h1 class="title">EAF Browser: Install &amp; Usage
+<br />
+<span class="subtitle">A modern browser inside Emacs powered by Qt6 WebEngine</span>
+</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org78e4540">1. EAF Browser</a></li>
+<li><a href="#orgdf2835a">2. Install</a>
+<ul>
+<li><a href="#orgfedf21f">2.1. System Dependencies (macOS)</a></li>
+<li><a href="#org864eaab">2.2. Install aria2 (optional, for downloads)</a></li>
+<li><a href="#org9ef3492">2.3. Install pycookiecheat (optional, for Chrome cookie import)</a></li>
+<li><a href="#org3285436">2.4. Install EAF Framework + Browser</a></li>
+<li><a href="#org86d1be4">2.5. Verify Installation</a></li>
+</ul>
+</li>
+<li><a href="#org8084046">3. Configuration</a>
+<ul>
+<li><a href="#org5a94e12">3.1. Core Settings</a></li>
+<li><a href="#org104e72b">3.2. Proxy &amp; Chromium Flags</a></li>
+<li><a href="#orga014111">3.3. Browser Defaults</a></li>
+</ul>
+</li>
+<li><a href="#org84b7cbf">4. Usage</a>
+<ul>
+<li><a href="#orgd0cffa7">4.1. Launch Commands</a></li>
+<li><a href="#org5727ffc">4.2. Key Bindings (SPC Leader)</a></li>
+<li><a href="#orgf5bb03f">4.3. EAF Browser Mode Key Bindings</a></li>
+<li><a href="#org3ddc5af">4.4. Chrome Cookie Import</a></li>
+</ul>
+</li>
+<li><a href="#orgd0de7bb">5. Troubleshooting</a>
+<ul>
+<li><a href="#orga0055d1">5.1. EAF doesn&rsquo;t start</a></li>
+<li><a href="#orgc07f881">5.2. Sandbox issues on macOS</a></li>
+<li><a href="#orgec24be5">5.3. Proxy not working</a></li>
+<li><a href="#orgf75f85b">5.4. Update EAF</a></li>
+</ul>
+</li>
+<li><a href="#orge9a5d90">6. Reference</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org78e4540" class="outline-2">
+<h2 id="org78e4540"><span class="section-number-2">1.</span> EAF Browser</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+EAF (Emacs Application Framework) is a framework that extends Emacs with modern graphical capabilities by embedding a Qt6 WebEngine view. EAF Browser is the web browser application built on it — a full-featured, keyboard-driven browser that runs inside Emacs.<br />
+</p>
+</div>
+</div>
+<div id="outline-container-orgdf2835a" class="outline-2">
+<h2 id="orgdf2835a"><span class="section-number-2">2.</span> Install</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-orgfedf21f" class="outline-3">
+<h3 id="orgfedf21f"><span class="section-number-3">2.1.</span> System Dependencies (macOS)</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+EAF depends on Qt6 WebEngine and Python. Install them via brew:<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell"><code>brew install python@3.13 qt6 pyqt6
+</code></pre>
+</div>
+
+<p>
+Use Python 3.13 (the recommended version). Make sure <code>python3</code> points to the brew-installed one:<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell"><code>which python3
+<span style="color: #545c5e;"># </span><span style="color: #545c5e;">should output /opt/homebrew/bin/python3</span>
+</code></pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org864eaab" class="outline-3">
+<h3 id="org864eaab"><span class="section-number-3">2.2.</span> Install aria2 (optional, for downloads)</h3>
+<div class="outline-text-3" id="text-2-2">
+<div class="org-src-container">
+<pre class="src src-shell"><code>brew install aria2
+</code></pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org9ef3492" class="outline-3">
+<h3 id="org9ef3492"><span class="section-number-3">2.3.</span> Install pycookiecheat (optional, for Chrome cookie import)</h3>
+<div class="outline-text-3" id="text-2-3">
+<div class="org-src-container">
+<pre class="src src-shell"><code>pip3 install pycookiecheat
+</code></pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org3285436" class="outline-3">
+<h3 id="org3285436"><span class="section-number-3">2.4.</span> Install EAF Framework + Browser</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+Neo-emacs uses doom&rsquo;s <code>straight.el</code> to install both <code>eaf</code> and <code>eaf-browser</code> from source. The package recipes are in <code>packages.el</code>:<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp"><code><span style="color: #6bd9db;">(</span>package! eaf
+  :recipe <span style="color: #ab98b5;">(</span>:host github
+           :repo <span style="color: #6fb593;">"emacs-eaf/emacs-application-framework"</span>
+           :branch <span style="color: #6fb593;">"master"</span>
+           :files <span style="color: #5D8272;">(</span><span style="color: #6fb593;">"*.el"</span> <span style="color: #6fb593;">"*.json"</span> <span style="color: #6fb593;">"*.py"</span> <span style="color: #6fb593;">"core"</span> <span style="color: #6fb593;">"app"</span><span style="color: #5D8272;">)</span><span style="color: #ab98b5;">)</span><span style="color: #6bd9db;">)</span>
+
+<span style="color: #6bd9db;">(</span>package! eaf-browser
+  :recipe <span style="color: #ab98b5;">(</span>:host github
+           :repo <span style="color: #6fb593;">"emacs-eaf/eaf-browser"</span>
+           :branch <span style="color: #6fb593;">"master"</span>
+           :files <span style="color: #5D8272;">(</span>:defaults <span style="color: #6fb593;">"*.py"</span> <span style="color: #6fb593;">"dependencies.json"</span> <span style="color: #6fb593;">"easylist.txt"</span> <span style="color: #6fb593;">"aria2-ng"</span> <span style="color: #6fb593;">"node_modules"</span><span style="color: #5D8272;">)</span><span style="color: #ab98b5;">)</span><span style="color: #6bd9db;">)</span>
+</code></pre>
+</div>
+
+<p>
+After the packages are pulled, run the EAF installer to set up Python dependencies:<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell"><code><span style="color: #cd9575;">cd</span> ~/.emacs.d/.local/straight/repos/emacs-application-framework/
+python3 install-eaf.py
+</code></pre>
+</div>
+
+<p>
+Or use <code>M-x eaf-install-and-update</code> inside Emacs.<br />
+</p>
+</div>
+</div>
+<div id="outline-container-org86d1be4" class="outline-3">
+<h3 id="org86d1be4"><span class="section-number-3">2.5.</span> Verify Installation</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+Open EAF&rsquo;s demo to check everything works:<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp"><code>M-x eaf-open-demo
+</code></pre>
+</div>
+
+<p>
+If the demo window appears, EAF is installed correctly.<br />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org8084046" class="outline-2">
+<h2 id="org8084046"><span class="section-number-2">3.</span> Configuration</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Neo-emacs configures EAF Browser in <code>config.el</code> with sensible defaults:<br />
+</p>
+</div>
+<div id="outline-container-org5a94e12" class="outline-3">
+<h3 id="org5a94e12"><span class="section-number-3">3.1.</span> Core Settings</h3>
+<div class="outline-text-3" id="text-3-1">
+<div class="org-src-container">
+<pre class="src src-elisp"><code><span style="color: #6bd9db;">(</span>setq <span style="color: #968cc7;">eaf-python-command</span> <span style="color: #6fb593;">"/opt/homebrew/bin/python3"</span>
+      <span style="color: #968cc7;">eaf-browser-continue-where-left-off</span> t
+      <span style="color: #968cc7;">eaf-browser-enable-adblocker</span> t
+      <span style="color: #968cc7;">eaf-proxy-type</span> <span style="color: #6fb593;">"http"</span>
+      <span style="color: #968cc7;">eaf-proxy-host</span> <span style="color: #6fb593;">"127.0.0.1"</span>
+      <span style="color: #968cc7;">eaf-proxy-port</span> <span style="color: #6fb593;">"10887"</span>
+      <span style="color: #968cc7;">eaf-start-python-process-when-require</span> nil<span style="color: #6bd9db;">)</span>
+</code></pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org104e72b" class="outline-3">
+<h3 id="org104e72b"><span class="section-number-3">3.2.</span> Proxy &amp; Chromium Flags</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+QtWebEngine runs Chromium under the hood. Neo-emacs configures proxy and flags via environment variables:<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp"><code><span style="color: #6bd9db;">(</span><span style="color: #ab98b5;">setenv</span> <span style="color: #6fb593;">"QTWEBENGINE_CHROMIUM_FLAGS"</span>
+        <span style="color: #6fb593;">"--no-sandbox --disable-features=WebRtcHideLocalIpsWithMdns
+         --enable-features=PlatformHEVCDecoderSupport
+         --enable-gpu-rasterization --ignore-gpu-blocklist
+         --proxy-server=http://127.0.0.1:10887
+         --user-agent=\"Mozilla/5.0 ...\""</span><span style="color: #6bd9db;">)</span>
+<span style="color: #6bd9db;">(</span><span style="color: #ab98b5;">setenv</span> <span style="color: #6fb593;">"QTWEBENGINE_DISABLE_SANDBOX"</span> <span style="color: #6fb593;">"1"</span><span style="color: #6bd9db;">)</span>
+</code></pre>
+</div>
+
+<p>
+Proxy auto-toggle is handled by an advice:<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp"><code><span style="color: #6bd9db;">(</span><span style="color: #4d9391;">defun</span> <span style="color: #80bcb6;">my/eaf-enable-proxy</span> <span style="color: #ab98b5;">(</span>&amp;rest _<span style="color: #ab98b5;">)</span>
+  <span style="color: #ab98b5;">(</span>ignore-errors
+    <span style="color: #5D8272;">(</span>when <span style="color: #807f96;">(</span>and <span style="color: #4d9391;">(</span><span style="color: #ab98b5;">boundp</span> <span style="color: #80bcb6;">'</span><span style="color: #968cc7;">eaf-proxy-type</span><span style="color: #4d9391;">)</span> <span style="color: #968cc7;">eaf-proxy-type</span> <span style="color: #968cc7;">eaf-epc-process</span><span style="color: #807f96;">)</span>
+      <span style="color: #807f96;">(</span><span style="color: #80bcb6;">eaf-call-async</span> <span style="color: #6fb593;">"toggle_proxy"</span><span style="color: #807f96;">)</span><span style="color: #5D8272;">)</span><span style="color: #ab98b5;">)</span><span style="color: #6bd9db;">)</span>
+<span style="color: #6bd9db;">(</span><span style="color: #ab98b5;">advice-add</span> <span style="color: #80bcb6;">'</span><span style="color: #4d9391;">eaf-open-browser</span> :after <span style="color: #80bcb6;">#'</span><span style="color: #4d9391;">my/eaf-enable-proxy</span><span style="color: #6bd9db;">)</span>
+</code></pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orga014111" class="outline-3">
+<h3 id="orga014111"><span class="section-number-3">3.3.</span> Browser Defaults</h3>
+<div class="outline-text-3" id="text-3-3">
+<div class="org-src-container">
+<pre class="src src-elisp"><code><span style="color: #6bd9db;">(</span>setq <span style="color: #968cc7;">browse-url-browser-function</span> <span style="color: #80bcb6;">'</span><span style="color: #4d9391;">eaf-open-browser</span><span style="color: #6bd9db;">)</span>
+<span style="color: #6bd9db;">(</span><span style="color: #ab98b5;">defalias</span> <span style="color: #80bcb6;">'</span><span style="color: #80bcb6;">browse-web</span> <span style="color: #80bcb6;">#'</span><span style="color: #4d9391;">eaf-open-browser</span><span style="color: #6bd9db;">)</span>
+<span style="color: #6bd9db;">(</span><span style="color: #ab98b5;">require</span> <span style="color: #80bcb6;">'</span><span style="color: #4d9391;">eaf-browser</span><span style="color: #6bd9db;">)</span>
+<span style="color: #6bd9db;">(</span>eaf-setq <span style="color: #968cc7;">eaf-browser-default-search-engine</span> <span style="color: #6fb593;">"google"</span><span style="color: #6bd9db;">)</span>
+
+<span style="color: #6bd9db;">(</span>setq <span style="color: #968cc7;">eaf-browser-auto-import-chrome-cookies</span> t
+      <span style="color: #968cc7;">eaf-browser-enable-adblocker</span> t
+      <span style="color: #968cc7;">eaf-browser-enable-autofill</span> t
+      <span style="color: #968cc7;">eaf-browser-dark-mode</span> <span style="color: #6fb593;">"ignore"</span>
+      <span style="color: #968cc7;">eaf-chrome-bookmark-file</span> <span style="color: #6fb593;">"~/Desktop/bookmarks_2026_8_17.html"</span>
+      eaf-browser-default-zoom 1.0
+      eaf-browser-enable-javascript t
+      eaf-browser-enable-aria2 t
+      eaf-browser-aria2-download-dir <span style="color: #6fb593;">"~/Downloads/"</span>
+      eaf-browser-history-file <span style="color: #ab98b5;">(</span><span style="color: #ab98b5;">concat</span> <span style="color: #968cc7;">doom-data-dir</span> <span style="color: #6fb593;">"eaf/browser/history.log"</span><span style="color: #ab98b5;">)</span>
+      eaf-browser-bookmark-file <span style="color: #ab98b5;">(</span><span style="color: #ab98b5;">concat</span> <span style="color: #968cc7;">doom-data-dir</span> <span style="color: #6fb593;">"eaf/browser/bookmarks.log"</span><span style="color: #ab98b5;">)</span>
+      eaf-browser-cookie-file <span style="color: #ab98b5;">(</span><span style="color: #ab98b5;">concat</span> <span style="color: #968cc7;">doom-data-dir</span> <span style="color: #6fb593;">"eaf/browser/cookies"</span><span style="color: #ab98b5;">)</span><span style="color: #6bd9db;">)</span>
+</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org84b7cbf" class="outline-2">
+<h2 id="org84b7cbf"><span class="section-number-2">4.</span> Usage</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-orgd0cffa7" class="outline-3">
+<h3 id="orgd0cffa7"><span class="section-number-3">4.1.</span> Launch Commands</h3>
+<div class="outline-text-3" id="text-4-1">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Command</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>M-x eaf-open-browser</code></td>
+<td class="org-left">Open browser (search or URL)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>M-x eaf-open-browser-with-history</code></td>
+<td class="org-left">Open browser with history selection</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>M-x eaf-open-bookmark</code></td>
+<td class="org-left">Open bookmark manager</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>M-x eaf-open</code></td>
+<td class="org-left">Open file in appropriate EAF app</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org5727ffc" class="outline-3">
+<h3 id="org5727ffc"><span class="section-number-3">4.2.</span> Key Bindings (SPC Leader)</h3>
+<div class="outline-text-3" id="text-4-2">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Key</th>
+<th scope="col" class="org-left">Command</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC o b</td>
+<td class="org-left"><code>eaf-open-browser</code></td>
+<td class="org-left">Open EAF browser</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC o B</td>
+<td class="org-left"><code>eaf-open-browser-with-history</code></td>
+<td class="org-left">Open with history</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC o e</td>
+<td class="org-left"><code>eaf-open</code></td>
+<td class="org-left">Open file in EAF</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c b</td>
+<td class="org-left"><code>eaf-open-bookmark</code></td>
+<td class="org-left">Open bookmarks</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgf5bb03f" class="outline-3">
+<h3 id="orgf5bb03f"><span class="section-number-3">4.3.</span> EAF Browser Mode Key Bindings</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+EAF Browser has two modes: <code>insert mode</code> (normal browsing) and <code>input mode</code> (for text input in web forms).<br />
+</p>
+</div>
+<ol class="org-ol">
+<li><a id="org62426e4"></a>Navigation<br />
+<div class="outline-text-4" id="text-4-3-1">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Key</th>
+<th scope="col" class="org-left">Event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-n</td>
+<td class="org-left">scroll_up</td>
+</tr>
+
+<tr>
+<td class="org-left">C-p</td>
+<td class="org-left">scroll_down</td>
+</tr>
+
+<tr>
+<td class="org-left">C-f</td>
+<td class="org-left">scroll_right</td>
+</tr>
+
+<tr>
+<td class="org-left">C-b</td>
+<td class="org-left">scroll_left</td>
+</tr>
+
+<tr>
+<td class="org-left">C-v</td>
+<td class="org-left">scroll_up_page</td>
+</tr>
+
+<tr>
+<td class="org-left">M-v</td>
+<td class="org-left">scroll_down_page</td>
+</tr>
+
+<tr>
+<td class="org-left">M-f</td>
+<td class="org-left">history_forward</td>
+</tr>
+
+<tr>
+<td class="org-left">M-b</td>
+<td class="org-left">history_backward</td>
+</tr>
+
+<tr>
+<td class="org-left">M-t</td>
+<td class="org-left">new_blank_page</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><a id="org8ddf26c"></a>Zoom<br />
+<div class="outline-text-4" id="text-4-3-2">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Key</th>
+<th scope="col" class="org-left">Event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C--</td>
+<td class="org-left">zoom_out</td>
+</tr>
+
+<tr>
+<td class="org-left">C-=</td>
+<td class="org-left">zoom_in</td>
+</tr>
+
+<tr>
+<td class="org-left">C-0</td>
+<td class="org-left">zoom_reset</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><a id="orgd189e69"></a>Text / Clipboard<br />
+<div class="outline-text-4" id="text-4-3-3">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Key</th>
+<th scope="col" class="org-left">Event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-w</td>
+<td class="org-left">kill_text</td>
+</tr>
+
+<tr>
+<td class="org-left">C-y</td>
+<td class="org-left">yank_text</td>
+</tr>
+
+<tr>
+<td class="org-left">M-w</td>
+<td class="org-left">copy_text</td>
+</tr>
+
+<tr>
+<td class="org-left">M-e</td>
+<td class="org-left">atomic_edit</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><a id="org76e2c83"></a>Neo-Emacs Custom Bindings<br />
+<div class="outline-text-4" id="text-4-3-4">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Key</th>
+<th scope="col" class="org-left">Command</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">J</td>
+<td class="org-left">+workspace/switch-left</td>
+<td class="org-left">Switch workspace left</td>
+</tr>
+
+<tr>
+<td class="org-left">K</td>
+<td class="org-left">+workspace/switch-right</td>
+<td class="org-left">Switch workspace right</td>
+</tr>
+
+<tr>
+<td class="org-left">B</td>
+<td class="org-left">consult-buffer</td>
+<td class="org-left">Switch buffer</td>
+</tr>
+
+<tr>
+<td class="org-left">R</td>
+<td class="org-left">eaf-restart-process</td>
+<td class="org-left">Restart EAF process</td>
+</tr>
+
+<tr>
+<td class="org-left">Q</td>
+<td class="org-left">eaf-safe-close-buffer</td>
+<td class="org-left">Safely close buffer</td>
+</tr>
+
+<tr>
+<td class="org-left">M-[</td>
+<td class="org-left">history_backward</td>
+<td class="org-left">Go back</td>
+</tr>
+
+<tr>
+<td class="org-left">M-]</td>
+<td class="org-left">history_forward</td>
+<td class="org-left">Go forward</td>
+</tr>
+
+<tr>
+<td class="org-left">M-y</td>
+<td class="org-left">eaf-consult-yank-pop</td>
+<td class="org-left">Paste from kill-ring</td>
+</tr>
+
+<tr>
+<td class="org-left">M-i</td>
+<td class="org-left">switch_to_input_mode</td>
+<td class="org-left">Toggle input mode</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><a id="org076c5c7"></a>Input Mode Toggle<br />
+<div class="outline-text-4" id="text-4-3-5">
+<p>
+When a web page requires text input, press <code>M-i</code> to switch to input mode. On macOS, this also activates the EAF window via AppleScript for proper IME support.<br />
+</p>
+</div>
+</li>
+</ol>
+</div>
+<div id="outline-container-org3ddc5af" class="outline-3">
+<h3 id="org3ddc5af"><span class="section-number-3">4.4.</span> Chrome Cookie Import</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+When <code>eaf-browser-auto-import-chrome-cookies</code> is set to <code>t</code>, EAF Browser automatically imports cookies from Chrome on startup. You don&rsquo;t need to log in separately.<br />
+</p>
+
+<p>
+Supported Chrome-based browsers: <code>Chrome</code> (default), <code>Chromium</code>, <code>Brave</code>. Set via <code>eaf-browser-chrome-browser-name</code>.<br />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd0de7bb" class="outline-2">
+<h2 id="orgd0de7bb"><span class="section-number-2">5.</span> Troubleshooting</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-orga0055d1" class="outline-3">
+<h3 id="orga0055d1"><span class="section-number-3">5.1.</span> EAF doesn&rsquo;t start</h3>
+<div class="outline-text-3" id="text-5-1">
+<ul class="org-ul">
+<li>Check <code>eaf-python-command</code> points to the correct Python 3.13<br /></li>
+<li>Run <code>M-x eaf-install-and-update</code> to install missing Python deps<br /></li>
+<li>Check the <code>*eaf*</code> buffer for error messages<br /></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgc07f881" class="outline-3">
+<h3 id="orgc07f881"><span class="section-number-3">5.2.</span> Sandbox issues on macOS</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+EAF disables sandboxing by default (<code>QTWEBENGINE_DISABLE_SANDBOX=1</code>) because QtWebEngine sandboxing conflicts with some macOS configurations.<br />
+</p>
+</div>
+</div>
+<div id="outline-container-orgec24be5" class="outline-3">
+<h3 id="orgec24be5"><span class="section-number-3">5.3.</span> Proxy not working</h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+Ensure your proxy settings are correct in <code>config.el</code>. The proxy is toggled automatically when opening a browser, but verify with <code>eaf-proxy-type</code>, <code>eaf-proxy-host</code>, and <code>eaf-proxy-port</code>.<br />
+</p>
+</div>
+</div>
+<div id="outline-container-orgf75f85b" class="outline-3">
+<h3 id="orgf75f85b"><span class="section-number-3">5.4.</span> Update EAF</h3>
+<div class="outline-text-3" id="text-5-4">
+<div class="org-src-container">
+<pre class="src src-shell"><code><span style="color: #cd9575;">cd</span> ~/.emacs.d/.local/straight/repos/emacs-application-framework/
+<span style="color: #cd9575;">git</span> pull
+python3 install-eaf.py
+</code></pre>
+</div>
+
+<p>
+Then run <code>doom sync</code> in Emacs to rebuild.<br />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orge9a5d90" class="outline-2">
+<h2 id="orge9a5d90"><span class="section-number-2">6.</span> Reference</h2>
+<div class="outline-text-2" id="text-6">
+<ul class="org-ul">
+<li><a href="https://github.com/emacs-eaf/emacs-application-framework">EAF Framework</a><br /></li>
+<li><a href="https://github.com/emacs-eaf/eaf-browser">EAF Browser</a><br /></li>
+<li><a href="https://github.com/emacs-eaf/emacs-application-framework/wiki">EAF Wiki</a><br /></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2026-08-19 Wed 15:00</p>
+<p class="author">Author: van</p>
+<p class="date">Created: 2026-08-19 Wed 14:00</p>
+</div>
+</body>
+</html>

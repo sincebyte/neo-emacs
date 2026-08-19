@@ -55,7 +55,7 @@
   (eaf-bind-key eaf-consult-yank-pop "M-y" eaf-browser-keybinding)
 
   (eaf-bind-key switch_to_input_mode "M-i" eaf-browser-keybinding)
-  (setf (map-elt eaf-browser-keybinding "M-i") 'my/eaf-toggle-input-mode)
+  (setf (map-elt eaf-browser-keybinding "s-i") 'my/eaf-toggle-input-mode)
   (setf (map-elt eaf-browser-keybinding "i") nil)
   (setf (map-elt eaf-browser-keybinding "f") nil)
   (setf (map-elt eaf-browser-keybinding "m") nil)

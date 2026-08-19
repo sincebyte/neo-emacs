@@ -1,0 +1,253 @@
+#+title: EAF Browser: Install & Usage
+#+subtitle: A modern browser inside Emacs powered by Qt6 WebEngine
+#+author: van
+#+date: <2026-08-19 15:00>
+#+SETUPFILE: ~/.doom.d/org-classic-head.setup
+
+* EAF Browser
+
+EAF (Emacs Application Framework) is a framework that extends Emacs with modern graphical capabilities by embedding a Qt6 WebEngine view. EAF Browser is the web browser application built on it — a full-featured, keyboard-driven browser that runs inside Emacs.
+
+* Install
+
+** System Dependencies (macOS)
+
+EAF depends on Qt6 WebEngine and Python. Install them via brew:
+
+#+begin_src shell
+brew install python@3.13 qt6 pyqt6
+#+end_src
+
+Use Python 3.13 (the recommended version). Make sure =python3= points to the brew-installed one:
+
+#+begin_src shell
+which python3
+# should output /opt/homebrew/bin/python3
+#+end_src
+
+** Install aria2 (optional, for downloads)
+
+#+begin_src shell
+brew install aria2
+#+end_src
+
+** Install pycookiecheat (optional, for Chrome cookie import)
+
+#+begin_src shell
+pip3 install pycookiecheat
+#+end_src
+
+** Install EAF Framework + Browser
+
+Neo-emacs uses doom's =straight.el= to install both =eaf= and =eaf-browser= from source. The package recipes are in =packages.el=:
+
+#+begin_src elisp
+(package! eaf
+  :recipe (:host github
+           :repo "emacs-eaf/emacs-application-framework"
+           :branch "master"
+           :files ("*.el" "*.json" "*.py" "core" "app")))
+
+(package! eaf-browser
+  :recipe (:host github
+           :repo "emacs-eaf/eaf-browser"
+           :branch "master"
+           :files (:defaults "*.py" "dependencies.json" "easylist.txt" "aria2-ng" "node_modules")))
+#+end_src
+
+After the packages are pulled, run the EAF installer to set up Python dependencies:
+
+#+begin_src shell
+cd ~/.emacs.d/.local/straight/repos/emacs-application-framework/
+python3 install-eaf.py
+#+end_src
+
+Or use =M-x eaf-install-and-update= inside Emacs.
+
+** Verify Installation
+
+Open EAF's demo to check everything works:
+
+#+begin_src elisp
+M-x eaf-open-demo
+#+end_src
+
+If the demo window appears, EAF is installed correctly.
+
+* Configuration
+
+Neo-emacs configures EAF Browser in =config.el= with sensible defaults:
+
+** Core Settings
+
+#+begin_src elisp
+(setq eaf-python-command "/opt/homebrew/bin/python3"
+      eaf-browser-continue-where-left-off t
+      eaf-browser-enable-adblocker t
+      eaf-proxy-type "http"
+      eaf-proxy-host "127.0.0.1"
+      eaf-proxy-port "10887"
+      eaf-start-python-process-when-require nil)
+#+end_src
+
+** Proxy & Chromium Flags
+
+QtWebEngine runs Chromium under the hood. Neo-emacs configures proxy and flags via environment variables:
+
+#+begin_src elisp
+(setenv "QTWEBENGINE_CHROMIUM_FLAGS"
+        "--no-sandbox --disable-features=WebRtcHideLocalIpsWithMdns
+         --enable-features=PlatformHEVCDecoderSupport
+         --enable-gpu-rasterization --ignore-gpu-blocklist
+         --proxy-server=http://127.0.0.1:10887
+         --user-agent=\"Mozilla/5.0 ...\"")
+(setenv "QTWEBENGINE_DISABLE_SANDBOX" "1")
+#+end_src
+
+Proxy auto-toggle is handled by an advice:
+
+#+begin_src elisp
+(defun my/eaf-enable-proxy (&rest _)
+  (ignore-errors
+    (when (and (boundp 'eaf-proxy-type) eaf-proxy-type eaf-epc-process)
+      (eaf-call-async "toggle_proxy"))))
+(advice-add 'eaf-open-browser :after #'my/eaf-enable-proxy)
+#+end_src
+
+** Browser Defaults
+
+#+begin_src elisp
+(setq browse-url-browser-function 'eaf-open-browser)
+(defalias 'browse-web #'eaf-open-browser)
+(require 'eaf-browser)
+(eaf-setq eaf-browser-default-search-engine "google")
+
+(setq eaf-browser-auto-import-chrome-cookies t
+      eaf-browser-enable-adblocker t
+      eaf-browser-enable-autofill t
+      eaf-browser-dark-mode "ignore"
+      eaf-chrome-bookmark-file "~/Desktop/bookmarks_2026_8_17.html"
+      eaf-browser-default-zoom 1.0
+      eaf-browser-enable-javascript t
+      eaf-browser-enable-aria2 t
+      eaf-browser-aria2-download-dir "~/Downloads/"
+      eaf-browser-history-file (concat doom-data-dir "eaf/browser/history.log")
+      eaf-browser-bookmark-file (concat doom-data-dir "eaf/browser/bookmarks.log")
+      eaf-browser-cookie-file (concat doom-data-dir "eaf/browser/cookies"))
+#+end_src
+
+* Usage
+
+** Launch Commands
+
+| Command                              | Description                                 |
+|--------------------------------------+---------------------------------------------|
+| =M-x eaf-open-browser=               | Open browser (search or URL)                |
+| =M-x eaf-open-browser-with-history=  | Open browser with history selection         |
+| =M-x eaf-open-bookmark=              | Open bookmark manager                       |
+| =M-x eaf-open=                       | Open file in appropriate EAF app            |
+
+** Key Bindings (SPC Leader)
+
+| Key     | Command                  | Description                    |
+|---------+--------------------------+--------------------------------|
+| SPC o b | =eaf-open-browser=       | Open EAF browser               |
+| SPC o B | =eaf-open-browser-with-history= | Open with history        |
+| SPC o e | =eaf-open=               | Open file in EAF               |
+| C-c b   | =eaf-open-bookmark=      | Open bookmarks                 |
+
+** EAF Browser Mode Key Bindings
+
+EAF Browser has two modes: =insert mode= (normal browsing) and =input mode= (for text input in web forms).
+
+*** Navigation
+
+| Key | Event             |
+|-----+-------------------|
+| C-n | scroll_up         |
+| C-p | scroll_down       |
+| C-f | scroll_right      |
+| C-b | scroll_left       |
+| C-v | scroll_up_page    |
+| M-v | scroll_down_page  |
+| M-f | history_forward   |
+| M-b | history_backward  |
+| M-t | new_blank_page    |
+
+*** Zoom
+
+| Key | Event        |
+|-----+--------------|
+| C-- | zoom_out     |
+| C-= | zoom_in      |
+| C-0 | zoom_reset   |
+
+*** Text / Clipboard
+
+| Key | Event        |
+|-----+--------------|
+| C-w | kill_text    |
+| C-y | yank_text    |
+| M-w | copy_text    |
+| M-e | atomic_edit  |
+
+*** Neo-Emacs Custom Bindings
+
+| Key | Command                  | Description              |
+|-----+--------------------------+--------------------------|
+| J   | +workspace/switch-left  | Switch workspace left    |
+| K   | +workspace/switch-right | Switch workspace right   |
+| B   | consult-buffer           | Switch buffer            |
+| R   | eaf-restart-process      | Restart EAF process      |
+| Q   | eaf-safe-close-buffer    | Safely close buffer      |
+| M-[ | history_backward         | Go back                  |
+| M-] | history_forward          | Go forward               |
+| M-y | eaf-consult-yank-pop     | Paste from kill-ring     |
+| M-i | switch_to_input_mode     | Toggle input mode        |
+
+*** Input Mode Toggle
+
+| Key | Command                  | Description                                          |
+|-----+--------------------------+------------------------------------------------------|
+| M-i | switch_to_input_mode     | Toggle input mode (built-in)                         |
+| s-i | my/eaf-toggle-input-mode | Toggle input mode + activate EAF window for IME      |
+
+When a web page requires text input, press =M-i= or =s-i= to switch to input mode. =s-i= is the neo-emacs custom version: on macOS it additionally runs AppleScript to bring the EAF window to the front, ensuring proper IME (input method) cursor positioning.
+
+** Chrome Cookie Import
+
+When =eaf-browser-auto-import-chrome-cookies= is set to =t=, EAF Browser automatically imports cookies from Chrome on startup. You don't need to log in separately.
+
+Supported Chrome-based browsers: =Chrome= (default), =Chromium=, =Brave=. Set via =eaf-browser-chrome-browser-name=.
+
+* Troubleshooting
+
+** EAF doesn't start
+
+- Check =eaf-python-command= points to the correct Python 3.13
+- Run =M-x eaf-install-and-update= to install missing Python deps
+- Check the =*eaf*= buffer for error messages
+
+** Sandbox issues on macOS
+
+EAF disables sandboxing by default (=QTWEBENGINE_DISABLE_SANDBOX=1=) because QtWebEngine sandboxing conflicts with some macOS configurations.
+
+** Proxy not working
+
+Ensure your proxy settings are correct in =config.el=. The proxy is toggled automatically when opening a browser, but verify with =eaf-proxy-type=, =eaf-proxy-host=, and =eaf-proxy-port=.
+
+** Update EAF
+
+#+begin_src shell
+cd ~/.emacs.d/.local/straight/repos/emacs-application-framework/
+git pull
+python3 install-eaf.py
+#+end_src
+
+Then run =doom sync= in Emacs to rebuild.
+
+* Reference
+
+- [[https://github.com/emacs-eaf/emacs-application-framework][EAF Framework]]
+- [[https://github.com/emacs-eaf/eaf-browser][EAF Browser]]
+- [[https://github.com/emacs-eaf/emacs-application-framework/wiki][EAF Wiki]]
