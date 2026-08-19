@@ -62,6 +62,9 @@
   (setf (map-elt eaf-browser-keybinding "p") nil)
   (setf (map-elt eaf-browser-keybinding "t") nil)
   (setf (map-elt eaf-browser-keybinding "x") nil)
+  (setf (map-elt eaf-browser-keybinding ".") nil)
+  (setf (map-elt eaf-browser-keybinding ";") nil)
+  (setf (map-elt eaf-browser-keybinding "3") nil)
 
   (advice-add 'eaf--monitor-buffer-kill :around
               (lambda (orig-fn &rest args)
@@ -96,6 +99,15 @@
                 eaf-epc-process)
       (eaf-call-async "toggle_proxy"))))
 (advice-add 'eaf-open-browser :after #'my/eaf-enable-proxy)
+
+(defun my/eaf-auto-input-mode (&rest _)
+  "Auto-enter input mode when EAF browser opens."
+  (ignore-errors
+    (when (and (boundp 'eaf-epc-process) eaf-epc-process)
+      (run-at-time 0.5 nil
+                   (lambda ()
+                     (eaf-call-async "eval_function" eaf--buffer-id "switch_to_input_mode" ""))))))
+(advice-add 'eaf-open-browser :after #'my/eaf-auto-input-mode)
 
 (defun my/eaf-toggle-input-mode ()
   (interactive)

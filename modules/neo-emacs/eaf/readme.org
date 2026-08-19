@@ -158,7 +158,21 @@ Proxy auto-toggle is handled by an advice:
 
 ** EAF Browser Mode Key Bindings
 
-EAF Browser has two modes: =insert mode= (normal browsing) and =input mode= (for text input in web forms).
+EAF Browser defaults to =input mode= on startup — all keys are sent directly to the web page. Press =M-i= or =s-i= to toggle back to =insert mode= for EAF commands.
+
+*** Auto-Input Mode
+
+When EAF browser opens, neo-emacs automatically enters input mode after a 0.5s delay:
+
+#+begin_src elisp
+(defun my/eaf-auto-input-mode (&rest _)
+  (ignore-errors
+    (when (and (boundp 'eaf-epc-process) eaf-epc-process)
+      (run-at-time 0.5 nil
+                   (lambda ()
+                     (eaf-call-async "eval_function" eaf--buffer-id "switch_to_input_mode" ""))))))
+(advice-add 'eaf-open-browser :after #'my/eaf-auto-input-mode)
+#+end_src
 
 *** Navigation
 
@@ -203,7 +217,22 @@ EAF Browser has two modes: =insert mode= (normal browsing) and =input mode= (for
 | M-[ | history_backward         | Go back                  |
 | M-] | history_forward          | Go forward               |
 | M-y | eaf-consult-yank-pop     | Paste from kill-ring     |
-| M-i | switch_to_input_mode     | Toggle input mode        |
+
+*** Removed Default Bindings
+
+The following default EAF browser keys are unbound in neo-emacs:
+
+| Key | Original Function          | Reason                   |
+|-----+----------------------------+--------------------------|
+| .   | insert_or_translate_text   | translate not needed     |
+| ;   | insert_or_translate_page   | translate not needed     |
+| 3   | insert_or_save_as_screenshot | screenshot not needed  |
+| i   | insert_or_focus_input      | auto-input-mode replaces |
+| f   | insert_or_open_link        | —                        |
+| m   | insert_or_save_as_bookmark | —                        |
+| p   | insert_or_toggle_device    | —                        |
+| t   | insert_or_new_blank_page   | —                        |
+| x   | insert_or_close_buffer     | —                        |
 
 *** Input Mode Toggle
 
