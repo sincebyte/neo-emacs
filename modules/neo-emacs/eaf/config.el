@@ -75,15 +75,10 @@
                    (eaf-start-process)))))
 
   (defun eaf-safe-close-buffer ()
-    "Close EAF browser buffer safely by stopping process first."
+    "Close current EAF browser buffer safely."
     (interactive)
     (when (derived-mode-p 'eaf-mode)
-      (eaf-stop-process)
-      (run-at-time 0.5 nil
-                   (lambda (buf)
-                     (when (buffer-live-p buf)
-                       (kill-buffer buf)))
-                   (current-buffer))))
+      (kill-buffer (current-buffer))))
 
   (map! :leader
         :desc "EAF Browser" "o b" #'eaf-open-browser
