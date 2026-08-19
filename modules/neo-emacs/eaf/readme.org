@@ -1,7 +1,7 @@
 #+title: EAF Browser: Install & Usage
 #+subtitle: A modern browser inside Emacs powered by Qt6 WebEngine
 #+author: van
-#+date: <2026-08-19 15:00>
+#+date: <2026-08-19 18:05>
 #+SETUPFILE: ~/.doom.d/org-classic-head.setup
 
 * EAF Browser
@@ -168,11 +168,14 @@ When EAF browser opens, neo-emacs automatically enters input mode after a 0.5s d
 (defun my/eaf-auto-input-mode (&rest _)
   (ignore-errors
     (when (and (boundp 'eaf-epc-process) eaf-epc-process)
-      (run-at-time 0.5 nil
-                   (lambda ()
-                     (eaf-call-async "eval_function" eaf--buffer-id "switch_to_input_mode" ""))))))
+      (let ((buffer-id eaf--buffer-id))
+        (run-at-time 0.5 nil
+                     (lambda ()
+                       (eaf-call-async "eval_function" buffer-id "switch_to_input_mode" "t")))))))
 (advice-add 'eaf-open-browser :after #'my/eaf-auto-input-mode)
 #+end_src
+
+The event string ="t"= makes =switch_to_input_mode= enable input mode idempotently, so a later =s-i= press always re-enables it instead of toggling it off.
 
 *** Navigation
 
@@ -239,15 +242,55 @@ The following default EAF browser keys are unbound in neo-emacs:
 | Key | Command                  | Description                                          |
 |-----+--------------------------+------------------------------------------------------|
 | M-i | switch_to_input_mode     | Toggle input mode (built-in)                         |
-| s-i | my/eaf-toggle-input-mode | Toggle input mode + activate EAF window for IME      |
+| s-i | my/eaf-toggle-input-mode | Enable input mode (idempotent) + hand focus to browser |
 
-When a web page requires text input, press =M-i= or =s-i= to switch to input mode. =s-i= is the neo-emacs custom version: on macOS it additionally runs AppleScript to bring the EAF window to the front, ensuring proper IME (input method) cursor positioning.
+=my/eaf-toggle-input-mode= sends the event string ="t"= to =switch_to_input_mode=, which enables input mode without toggling it back off — so a single =s-i= press always transfers keyboard focus to the Qt browser. On macOS the newer EAF activates the EAF (Qt) application when enabling and re-activates Emacs when disabling (or when Emacs regains focus). Left-clicking inside the browser also enables input mode and gives it focus.
 
 ** Chrome Cookie Import
 
 When =eaf-browser-auto-import-chrome-cookies= is set to =t=, EAF Browser automatically imports cookies from Chrome on startup. You don't need to log in separately.
 
 Supported Chrome-based browsers: =Chrome= (default), =Chromium=, =Brave=. Set via =eaf-browser-chrome-browser-name=.
+
+* Vendored Python Patches (persist across updates)
+
+Some fixes touch EAF's Python core (Qt/PyQt) and cannot be expressed in Emacs Lisp. They are kept as vendored files under =~/.doom.d/patches/eaf/core/= and are automatically copied back into the straight-managed source on every Emacs startup by =my/eaf-apply-patches= (defined at the top of =config.el=).
+
+- =core/webengine.py=
+  - =switch_to_input_mode= honors an event string: ="t"= enables input mode idempotently, ="nil"= disables, otherwise it toggles. Enabling also activates the EAF (Qt) application and retries giving keyboard focus to the browser view window, so a single =s-i= press reliably transfers focus.
+  - Left-clicking inside the browser (when not in input mode) enables input mode, so a mouse click also hands focus to the browser.
+  - Mouse release no longer returns focus to Emacs while in input mode.
+- =core/macos.py=
+  - Resets =input_mode= to =nil= whenever Emacs regains focus, so a later =s-i= press starts from a known OFF state instead of accidentally disabling an already-enabled mode.
+- =core/buffer.py=
+  - Keeps the scene rectangle in sync with the view size on resize (=setSceneRect=).
+
+Why it exists: =doom sync= / package updates reset the straight repo and would silently discard these edits. =my/eaf-apply-patches= compares each vendored file with the repo copy (byte-for-byte) and copies it over only when they differ, so the fixes survive updates. If an update resets the repo, simply restart Emacs to re-apply.
+
+#+begin_src elisp
+(defun my/eaf-apply-patches (&optional force)
+  "Apply EAF Python patches from ~/.doom.d/patches/eaf/ to the straight repo."
+  (let* ((repo (expand-file-name
+                "straight/repos/emacs-application-framework/"
+                (or (bound-and-true-p doom-local-dir)
+                    "~/.config/emacs/.local/")))
+         (patch-dir (expand-file-name
+                     "patches/eaf/"
+                     (or (bound-and-true-p doom-user-dir) "~/.doom.d/"))))
+    (dolist (rel '("core/webengine.py" "core/macos.py" "core/buffer.py"))
+      (let ((target (expand-file-name rel repo))
+            (source (expand-file-name rel patch-dir)))
+        (when (and (file-exists-p source)
+                   (or force
+                       (not (my/eaf--files-same-contents-p source target))))
+          (copy-file source target t)
+          (message "[EAF] applied patch: %s" rel))))))
+(my/eaf-apply-patches)
+#+end_src
+
+Note: the vendored files overwrite any upstream changes in those three files (a small fork). If upstream EAF significantly changes them, update the copies under =~/.doom.d/patches/eaf/core/= accordingly.
+
+Also see the fringe fix in =config.el=: EAF buffers get zero-width fringes so the focus-lost screenshot is aligned with the widget position (fixes a 5–15px rightward content shift).
 
 * Troubleshooting
 
@@ -274,6 +317,8 @@ python3 install-eaf.py
 #+end_src
 
 Then run =doom sync= in Emacs to rebuild.
+
+After an update resets the repo, the vendored patches under =~/.doom.d/patches/eaf/core/= are re-applied automatically on the next Emacs startup (see "Vendored Python Patches"). Restart the EAF process (=M-x eaf-restart-process=) to load the patched Python code.
 
 * Reference
 

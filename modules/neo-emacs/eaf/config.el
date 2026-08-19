@@ -1,5 +1,38 @@
 ;;; $DOOMDIR/modules/neo-emacs/eaf/config.el -*- lexical-binding: t; -*-
 
+;; Apply vendored Python patches to the straight-managed EAF source so the
+;; fixes survive `doom sync' / package updates.  The patched files live in
+;; ~/.doom.d/patches/eaf/core/ and are copied over the straight repo when they
+;; differ (e.g. right after an update reset the repo).
+(defun my/eaf--files-same-contents-p (a b)
+  "Return non-nil if files A and B have identical contents."
+  (when (and (file-exists-p a) (file-exists-p b))
+    (with-temp-buffer
+      (insert-file-contents a)
+      (let ((content (buffer-string)))
+        (with-temp-buffer
+          (insert-file-contents b)
+          (equal content (buffer-string)))))))
+
+(defun my/eaf-apply-patches (&optional force)
+  "Apply EAF Python patches from ~/.doom.d/patches/eaf/ to the straight repo."
+  (let* ((repo (expand-file-name
+                "straight/repos/emacs-application-framework/"
+                (or (bound-and-true-p doom-local-dir)
+                    "~/.config/emacs/.local/")))
+         (patch-dir (expand-file-name
+                     "patches/eaf/"
+                     (or (bound-and-true-p doom-user-dir) "~/.doom.d/"))))
+    (dolist (rel '("core/webengine.py" "core/macos.py" "core/buffer.py"))
+      (let ((target (expand-file-name rel repo))
+            (source (expand-file-name rel patch-dir)))
+        (when (and (file-exists-p source)
+                   (or force
+                       (not (my/eaf--files-same-contents-p source target))))
+          (copy-file source target t)
+          (message "[EAF] applied patch: %s" rel))))))
+(my/eaf-apply-patches)
+
 (use-package! eaf
   :init
   (setenv "QTWEBENGINE_CHROMIUM_FLAGS" "--no-sandbox --disable-features=WebRtcHideLocalIpsWithMdns --enable-features=PlatformHEVCDecoderSupport --enable-gpu-rasterization --ignore-gpu-blocklist --proxy-server=http://127.0.0.1:10887 --user-agent=\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\"")
@@ -131,7 +164,6 @@ browser.  On macOS the newer EAF activates the EAF (Qt) application when
 enabling and re-activates Emacs when disabling (or when Emacs regains focus)."
   (interactive)
   (when (derived-mode-p 'eaf-mode)
-    (message "my/eaf-toggle-input-mode: sending switch_to_input_mode t")
     (eaf-call-async "eval_function" eaf--buffer-id "switch_to_input_mode" "t")))
 
 ;;; Fix EAF content shifting right when Emacs loses focus (macOS)
