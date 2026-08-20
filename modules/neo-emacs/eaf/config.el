@@ -31,7 +31,7 @@
                        (not (my/eaf--files-same-contents-p source target))))
           (copy-file source target t)
           (message "[EAF] applied patch: %s" rel))))))
-(my/eaf-apply-patches)
+;; (my/eaf-apply-patches)
 
 (use-package! eaf
   :init
