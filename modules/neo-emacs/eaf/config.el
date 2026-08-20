@@ -166,21 +166,35 @@ enabling and re-activates Emacs when disabling (or when Emacs regains focus)."
   (when (derived-mode-p 'eaf-mode)
     (eaf-call-async "eval_function" eaf--buffer-id "switch_to_input_mode" "t")))
 
-;;; Fix EAF content shifting right when Emacs loses focus (macOS)
+;;; Fix EAF content shifting right / white right edge on focus loss (macOS)
 ;;;
-;;; Root cause: EAF positions its Qt widget at `window-pixel-edges' (the window's
-;;; TOTAL edge, which includes the left fringe). But when focus is lost, EAF hides
-;;; the widget and shows a screenshot via `insert-image', which lands in the TEXT
-;;; AREA (after the left fringe). The screenshot is therefore offset right by the
-;;; fringe width (~8px), matching the observed 5-15px jump.
+;;; EAF positions its Qt widget at `window-pixel-edges' (the window's TOTAL edge,
+;;; which includes the left fringe). On focus loss EAF hides the widget and shows
+;;; a screenshot via `insert-image'. Two Emacs 31 quirks then apply:
 ;;;
-;;; Fix: Give EAF buffers zero-width fringes so the text area (where the
-;;; screenshot is drawn) coincides with the widget position.
+;;; 1) With wrapping enabled (`truncate-lines' nil) the display engine reserves
+;;;    one character column and clamps the image to body-width-10, leaving a
+;;;    white vertical strip on the right edge of the placeholder.
+;;; 2) A full-width image leaves point at the right edge, so auto-hscroll shifts
+;;;    the content ~30px left.
+;;;
+;;; Fix: zero-width fringes (placeholder aligns with the widget, no shift),
+;;; `truncate-lines t' (image fills the full width, no white strip), and pin
+;;; point to the image start after display (no auto-hscroll).
 
 (add-hook 'eaf-mode-hook
           (lambda ()
             (setq-local left-fringe-width 0)
             (setq-local right-fringe-width 0)
+            (setq-local truncate-lines t)
+            (face-remap-add-relative 'default :background "#000000")
             (let ((win (get-buffer-window (current-buffer) 0)))
               (when win
                 (set-window-fringes win 0 0)))))
+
+;; `eaf--display-image' leaves point after the full-width screenshot, which
+;; triggers auto-hscroll and shifts the content. Pin point to the image start.
+(advice-add 'eaf--display-image :after
+            (lambda (&rest _)
+              (when (derived-mode-p 'eaf-mode)
+                (goto-char (point-min)))))
