@@ -4,8 +4,41 @@
 
 (server-start)
 (setq custom-file null-device)
-;; max width and height but not fullscreen
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; 按屏幕分辨率自动匹配窗口位置与大小 (像素单位)
+;; macOS 上 Emacs 报告的是逻辑分辨率(即系统"Looks like"值):
+;;   1K = 1920x1080, 2K = 2560x1440, 4K = 3840x2160
+;; 记录方法: emacsclient -e '(list (frame-parameter nil (quote left)) (frame-parameter nil (quote top)) (frame-pixel-width) (frame-pixel-height))'
+;; 注意: 不要用 frame-resize-pixelwise, macOS 上开启后帧缩放会卡死
+(defun my/detect-display-class ()
+  "根据当前主屏逻辑分辨率返回类别: 1k / 2k / 4k / other."
+  (let ((width (display-pixel-width))
+        (height (display-pixel-height)))
+    (cond ((and (>= width 3800) (>= height 2100)) '4k)
+          ((and (>= width 2500) (>= height 1400)) '2k)
+          ((and (>= width 1900) (>= height 1050)) '1k)
+          (t 'other))))
+
+(defvar my/window-geometry-table
+  '((1k :left 169 :top 35 :width 1416 :height 944)
+    (2k nil)   ; TODO 2K 显示器实测后填写
+    (4k nil))  ; TODO 4K 显示器实测后填写
+  "不同分辨率下的窗口几何参数(像素).
+  :left/:top 为窗口左上角坐标, :width/:height 为内容区尺寸.
+  条目为 nil 时回退为最大化窗口.")
+
+(defun my/apply-window-geometry ()
+  "探测当前屏幕分辨率, 自动应用匹配的窗口位置与大小."
+  (when (display-graphic-p)
+    (let* ((class (my/detect-display-class))
+           (plist (cdr (assq class my/window-geometry-table)))
+           (width (and plist (plist-get plist :width)))
+           (height (and plist (plist-get plist :height))))
+      (if (and width height)
+          (progn
+            (set-frame-position nil (plist-get plist :left) (plist-get plist :top))
+            (set-frame-size nil width height t))
+        (add-to-list 'default-frame-alist '(fullscreen . maximized))))))
+(add-hook 'window-setup-hook #'my/apply-window-geometry)
 (setq ns-use-proxy-icon nil)           ; 禁用代理图标
 (setq frame-title-format nil)          ; 清空标题格式
 ;; full screen
