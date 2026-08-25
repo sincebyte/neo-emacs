@@ -373,3 +373,20 @@
             (lambda (frame)
               (run-with-idle-timer 0.2 nil
                 (lambda () (select-frame-set-input-focus frame))))))
+
+;; 覆盖 doom+ 默认实现: yank 路径时不用 ~ 缩写, 保持绝对路径
+(defun my/yank-buffer-path-full (&optional root)
+  "Copy the current buffer's absolute path to the kill ring."
+  (interactive)
+  (if-let* ((filename (or (buffer-file-name (buffer-base-buffer))
+                          (bound-and-true-p list-buffers-directory))))
+      (let ((path (if root
+                      (file-relative-name filename root)
+                    filename)))
+        (kill-new path)
+        (if (string= path (car kill-ring))
+            (message "Copied path: %s" path)
+          (user-error "Couldn't copy filename in current buffer")))
+    (error "Couldn't find filename in current buffer")))
+
+(advice-add '+default/yank-buffer-path :override #'my/yank-buffer-path-full)

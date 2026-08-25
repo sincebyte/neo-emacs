@@ -69,7 +69,7 @@
 
   (eaf-bind-key +workspace/switch-left "J" eaf-browser-keybinding)
   (eaf-bind-key +workspace/switch-right "K" eaf-browser-keybinding)
-  (eaf-bind-key consult-buffer "B" eaf-browser-keybinding)
+  ;; (eaf-bind-key consult-buffer "B" eaf-browser-keybinding)
   (eaf-bind-key eaf-restart-process "R" eaf-browser-keybinding)
   (eaf-bind-key eaf-safe-close-buffer "Q" eaf-browser-keybinding)
 
@@ -99,6 +99,12 @@
   (setf (map-elt eaf-browser-keybinding ";") nil)
   (setf (map-elt eaf-browser-keybinding "3") nil)
   (setf (map-elt eaf-browser-keybinding "C-j") nil)
+  (setf (map-elt eaf-browser-keybinding "C--") nil)
+  (setf (map-elt eaf-browser-keybinding "C-=") nil)
+  (setf (map-elt eaf-browser-keybinding "C-0") nil)
+  (setf (map-elt eaf-browser-keybinding "-") nil)
+  (setf (map-elt eaf-browser-keybinding "=") nil)
+  (setf (map-elt eaf-browser-keybinding "0") nil)
 
   (advice-add 'eaf--monitor-buffer-kill :around
               (lambda (orig-fn &rest args)
