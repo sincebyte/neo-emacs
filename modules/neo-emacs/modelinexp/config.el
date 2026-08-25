@@ -108,6 +108,11 @@
                     :foreground "black"
                     :weight 'bold)
 
+  (set-face-attribute 'doom-modeline-panel nil
+                    :inherit 'doom-modeline
+                    :foreground "#68f3ca"
+                    :background nil)
+
   (set-face-attribute 'doom-modeline-evil-normal-state nil
                     :inherit 'doom-modeline
                     :background (face-foreground 'font-lock-string-face)
