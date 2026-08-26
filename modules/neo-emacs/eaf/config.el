@@ -87,8 +87,8 @@
 
   (eaf-bind-key eaf-consult-yank-pop "M-y" eaf-browser-keybinding)
 
-  (eaf-bind-key switch_to_input_mode "M-i" eaf-browser-keybinding)
   (setf (map-elt eaf-browser-keybinding "s-i") 'my/eaf-toggle-input-mode)
+  (setf (map-elt eaf-browser-keybinding "M-i") 'my/eaf-toggle-input-mode)
   (setf (map-elt eaf-browser-keybinding "i") nil)
   (setf (map-elt eaf-browser-keybinding "f") nil)
   (setf (map-elt eaf-browser-keybinding "m") nil)
@@ -168,7 +168,7 @@
 (advice-add 'eaf-open-browser :after #'my/eaf-auto-input-mode)
 
 (defun my/eaf-toggle-input-mode ()
-  "Enable EAF input mode (idempotent).
+  "Enable EAF input mode for the current buffer (idempotent).
 
 The event string \"t\" makes `switch_to_input_mode' enable input mode without
 toggling it back off, so a single press always hands keyboard focus to the Qt
@@ -176,7 +176,26 @@ browser.  On macOS the newer EAF activates the EAF (Qt) application when
 enabling and re-activates Emacs when disabling (or when Emacs regains focus)."
   (interactive)
   (when (derived-mode-p 'eaf-mode)
-    (eaf-call-async "eval_function" eaf--buffer-id "switch_to_input_mode" "t")))
+    (my/eaf-enable-input-mode eaf--buffer-id)))
+
+(defun my/eaf-enable-input-mode (buffer-id)
+  "Force input mode ON for BUFFER-ID unless it is already enabled."
+  (let ((buffer (eaf-get-buffer buffer-id)))
+    (when (and buffer
+               (with-current-buffer buffer (derived-mode-p 'eaf-mode))
+               (not (buffer-local-value 'eaf-buffer-input-focus buffer)))
+      (eaf-call-async "eval_function" buffer-id "switch_to_input_mode" "t"))))
+
+(defun my/eaf-on-input-mode-enabled (buffer-id &optional state)
+  "Trigger input-mode enable when the browser reports it enabled.
+
+`eaf--toggle-input-mode' is the single report point for every input-mode
+change, so this also fires when a mouse click enables the browser directly
+in Python.  `my/eaf-enable-input-mode' is idempotent, so the re-report
+produced by our own \"t\" command is a no-op and cannot recurse."
+  (when (equal state "'t")
+    (my/eaf-enable-input-mode buffer-id)))
+(advice-add 'eaf--toggle-input-mode :after #'my/eaf-on-input-mode-enabled)
 
 ;;; Fix EAF content shifting right / white right edge on focus loss (macOS)
 ;;;
