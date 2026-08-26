@@ -151,6 +151,12 @@
         (with-current-buffer buf
           (setq-local eaf-buffer-input-focus (equal state "'t")))))))
 
+(defun my/eaf-rime-on-input-mode (_buffer-id state)
+  "Switch to Rime (Chinese) input when EAF enters input mode."
+  (when (eq state t)
+    (my/mac-switch-to-rime)))
+(advice-add 'eaf--toggle-input-mode :after #'my/eaf-rime-on-input-mode)
+
 (defun my/eaf-auto-input-mode (&rest _)
   "Auto-enter input mode when EAF browser opens."
   (ignore-errors
