@@ -239,12 +239,13 @@ The following default EAF browser keys are unbound in neo-emacs:
 
 *** Input Mode Toggle
 
-| Key | Command                  | Description                                          |
-|-----+--------------------------+------------------------------------------------------|
-| M-i | switch_to_input_mode     | Toggle input mode (built-in)                         |
-| s-i | my/eaf-toggle-input-mode | Enable input mode (idempotent) + hand focus to browser |
+| Key    | Command                  | Description                                          |
+|--------+--------------------------+------------------------------------------------------|
+| M-i, s-i | my/eaf-toggle-input-mode | Enable input mode (idempotent) + hand focus to browser |
 
-=my/eaf-toggle-input-mode= sends the event string ="t"= to =switch_to_input_mode=, which enables input mode without toggling it back off — so a single =s-i= press always transfers keyboard focus to the Qt browser. On macOS the newer EAF activates the EAF (Qt) application when enabling and re-activates Emacs when disabling (or when Emacs regains focus). Left-clicking inside the browser also enables input mode and gives it focus.
+Both =M-i= and =s-i= run =my/eaf-toggle-input-mode=, which sends the event string ="t"= to =switch_to_input_mode=, enabling input mode without toggling it back off — so a single press always transfers keyboard focus to the Qt browser. On macOS the newer EAF activates the EAF (Qt) application when enabling and re-activates Emacs when disabling (or when Emacs regains focus). Left-clicking inside the browser also enables input mode and gives it focus.
+
+The Python side reports every input-mode change back to Emacs via =eaf--toggle-input-mode=; an =:after= advice (=my/eaf-on-input-mode-enabled=) re-runs =my/eaf-toggle-input-mode= for that report, so a mouse click triggers the same idempotent enable path as the keybinding. The state is tracked in the buffer-local =my/eaf-input-mode=, and the whole chain is guarded against recursion.
 
 ** Chrome Cookie Import
 
@@ -257,11 +258,11 @@ Supported Chrome-based browsers: =Chrome= (default), =Chromium=, =Brave=. Set vi
 Some fixes touch EAF's Python core (Qt/PyQt) and cannot be expressed in Emacs Lisp. They are kept as vendored files under =~/.doom.d/patches/eaf/core/= and are automatically copied back into the straight-managed source on every Emacs startup by =my/eaf-apply-patches= (defined at the top of =config.el=).
 
 - =core/webengine.py=
-  - =switch_to_input_mode= honors an event string: ="t"= enables input mode idempotently, ="nil"= disables, otherwise it toggles. Enabling also activates the EAF (Qt) application and retries giving keyboard focus to the browser view window, so a single =s-i= press reliably transfers focus.
+  - =switch_to_input_mode= honors an event string: ="t"= enables input mode idempotently, ="nil"= disables, otherwise it toggles. Enabling also activates the EAF (Qt) application and retries giving keyboard focus to the browser view window, so a single =M-i=/=s-i= press (or click) reliably transfers focus.
   - Left-clicking inside the browser (when not in input mode) enables input mode, so a mouse click also hands focus to the browser.
   - Mouse release no longer returns focus to Emacs while in input mode.
 - =core/macos.py=
-  - Resets =input_mode= to =nil= whenever Emacs regains focus, so a later =s-i= press starts from a known OFF state instead of accidentally disabling an already-enabled mode.
+  - Resets =input_mode= to =nil= whenever Emacs regains focus, so a later =M-i=/=s-i= press starts from a known OFF state instead of accidentally disabling an already-enabled mode.
 - =core/buffer.py=
   - Keeps the scene rectangle in sync with the view size on resize (=setSceneRect=).
 

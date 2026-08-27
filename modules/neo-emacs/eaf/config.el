@@ -143,13 +143,21 @@
 
 ;; The newer EAF calls `eaf--toggle-input-mode' via eval_in_emacs to report the
 ;; input-mode state, but the installed eaf.el does not define it. Provide it.
+;;
+;; Python encodes the state as a quoted Symbol, so it arrives here as the symbol
+;; `t'/nil, NOT the string "'t".  Track it in `my/eaf-input-mode' instead of
+;; `eaf-buffer-input-focus', which `eaf-update-focus-state' owns and which means
+;; "the page has a focused input element" (a different concept entirely).
+(defvar-local my/eaf-input-mode nil
+  "Non-nil when this EAF buffer's input mode is enabled.")
+
 (defun eaf--toggle-input-mode (buffer-id &optional state)
   "Record EAF input-mode STATE for BUFFER-ID."
   (ignore-errors
     (let ((buf (eaf-get-buffer buffer-id)))
       (when buf
         (with-current-buffer buf
-          (setq-local eaf-buffer-input-focus (equal state "'t")))))))
+          (setq-local my/eaf-input-mode (equal state t)))))))
 
 (defun my/eaf-rime-on-input-mode (_buffer-id state)
   "Switch to Rime (Chinese) input when EAF enters input mode."
@@ -183,18 +191,23 @@ enabling and re-activates Emacs when disabling (or when Emacs regains focus)."
   (let ((buffer (eaf-get-buffer buffer-id)))
     (when (and buffer
                (with-current-buffer buffer (derived-mode-p 'eaf-mode))
-               (not (buffer-local-value 'eaf-buffer-input-focus buffer)))
+               (not (buffer-local-value 'my/eaf-input-mode buffer)))
       (eaf-call-async "eval_function" buffer-id "switch_to_input_mode" "t"))))
 
 (defun my/eaf-on-input-mode-enabled (buffer-id &optional state)
-  "Trigger input-mode enable when the browser reports it enabled.
+  "Trigger `my/eaf-toggle-input-mode' when the browser reports input mode
+enabled -- via keybinding, mouse click, or any other trigger.
 
 `eaf--toggle-input-mode' is the single report point for every input-mode
 change, so this also fires when a mouse click enables the browser directly
-in Python.  `my/eaf-enable-input-mode' is idempotent, so the re-report
-produced by our own \"t\" command is a no-op and cannot recurse."
-  (when (equal state "'t")
-    (my/eaf-enable-input-mode buffer-id)))
+in Python.  `my/eaf-toggle-input-mode' is idempotent (it no-ops when
+`my/eaf-input-mode' is already set), so the re-report produced by our own
+\"t\" command is a no-op and cannot recurse."
+  (when (equal state t)
+    (let ((buffer (eaf-get-buffer buffer-id)))
+      (when buffer
+        (with-current-buffer buffer
+          (my/eaf-toggle-input-mode))))))
 (advice-add 'eaf--toggle-input-mode :after #'my/eaf-on-input-mode-enabled)
 
 ;;; Fix EAF content shifting right / white right edge on focus loss (macOS)
