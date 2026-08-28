@@ -34,6 +34,7 @@ from core.buffer import Buffer
 from core.utils import *
 from PyQt6 import QtCore
 from PyQt6.QtCore import QEvent, QEventLoop, QPoint, QPointF, Qt, QThread, QTimer, QUrl, pyqtSlot
+from PyQt6.QtGui import QPalette
 from PyQt6.QtWebChannel import QWebChannel
 from PyQt6.QtWebEngineCore import QWebEnginePage, QWebEngineProfile, QWebEngineSettings
 from PyQt6.QtWebEngineWidgets import QWebEngineView
@@ -338,13 +339,7 @@ Note, we need hook this function to signal 'loadProgress', signal 'loadStarted' 
                     return True
 
 
-        if event.type() == QEvent.Type.Wheel:
-            modifiers = QApplication.keyboardModifiers()
-            if modifiers == Qt.KeyboardModifier.ControlModifier:
-                if event.angleDelta().y() > 0:
-                    self.zoom_in()
-                else:
-                    self.zoom_out()
+        # Zoom is intentionally disabled (Ctrl+wheel zoom removed).
 
         if event.type() == QEvent.Type.MouseButtonRelease and \
            event.button() in [Qt.MouseButton.ForwardButton,
@@ -407,25 +402,17 @@ Note, we need hook this function to signal 'loadProgress', signal 'loadStarted' 
     @interactive(insert_or_do=True)
     def zoom_in(self):
         ''' Zoom in.'''
-        self.setZoomFactor(min(5, self.zoomFactor() + self.zoom_step))
-        if self.default_zoom == self.zoomFactor():
-            self.buffer.zoom_data.delete_entry(urlparse(self.buffer.current_url).hostname)
-        else:
-            self.buffer.zoom_data.add_entry(urlparse(self.buffer.current_url).hostname, self.zoomFactor())
+        pass
 
     @interactive(insert_or_do=True)
     def zoom_out(self):
         ''' Zoom out.'''
-        self.setZoomFactor(max(0.25, self.zoomFactor() - self.zoom_step))
-        if self.default_zoom == self.zoomFactor():
-            self.buffer.zoom_data.delete_entry(urlparse(self.buffer.current_url).hostname)
-        else:
-            self.buffer.zoom_data.add_entry(urlparse(self.buffer.current_url).hostname, self.zoomFactor())
+        pass
 
     @interactive(insert_or_do=True)
     def zoom_reset(self):
         ''' Reset the magnification.'''
-        self.setZoomFactor(float(self.default_zoom))
+        pass
 
     def eval_js(self, js):
         ''' Run JavaScript.'''
@@ -1464,13 +1451,7 @@ class BrowserBuffer(Buffer):
 
     def reset_default_zoom(self):
         ''' Reset default magnification.'''
-        if hasattr(self, "buffer_widget"):
-            result = self.zoom_data.get_entry(urlparse(self.url).hostname)
-            zoom_factor = self.default_zoom
-            for row in result:
-                zoom_factor = float(row[0])
-
-            self.buffer_widget.setZoomFactor(float(zoom_factor))
+        pass
 
     def atomic_edit(self):
         ''' Edit the focus text.'''
@@ -1516,6 +1497,8 @@ class BrowserBuffer(Buffer):
             if platform.system() == "Darwin":
                 tracker = QApplication.instance().macos_window_tracker
                 tracker.bridge.activate_application(tracker.emacs_pid)
+
+        QTimer.singleShot(2000, clear_emacs_message)
 
         eval_in_emacs('eaf--toggle-input-mode', [self.buffer_id, "'t" if self.input_mode else "'nil"])
 
@@ -1725,6 +1708,26 @@ class BrowserBuffer(Buffer):
     def init_web_page_background(self):
         # Web page background follow Emacs's background.
         self.buffer_widget.web_page.setBackgroundColor(self.background_color)
+        # QtWebEngine renders through an internal QQuickWidget whose default
+        # clear color is white; when the composited page doesn't fill it
+        # exactly a thin white line shows around the content edge on re-show.
+        # Force the Quick surface clear color to the theme background too.
+        try:
+            from PyQt6.QtQuickWidgets import QQuickWidget
+            for child in self.buffer_widget.findChildren(QQuickWidget):
+                child.setClearColor(self.background_color)
+        except Exception:
+            pass
+        # Match the widget's own background so resizes don't flash white around
+        # the web content (QWebEngineView defaults to a light palette).
+        self.buffer_widget.setAutoFillBackground(True)
+        self.buffer_widget.setAttribute(Qt.WidgetAttribute.WA_OpaquePaintEvent, True)
+        self.buffer_widget.setAttribute(Qt.WidgetAttribute.WA_NoSystemBackground, True)
+        self.buffer_widget.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
+        widget_palette = self.buffer_widget.palette()
+        widget_palette.setColor(QPalette.ColorRole.Window, self.background_color)
+        widget_palette.setColor(QPalette.ColorRole.Base, self.background_color)
+        self.buffer_widget.setPalette(widget_palette)
 
     @interactive(insert_or_do=True)
     def change_url(self, url):
