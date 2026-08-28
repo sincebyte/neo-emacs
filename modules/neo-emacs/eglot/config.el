@@ -208,7 +208,7 @@
 (defun +eglot-java--build-workspace (server)
   (when (+eglot-java--jdt-server-p server)
     (ignore-errors
-      (jsonrpc-request server :java/buildWorkspace nil))))
+      (jsonrpc-async-request server :java/buildWorkspace nil))))
 
 (after! eglot
   (cl-defmethod eglot-execute-command ((server eglot-lsp-server)
@@ -376,7 +376,7 @@
 
 (add-hook 'find-file-hook #'+eglot-java-ts-mode-for-jdt-decompiled)
 (after! eglot
-    (setq eglot-sync-connect              8
+    (setq eglot-sync-connect              nil
           eldoc-echo-area-use-multiline-p nil))
 
 (after! focus
