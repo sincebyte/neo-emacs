@@ -40,7 +40,8 @@
         (add-to-list 'default-frame-alist '(fullscreen . maximized))))))
 (add-hook 'window-setup-hook #'my/apply-window-geometry)
 (setq ns-use-proxy-icon nil)           ; 禁用代理图标
-(setq frame-title-format nil)          ; 清空标题格式
+(setq frame-title-format '("")         ; 清空标题格式
+      icon-title-format '(""))         ; 最小化时同样清空
 ;; full screen
 ;; (when (display-graphic-p)
 ;;   (add-hook 'window-setup-hook #'toggle-frame-fullscreen))

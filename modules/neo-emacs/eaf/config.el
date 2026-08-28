@@ -64,6 +64,8 @@
         eaf-browser-bookmark-file (concat doom-data-dir "eaf/browser/bookmarks.log")
         eaf-browser-cookie-file (concat doom-data-dir "eaf/browser/cookies"))
 
+  (setq eaf-frame-title-format '(""))
+
   (eaf-bind-key history_backward "M-[" eaf-browser-keybinding)
   (eaf-bind-key history_forward "M-]" eaf-browser-keybinding)
 
