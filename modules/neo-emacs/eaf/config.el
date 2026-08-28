@@ -242,3 +242,19 @@ in Python.  `my/eaf-toggle-input-mode' is idempotent (it no-ops when
             (lambda (&rest _)
               (when (derived-mode-p 'eaf-mode)
                 (goto-char (point-min)))))
+
+;; Cold-start (e.g. Emacs startup) drops every `eaf-open' call after the first:
+;; `eaf-open' only queues the first URL into `eaf--first-start-app-buffers'
+;; before the EPC process is live, and the rest are silently discarded.  Wait
+;; until the process is ready, then open the URL in the other window (which
+;; also does the right split).
+(defun my/eaf-open-browser-other-window-when-ready (url)
+  "Open URL in the other window once the EAF process is ready.
+
+Split left:right at 7:3 (current window takes 70%, the new one 30%)."
+  (if (and (boundp 'eaf-epc-process) (eaf-epc-live-p eaf-epc-process))
+      (let ((right-width (round (* 0.7 (window-total-width)))))
+        (split-window-right right-width)
+        (other-window 1)
+        (eaf-open-browser url))
+    (run-with-idle-timer 0.5 nil #'my/eaf-open-browser-other-window-when-ready url)))
