@@ -19,7 +19,7 @@
           (t 'other))))
 
 (defvar my/window-geometry-table
-  '((1k :left 169 :top 35 :width 1416 :height 944)
+  '(    (1k :left 172 :top 89 :width 1322 :height 806)
     (2k nil)   ; TODO 2K 显示器实测后填写
     (4k nil))  ; TODO 4K 显示器实测后填写
   "不同分辨率下的窗口几何参数(像素).
@@ -180,6 +180,10 @@
 ;; (setq doom-theme 'doom-winter-is-coming-dark-blue)
 ;; (after! doom-themes
 ;;   (load-theme 'doom-winter-is-coming-dark-blue t))
+
+(add-hook 'doom-load-theme-hook
+          (lambda ()
+            (set-face-attribute 'help-key-binding nil :box nil)))
 
 (load-theme 'kaolin-dark t)
 (after! avy (set-face-attribute 'avy-lead-face nil
