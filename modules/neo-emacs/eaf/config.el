@@ -196,6 +196,26 @@ enabling and re-activates Emacs when disabling (or when Emacs regains focus)."
                (not (buffer-local-value 'my/eaf-input-mode buffer)))
       (eaf-call-async "eval_function" buffer-id "switch_to_input_mode" "t"))))
 
+(defun my/eaf-clicked-buffer-id ()
+  "Return the EAF buffer id of the window under the mouse pointer, or nil.
+
+Called by the EAF macOS window tracker right after focus returns to Emacs.
+The mouse is still at the click point, so the window physically under it is the
+one the user clicked back into -- this does not depend on window selection.
+Falls back to the selected window.  Returns nil when neither is an EAF buffer."
+  (let* ((mouse-pos (mouse-position))
+         (frame (car mouse-pos))
+         (x (cadr mouse-pos))
+         (y (cddr mouse-pos))
+         (window (and (framep frame) (integerp x) (integerp y)
+                      (window-at x y frame))))
+    (unless window
+      (setq window (selected-window)))
+    (when window
+      (let ((buf (window-buffer window)))
+        (when (eq (buffer-local-value 'major-mode buf) 'eaf-mode)
+          (buffer-local-value 'eaf--buffer-id buf))))))
+
 (defun my/eaf-on-input-mode-enabled (buffer-id &optional state)
   "Trigger `my/eaf-toggle-input-mode' when the browser reports input mode
 enabled -- via keybinding, mouse click, or any other trigger.
