@@ -140,7 +140,7 @@
     (when (and (boundp 'eaf-proxy-type)
                 eaf-proxy-type
                 eaf-epc-process)
-      (eaf-call-async "toggle_proxy"))))
+      (eaf-call-async "enable_proxy"))))
 (advice-add 'eaf-open-browser :after #'my/eaf-enable-proxy)
 
 ;; The newer EAF calls `eaf--toggle-input-mode' via eval_in_emacs to report the
