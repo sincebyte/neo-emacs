@@ -5,7 +5,7 @@
 
 (defun my/mac-switch-to-rime ()
   (interactive)
-  (start-process "hs-abc" nil "/opt/homebrew/bin/hs" "-c" "hs.keycodes.currentSourceID(\"com.apple.keylayout.ABC\")")
+  ;; (start-process "hs-abc" nil "/opt/homebrew/bin/hs" "-c" "hs.keycodes.currentSourceID(\"com.apple.keylayout.ABC\")")
   (run-at-time 0.1 nil (lambda ()
      (start-process "hs-rime" nil "/opt/homebrew/bin/hs" "-c" "hs.keycodes.currentSourceID(\"im.rime.inputmethod.Squirrel.Hans\")"))))
 
