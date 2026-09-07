@@ -7,7 +7,7 @@ import time
 from ctypes import byref, c_bool, c_double, c_float, c_int32, c_long, c_uint32, c_void_p
 
 from PyQt6.QtCore import QEvent, QPoint, QPointF, QTimer, Qt
-from PyQt6.QtGui import QCursor, QMouseEvent
+from PyQt6.QtGui import QCursor, QImage, QMouseEvent
 from PyQt6.QtWidgets import QApplication
 
 from core.utils import eval_in_emacs, get_emacs_func_result
@@ -335,6 +335,11 @@ class MacOSWindowTracker:
         self.eaf_pid = os.getpid()
         self.views = views
         self.hide_views = hide_views
+        # A/B diagnostic: disable the per-tick window repositioning to test
+        # whether continuously nudging/resizing the QtWebEngine view windows
+        # every 16ms is what intermittently kills their compositor (black
+        # frame).  When True the windows keep their last geometry.
+        self._test_no_reposition = True
         self.bridge = bridge or MacOSWindowBridge()
         self.last_frontmost_pid = None
         # Polled left-button state: we record the position and time of the
@@ -355,6 +360,22 @@ class MacOSWindowTracker:
         self._replay_focus_js = None
         self._replay_until = 0.0
         self._replay_timer = None
+
+        # Black-window watchdog.  A QtWebEngine view on macOS can lose its
+        # compositor and start presenting a uniform near-black frame while the
+        # page keeps running (no crash, no error); it has no deterministic
+        # trigger, so instead of trying to prevent it we sample each visible
+        # view and reload the ones that went black.  hide/show and a
+        # resize-tickle were measured NOT to recover the compositor, so reload
+        # (which rebuilds the page) is the recovery; two reloads without a
+        # healthy frame within ~10s stop and notify instead of looping.
+        self._black_check_interval = 2.0
+        self._black_elapsed = 0.0
+        # True reloads black views automatically (currently OFF while the root
+        # cause is being diagnosed: reload-looping a window whose compositor is
+        # dead was destroying app sessions for no benefit).
+        self._black_auto_heal = False
+        self._black_state = {}   # buffer_id -> dict(suspects, reloads, cooldown_until)
 
         self.timer = QTimer()
         self.timer.setTimerType(Qt.TimerType.PreciseTimer)
@@ -509,6 +530,19 @@ class MacOSWindowTracker:
             # window that was clicked (see `_maybe_replay_click').
             if previous_pid not in (None, self.emacs_pid, self.eaf_pid):
                 QTimer.singleShot(100, self._maybe_replay_click)
+
+        if frontmost_pid == self.eaf_pid:
+            # While typing (input mode) EAF itself is frontmost.  A focus
+            # hiccup -- e.g. an IME/candidate window briefly registering as a
+            # separate frontmost application -- can run the hide path above,
+            # and the Emacs-frontmost re-show never fires afterwards, leaving
+            # the Emacs buffer underneath empty (which reads as a black box
+            # while the user keeps typing).  Re-show any hidden view whenever
+            # EAF is frontmost so this state cannot persist.
+            for view in self.views():
+                if not view.isVisible():
+                    self._log("  re-show hidden view on EAF frontmost")
+                    view.try_show_top_view()
 
         external_application = (
             frontmost_pid != self.emacs_pid and
@@ -892,11 +926,142 @@ class MacOSWindowTracker:
         if self.bridge.frontmost_pid() == self.eaf_pid:
             self.bridge.activate_application(self.emacs_pid)
 
+    def _sample_black_view(self, view):
+        """Return True if VIEW currently renders a uniform near-black frame.
+
+        A QtWebEngine view that lost its compositor paints a single flat color
+        (measured ~rgb(24,24,26) on this setup) with essentially no content
+        pixels, whereas even a dark-themed page has some text/accents above
+        luminance ~90.  Grab the view and count those two populations."""
+        try:
+            pixmap = view.grab()
+            image = pixmap.toImage().convertToFormat(
+                QImage.Format.Format_RGB32).scaled(
+                    96, 64,
+                    Qt.AspectRatioMode.IgnoreAspectRatio,
+                    Qt.TransformationMode.SmoothTransformation)
+            width = image.width()
+            height = image.height()
+            if width <= 0 or height <= 0:
+                return False
+            dark = 0
+            lit = 0
+            total = 0
+            for y in range(height):
+                for x in range(width):
+                    color = image.pixelColor(x, y)
+                    luminance = (0.299 * color.red() +
+                                 0.587 * color.green() +
+                                 0.114 * color.blue())
+                    total += 1
+                    if luminance < 48:
+                        dark += 1
+                    elif luminance >= 96:
+                        lit += 1
+            if total == 0:
+                return False
+            return (dark / total >= 0.985 and lit / total <= 0.006)
+        except Exception:
+            return False
+
+    def _heal_black_view(self, view, state):
+        """Reload the render widget of a view that went black (GUI thread).
+
+        hide/show and resize-tickling were measured NOT to fix the black frame
+        (the QtWebEngine compositor for that view is gone and only a fresh page
+        rebuilds it), so skip straight to the reliable recovery: reload.  The
+        buffer's own `refresh_page' path is avoided (it re-activates Windows
+        windows); `buffer_widget.reload()' just reloads this page."""
+        buffer = getattr(view, 'buffer', None)
+        if buffer is None:
+            return
+        widget = getattr(buffer, 'buffer_widget', None)
+        if widget is None:
+            state['reloads'] = state.get('reloads', 0) + 1
+            state['cooldown_until'] = time.monotonic() + 60.0
+            return
+        state['reloads'] = state.get('reloads', 0) + 1
+        buffer_id = buffer.buffer_id
+        self._log("  black-heal[%s]: reload page" % buffer_id)
+        try:
+            widget.reload()
+        except Exception:
+            self._log_exception()
+        # Reload + paint needs a few seconds; back off so a page that stays
+        # legitimately black is not reload-loop attacked.
+        state['cooldown_until'] = time.monotonic() + 8.0
+
+    def _watch_black_views(self):
+        """Sample visible views and auto-recover any that went black."""
+        frontmost = self.bridge.frontmost_pid()
+        if frontmost not in (self.emacs_pid, self.eaf_pid):
+            return
+        now = time.monotonic()
+        for view in self.views():
+            try:
+                buffer = getattr(view, 'buffer', None)
+                if (buffer is None or not view.isVisible() or
+                        not hasattr(buffer, 'buffer_id')):
+                    continue
+                if (self._replay_view is view and
+                        now < self._replay_until):
+                    continue
+                buffer_id = buffer.buffer_id
+                state = self._black_state.setdefault(
+                    buffer_id, {'suspects': 0, 'reloads': 0,
+                                'cooldown_until': 0.0, 'last': 0.0})
+                widget = getattr(buffer, 'buffer_widget', None)
+                # Skip while the page is loading; grabbing mid-load reads a
+                # not-yet-painted frame and would false-positive (this also
+                # holds right after our own recovery reload).
+                try:
+                    if (widget is not None and
+                            getattr(widget, 'loadProgress',
+                                    lambda: 100)() < 100):
+                        state['suspects'] = 0
+                        continue
+                except Exception:
+                    pass
+                if now < state.get('cooldown_until', 0.0):
+                    continue
+                if now - state.get('last', 0.0) < self._black_check_interval:
+                    continue
+                state['last'] = now
+                black = self._sample_black_view(view)
+                if not black:
+                    state['suspects'] = 0
+                    if state.get('reloads', 0) != 0:
+                        self._log("  black-heal[%s]: recovered" % buffer_id)
+                        self._black_state.pop(buffer_id, None)
+                    continue
+                state['suspects'] = state.get('suspects', 0) + 1
+                # Require two consecutive black samples (~4s) before healing,
+                # so a transient dark frame never reloads a page.
+                if state['suspects'] >= 2:
+                    state['suspects'] = 0
+                    if self._black_auto_heal:
+                        self._heal_black_view(view, state)
+                    else:
+                        # Auto-reload is disabled during root-cause work: it was
+                        # found to reload-loop a view whose page loads fine but
+                        # whose window compositor stays dead, destroying app
+                        # sessions.  Just keep a timestamped sighting record.
+                        self._log("  black-view[%s]: seen (auto-heal off)" %
+                                  buffer_id)
+                        state['cooldown_until'] = time.monotonic() + 30.0
+            except Exception:
+                self._log_exception()
+
     def update(self):
         """Synchronize EAF position and visibility with native macOS state."""
         self._poll_mouse_down()
-        windows = self.bridge.emacs_windows(self.emacs_pid)
-        views = self.views()
-        for view in views:
-            self._update_view_position(view, windows)
+        if not self._test_no_reposition:
+            windows = self.bridge.emacs_windows(self.emacs_pid)
+            for view in self.views():
+                self._update_view_position(view, windows)
         self._update_frontmost_application()
+        # Black-window watchdog, ticked from this same 16ms timer.
+        self._black_elapsed += 0.016
+        if self._black_elapsed >= self._black_check_interval:
+            self._black_elapsed = 0.0
+            self._watch_black_views()

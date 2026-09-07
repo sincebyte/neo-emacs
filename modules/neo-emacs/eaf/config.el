@@ -23,7 +23,7 @@
          (patch-dir (expand-file-name
                      "patches/eaf/"
                      (or (bound-and-true-p doom-user-dir) "~/.doom.d/"))))
-    (dolist (rel '("core/webengine.py" "core/macos.py" "core/buffer.py"))
+    (dolist (rel '("core/view.py" "core/webengine.py" "core/macos.py" "core/buffer.py"))
       (let ((target (expand-file-name rel repo))
             (source (expand-file-name rel patch-dir)))
         (when (and (file-exists-p source)
@@ -31,7 +31,7 @@
                        (not (my/eaf--files-same-contents-p source target))))
           (copy-file source target t)
           (message "[EAF] applied patch: %s" rel))))))
-;; (my/eaf-apply-patches)
+(my/eaf-apply-patches)
 
 (use-package! eaf
   :init
