@@ -68,6 +68,8 @@
 
   (eaf-bind-key history_backward "M-[" eaf-browser-keybinding)
   (eaf-bind-key history_forward "M-]" eaf-browser-keybinding)
+  (eaf-bind-key history_backward "s-[" eaf-browser-keybinding)
+  (eaf-bind-key history_forward "s-]" eaf-browser-keybinding)
 
   (eaf-bind-key +workspace/switch-left "J" eaf-browser-keybinding)
   (eaf-bind-key +workspace/switch-right "K" eaf-browser-keybinding)
