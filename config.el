@@ -270,6 +270,7 @@
 (map! :n   "SPC t n"  '+workspace/new                        )
 (map! :n   "SPC f n"  'copy-buffer-file-name                 )
 (map! :v   "SPC f n"  'copy-buffer-file-name                 )
+(map! :n   "SPC f g"  'copy-file-to-clipboard                )
 ;; (map! :nv  "SPC d"    'aidermacs-transient-menu              )
 
 (map! :n   "K"        '+workspace/switch-right               )

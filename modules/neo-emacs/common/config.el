@@ -69,3 +69,24 @@
                    (format "%s:%d,%d" filename start-line end-line)
                  (format "%s:%d" filename start-line))))))
 
+(defun copy-file-to-clipboard ()
+  "Copy the current file itself to the system clipboard.
+On macOS this puts a file reference on the clipboard, so pasting elsewhere
+\(e.g. WeChat) attaches the file rather than inserting its path or contents."
+  (interactive)
+  (let ((file (buffer-file-name)))
+    (unless file
+      (user-error "Current buffer is not visiting a file"))
+    (let ((path (expand-file-name file)))
+      (unless (file-exists-p path)
+        (user-error "File does not exist: %s" path))
+      (if (eq system-type 'darwin)
+          (let ((status (call-process "osascript" nil nil nil "-e"
+                                      (format "set the clipboard to (POSIX file %s)"
+                                              (prin1-to-string path)))))
+            (if (and (integerp status) (zerop status))
+                (message "Copied file to clipboard: %s" path)
+              (user-error "Failed to copy file to clipboard: %s" path)))
+        (kill-new path)
+        (message "Copied file path to clipboard: %s" path)))))
+
