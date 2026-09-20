@@ -342,6 +342,13 @@ class MacOSWindowTracker:
         self._test_no_reposition = True
         self.bridge = bridge or MacOSWindowBridge()
         self.last_frontmost_pid = None
+        # Cold-start wake-up.  A freshly spawned EAF process has never been the
+        # active application, so its always-on-top QtWebEngine windows never get
+        # an exposure/focus event and stay black until the user clicks one.
+        # For a short window after start we reproduce that click's activation
+        # once per buffer (then hand focus back to Emacs) instead of reloading.
+        self._started_at = time.monotonic()
+        self._wake_done = set()
         # Polled left-button state: we record the position and time of the
         # button going down so a click that activates Emacs (from the EAF
         # process's point of view an event on another application) can be
@@ -729,6 +736,41 @@ class MacOSWindowTracker:
         except Exception:
             self._log_exception()
 
+    def _wake_view(self, view):
+        """Start VIEW's QtWebEngine compositor on a cold start.
+
+        At EAF process start the view window is shown while the EAF
+        application has never been active, so QtWebEngine never receives the
+        exposure/focus event that starts compositing and the page stays black
+        until the user clicks the window.  Reproduce that click's activation
+        here (no synthetic mouse events, no input mode) and then hand keyboard
+        focus straight back to Emacs, since the view is always-on-top and keeps
+        rendering once the compositor is live."""
+        try:
+            self.bridge.activate_application(self.eaf_pid)
+            if not view.isVisible():
+                view.try_show_top_view()
+            view.show()
+            view.raise_()
+            handle = view.windowHandle()
+            if handle is not None:
+                self.bridge.make_key_window(handle.winId())
+            view.activateWindow()
+            buffer = getattr(view, 'buffer', None)
+            widget = getattr(buffer, 'buffer_widget', None)
+            if widget is not None:
+                widget.setFocus(Qt.FocusReason.ActiveWindowFocusReason)
+                proxy = widget.focusProxy()
+                if proxy is not None:
+                    proxy.setFocus(Qt.FocusReason.ActiveWindowFocusReason)
+            self._log("  wake view buffer=%s geom=%s" % (
+                getattr(buffer, 'buffer_id', '?'), view.geometry()))
+        except Exception:
+            self._log_exception()
+        finally:
+            QTimer.singleShot(
+                400, lambda: self.bridge.activate_application(self.emacs_pid))
+
     def _deliver_synthetic_click(self, view, global_pos):
         """Place the caret and hand web focus to VIEW at GLOBAL_POS.
 
@@ -1039,6 +1081,18 @@ class MacOSWindowTracker:
                 # so a transient dark frame never reloads a page.
                 if state['suspects'] >= 2:
                     state['suspects'] = 0
+                    # Cold start: the first frames of a freshly spawned EAF
+                    # process are black because the never-active Qt app has not
+                    # been given an exposure event.  Reproduce the click that
+                    # normally fixes it (activate + focus, then hand focus back
+                    # to Emacs) rather than reloading; reloading a page whose
+                    # compositor has not started yet does not help.
+                    if (time.monotonic() - self._started_at < 60.0 and
+                            buffer_id not in self._wake_done):
+                        self._wake_done.add(buffer_id)
+                        self._wake_view(view)
+                        state['cooldown_until'] = time.monotonic() + 5.0
+                        continue
                     if self._black_auto_heal:
                         self._heal_black_view(view, state)
                     else:

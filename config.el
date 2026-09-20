@@ -396,3 +396,112 @@
     (error "Couldn't find filename in current buffer")))
 
 (advice-add '+default/yank-buffer-path :override #'my/yank-buffer-path-full)
+
+;;; TRAMP / 退出行为：只对“有未保存改动的远程 buffer”逐个询问，绝不卡住
+;; 退出一共有两处会访问远程：
+;;  A. Doom 把 `recentf-cleanup' 挂在 `kill-emacs-hook' 上（doom-emacs.el），而默认的
+;;     `recentf-keep-default-predicate' 会对“连接已建立”的远程文件调用 `access-file'。
+;;  B. `diff-hl-mode' / `flycheck-mode' 会在空闲计时器/钩子里通过 vc 在远程执行
+;;     git 等命令（日志里的 process.run 超时即来自此）。退出流程弹窗时这些计时器
+;;     仍会触发，导致卡死。
+;; 下面先堵 A（让 recentf 保留远程条目但绝不探测），再在退出前拆掉 B。
+;; 退出行为：没有改动的远程 buffer 不询问、直接随退出关闭；有未保存改动的远程
+;; buffer 才逐个弹菜单，让用户选择 保存 / 不保存并关闭 / 取消退出。不使用任何检测/
+;; 确认定时器；只在退出期间把连接超时压到 5s，让不可达连接尽快失败而不是等 60s。
+(defun my/recentf-keep (file)
+  "本地文件检查可读性；远程文件直接保留，绝不发起 I/O。"
+  (if (file-remote-p file) t (file-readable-p file)))
+
+(after! recentf
+  (setq recentf-keep '(my/recentf-keep))
+  ;; 无论谁调用 `recentf-cleanup'（含 TRAMP 的清理钩子），都强制不探测远程文件：
+  ;; 否则默认谓词会对“连接已建立”的远程路径调用 `access-file'，VPN 断后逐个超时。
+  (defun my/recentf-cleanup-keep-remote (orig &rest args)
+    (let ((recentf-keep '(my/recentf-keep)))
+      (apply orig args)))
+  (advice-add 'recentf-cleanup :around #'my/recentf-cleanup-keep-remote))
+
+;; TRAMP 在清理连接时（tramp-recentf-cleanup / tramp-recentf-cleanup-all）会把
+;; 对应的远程条目从 recentf 里删掉，并打印一长串 "File ... removed from the recentf
+;; list"。这既是退出时刷屏的来源，也会把你明确想保留的远程路径删掉。置为 no-op，
+;; 让 recentf 只记录路径、远程条目永久保留。
+(with-eval-after-load 'tramp-integration
+  (advice-add 'tramp-recentf-cleanup :override #'ignore)
+  (advice-add 'tramp-recentf-cleanup-all :override #'ignore))
+
+;; 关掉所有会在空闲计时器/钩子里通过 TRAMP 跑远程命令的次要模式
+(defun my/disable-remote-touching-modes ()
+  "关闭会在退出流程中触发远程访问的全局与本地次要模式。"
+  (dolist (mode '(global-diff-hl-mode global-flycheck-mode))
+    (when (and (boundp mode) (symbol-value mode))
+      (ignore-errors (funcall mode -1))))
+  (dolist (buffer (buffer-list))
+    (when (buffer-live-p buffer)
+      (with-current-buffer buffer
+        (when (and buffer-file-name (file-remote-p buffer-file-name))
+          (dolist (mode '(diff-hl-mode flycheck-mode auto-revert-mode))
+            (when (and (boundp mode) (symbol-value mode))
+              (ignore-errors (funcall mode -1)))))))))
+
+(defun my/remote-modified-buffers ()
+  "返回所有已修改的远程 (TRAMP) 文件 buffer。"
+  (seq-filter
+   (lambda (buffer)
+     (let ((file (buffer-file-name buffer)))
+       (and file
+            (file-remote-p file)
+            (buffer-modified-p buffer))))
+   (buffer-list)))
+
+(defun my/confirm-remote-buffers-before-exit ()
+  "退出前逐个询问已修改的远程 buffer，由用户决定保存/不保存/取消退出。
+没有改动的远程 buffer 不会被询问，直接随退出关闭。全程无任何定时器/超时。"
+  (dolist (buffer (my/remote-modified-buffers))
+    (when (buffer-live-p buffer)
+      (with-current-buffer buffer
+        (let ((file buffer-file-name))
+          (pcase (car (read-multiple-choice
+                       (format "远程文件已修改：%s" file)
+                       '((?s "save"    "保存该文件")
+                         (?n "no-save" "放弃修改并关闭该文件")
+                         (?c "cancel"  "取消退出 Emacs"))))
+            (?s
+             (condition-case err
+                 (progn
+                   (save-buffer)
+                   (message "已保存：%s" file))
+               (error
+                (message "保存失败：%s（%s）" file err)
+                (if (yes-or-no-p
+                     (format "保存 %s 失败，放弃修改并继续退出？ " file))
+                    (set-buffer-modified-p nil)
+                  (user-error "退出已取消")))))
+            (?n (set-buffer-modified-p nil))
+            (?c (user-error "退出已取消"))))))))
+
+(defun my/save-buffers-kill-emacs-a (orig &rest args)
+  "退出前先拆掉远程访问，再走标准退出流程；若退出被取消则恢复。"
+  (let ((diff-hl-was (and (boundp 'global-diff-hl-mode)
+                          (symbol-value 'global-diff-hl-mode)))
+        (flycheck-was (and (boundp 'global-flycheck-mode)
+                           (symbol-value 'global-flycheck-mode)))
+        (tramp-verbose 0)
+        ;; 退出时把连接超时压到 5s：VPN 已断时不再等默认 60s 才失败（可自行调整）
+        (tramp-connection-timeout 5)
+        (remote-file-name-inhibit-cache t)
+        ;; 退出期间禁用 VC，避免保存/关闭远程文件时再触发 vc 的远程 git 调用
+        (vc-handled-backends nil))
+    (unwind-protect
+        (progn
+          (my/disable-remote-touching-modes)
+          (my/confirm-remote-buffers-before-exit)
+          ;; `non-essential' 让 TRAMP 在退出期间不再为远程操作阻塞/重连
+          (let ((non-essential t))
+            (apply orig args)))
+      ;; 只有退出被取消（没有真正 kill-emacs）时才会执行到这里
+      (when diff-hl-was (ignore-errors (global-diff-hl-mode 1)))
+      (when flycheck-was (ignore-errors (global-flycheck-mode 1))))))
+(advice-add 'save-buffers-kill-emacs :around #'my/save-buffers-kill-emacs-a)
+
+;; 兜底：即使从其它路径直接 kill-emacs，也先关掉远程相关模式
+(add-hook 'kill-emacs-hook #'my/disable-remote-touching-modes -95)
