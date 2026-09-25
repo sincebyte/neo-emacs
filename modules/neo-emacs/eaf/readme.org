@@ -263,6 +263,7 @@ Some fixes touch EAF's Python core (Qt/PyQt) and cannot be expressed in Emacs Li
   - Mouse release no longer returns focus to Emacs while in input mode.
 - =core/macos.py=
   - Resets =input_mode= to =nil= whenever Emacs regains focus, so a later =M-i=/=s-i= press starts from a known OFF state instead of accidentally disabling an already-enabled mode.
+  - Freezes the live Qt views while the Emacs frame itself is being dragged. The EAF browser is a separate always-on-top window in another process, so a live window can only follow the frame when the tracker commits a =setPosition= at the next vsync and therefore trails by about one frame. When the tracker sees the left button held *and* an Emacs window origin moving it captures the views, hides them and lets Emacs show the screenshot placeholder instead; the placeholder is an image inside the frame, so it moves with the frame with zero relative lag. On button release the views are moved to the frame's final position and shown again. Clicks and selections inside the browser never move the frame, so they are unaffected.
 - =core/buffer.py=
   - Keeps the scene rectangle in sync with the view size on resize (=setSceneRect=).
 

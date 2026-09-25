@@ -514,6 +514,17 @@ class MacOSWindowTracker(QObject):
         self._was_down = False
         self._down_pos = None
         self._down_time = None
+        # Freeze-during-drag state.  While the Emacs frame itself is being
+        # dragged (left button held AND an Emacs window's origin moving), the
+        # live Qt windows are hidden and Emacs shows the screenshot
+        # placeholders.  A placeholder is an image INSIDE the Emacs frame, so
+        # it moves with the frame with zero relative lag -- unlike the live Qt
+        # window, which can only follow when this process commits a window move
+        # at the next vsync and therefore always trails by ~1 frame.
+        self._drag_freeze = False
+        self._drag_freeze_started = 0.0
+        # Last seen Emacs window origins, for drag detection.
+        self._drag_origins = None
         # Click-replay window state.  During the replay the tracker must NOT
         # reset the replayed buffer's input_mode when Emacs happens to be
         # frontmost again (the original click can re-activate Emacs late), and
@@ -714,7 +725,9 @@ class MacOSWindowTracker(QObject):
 
         if frontmost_pid == self.emacs_pid:
             for view in self.views():
-                if not view.isVisible():
+                # Not during a drag-freeze: the views are hidden on purpose so
+                # Emacs can show the zero-lag placeholder.
+                if not view.isVisible() and not self._drag_freeze:
                     view.try_show_top_view()
             # Reset input mode when focus returns to Emacs so that a later
             # `switch_to_input_mode' toggle starts from the OFF state instead of
@@ -756,7 +769,7 @@ class MacOSWindowTracker(QObject):
             # while the user keeps typing).  Re-show any hidden view whenever
             # EAF is frontmost so this state cannot persist.
             for view in self.views():
-                if not view.isVisible():
+                if not view.isVisible() and not self._drag_freeze:
                     self._log("  re-show hidden view on EAF frontmost")
                     view.try_show_top_view()
 
@@ -1152,6 +1165,73 @@ class MacOSWindowTracker(QObject):
             self._down_time = time.monotonic()
         self._was_down = down
 
+    def _update_drag_freeze(self, windows):
+        """Freeze the live Qt views while the Emacs frame is being dragged.
+
+        `_poll_mouse_down' has already run this tick, so `_was_down' reflects
+        the current left-button state.  A frame drag is a left-button hold
+        during which an Emacs window's origin moves; clicks, text selection and
+        scrollbar drags *inside* the browser never move the frame, so they do
+        not trigger this.
+        """
+        origins = {}
+        for number, bounds in (windows or {}).items():
+            origins[number] = (bounds[0], bounds[1])
+        previous = self._drag_origins
+        self._drag_origins = origins
+
+        if not self._was_down:
+            if self._drag_freeze:
+                self._end_drag_freeze(windows)
+            return
+
+        if self._drag_freeze or not previous:
+            return
+
+        for number, (x, y) in origins.items():
+            if number not in previous:
+                continue
+            previous_x, previous_y = previous[number]
+            if abs(x - previous_x) > 2 or abs(y - previous_y) > 2:
+                self._start_drag_freeze()
+                break
+
+    def _start_drag_freeze(self):
+        """Hide the live views; let Emacs show the placeholders instead."""
+        if self.hide_views is None:
+            return
+        self._drag_freeze = True
+        self._drag_freeze_started = time.monotonic()
+        self._log("drag-freeze: hide live views, show placeholders")
+        try:
+            # Same call the focus-out path uses, and likewise invoked directly
+            # from the GUI thread: capture each visible view, hide it, and ask
+            # Emacs to insert the screenshot into its EAF buffers.
+            self.hide_views()
+        except Exception:
+            self._log_exception()
+            self._drag_freeze = False
+
+    def _end_drag_freeze(self, windows):
+        """Restore the live views after the frame drag ends."""
+        self._drag_freeze = False
+        elapsed = time.monotonic() - self._drag_freeze_started
+        self._log("drag-freeze: restore live views (%.2fs)" % elapsed)
+        # Move the still-hidden windows to the frame's final position BEFORE
+        # showing them, so the re-show never flashes at the pre-drag origin.
+        if windows:
+            for view in self.views():
+                try:
+                    self._update_view_position(view, windows)
+                except Exception:
+                    self._log_exception()
+        for view in self.views():
+            try:
+                if not view.isVisible():
+                    view.try_show_top_view()
+            except Exception:
+                self._log_exception()
+
     @staticmethod
     def _log(message):
         print("[click-replay] " + message, flush=True)
@@ -1337,8 +1417,9 @@ class MacOSWindowTracker(QObject):
     def update(self):
         """Synchronize EAF position and visibility with native macOS state."""
         self._poll_mouse_down()
-        if not self._test_no_reposition:
-            windows = self.bridge.emacs_windows(self.emacs_pid)
+        windows = self.bridge.emacs_windows(self.emacs_pid)
+        self._update_drag_freeze(windows)
+        if not self._test_no_reposition and not self._drag_freeze:
             for view in self.views():
                 self._update_view_position(view, windows)
         self._update_frontmost_application()
