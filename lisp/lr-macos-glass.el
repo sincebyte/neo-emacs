@@ -59,16 +59,16 @@
     "Fallback CGS blur for Emacs builds without native glass material support.")
 
   (defconst salih/glass-presets
-    '((macos-glass-regular        ; 预设A：常规毛玻璃（默认，salih/glass-style 的默认值）
-       :material regular          ; 玻璃材质：regular=毛玻璃感 / clear=更清透
-       :alpha 0.60                ; 帧背景 alpha：0=全透、1=不透明（越大越"实"）
+    '((macos-glass-regular        ; 预设A：默认毛玻璃（salih/glass-style 的默认值；材质见下）
+       :material regular            ; 玻璃材质：clear=更清透/模糊更轻；regular=毛玻璃感更重
+       :alpha 0.70                ; 帧背景 alpha：0=全透、1=不透明（越大越"实"）
        :glyphs-min-alpha 0.24     ; hl-line/选区等字形背景的最小 alpha
        :blur 0                    ; CGS 模糊半径（原生材质自带模糊，保持 0）
        :tint-opacity 0.05         ; 玻璃上叠主题色调的不透明度：越大越暗/越实
        :saturation 1.9            ; 窗口失焦时叠加层的饱和度倍数：>1 更鲜艳
        :inactive-opacity 0.05     ; 窗口失焦时叠加层不透明度：越大越暗；nil=不叠加
        :corner-radius 2           ; 玻璃区域圆角（点）
-       :fallback-alpha 0.60       ; 【降级】无原生玻璃时的 alpha
+       :fallback-alpha 0.70       ; 【降级】无原生玻璃时的 alpha
        :fallback-blur 30)         ; 【降级】无原生玻璃时的模糊半径
       (macos-glass-clear          ; 预设B：更清透的玻璃
        :material clear            ; 材质 clear=清透

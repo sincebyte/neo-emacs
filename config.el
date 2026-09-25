@@ -381,7 +381,8 @@
                 (lambda () (select-frame-set-input-focus frame))))))
 
 ;; macOS Liquid Glass (原生 NSGlassEffectView 玻璃/模糊背景) —— 已启用
-;; 整体不透明度约 60%（预设 macos-glass-regular 的 :alpha=0.60），即约 40% 透视。
+;; 整体不透明度约 70%（预设 macos-glass-regular 的 :alpha=0.70），即约 30% 透视。
+;; 玻璃材质：clear（比 regular 更清透、模糊更轻）。
 ;; modeline/hl-line/选区保持实色（ns-alpha-elements 刻意排除 ns-alpha-glyphs），Powerline 零色差。
 ;; 想临时关掉：M-x salih/toggle-glass。
 ;; 依赖: emacs-plus@31 编译时应用 frame-transparency + ns-glass-effect 补丁
