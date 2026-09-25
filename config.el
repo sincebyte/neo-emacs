@@ -380,6 +380,18 @@
               (run-with-idle-timer 0.2 nil
                 (lambda () (select-frame-set-input-focus frame))))))
 
+;; macOS Liquid Glass (原生 NSGlassEffectView 玻璃/模糊背景) —— 已启用
+;; 整体不透明度约 60%（预设 macos-glass-regular 的 :alpha=0.60），即约 40% 透视。
+;; modeline/hl-line/选区保持实色（ns-alpha-elements 刻意排除 ns-alpha-glyphs），Powerline 零色差。
+;; 想临时关掉：M-x salih/toggle-glass。
+;; 依赖: emacs-plus@31 编译时应用 frame-transparency + ns-glass-effect 补丁
+;;   ~/.config/emacs-plus/build.yml
+;;   ~/.config/emacs-plus/ns-glass-effect.patch
+;; 源码: https://github.com/larrasket/emacs-liquid-glass
+;; 用法: M-x salih/set-glass-style / salih/toggle-glass / salih/set-glass
+(add-to-list 'load-path "~/.doom.d/lisp")
+(require 'lr-macos-glass)
+
 ;; 覆盖 doom+ 默认实现: yank 路径时不用 ~ 缩写, 保持绝对路径
 (defun my/yank-buffer-path-full (&optional root)
   "Copy the current buffer's absolute path to the kill ring."

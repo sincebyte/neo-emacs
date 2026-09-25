@@ -63,6 +63,76 @@
             (floor (* g 255))
             (floor (* b 255)))))
 
+(defvar my/modeline-glyphs-alpha-fallback 0.65
+  "预混合 Powerline 分隔符时使用的兜底 alpha（glass 尚未应用时）。
+应等于 lr-macos-glass 中 max(alpha-background, glyphs-min-alpha)，
+也就是非默认 glyph 背景（含 modeline segment）真正使用的 alpha。
+注意：不是 `alpha-background'，而是 `ns-alpha-glyphs-alpha'。")
+
+(defun my/modeline-glyphs-enabled-p ()
+  "mode line 现在由 Emacs 补丁单独保持不透明，Powerline 分隔符直接用实色即可。
+补丁 ~/.config/emacs-plus/ns-glass-effect.patch 按 glyph row 的 `mode_line_p'
+判断：mode line 的 glyph 背景始终以 alpha=1 绘制，其余地方照常透明。
+因此这里固定返回 nil，不做预混合。"
+  nil)
+
+(defun my/modeline-glyphs-alpha ()
+  "返回当前 frame 用于非默认 glyph 背景（含 modeline segment）的 alpha。
+Powerline 分隔符是不透明 XPM 图片，必须用这个 alpha 预混合，才能和半透明的
+segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyphs）则返回 1。"
+  (if (not (my/modeline-glyphs-enabled-p))
+      1.0
+    (let ((glyph (frame-parameter nil 'ns-alpha-glyphs-alpha))
+          (base  (frame-parameter nil 'alpha-background)))
+      (cond (glyph glyph)
+            (base (if (boundp 'salih/ns-alpha-glyphs-min-alpha)
+                      (max base salih/ns-alpha-glyphs-min-alpha)
+                    base))
+            (t my/modeline-glyphs-alpha-fallback)))))
+
+(defun my/modeline-alpha (face attr)
+  "取 FACE 的 ATTR 颜色，按当前 glyph 背景 alpha 预混合后返回。
+用于 Powerline 分隔符：分隔符是图片、以不透明方式绘制，而 segment 背景会被
+透明补丁按 glyph alpha 混合，所以必须让分隔符颜色等于\"混合后的实色\"。"
+  (let* ((color (and (facep face) (face-attribute face attr nil t)))
+         (alpha (my/modeline-glyphs-alpha))
+         (bg (or (face-background 'default) "#000000")))
+    (if (and (stringp color)
+             (string-match-p "\\`#[0-9a-fA-F]\\{6\\}\\'" color)
+             (< alpha 1.0))          ; alpha=1 时原样返回，避免浮点取整 +/-1
+        (color-alpha color alpha bg)
+      color)))
+
+(defconst my/modeline-alpha-faces
+  '((doom-modeline-buffer-file-alpha        . doom-modeline-buffer-file)
+    (doom-modeline-evil-normal-alpha-state  . doom-modeline-evil-normal-state)
+    (doom-modeline-evil-insert-alpha-state  . doom-modeline-evil-insert-state)
+    (doom-modeline-evil-visual-alpha-state  . doom-modeline-evil-visual-state)
+    (doom-modeline-evil-replace-alpha-state . doom-modeline-evil-replace-state)
+    (doom-modeline-evil-motion-alpha-state  . doom-modeline-evil-motion-state)
+    (doom-modeline-mode-line-alpha          . mode-line))
+  "Powerline 专用 `-alpha' face 及其对应的 segment face。")
+
+(defun my/refresh-modeline-alpha-faces ()
+  "按当前 glass alpha 重算 Powerline 分隔符 face 颜色。"
+  (when (facep 'doom-modeline)
+    (dolist (pair my/modeline-alpha-faces)
+      (let ((face (car pair))
+            (color (my/modeline-alpha (cdr pair) :background)))
+        (unless (facep face) (make-face face))   ; set-face-attribute 不会自动建 face
+        (set-face-attribute face nil
+                            :inherit 'doom-modeline
+                            :background (and (stringp color) color)
+                            :foreground "black"
+                            :weight 'bold)))))
+
+;; glass 参数一变（切 preset / 调 alpha），立刻重算分隔符颜色
+(with-eval-after-load 'lr-macos-glass
+  (dolist (fn '(salih/--apply-glass salih/toggle-glass salih/set-glass
+                salih/set-glass-style salih/set-glass-glyph-alpha))
+    (advice-add fn :after (lambda (&rest _) (my/refresh-modeline-alpha-faces))))
+  (my/refresh-modeline-alpha-faces))
+
 (defun my/create-modeline-fontset ()
   (create-fontset-from-fontset-spec
    "-*-JetBrains Mono-normal-*-*-*-17-*-*-*-*-*-fontset-modeline,
@@ -104,7 +174,7 @@
     "group doc"
     :group 'doom-modeline)
   (set-face-attribute 'doom-modeline-buffer-file-alpha nil
-                    :background (color-alpha (face-background 'doom-modeline-buffer-file ) 1)
+                    :background (my/modeline-alpha 'doom-modeline-buffer-file :background)
                     :foreground "black"
                     :weight 'bold)
 
@@ -123,7 +193,7 @@
     "group doc"
     :group 'doom-modeline)
   (set-face-attribute 'doom-modeline-evil-normal-alpha-state nil
-                    :background (color-alpha (face-background 'doom-modeline-evil-normal-state ) 1)
+                    :background (my/modeline-alpha 'doom-modeline-evil-normal-state :background)
                     :foreground "black"
                     :weight 'bold)
 
@@ -137,7 +207,7 @@
     "group doc"
     :group 'doom-modeline)
   (set-face-attribute 'doom-modeline-evil-insert-alpha-state nil
-                    :background (color-alpha (face-background 'doom-modeline-evil-insert-state ) 1)
+                    :background (my/modeline-alpha 'doom-modeline-evil-insert-state :background)
                     :foreground "black"
                     :weight 'bold)
 
@@ -151,7 +221,7 @@
     "group doc"
     :group 'doom-modeline)
   (set-face-attribute 'doom-modeline-evil-visual-alpha-state nil
-                    :background (color-alpha (face-background 'doom-modeline-evil-visual-state ) 1)
+                    :background (my/modeline-alpha 'doom-modeline-evil-visual-state :background)
                     :foreground "black"
                     :weight 'bold)
 
@@ -165,7 +235,7 @@
     "group doc"
     :group 'doom-modeline)
   (set-face-attribute 'doom-modeline-evil-replace-alpha-state nil
-                    :background (color-alpha (face-background 'doom-modeline-evil-replace-state ) 1)
+                    :background (my/modeline-alpha 'doom-modeline-evil-replace-state :background)
                     :foreground "black"
                     :weight 'bold)
 
@@ -179,10 +249,11 @@
     "group doc"
     :group 'doom-modeline)
   (set-face-attribute 'doom-modeline-evil-motion-alpha-state nil
-                    :background (color-alpha (face-background 'doom-modeline-evil-motion-state ) 1)
+                    :background (my/modeline-alpha 'doom-modeline-evil-motion-state :background)
                     :foreground "black"
                     :weight 'bold)
 
+  (my/refresh-modeline-alpha-faces)
   (fresh/modelineconfig)
   (add-hook '+workspace-new-hook #'fresh/modelineconfig)
   )))
@@ -229,13 +300,13 @@
                                              ((eq evil-state 'motion)   'doom-modeline-evil-motion-alpha-state)
                                              (t                         'doom-modeline-evil-normal-alpha-state))
                                           'doom-modeline-evil-normal-alpha-state)
-                                        'mode-line ))))
+                                        'doom-modeline-mode-line-alpha ))))
 
   (doom-modeline-def-segment powerline-filename-right-1
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
                 (powerline-arrow-left
-                 'mode-line
+                 'doom-modeline-mode-line-alpha
                  'doom-modeline-buffer-file-alpha)))
 
   (doom-modeline-def-segment powerline-filename-right-2
@@ -243,34 +314,34 @@
     (propertize " " 'display
                 (powerline-arrow-left
                  'doom-modeline-buffer-file-alpha
-                 'mode-line)))
+                 'doom-modeline-mode-line-alpha)))
 
   (doom-modeline-def-segment powerline-separator-right-vert
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
                 (powerline-arrow-right
-                 'doom-modeline-evil-emacs-alpha-state
-                 'mode-line)))
+                 'doom-modeline-evil-normal-alpha-state
+                 'doom-modeline-mode-line-alpha)))
 
   (doom-modeline-def-segment powerline-separator-left
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
         (powerline-arrow-right
-                'mode-line
+                'doom-modeline-mode-line-alpha
                 'doom-modeline-evil-visual-alpha-state)))
 
   (doom-modeline-def-segment powerline-separator-left-vcs
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
         (powerline-arrow-right
-                'mode-line
+                'doom-modeline-mode-line-alpha
                 'doom-modeline-evil-normal-alpha-state)))
 
   (doom-modeline-def-segment powerline-separator-left-time
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
         (powerline-arrow-right
-                'mode-line
+                'doom-modeline-mode-line-alpha
                 'doom-modeline-evil-insert-alpha-state)))
 
   (doom-modeline-def-segment powerline-separator-left-time-db
@@ -278,14 +349,14 @@
     (propertize " " 'display
         (powerline-arrow-right
                 'doom-modeline-evil-normal-alpha-state
-                'mode-line)))
+                'doom-modeline-mode-line-alpha)))
 
   (doom-modeline-def-segment powerline-separator-left-git-empty
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
         (powerline-arrow-right
                 'doom-modeline-evil-visual-alpha-state
-                'mode-line)))
+                'doom-modeline-mode-line-alpha)))
 
 
   (doom-modeline-def-segment my-major-mode
