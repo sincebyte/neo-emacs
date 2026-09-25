@@ -12,7 +12,7 @@ from PyQt6.QtCore import QEvent, QObject, QPoint, QPointF, QTimer, Qt, pyqtSigna
 from PyQt6.QtGui import QCursor, QImage, QMouseEvent
 from PyQt6.QtWidgets import QApplication
 
-from core.utils import eval_in_emacs, get_emacs_func_result
+from core.utils import eval_in_emacs, get_emacs_config_dir, get_emacs_func_result
 
 
 class CGPoint(ctypes.Structure):
@@ -785,10 +785,10 @@ class MacOSWindowTracker(QObject):
                 (previous_pid is None or
                  previous_pid in (self.emacs_pid, self.eaf_pid))):
             if self.hide_views is not None:
-                # Capture and hide in one Qt event-loop turn.  Hiding here and
-                # asking Emacs to capture later races with the asynchronous
-                # RPC and produces an empty placeholder.
-                self.hide_views()
+                # Insert the screenshots and let Emacs paint them while the
+                # live views still cover the window, then hide those views, so
+                # the swap never exposes the blank buffer (a black flash).
+                self._paint_placeholders_then_hide()
             else:
                 eval_in_emacs('eaf--topmost-macos-focus-out', [])
 
@@ -1196,18 +1196,56 @@ class MacOSWindowTracker(QObject):
                 self._start_drag_freeze()
                 break
 
+    def _paint_placeholders_then_hide(self):
+        """Insert fresh screenshots into Emacs, then hide the live Qt views.
+
+        The screenshots are written to disk, pushed into the Emacs EAF buffers
+        and force-redisplayed *while the Qt views still cover the window*, and
+        only afterwards are the views hidden.  Hiding first exposed the blank
+        EAF buffer until the asynchronous Emacs insert arrived -- the black
+        flash seen at the start of a frame drag or on focus loss.
+        """
+        screenshots = {}
+        for view in self.views():
+            try:
+                if view.isVisible():
+                    screenshots[view.buffer_id] = view.screen_shot()
+            except Exception:
+                self._log_exception()
+
+        if not screenshots:
+            return
+
+        eaf_config_dir = get_emacs_config_dir()
+        for buffer_id, screenshot in screenshots.items():
+            try:
+                screenshot.save(os.path.join(eaf_config_dir, buffer_id + ".jpeg"))
+            except Exception:
+                self._log_exception()
+
+        try:
+            # Synchronous on purpose: blocks until Emacs has inserted the
+            # images and redisplays them, so the placeholder is already painted
+            # when the views below go away.
+            get_emacs_func_result("eaf--display-placeholders-now", [])
+        except Exception:
+            self._log_exception()
+
+        for view in self.views():
+            try:
+                view.try_hide_top_view()
+            except Exception:
+                self._log_exception()
+
     def _start_drag_freeze(self):
-        """Hide the live views; let Emacs show the placeholders instead."""
+        """Paint the placeholders, then hide the live views."""
         if self.hide_views is None:
             return
         self._drag_freeze = True
         self._drag_freeze_started = time.monotonic()
-        self._log("drag-freeze: hide live views, show placeholders")
+        self._log("drag-freeze: paint placeholders, then hide live views")
         try:
-            # Same call the focus-out path uses, and likewise invoked directly
-            # from the GUI thread: capture each visible view, hide it, and ask
-            # Emacs to insert the screenshot into its EAF buffers.
-            self.hide_views()
+            self._paint_placeholders_then_hide()
         except Exception:
             self._log_exception()
             self._drag_freeze = False

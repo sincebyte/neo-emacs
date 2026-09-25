@@ -357,16 +357,29 @@ in Python.  `my/eaf-toggle-input-mode' is idempotent (it no-ops when
                     (window-list frame))
       (set-frame-parameter frame 'no-special-glyphs t))))
 
+;; Paint the frozen screenshots and force a redisplay *before* the Qt tracker
+;; hides the live views.
+;;
+;; EAF's Qt tracker calls this synchronously (`get_emacs_func_result') at the
+;; start of a frame drag / on focus loss, while the live Qt view is still on
+;; top.  Inserting the screenshot and redisplaying here (rather than hiding the
+;; views first and asking Emacs to insert afterwards) means the placeholder is
+;; already painted when the widget goes away, so the blank buffer is never
+;; exposed -- no black flash.
+(defun eaf--display-placeholders-now ()
+  "Insert the frozen placeholders and force a redisplay before returning."
+  (eaf--topmost-display-images)
+  (redisplay t)
+  t)
+
 ;; EAF's Qt tracker calls `eaf--clear-placeholder' from `showEvent' whenever it
 ;; re-shows a live view, but upstream never defines it, so the call used to be a
-;; silent no-op.  Define it: drop the now-hidden screenshot and restore the
-;; frame's special glyphs.
+;; silent no-op.  Define it to restore the frame's special glyphs.  We do NOT
+;; erase the screenshot: it stays in the buffer as an anti-black backdrop, and
+;; `eaf--display-placeholders-now' always replaces it before the views hide.
 (defun eaf--clear-placeholder (buffer-id)
-  "Drop the frozen placeholder for BUFFER-ID and restore special glyphs."
-  (when-let ((buffer (eaf-get-buffer buffer-id)))
-    (with-current-buffer buffer
-      (let ((inhibit-read-only t))
-        (erase-buffer))))
+  "Restore the frame's special glyphs once a live view is shown again."
+  (ignore buffer-id)
   (dolist (frame (frame-list))
     (set-frame-parameter frame 'no-special-glyphs nil)))
 
