@@ -54,6 +54,10 @@ Core patches live under `patches/eaf/core/' and go to the
   (setenv "QTWEBENGINE_CHROMIUM_FLAGS" "--no-sandbox --disable-features=WebRtcHideLocalIpsWithMdns --enable-features=PlatformHEVCDecoderSupport --enable-gpu-rasterization --ignore-gpu-blocklist --proxy-server=http://127.0.0.1:10887 --user-agent=\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\"")
   (setenv "QTWEBENGINE_DISABLE_SANDBOX" "1")
   (setenv "PYTHONIOENCODING" "utf-8")
+  ;; A/B experiment: CoreVideo follows the real display refresh (about 60 Hz
+  ;; here) instead of using an arbitrary 16 ms phase.  Change this to
+  ;; "qt-timer" and restart EAF to compare against the previous behavior.
+  (setenv "EAF_MACOS_TRACKER_DRIVER" "display-link")
   (setq eaf-python-command "/opt/homebrew/bin/python3"
         eaf-browser-continue-where-left-off t
         eaf-browser-enable-adblocker t

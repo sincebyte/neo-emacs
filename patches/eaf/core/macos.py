@@ -3,10 +3,12 @@
 
 import ctypes
 import os
+import threading
 import time
+import weakref
 from ctypes import byref, c_bool, c_double, c_float, c_int32, c_long, c_uint32, c_void_p
 
-from PyQt6.QtCore import QEvent, QPoint, QPointF, QTimer, Qt
+from PyQt6.QtCore import QEvent, QObject, QPoint, QPointF, QTimer, Qt, pyqtSignal, pyqtSlot
 from PyQt6.QtGui import QCursor, QImage, QMouseEvent
 from PyQt6.QtWidgets import QApplication
 
@@ -35,6 +37,90 @@ class NSSize(ctypes.Structure):
 
 class NSRect(ctypes.Structure):
     _fields_ = [("origin", NSPoint), ("size", NSSize)]
+
+
+class MacOSDisplayLink:
+    """Drive a callback from CoreVideo's real display-refresh cadence.
+
+    CoreVideo invokes this callback shortly before each display frame.  It
+    does not increase a 60 Hz display to 120 Hz; it merely replaces an
+    arbitrarily phased QTimer with the WindowServer's actual refresh signal.
+    """
+
+    def __init__(self, callback):
+        self.callback = callback
+        self.core_video = ctypes.CDLL(
+            "/System/Library/Frameworks/CoreVideo.framework/CoreVideo")
+        callback_type = ctypes.CFUNCTYPE(
+            c_int32, c_void_p, c_void_p, c_void_p,
+            ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), c_void_p)
+
+        self.core_video.CVDisplayLinkCreateWithActiveCGDisplays.argtypes = [
+            ctypes.POINTER(c_void_p)]
+        self.core_video.CVDisplayLinkCreateWithActiveCGDisplays.restype = c_int32
+        self.core_video.CVDisplayLinkSetOutputCallback.argtypes = [
+            c_void_p, callback_type, c_void_p]
+        self.core_video.CVDisplayLinkSetOutputCallback.restype = c_int32
+        self.core_video.CVDisplayLinkStart.argtypes = [c_void_p]
+        self.core_video.CVDisplayLinkStart.restype = c_int32
+        self.core_video.CVDisplayLinkStop.argtypes = [c_void_p]
+        self.core_video.CVDisplayLinkStop.restype = c_int32
+        self.core_video.CVDisplayLinkRelease.argtypes = [c_void_p]
+        self.core_video.CVDisplayLinkRelease.restype = None
+        self.core_video.CVDisplayLinkGetActualOutputVideoRefreshPeriod.argtypes = [
+            c_void_p]
+        self.core_video.CVDisplayLinkGetActualOutputVideoRefreshPeriod.restype = (
+            c_double)
+
+        self._callback = callback_type(self._handle_frame)
+        self._link = c_void_p()
+        result = self.core_video.CVDisplayLinkCreateWithActiveCGDisplays(
+            byref(self._link))
+        if result != 0 or not self._link:
+            raise OSError(result, "CVDisplayLinkCreateWithActiveCGDisplays failed")
+
+        result = self.core_video.CVDisplayLinkSetOutputCallback(
+            self._link, self._callback, None)
+        if result != 0:
+            self._release()
+            raise OSError(result, "CVDisplayLinkSetOutputCallback failed")
+
+        result = self.core_video.CVDisplayLinkStart(self._link)
+        if result != 0:
+            self._release()
+            raise OSError(result, "CVDisplayLinkStart failed")
+
+    def _handle_frame(self, _display_link, _now, _output_time,
+                      _flags_in, _flags_out, _context):
+        try:
+            self.callback()
+        except Exception:
+            import traceback
+            traceback.print_exc()
+        return 0
+
+    @property
+    def refresh_period(self):
+        if not self._link:
+            return 0.0
+        return self.core_video.CVDisplayLinkGetActualOutputVideoRefreshPeriod(
+            self._link)
+
+    def stop(self):
+        if self._link:
+            self.core_video.CVDisplayLinkStop(self._link)
+            self._release()
+
+    def _release(self):
+        if self._link:
+            self.core_video.CVDisplayLinkRelease(self._link)
+            self._link = c_void_p()
+
+    def __del__(self):
+        try:
+            self.stop()
+        except Exception:
+            pass
 
 
 class MacOSWindowBridge:
@@ -127,6 +213,15 @@ class MacOSWindowBridge:
             c_void_p, c_void_p, c_void_p,
             c_int32, NSPoint, ctypes.c_ulong, c_double, c_long,
             c_void_p, c_long, c_long, c_float)(
+                ("objc_msgSend", self.objc))
+        # [NSColor colorWithSRGBRed:green:blue:alpha:] -> NSColor.
+        self.send_color = ctypes.CFUNCTYPE(
+            c_void_p, c_void_p, c_void_p,
+            c_double, c_double, c_double, c_double)(
+                ("objc_msgSend", self.objc))
+        # Methods with a single BOOL argument, e.g. [NSWindow setHasShadow:].
+        self.send_bool_arg = ctypes.CFUNCTYPE(
+            c_void_p, c_void_p, c_void_p, c_bool)(
                 ("objc_msgSend", self.objc))
 
         workspace_class = self.objc.objc_getClass(b"NSWorkspace")
@@ -324,13 +419,67 @@ class MacOSWindowBridge:
             return False
         return False
 
+    def _nswindow_of_view(self, ns_view):
+        """Return the NSWindow hosting NS_VIEW (an NSView pointer), or None."""
+        try:
+            return self.send_object(
+                int(ns_view), self.objc.sel_registerName(b"window"))
+        except Exception:
+            return None
 
-class MacOSWindowTracker:
+    def set_view_has_shadow(self, ns_view, has_shadow):
+        """Enable/disable the native NSWindow shadow of an EAF view window.
+
+        Frameless Qt windows still get a system-drawn shadow on macOS
+        (NoDropShadowWindowHint is not honoured); while the window is being
+        dragged or re-shown that shadow reads as a light/white frame around
+        the outermost edges.  Turn it off on the real NSWindow."""
+        try:
+            nswindow = self._nswindow_of_view(ns_view)
+            if nswindow:
+                self.send_bool_arg(
+                    nswindow,
+                    self.objc.sel_registerName(b"setHasShadow:"),
+                    c_bool(bool(has_shadow)))
+        except Exception:
+            pass
+
+    def set_view_background(self, ns_view, r, g, b):
+        """Paint the NSWindow background of NS_VIEW with (R, G, B) in 0..1.
+
+        Qt paints the dark theme inside the window, but the native NSWindow
+        backing is default white; while the window is moved/resized during a
+        drag or re-shown, the window server can present that white backing
+        around the (lagging) web content -- a white border on the outermost
+        edge.  Filling the NSWindow's own background makes every frame the
+        window server draws use the theme color instead."""
+        try:
+            nswindow = self._nswindow_of_view(ns_view)
+            if not nswindow:
+                return
+            objc = self.objc
+            color_class = objc.objc_getClass(b"NSColor")
+            color = self.send_color(
+                color_class,
+                objc.sel_registerName(b"colorWithSRGBRed:green:blue:alpha:"),
+                float(r), float(g), float(b), 1.0)
+            if color:
+                self.send_object_object(
+                    nswindow,
+                    objc.sel_registerName(b"setBackgroundColor:"),
+                    color)
+        except Exception:
+            pass
+
+
+class MacOSWindowTracker(QObject):
     """Keep top-level EAF views aligned with their macOS Emacs windows."""
 
     edge_anchor_margin = 100
+    _display_link_frame = pyqtSignal()
 
     def __init__(self, emacs_pid, views, bridge=None, hide_views=None):
+        super().__init__()
         self.emacs_pid = int(emacs_pid)
         self.eaf_pid = os.getpid()
         self.views = views
@@ -339,8 +488,9 @@ class MacOSWindowTracker:
         # only geometry source is Emacs's `eaf--monitor-configuration-change',
         # which is debounced (0.08s after the last change), so dragging the
         # Emacs window leaves the EAF window trailing behind.  The native
-        # per-tick path reads the real NSWindow bounds each tick, so the view
-        # tracks the frame with no perceptible lag.
+        # per-tick path reads the real NSWindow bounds each tick and avoids
+        # timer-phase sampling error; the independent top-level window can
+        # still incur WindowServer's normal display-commit delay.
         self._test_no_reposition = False
         # Keep *sizes* on the Emacs path.  Resizing the QtWebEngine window every
         # few ms (which a continuous resize drag would do) is a suspected trigger
@@ -393,20 +543,59 @@ class MacOSWindowTracker:
         self._black_auto_heal = False
         self._black_state = {}   # buffer_id -> dict(suspects, reloads, cooldown_until)
 
-        self.timer = QTimer()
+        self.timer = QTimer(self)
         self.timer.setTimerType(Qt.TimerType.PreciseTimer)
         self.timer.timeout.connect(self.update)
-        # Poll once per display frame.  Measured on this machine: the EAF
-        # window's position can only advance at the display refresh anyway
-        # (app-driven window moves commit at vsync, ~17ms), while the dragged
-        # Emacs frame moves per input event (~4ms).  So a faster timer (8ms)
-        # does NOT reduce the residual ~1 frame trailing - it only doubles
-        # wakeups.  Only window *position* is updated per tick (see
-        # `_update_view_position'), so this never re-resizes the QtWebEngine
-        # view and does not touch the compositor black frame.
-        self.timer.start(16)
-        self._log("MacOSWindowTracker started (emacs=%s eaf=%s)" %
-                  (self.emacs_pid, self.eaf_pid))
+        # The default remains the old Qt-timer path.  Set
+        # EAF_MACOS_TRACKER_DRIVER=display-link for the A/B experiment: the
+        # callback is queued to the GUI thread once per actual display frame,
+        # while this timer remains the immediate fallback if CoreVideo is
+        # unavailable.  Neither path raises the physical 60 Hz refresh rate.
+        self._display_link = None
+        self._display_link_pending = False
+        self._display_link_pending_lock = threading.Lock()
+        self._display_link_frame.connect(
+            self._on_display_link_frame,
+            Qt.ConnectionType.QueuedConnection)
+        driver = os.environ.get(
+            "EAF_MACOS_TRACKER_DRIVER", "qt-timer").strip().lower()
+        self.tracker_driver = driver
+        if driver in ("display-link", "display_link", "native", "cadisplaylink"):
+            tracker_ref = weakref.ref(self)
+
+            def request_display_link_frame():
+                tracker = tracker_ref()
+                if tracker is not None:
+                    tracker._queue_display_link_update()
+
+            try:
+                self._display_link = MacOSDisplayLink(
+                    request_display_link_frame)
+            except Exception:
+                self._log_exception()
+                self._display_link = None
+
+        if self._display_link is not None:
+            refresh_ms = self._display_link.refresh_period * 1000.0
+            refresh_info = ("refresh=%.2fms" % refresh_ms
+                            if refresh_ms > 0 else "refresh=adaptive")
+            self._log("MacOSWindowTracker started (emacs=%s eaf=%s; "
+                      "driver=display-link; %s)" %
+                      (self.emacs_pid, self.eaf_pid, refresh_info))
+        else:
+            if driver not in ("qt-timer", "timer"):
+                self._log("MacOSWindowTracker display-link unavailable; "
+                          "falling back to qt-timer")
+            # Poll once per display frame.  Measured on this machine: the EAF
+            # window's position can only advance at the display refresh anyway
+            # (app-driven window moves commit at vsync, ~17ms), while the
+            # dragged Emacs frame moves per input event (~4ms).  A faster timer
+            # therefore only adds duplicate wakeups; it does not remove the
+            # residual independent-window commit delay.
+            self.timer.start(16)
+            self._log("MacOSWindowTracker started (emacs=%s eaf=%s; "
+                      "driver=qt-timer; interval=16ms)" %
+                      (self.emacs_pid, self.eaf_pid))
 
     @staticmethod
     def _contains(bounds, x, y):
@@ -1125,6 +1314,25 @@ class MacOSWindowTracker:
                         state['cooldown_until'] = time.monotonic() + 30.0
             except Exception:
                 self._log_exception()
+
+    def _queue_display_link_update(self):
+        """Request one coalesced GUI-thread update from the display callback."""
+        with self._display_link_pending_lock:
+            if self._display_link_pending:
+                return
+            self._display_link_pending = True
+        self._display_link_frame.emit()
+
+    @pyqtSlot()
+    def _on_display_link_frame(self):
+        # Keep the pending bit set while update() runs.  If the GUI thread is
+        # briefly busy, CoreVideo callbacks are coalesced instead of building
+        # a backlog of stale window moves.
+        try:
+            self.update()
+        finally:
+            with self._display_link_pending_lock:
+                self._display_link_pending = False
 
     def update(self):
         """Synchronize EAF position and visibility with native macOS state."""
