@@ -277,18 +277,25 @@ in Python.  `my/eaf-toggle-input-mode' is idempotent (it no-ops when
 ;;; Fix EAF content shifting right / white right edge on focus loss (macOS)
 ;;;
 ;;; EAF positions its Qt widget at `window-pixel-edges' (the window's TOTAL edge,
-;;; which includes the left fringe). On focus loss EAF hides the widget and shows
-;;; a screenshot via `insert-image'. Two Emacs 31 quirks then apply:
+;;; which includes the left fringe). On focus loss EAF hides the widget and
+;;; stamps a screenshot into the buffer via `insert-image'. Two Emacs 31 quirks
+;;; then apply:
 ;;;
-;;; 1) With wrapping enabled (`truncate-lines' nil) the display engine reserves
-;;;    one character column and clamps the image to body-width-10, leaving a
-;;;    white vertical strip on the right edge of the placeholder.
+;;; 1) A window with NO right fringe makes the display engine reserve one
+;;;    character cell for the truncation (`$') / continuation (`\') indicator
+;;;    (`init_iterator' in xdisp.c does `it->last_visible_x -=
+;;;    it->truncation_pixel_width' only when the right fringe is zero).  With
+;;;    the zero-width fringes set below a full-window screenshot is therefore
+;;;    clamped to `body-width - frame-char-width' (933px -> 923px here), leaving
+;;;    a ~10px column of buffer background (near-black) on the right edge of the
+;;;    placeholder.  `truncate-lines' only chooses WHICH indicator is reserved;
+;;;    it does not remove the reserve.
 ;;; 2) A full-width image leaves point at the right edge, so auto-hscroll shifts
 ;;;    the content ~30px left.
 ;;;
-;;; Fix: zero-width fringes (placeholder aligns with the widget, no shift),
-;;; `truncate-lines t' (image fills the full width, no white strip), and pin
-;;; point to the image start after display (no auto-hscroll).
+;;; Fix: zero-width fringes (placeholder aligns with the widget, no shift), pin
+;;; point to the image start (no auto-hscroll), and suppress the special glyphs
+;;; (`no-special-glyphs', see below) so the screenshot fills the whole body.
 
 (add-hook 'eaf-mode-hook
           (lambda ()
@@ -321,6 +328,50 @@ in Python.  `my/eaf-toggle-input-mode' is idempotent (it no-ops when
             (lambda (&rest _)
               (when (derived-mode-p 'eaf-mode)
                 (goto-char (point-min)))))
+
+;; Suppress the reserved truncation cell so a frozen placeholder fills the
+;; whole window body.
+;;
+;; The display engine reserves one character cell at the right of any window
+;; without a right fringe (see the note above `eaf-mode-hook').  That clamps the
+;; placeholder image to `body-width - frame-char-width' and leaves a dark ~10px
+;; column on the right edge while the Qt view is hidden.  The *frame* parameter
+;; `no-special-glyphs' suppresses the indicator, so the image reaches the text
+;; body's edge.
+;;
+;; It is frame-wide, so scope it to the moments a placeholder is on screen: set
+;; it while `eaf--topmost-display-images' stamps the frozen screenshots, and
+;; drop it again when EAF re-shows a live view (its Qt tracker fires
+;; `showEvent' -> `eaf--clear-placeholder').
+;;
+;; Do NOT "fix" this by zeroing the frame's right window divider: an image can
+;; never occupy the divider strip, and with the divider gone Emacs paints its
+;; native `vertical-border' there instead -- a *light* pixel on this theme.
+;; Keep the 1px divider (face `window-divider', #2B2B2F).
+(defun my/eaf--fill-window-with-placeholder (&rest _)
+  "Let EAF placeholders reach the window body's right edge."
+  (dolist (frame (frame-list))
+    (when (seq-some (lambda (win)
+                      (with-current-buffer (window-buffer win)
+                        (derived-mode-p 'eaf-mode)))
+                    (window-list frame))
+      (set-frame-parameter frame 'no-special-glyphs t))))
+
+;; EAF's Qt tracker calls `eaf--clear-placeholder' from `showEvent' whenever it
+;; re-shows a live view, but upstream never defines it, so the call used to be a
+;; silent no-op.  Define it: drop the now-hidden screenshot and restore the
+;; frame's special glyphs.
+(defun eaf--clear-placeholder (buffer-id)
+  "Drop the frozen placeholder for BUFFER-ID and restore special glyphs."
+  (when-let ((buffer (eaf-get-buffer buffer-id)))
+    (with-current-buffer buffer
+      (let ((inhibit-read-only t))
+        (erase-buffer))))
+  (dolist (frame (frame-list))
+    (set-frame-parameter frame 'no-special-glyphs nil)))
+
+(advice-add 'eaf--topmost-display-images :before
+            #'my/eaf--fill-window-with-placeholder)
 
 ;; Cold-start (e.g. Emacs startup) drops every `eaf-open' call after the first:
 ;; `eaf-open' only queues the first URL into `eaf--first-start-app-buffers'
