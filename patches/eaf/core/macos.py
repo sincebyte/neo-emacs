@@ -335,11 +335,19 @@ class MacOSWindowTracker:
         self.eaf_pid = os.getpid()
         self.views = views
         self.hide_views = hide_views
-        # A/B diagnostic: disable the per-tick window repositioning to test
-        # whether continuously nudging/resizing the QtWebEngine view windows
-        # every 16ms is what intermittently kills their compositor (black
-        # frame).  When True the windows keep their last geometry.
-        self._test_no_reposition = True
+        # Follow the Emacs frame's movement in real time.  With this off the
+        # only geometry source is Emacs's `eaf--monitor-configuration-change',
+        # which is debounced (0.08s after the last change), so dragging the
+        # Emacs window leaves the EAF window trailing behind.  The native
+        # per-tick path reads the real NSWindow bounds each tick, so the view
+        # tracks the frame with no perceptible lag.
+        self._test_no_reposition = False
+        # Keep *sizes* on the Emacs path.  Resizing the QtWebEngine window every
+        # few ms (which a continuous resize drag would do) is a suspected trigger
+        # of the compositor black frame, and Emacs already sends the settled size
+        # once the resize stops.  Position-only tracking is enough to fix the
+        # movement lag and never resizes the web view.
+        self._allow_tracker_resize = False
         self.bridge = bridge or MacOSWindowBridge()
         self.last_frontmost_pid = None
         # Cold-start wake-up.  A freshly spawned EAF process has never been the
@@ -378,6 +386,7 @@ class MacOSWindowTracker:
         # healthy frame within ~10s stop and notify instead of looping.
         self._black_check_interval = 2.0
         self._black_elapsed = 0.0
+        self._black_last_time = time.monotonic()
         # True reloads black views automatically (currently OFF while the root
         # cause is being diagnosed: reload-looping a window whose compositor is
         # dead was destroying app sessions for no benefit).
@@ -387,6 +396,14 @@ class MacOSWindowTracker:
         self.timer = QTimer()
         self.timer.setTimerType(Qt.TimerType.PreciseTimer)
         self.timer.timeout.connect(self.update)
+        # Poll once per display frame.  Measured on this machine: the EAF
+        # window's position can only advance at the display refresh anyway
+        # (app-driven window moves commit at vsync, ~17ms), while the dragged
+        # Emacs frame moves per input event (~4ms).  So a faster timer (8ms)
+        # does NOT reduce the residual ~1 frame trailing - it only doubles
+        # wakeups.  Only window *position* is updated per tick (see
+        # `_update_view_position'), so this never re-resizes the QtWebEngine
+        # view and does not touch the compositor black frame.
         self.timer.start(16)
         self._log("MacOSWindowTracker started (emacs=%s eaf=%s)" %
                   (self.emacs_pid, self.eaf_pid))
@@ -486,14 +503,17 @@ class MacOSWindowTracker:
             bounds[1], bounds[3], top, bottom, view_height)
 
         if target_x != view.x or target_y != view.y:
-            view.x = target_x
-            view.y = target_y
-            view.windowHandle().setPosition(QPoint(target_x, target_y))
-        if target_width != view.width or target_height != view.height:
-            view.width = target_width
-            view.height = target_height
-            view.resize(target_width, target_height)
-            return True
+            handle = view.windowHandle()
+            if handle is not None:
+                view.x = target_x
+                view.y = target_y
+                handle.setPosition(QPoint(target_x, target_y))
+        if self._allow_tracker_resize:
+            if target_width != view.width or target_height != view.height:
+                view.width = target_width
+                view.height = target_height
+                view.resize(target_width, target_height)
+                return True
         return False
 
     def _update_frontmost_application(self):
@@ -1114,8 +1134,11 @@ class MacOSWindowTracker:
             for view in self.views():
                 self._update_view_position(view, windows)
         self._update_frontmost_application()
-        # Black-window watchdog, ticked from this same 16ms timer.
-        self._black_elapsed += 0.016
+        # Black-window watchdog, ticked from this same timer.  Use the real
+        # elapsed time so the 2s cadence is independent of the timer interval.
+        now = time.monotonic()
+        self._black_elapsed += now - self._black_last_time
+        self._black_last_time = now
         if self._black_elapsed >= self._black_check_interval:
             self._black_elapsed = 0.0
             self._watch_black_views()

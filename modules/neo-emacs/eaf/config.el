@@ -152,6 +152,26 @@ Core patches live under `patches/eaf/core/' and go to the
         :desc "EAF open file" "o e" #'eaf-open)
   (map! :desc "EAF Bookmarks" "C-c b" #'eaf-open-bookmark))
 
+;; On macOS EAF uses "stay on top" windows and the native `MacOSWindowTracker'
+;; polls the real NSWindow bounds every few ms to keep them aligned with Emacs.
+;; Emacs's own `move-frame-functions' update is debounced and, while the window
+;; is being dragged, reports a *stale* frame position: it yanks the EAF window
+;; back mid-drag and fights the tracker, which reads as the window trailing
+;; behind the mouse.  Drop that update on macOS and let the native tracker own
+;; frame translation; window splits / buffer switches still go through
+;; `window-configuration-change-hook' as before.
+(when (eq system-type 'darwin)
+  (defun my/eaf--drop-stale-move-hook (&rest _)
+    "Remove Emacs's move-driven EAF repositioning on macOS.
+`eaf--schedule-monitor-configuration-change' re-adds itself to
+`move-frame-functions' on every EAF start, so re-remove it afterwards."
+    (remove-hook 'move-frame-functions
+                 #'eaf--schedule-monitor-configuration-change))
+  (with-eval-after-load 'eaf
+    (my/eaf--drop-stale-move-hook)
+    (unless (advice-member-p #'my/eaf--drop-stale-move-hook 'eaf-start-process)
+      (advice-add 'eaf-start-process :after #'my/eaf--drop-stale-move-hook))))
+
 (defun my/eaf-enable-proxy (&rest _)
   (ignore-errors
     (when (and (boundp 'eaf-proxy-type)
