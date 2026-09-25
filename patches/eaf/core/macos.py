@@ -757,7 +757,8 @@ class MacOSWindowTracker(QObject):
             # directly instead of leaving focus stuck on Emacs.  Run it after a
             # short delay so Emacs has processed the click and selected the
             # window that was clicked (see `_maybe_replay_click').
-            if previous_pid not in (None, self.emacs_pid, self.eaf_pid):
+            if (previous_pid not in (None, self.emacs_pid, self.eaf_pid) and
+                    not self._drag_freeze):
                 QTimer.singleShot(100, self._maybe_replay_click)
 
         if frontmost_pid == self.eaf_pid:
@@ -792,6 +793,25 @@ class MacOSWindowTracker(QObject):
             else:
                 eval_in_emacs('eaf--topmost-macos-focus-out', [])
 
+    def _abort_replay(self):
+        """Cancel a pending/ongoing click-replay.
+
+        A frame-drag freeze supersedes the replay: while the live views are
+        hidden for the zero-lag placeholder, a replay that re-shows its view
+        would put that view back on screen at its pre-drag position.  The
+        tracker skips `_update_view_position' during the freeze, so the view
+        would sit there as a still "ghost" until the drag ends and the views
+        are repositioned -- exactly the double image seen on the first drag
+        after refocusing."""
+        self._replay_until = 0.0
+        self._replay_buffer_id = None
+        self._replay_view = None
+        self._replay_widget = None
+        self._replay_pos = None
+        self._replay_focus_js = None
+        if self._replay_timer is not None:
+            self._replay_timer.stop()
+
     def _maybe_replay_click(self):
         """Focus the EAF view whose window the user just clicked back into.
 
@@ -809,6 +829,10 @@ class MacOSWindowTracker(QObject):
         Only fires for a genuine click (recorded by `_poll_mouse_down' within
         the last half second), so a Cmd-Tab refocus never steals focus from
         Emacs."""
+        if self._drag_freeze:
+            # A frame drag is in progress; do not re-show any live view.
+            self._abort_replay()
+            return
         if self._down_time is None:
             self._log("transition detected, but no mouse-down recorded")
         else:
@@ -885,6 +909,9 @@ class MacOSWindowTracker(QObject):
         switch and input-mode advice fire) and focus the correct View ourselves.
         The failure is non-fatal: the synthetic press that follows also enables
         input mode via BrowserView's event filter."""
+        if self._drag_freeze:
+            self._abort_replay()
+            return
         try:
             if not view.isVisible():
                 view.try_show_top_view()
@@ -932,6 +959,9 @@ class MacOSWindowTracker(QObject):
         input mode and the first keystrokes would go to Emacs.  This keeps EAF
         in front and the render widget + page element focused until the race
         settles."""
+        if self._drag_freeze:
+            self._abort_replay()
+            return
         try:
             if time.monotonic() > self._replay_until:
                 if self._replay_timer is not None:
@@ -1002,6 +1032,9 @@ class MacOSWindowTracker(QObject):
         1. JS `elementFromPoint().focus()` at the click point -- deterministic.
         2. A synthetic Qt mouse press+release delivered straight to VIEW's
            browser widget, so contenteditable editors get a real click too."""
+        if self._drag_freeze:
+            self._abort_replay()
+            return
         try:
             if not view.isVisible():
                 view.try_show_top_view()
@@ -1243,6 +1276,9 @@ class MacOSWindowTracker(QObject):
             return
         self._drag_freeze = True
         self._drag_freeze_started = time.monotonic()
+        # A click-replay scheduled by the focus transition that preceded this
+        # drag must not re-show a live view while it is frozen.
+        self._abort_replay()
         self._log("drag-freeze: paint placeholders, then hide live views")
         try:
             self._paint_placeholders_then_hide()
