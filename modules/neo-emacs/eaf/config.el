@@ -1,9 +1,11 @@
 ;;; $DOOMDIR/modules/neo-emacs/eaf/config.el -*- lexical-binding: t; -*-
 
 ;; Apply vendored Python patches to the straight-managed EAF source so the
-;; fixes survive `doom sync' / package updates.  The patched files live in
-;; ~/.doom.d/patches/eaf/core/ and are copied over the straight repo when they
-;; differ (e.g. right after an update reset the repo).
+;; fixes survive `doom sync' / package updates.  Patched core files live in
+;; ~/.doom.d/patches/eaf/core/ (emacs-application-framework repo) and browser
+;; files in ~/.doom.d/patches/eaf/browser/ (eaf-browser repo); they are copied
+;; over the straight repo when they differ (e.g. right after an update reset
+;; the repo).
 (defun my/eaf--files-same-contents-p (a b)
   "Return non-nil if files A and B have identical contents."
   (when (and (file-exists-p a) (file-exists-p b))
@@ -15,22 +17,35 @@
           (equal content (buffer-string)))))))
 
 (defun my/eaf-apply-patches (&optional force)
-  "Apply EAF Python patches from ~/.doom.d/patches/eaf/ to the straight repo."
-  (let* ((repo (expand-file-name
-                "straight/repos/emacs-application-framework/"
-                (or (bound-and-true-p doom-local-dir)
-                    "~/.config/emacs/.local/")))
+  "Apply EAF Python patches from ~/.doom.d/patches/eaf/ to the straight repos.
+
+Core patches live under `patches/eaf/core/' and go to the
+`emacs-application-framework' repo; `eaf-browser' patches live under
+`patches/eaf/browser/' and go to the separate `eaf-browser' repo."
+  (let* ((local-dir (or (bound-and-true-p doom-local-dir)
+                        "~/.config/emacs/.local/"))
          (patch-dir (expand-file-name
                      "patches/eaf/"
-                     (or (bound-and-true-p doom-user-dir) "~/.doom.d/"))))
-    (dolist (rel '("core/view.py" "core/webengine.py" "core/macos.py" "core/buffer.py"))
-      (let ((target (expand-file-name rel repo))
-            (source (expand-file-name rel patch-dir)))
-        (when (and (file-exists-p source)
-                   (or force
-                       (not (my/eaf--files-same-contents-p source target))))
-          (copy-file source target t)
-          (message "[EAF] applied patch: %s" rel))))))
+                     (or (bound-and-true-p doom-user-dir) "~/.doom.d/")))
+         ;; (REPO . ((SOURCE-REL . TARGET-REL) ...))
+         (targets
+          `((,(expand-file-name "straight/repos/emacs-application-framework/" local-dir)
+             ("core/view.py"    . "core/view.py")
+             ("core/webengine.py" . "core/webengine.py")
+             ("core/macos.py"   . "core/macos.py")
+             ("core/buffer.py"  . "core/buffer.py"))
+            (,(expand-file-name "straight/repos/eaf-browser/" local-dir)
+             ("browser/buffer.py" . "buffer.py")))))
+    (dolist (group targets)
+      (let ((repo (car group)))
+        (dolist (pair (cdr group))
+          (let ((source (expand-file-name (car pair) patch-dir))
+                (target (expand-file-name (cdr pair) repo)))
+            (when (and (file-exists-p source)
+                       (or force
+                           (not (my/eaf--files-same-contents-p source target))))
+              (copy-file source target t)
+              (message "[EAF] applied patch: %s" (car pair)))))))))
 (my/eaf-apply-patches)
 
 (use-package! eaf
