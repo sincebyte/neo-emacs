@@ -300,6 +300,21 @@ in Python.  `my/eaf-toggle-input-mode' is idempotent (it no-ops when
               (when win
                 (set-window-fringes win 0 0)))))
 
+;; `eaf-mode' sets `cursor-type' to nil, but Evil re-applies its state cursor
+;; (a `box' for normal state) on every state change / cursor refresh.  The
+;; frame's `cursor-color' is near-white (#efeff1) and
+;; `cursor-in-non-selected-windows' is nil, so only the *selected* EAF window
+;; draws it: a white block in the corner that reads as a white frame over the
+;; Qt view.  Force the cursor off in EAF buffers no matter what Evil wants.
+(defun my/eaf--suppress-evil-cursor (orig &optional state buffer)
+  "Keep EAF buffers cursor-less when Evil refreshes its cursor."
+  (with-current-buffer (or buffer (current-buffer))
+    (if (derived-mode-p 'eaf-mode)
+        (setq cursor-type nil)
+      (funcall orig state buffer))))
+(after! evil
+  (advice-add 'evil-refresh-cursor :around #'my/eaf--suppress-evil-cursor))
+
 ;; `eaf--display-image' leaves point after the full-width screenshot, which
 ;; triggers auto-hscroll and shifts the content. Pin point to the image start.
 (advice-add 'eaf--display-image :after
