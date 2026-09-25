@@ -30,6 +30,7 @@ Core patches live under `patches/eaf/core/' and go to the
          ;; (REPO . ((SOURCE-REL . TARGET-REL) ...))
          (targets
           `((,(expand-file-name "straight/repos/emacs-application-framework/" local-dir)
+             ("eaf.py"       . "eaf.py")
              ("core/view.py"    . "core/view.py")
              ("core/webengine.py" . "core/webengine.py")
              ("core/macos.py"   . "core/macos.py")
@@ -317,3 +318,63 @@ Split left:right at 7:3 (current window takes 70%, the new one 30%)."
         (other-window 1)
         (eaf-open-browser url))
     (run-with-idle-timer 0.5 nil #'my/eaf-open-browser-other-window-when-ready url)))
+
+;;; Coalesce EAF geometry updates around workspace switches (fixes the
+;;; "page redraws / DOM jumps after switching back to the EAF workspace"
+;;; flicker).
+;;;
+;;; Two layers are involved:
+;;;
+;;; 1) Python side (patches/eaf/eaf.py): `update_views' only resizes a
+;;;    non-fit_to_view buffer (the browser) when that buffer has a surviving
+;;;    view in the new layout.  Previously it resized hidden buffers to a
+;;;    stale `emacs_width/emacs_height' and re-queried Emacs for the buffer's
+;;;    window size (`resize_view'), which during a workspace window restore
+;;;    returns a foreign/transient size -- so the live page re-laid-out to a
+;;;    bogus geometry while invisible, then re-laid-out again (visibly) to the
+;;;    correct size on switch back.
+;;; 2) Emacs side (below): defer ALL geometry updates between
+;;;    `persp-before-switch-functions' and `persp-activated-functions' (while
+;;;    the synchronous window-state restore is in flight), then run exactly
+;;;    ONE authoritative update once the switch has settled.  The 0.08s
+;;;    debounce cannot merge the restore's intermediate
+;;;    `window-configuration-change-hook' firings on its own, so without this
+;;;    the final geometry gets pushed mid-restore with transient values.
+(defvar my/eaf--ws-defer-p nil
+  "Non-nil while a persp workspace switch is being restored.")
+(defvar my/eaf--ws-defer-start nil
+  "Timestamp when deferral started, so a stuck defer heals itself.")
+
+(defun my/eaf--ws-switch-before (&rest _)
+  "Defer EAF geometry updates until the switch's window config settles."
+  (setq my/eaf--ws-defer-p t
+        my/eaf--ws-defer-start (current-time)))
+
+(defun my/eaf--ws-switch-after (&rest _)
+  "Re-enable EAF geometry updates and force one final authoritative layout."
+  (setq my/eaf--ws-defer-p nil
+        my/eaf--ws-defer-start nil)
+  (when (and (boundp 'eaf-epc-process) (eaf-epc-live-p eaf-epc-process))
+    ;; Small delay so any deferred redisplay settles; the result is the one
+    ;; and only viewport resize the page sees after the switch.
+    (run-with-timer 0.05 nil #'eaf--monitor-configuration-change-now)))
+
+(defun my/eaf--ws-skip-during-switch-a (orig-fn &rest args)
+  "Skip EAF geometry updates while a workspace switch is being restored.
+
+Also acts as a watchdog: if the deferral has been active for more than
+2 seconds (e.g. an odd switch path that never fired the after-hook), clear
+it and let the update through -- the tree has long since settled by then."
+  (unless (and my/eaf--ws-defer-p
+               my/eaf--ws-defer-start
+               (time-less-p (current-time)
+                            (time-add my/eaf--ws-defer-start 2)))
+    (setq my/eaf--ws-defer-p nil)
+    (apply orig-fn args)))
+
+(advice-add 'eaf--monitor-configuration-change-now :around
+            #'my/eaf--ws-skip-during-switch-a)
+
+(with-eval-after-load 'persp-mode
+  (add-hook 'persp-before-switch-functions #'my/eaf--ws-switch-before)
+  (add-hook 'persp-activated-functions #'my/eaf--ws-switch-after))
