@@ -375,17 +375,33 @@ class EAF(object):
         '''Capture all visible views, hide them, then save their placeholders.'''
         screenshots = {}
         for view in list(self.view_dict.values()):
-            if view.isVisible():
-                screenshots[view.buffer_id] = view.screen_shot()
-
-        for view in list(self.view_dict.values()):
-            view.try_hide_top_view()
+            try:
+                if view.isVisible():
+                    pixmap = view.screen_shot()
+                    if (pixmap is not None and not pixmap.isNull()
+                            and pixmap.width() > 0 and pixmap.height() > 0):
+                        screenshots[view.buffer_id] = pixmap
+            except Exception:
+                import traceback
+                traceback.print_exc()
 
         eaf_config_dir = get_emacs_config_dir()
         for buffer_id, screenshot in screenshots.items():
             screenshot.save(os.path.join(eaf_config_dir, buffer_id + ".jpeg"))
 
-        eval_in_emacs('eaf--topmost-display-images', [])
+        for view in list(self.view_dict.values()):
+            try:
+                if view.isVisible():
+                    view.try_hide_top_view()
+            except Exception:
+                import traceback
+                traceback.print_exc()
+
+        # Only stamp the buffers that were actually captured, so a window
+        # whose view could not be grabbed never shows a stale screenshot.
+        if screenshots:
+            eval_in_emacs('eaf--display-placeholders-now',
+                          [",".join(screenshots)])
 
     @PostGui()
     def clip_and_hide_top_views(self):

@@ -525,6 +525,10 @@ class MacOSWindowTracker(QObject):
         # at the next vsync and therefore always trails by ~1 frame.
         self._drag_freeze = False
         self._drag_freeze_started = 0.0
+        # Cooldown between "start a frame-drag freeze" attempts that could not
+        # capture every visible view.  Without it, a layout we cannot fully
+        # screenshot would re-run the capture on every 16ms tick.
+        self._drag_freeze_retry_after = 0.0
         # Last seen Emacs window origins, for drag detection.
         self._drag_origins = None
         # Click-replay window state.  During the replay the tracker must NOT
@@ -1231,7 +1235,7 @@ class MacOSWindowTracker(QObject):
                 self._start_drag_freeze()
                 break
 
-    def _paint_placeholders_then_hide(self):
+    def _paint_placeholders_then_hide(self, require_all=False):
         """Insert fresh screenshots into Emacs, then hide the live Qt views.
 
         The screenshots are written to disk, pushed into the Emacs EAF buffers
@@ -1239,54 +1243,118 @@ class MacOSWindowTracker(QObject):
         only afterwards are the views hidden.  Hiding first exposed the blank
         EAF buffer until the asynchronous Emacs insert arrived -- the black
         flash seen at the start of a frame drag or on focus loss.
+
+        Only views that were actually grabbed are stamped, and Emacs is told
+        exactly which buffer ids those are, so a window whose view was not
+        captured is left untouched instead of being given a stale or
+        wrongly-sized screenshot.  That is what keeps this correct for any
+        layout: a browser that has just appeared in a new workspace and whose
+        view is not on screen yet is simply not stamped.
+
+        With REQUIRE_ALL set (the frame-drag path) the function does nothing
+        and returns False when any visible view could not be captured, so the
+        caller can fall back to the live views instead of freezing a partial
+        layout.  Without it (the focus-loss path) every visible view is still
+        hidden -- an always-on-top Qt window must never float over another
+        application -- and only the captured buffers are stamped.
+
+        Returns True when at least one view was captured and hidden.
         """
         screenshots = {}
-        for view in self.views():
+        captured_geoms = {}
+        visible_ids = set()
+        all_views = list(self.views())
+        for view in all_views:
+            try:
+                if not view.isVisible():
+                    continue
+                visible_ids.add(view.buffer_id)
+                pixmap = view.screen_shot()
+                if (pixmap is not None and not pixmap.isNull()
+                        and pixmap.width() > 0 and pixmap.height() > 0):
+                    screenshots[view.buffer_id] = pixmap
+                    try:
+                        geom = view.geometry()
+                        captured_geoms[view.buffer_id] = (
+                            geom.width(), geom.height())
+                    except Exception:
+                        captured_geoms[view.buffer_id] = (
+                            view.width(), view.height())
+                else:
+                    self._log("drag-freeze: empty grab for %s"
+                              % view.buffer_id)
+            except Exception:
+                self._log_exception()
+
+        if require_all and set(screenshots) != visible_ids:
+            self._log("drag-freeze: captured %d/%d visible buffers; "
+                      "skipping freeze" % (len(screenshots), len(visible_ids)))
+            return False
+
+        if screenshots:
+            eaf_config_dir = get_emacs_config_dir()
+            for buffer_id, screenshot in screenshots.items():
+                try:
+                    screenshot.save(
+                        os.path.join(eaf_config_dir, buffer_id + ".jpeg"))
+                except Exception:
+                    self._log_exception()
+
+            try:
+                # Synchronous on purpose: blocks until Emacs has inserted the
+                # images and redisplays them, so the placeholder is already
+                # painted when the views below go away.  Pass the exact
+                # captured set so Emacs only stamps fresh screenshots.
+                report = get_emacs_func_result(
+                    "eaf--display-placeholders-now", [",".join(screenshots)])
+                self._log("drag-freeze: captured [%s]; stamped [%s]" % (
+                    ", ".join(
+                        "%s view=%dx%d grab=%dx%d" % (
+                            bid,
+                            captured_geoms[bid][0], captured_geoms[bid][1],
+                            pm.width(), pm.height())
+                        for bid, pm in screenshots.items()),
+                    report))
+            except Exception:
+                self._log_exception()
+
+        # Hide every visible view: on focus loss the always-on-top Qt window
+        # must go away even if its screenshot could not be taken.
+        for view in all_views:
             try:
                 if view.isVisible():
-                    screenshots[view.buffer_id] = view.screen_shot()
+                    view.try_hide_top_view()
             except Exception:
                 self._log_exception()
 
-        if not screenshots:
-            return
-
-        eaf_config_dir = get_emacs_config_dir()
-        for buffer_id, screenshot in screenshots.items():
-            try:
-                screenshot.save(os.path.join(eaf_config_dir, buffer_id + ".jpeg"))
-            except Exception:
-                self._log_exception()
-
-        try:
-            # Synchronous on purpose: blocks until Emacs has inserted the
-            # images and redisplays them, so the placeholder is already painted
-            # when the views below go away.
-            get_emacs_func_result("eaf--display-placeholders-now", [])
-        except Exception:
-            self._log_exception()
-
-        for view in self.views():
-            try:
-                view.try_hide_top_view()
-            except Exception:
-                self._log_exception()
+        return bool(screenshots)
 
     def _start_drag_freeze(self):
-        """Paint the placeholders, then hide the live views."""
+        """Paint the placeholders, then hide the live views.
+
+        Does nothing (leaving the live views tracking the frame) when not
+        every visible view could be captured: a partial freeze would leave an
+        uncaptured window lagging behind or black, which is worse than the
+        ordinary one-frame trailing."""
         if self.hide_views is None:
             return
-        self._drag_freeze = True
-        self._drag_freeze_started = time.monotonic()
+        if time.monotonic() < self._drag_freeze_retry_after:
+            return
         # A click-replay scheduled by the focus transition that preceded this
         # drag must not re-show a live view while it is frozen.
         self._abort_replay()
         self._log("drag-freeze: paint placeholders, then hide live views")
+        self._drag_freeze = True
+        self._drag_freeze_started = time.monotonic()
         try:
-            self._paint_placeholders_then_hide()
+            painted = self._paint_placeholders_then_hide(require_all=True)
         except Exception:
             self._log_exception()
+            painted = False
+        if not painted:
             self._drag_freeze = False
+            self._drag_freeze_retry_after = time.monotonic() + 0.25
+            self._log("drag-freeze: no complete capture; live views left alone")
 
     def _end_drag_freeze(self, windows):
         """Restore the live views after the frame drag ends."""

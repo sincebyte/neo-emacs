@@ -366,11 +366,55 @@ in Python.  `my/eaf-toggle-input-mode' is idempotent (it no-ops when
 ;; views first and asking Emacs to insert afterwards) means the placeholder is
 ;; already painted when the widget goes away, so the blank buffer is never
 ;; exposed -- no black flash.
-(defun eaf--display-placeholders-now ()
-  "Insert the frozen placeholders and force a redisplay before returning."
-  (eaf--topmost-display-images)
-  (redisplay t)
-  t)
+;;
+;; The tracker passes the EXACT list of buffer ids it just captured, and only
+;; those buffers are stamped.  Upstream `eaf--topmost-display-images' stamped
+;; *every* EAF window from whatever `<buffer-id>.jpeg' happened to be on disk,
+;; scaled to that window -- so a window whose view was not captured this freeze
+;; (e.g. a browser that has just appeared in a new workspace and whose view is
+;; not on screen yet) could show a stale or wrongly-sized screenshot.  Keying
+;; the stamp to the captured set makes the freeze correct for any layout and
+;; any number of EAF buffers/workspaces.
+(defvar my/eaf--placeholder-buffer-ids nil
+  "EAF buffer ids captured for the current freeze, or nil for \"any\".")
+
+(defun my/eaf--topmost-display-images ()
+  "Stamp the frozen placeholder into EAF windows whose buffer was captured.
+
+A buffer is stamped only when it is a member of
+`my/eaf--placeholder-buffer-ids' (that variable being nil means \"stamp any
+buffer that has a screenshot\", the upstream behaviour).  Returns a list of
+\"BUFFER-ID:WxH\" strings for the stamped windows, so the tracker can log
+them next to the captured view sizes."
+  (let (stamped)
+    (dolist (frame (frame-list))
+      (dolist (window (window-list frame))
+        (with-current-buffer (window-buffer window)
+          (when (and (derived-mode-p 'eaf-mode)
+                     (or (null my/eaf--placeholder-buffer-ids)
+                         (member eaf--buffer-id
+                                 my/eaf--placeholder-buffer-ids)))
+            (eaf--display-image window)
+            (push (format "%s:%dx%d"
+                          eaf--buffer-id
+                          (window-pixel-width window)
+                          (window-pixel-height window))
+                  stamped)))))
+    (nreverse stamped)))
+
+(defun eaf--display-placeholders-now (&optional captured-ids)
+  "Insert the frozen placeholders and force a redisplay before returning.
+
+CAPTURED-IDS is the comma-separated string of EAF buffer ids the tracker
+just captured; only those buffers are stamped.  Returns a comma-separated
+string describing the stamped windows."
+  (let ((my/eaf--placeholder-buffer-ids
+         (cond ((stringp captured-ids)
+                (split-string captured-ids "," t))
+               ((consp captured-ids) captured-ids)
+               (t my/eaf--placeholder-buffer-ids))))
+    (prog1 (mapconcat #'identity (my/eaf--topmost-display-images) ",")
+      (redisplay t))))
 
 ;; EAF's Qt tracker calls `eaf--clear-placeholder' from `showEvent' whenever it
 ;; re-shows a live view, but upstream never defines it, so the call used to be a
@@ -416,7 +460,7 @@ in Python.  `my/eaf-toggle-input-mode' is idempotent (it no-ops when
              (equal result "True")
              (equal result "t")))))
 
-(advice-add 'eaf--topmost-display-images :before
+(advice-add 'my/eaf--topmost-display-images :before
             #'my/eaf--fill-window-with-placeholder)
 
 ;; Cold-start (e.g. Emacs startup) drops every `eaf-open' call after the first:
