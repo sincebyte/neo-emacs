@@ -374,14 +374,31 @@ in Python.  `my/eaf-toggle-input-mode' is idempotent (it no-ops when
 
 ;; EAF's Qt tracker calls `eaf--clear-placeholder' from `showEvent' whenever it
 ;; re-shows a live view, but upstream never defines it, so the call used to be a
-;; silent no-op.  Define it to restore the frame's special glyphs.  We do NOT
-;; erase the screenshot: it stays in the buffer as an anti-black backdrop, and
-;; `eaf--display-placeholders-now' always replaces it before the views hide.
+;; silent no-op.  It is intentionally a no-op here.
+;;
+;; We keep the frozen screenshot in the buffer as an anti-black backdrop (see
+;; `eaf--display-placeholders-now'), so the frame's `no-special-glyphs' must stay
+;; set for as long as that screenshot can be on screen.  Restoring it here (as
+;; this used to) clamps the retained screenshot by ~1 char -- the display engine
+;; reserves one character cell at the right of the zero-fringe EAF window for the
+;; truncation indicator -- exposing a column of buffer background on the right
+;; of every EAF browser until the live Qt view composites: the transient gray
+;; block seen when switching back to Emacs.  `no-special-glyphs' only suppresses
+;; truncation/continuation glyphs *outside fringes* (see xdisp.c), so ordinary
+;; windows, which have a right fringe, are unaffected.  The parameter is dropped
+;; when EAF stops (below), i.e. when it can no longer place a screenshot.
 (defun eaf--clear-placeholder (buffer-id)
-  "Restore the frame's special glyphs once a live view is shown again."
-  (ignore buffer-id)
-  (dolist (frame (frame-list))
-    (set-frame-parameter frame 'no-special-glyphs nil)))
+  "Keep the retained placeholder un-clamped (intentional no-op)."
+  (ignore buffer-id))
+
+(defun my/eaf-restore-special-glyphs (&rest _)
+  "Restore truncation/continuation glyphs once no EAF buffer is left."
+  (unless (seq-some (lambda (buffer)
+                      (with-current-buffer buffer (derived-mode-p 'eaf-mode)))
+                    (buffer-list))
+    (dolist (frame (frame-list))
+      (set-frame-parameter frame 'no-special-glyphs nil))))
+(add-hook 'eaf-stop-process-hook #'my/eaf-restore-special-glyphs)
 
 (advice-add 'eaf--topmost-display-images :before
             #'my/eaf--fill-window-with-placeholder)
