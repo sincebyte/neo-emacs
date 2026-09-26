@@ -400,6 +400,22 @@ in Python.  `my/eaf-toggle-input-mode' is idempotent (it no-ops when
       (set-frame-parameter frame 'no-special-glyphs nil))))
 (add-hook 'eaf-stop-process-hook #'my/eaf-restore-special-glyphs)
 
+;; Hammerspoon (see ~/.hammerspoon/init.lua) hides the Emacs application when
+;; toggling to Chrome.  The EAF browser is a *separate* always-on-top Qt window
+;; owned by the Python process, so `emacs:hide()' does not hide it: EAF hides it
+;; from its own focus-out logic, which can finish a beat later -- letting the
+;; Emacs window vanish while the browser is still on screen.  Hammerspoon polls
+;; this predicate and only hides Emacs once the EAF views are actually gone, so
+;; the disappearance order is EAF first, then Emacs.
+(defun my/eaf-views-visible-p ()
+  "Return non-nil while any EAF widget view is on screen."
+  (and (boundp 'eaf-epc-process)
+       (eaf-epc-live-p eaf-epc-process)
+       (let ((result (ignore-errors (eaf-call-sync "any_view_visible"))))
+         (or (eq result t)
+             (equal result "True")
+             (equal result "t")))))
+
 (advice-add 'eaf--topmost-display-images :before
             #'my/eaf--fill-window-with-placeholder)
 

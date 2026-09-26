@@ -531,6 +531,18 @@ class EAF(object):
         for key in list(self.view_dict):
             self.view_dict[key].try_hide_top_view()
 
+    def any_view_visible(self):
+        '''Return True while any EAF view is currently on screen.
+
+        Read by Emacs through EPC, so the answer comes from the macOS window
+        tracker's GUI-thread flag (not a non-thread-safe Qt call from the EPC
+        thread).  Used to let an application-hide sequence wait for the EAF
+        window to disappear before hiding Emacs itself.'''
+        tracker = getattr(self, "macos_window_tracker", None)
+        if tracker is not None and hasattr(tracker, "any_view_visible"):
+            return bool(tracker.any_view_visible)
+        return any(view.isVisible() for view in list(self.view_dict.values()))
+
     def open_devtools_tab(self, web_page):
         ''' Open devtools tab'''
         self.devtools_page = web_page

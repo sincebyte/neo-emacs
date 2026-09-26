@@ -500,6 +500,8 @@ class MacOSWindowTracker(QObject):
         self._allow_tracker_resize = False
         self.bridge = bridge or MacOSWindowBridge()
         self.last_frontmost_pid = None
+        # Freshly published by `update()'; read by `EAF.any_view_visible'.
+        self.any_view_visible = False
         # Cold-start wake-up.  A freshly spawned EAF process has never been the
         # active application, so its always-on-top QtWebEngine windows never get
         # an exposure/focus event and stay black until the user clicks one.
@@ -1497,6 +1499,13 @@ class MacOSWindowTracker(QObject):
             for view in self.views():
                 self._update_view_position(view, windows)
         self._update_frontmost_application()
+        # Publish a fresh "are any views on screen?" flag so Emacs (and, in turn,
+        # Hammerspoon) can wait for the EAF window to disappear before hiding the
+        # Emacs application.  Maintained here on the GUI thread; the EPC query
+        # (`EAF.any_view_visible') only reads this plain bool, so it never calls
+        # a non-thread-safe Qt method from the EPC thread.
+        self.any_view_visible = any(
+            view.isVisible() for view in self.views())
         # Black-window watchdog, ticked from this same timer.  Use the real
         # elapsed time so the 2s cadence is independent of the timer interval.
         now = time.monotonic()
