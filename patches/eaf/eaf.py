@@ -219,6 +219,55 @@ class EAF(object):
             old_view_buffer_ids = list(set(map(lambda v: v.buffer_id, self.view_dict.values())))
             new_view_buffer_ids = list(set(map(lambda v: v.split(":")[0], view_infos)))
 
+            # Resize each buffer's web widget BEFORE any view that shows it is
+            # (re)created.
+            #
+            # A buffer's view is destroyed when its persp workspace is left, but
+            # the buffer (and its web widget) survives at its old size.  If the
+            # Emacs frame/window size changed in the meantime, resizing the
+            # widget after the fresh view has been created and shown makes the
+            # page re-lay-out in full view -- the DOM redraw / layout jump seen
+            # when switching back to the EAF workspace.  Doing the resize here,
+            # while no view is on screen, reflows off-screen instead, so the
+            # view appears already at the right size.
+            #
+            # Note: only a non-`fit_to_view' buffer needs this; a `fit_to_view'
+            # buffer is re-laid-out by `View.resizeEvent' when it is shown.
+            #
+            # Only resize buffers that actually have a (surviving) view in the
+            # new layout.  Buffers without a view keep their current size and
+            # are resized exactly once, here, when they become visible again.
+            #
+            # Use the authoritative view geometry from `view_infos'; do NOT
+            # re-query Emacs (`resize_view'), which during a layout restore can
+            # return a stale or foreign window size and reflow the page twice.
+            new_view_sizes = {}
+            for view_info in view_infos:
+                parts = view_info.split(":")
+                if len(parts) < 6:
+                    continue
+                try:
+                    width, height = int(parts[4]), int(parts[5])
+                except ValueError:
+                    continue
+                new_view_sizes.setdefault(parts[0], []).append((width, height))
+
+            for buffer in list(self.buffer_dict.values()):
+                if buffer.fit_to_view or buffer.buffer_id not in new_view_buffer_ids:
+                    continue
+                sizes = new_view_sizes.get(buffer.buffer_id)
+                if not sizes:
+                    continue
+
+                # Adjust buffer size to the largest view's size.
+                width, height = max(sizes, key=lambda size: size[0] * size[1])
+
+                buffer.buffer_widget.width, buffer.buffer_widget.height = (
+                    lambda width=width: width, lambda height=height: height)
+                buffer.buffer_widget.resize(width, height)
+                if width > 0 and height > 0:
+                    buffer.setSceneRect(0, 0, width, height)
+
             # Call all_views_hide interface when buffer's all views will hide.
             # We do something in app's buffer interface, such as videoplayer will pause video when all views hide.
             # Note, we must call this function before last view destroy,
@@ -260,30 +309,8 @@ class EAF(object):
                         if new_view_buffer_id in self.buffer_dict:
                             self.buffer_dict[new_view_buffer_id].some_view_show()
 
-            # Adjust buffer size along with views change.
-            # Note: just buffer that option `fit_to_view' is False need to adjust,
-            # if buffer option fit_to_view is True, buffer render adjust by view.resizeEvent()
-            #
-            # Only adjust buffers that actually have a (surviving) view in the
-            # new layout.  `resize_view' queries Emacs for the buffer's window
-            # size, which during a workspace-switch window restore can return a
-            # stale or foreign window size, and resizing a hidden buffer's web
-            # widget forces the page to re-layout to a bogus geometry (visible
-            # as a DOM jump when the buffer is shown again).  Buffers without
-            # views keep their current size and are resized exactly once, from
-            # the authoritative view geometry, when they become visible again.
-            for buffer in list(self.buffer_dict.values()):
-                if not buffer.fit_to_view and buffer.buffer_id in new_view_buffer_ids:
-                    buffer_views = list(filter(lambda v: v.buffer_id == buffer.buffer_id, list(self.view_dict.values())))
-
-                    # Adjust buffer size to max view's size.
-                    max_view = max(buffer_views, key=lambda v: v.width * v.height)
-
-                    buffer.buffer_widget.width, buffer.buffer_widget.height = lambda: max_view.width, lambda: max_view.height
-                    buffer.buffer_widget.resize(max_view.width, max_view.height)
-
-                    # Send resize signal to buffer.
-                    buffer.resize_view()
+            # The buffer resize happened above, before the views were created,
+            # so no reflow is visible on this switch.
 
             # NOTE:
             # When you do switch buffer or kill buffer in Emacs, will call Python function 'update_views.
