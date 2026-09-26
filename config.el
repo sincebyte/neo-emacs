@@ -181,11 +181,31 @@
 ;; (after! doom-themes
 ;;   (load-theme 'doom-winter-is-coming-dark-blue t))
 
+;; kaolin 主题里 org-block / org-table 用的是 bg2(#222225)，比默认背景 bg1(#18181B) 亮，
+;; 这里把它们统一成 `default' 的背景色，去掉那层偏亮的底色。
+(defun my/org-unify-block-table-bg (&rest _)
+  "把 org 代码块、表格等的背景统一为 `default' 背景色。"
+  (let ((bg (face-attribute 'default :background nil t)))
+    (dolist (face '(org-table
+                    org-table-row
+                    org-block
+                    org-block-begin-line
+                    org-block-end-line
+                    org-inline-src-block))
+      (when (facep face)
+        (set-face-attribute face nil :background bg :extend t)))))
+
 (add-hook 'doom-load-theme-hook
           (lambda ()
-            (set-face-attribute 'help-key-binding nil :box nil)))
+            (set-face-attribute 'help-key-binding nil :box nil)
+            (my/org-unify-block-table-bg)))
 
 (load-theme 'kaolin-dark t)
+
+;; org 的 face 要等 org 真正加载时才定义（此时主题可能已加载完），
+;; 所以 org 加载后再统一一次背景。
+(after! org
+  (my/org-unify-block-table-bg))
 (after! avy (set-face-attribute 'avy-lead-face nil
                     :foreground "#000000"
                     :weight 'bold)
