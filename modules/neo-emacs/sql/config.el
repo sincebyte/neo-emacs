@@ -65,10 +65,14 @@ Strips trailing line comments and drops comment-only or blank lines."
                    (buffer-substring-no-properties beg (match-beginning 0))))))))
     (when (string-empty-p sql)
       (user-error "No SQL in tag (comments filtered)"))
-    (clutch--ensure-connection)
-    (clutch-execute sql)
-    (when-let* ((win (clutch--result-window)))
-      (select-window win))))
+    ;; Clutch 0.5.0 removed the undocumented `clutch-execute' command (see its
+    ;; CHANGELOG) together with the `clutch--result-window' helper.  Its
+    ;; supported entry points (`clutch-execute-dwim'/`-region'/`-buffer') all
+    ;; read SQL from buffer text, but this command executes a comment-filtered
+    ;; string, so call the internal executor they funnel through.  It ensures
+    ;; the connection itself and the result display already selects the result
+    ;; window, so no extra window handling is needed.
+    (clutch--execute sql)))
 (map! :after clutch
       :map clutch-mode-map
       :n "C-c C-c" #'my-clutch-exec-xml-inner)
