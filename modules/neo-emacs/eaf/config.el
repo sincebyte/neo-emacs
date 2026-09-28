@@ -446,11 +446,19 @@ string describing the stamped windows."
 
 ;; Hammerspoon (see ~/.hammerspoon/init.lua) hides the Emacs application when
 ;; toggling to Chrome.  The EAF browser is a *separate* always-on-top Qt window
-;; owned by the Python process, so `emacs:hide()' does not hide it: EAF hides it
-;; from its own focus-out logic, which can finish a beat later -- letting the
-;; Emacs window vanish while the browser is still on screen.  Hammerspoon polls
-;; this predicate and only hides Emacs once the EAF views are actually gone, so
-;; the disappearance order is EAF first, then Emacs.
+;; owned by the Python process, so `emacs:hide()' does not hide it directly.
+;;
+;; Strict hide/show sync is now owned by the Python side: the macOS window
+;; tracker (patches/eaf/core/macos.py, `_sync_views_to_emacs_windows') already
+;; polls Emacs's on-screen NSWindow list every display tick for positioning, and
+;; it now hides every EAF view in the same tick that list goes empty -- with no
+;; screenshot grab and no synchronous EPC round-trip -- so the browser cannot
+;; outlive the Emacs frame it belongs to.  The focus-return path re-shows the
+;; views.  No Hammerspoon-side waiting is needed, and the hide is synchronous
+;; to within one display frame.
+;;
+;; The predicate below is kept as a diagnostic (it reports whether any EAF view
+;; is on screen) and is no longer on the toggle path.
 (defun my/eaf-views-visible-p ()
   "Return non-nil while any EAF widget view is on screen."
   (and (boundp 'eaf-epc-process)
