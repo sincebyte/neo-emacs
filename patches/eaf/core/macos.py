@@ -536,6 +536,27 @@ class MacOSWindowTracker(QObject):
         self._drag_freeze_retry_after = 0.0
         # Last seen Emacs window origins, for drag detection.
         self._drag_origins = None
+        # Screenshots grabbed on the mouse-down that precedes a possible frame
+        # drag, keyed by buffer id -> (pixmap, (width, height)).  The
+        # synchronous Qt grab is the slow part of starting a freeze, so it is
+        # paid at press time -- while nothing is moving -- and reused the
+        # instant the drag is detected; a plain click just discards it.
+        self._drag_precapture = None
+        # Set by `_poll_mouse_down' on the tick the left button goes down, read
+        # (and cleared) once by `_update_drag_freeze'.
+        self._press_edge = False
+        # A press-and-hold on the frame chrome freezes the views after this
+        # many seconds even if the frame has not moved yet, so a slow drag
+        # start (press, pause, then move) already has the placeholders up.
+        # Tune (or disable with 0) via EAF_MACOS_DRAG_HOLD_SECONDS.
+        try:
+            self._drag_hold_seconds = float(
+                os.environ.get("EAF_MACOS_DRAG_HOLD_SECONDS", "0.1"))
+        except ValueError:
+            self._drag_hold_seconds = 1.0
+        self._drag_hold_timer = QTimer(self)
+        self._drag_hold_timer.setSingleShot(True)
+        self._drag_hold_timer.timeout.connect(self._on_drag_hold_elapsed)
         # Click-replay window state.  During the replay the tracker must NOT
         # reset the replayed buffer's input_mode when Emacs happens to be
         # frontmost again (the original click can re-activate Emacs late), and
@@ -749,6 +770,7 @@ class MacOSWindowTracker(QObject):
             # Skip the buffer that is mid click-replay: a late Emacs
             # re-activation (from the original click still being processed)
             # must not kill the input mode the replay just enabled.
+            typing_buffer_id = None
             for view in self.views():
                 buffer = getattr(view, 'buffer', None)
                 if (buffer is None or
@@ -757,6 +779,7 @@ class MacOSWindowTracker(QObject):
                 if (buffer.buffer_id == self._replay_buffer_id and
                         time.monotonic() < self._replay_until):
                     continue
+                typing_buffer_id = buffer.buffer_id
                 buffer.input_mode = False
                 try:
                     eval_in_emacs('eaf--toggle-input-mode',
@@ -764,16 +787,33 @@ class MacOSWindowTracker(QObject):
                 except Exception:
                     pass
 
-            # A left-click that brought Emacs back from another application and
-            # landed inside an EAF view is replayed into the browser: it enables
-            # input mode (EAF regains focus, Emacs loses it) and drops the caret
-            # where the user clicked, so clicking a text box re-enters typing
-            # directly instead of leaving focus stuck on Emacs.  Run it after a
-            # short delay so Emacs has processed the click and selected the
-            # window that was clicked (see `_maybe_replay_click').
-            if (previous_pid not in (None, self.emacs_pid, self.eaf_pid) and
-                    not self._drag_freeze):
-                QTimer.singleShot(100, self._maybe_replay_click)
+            # A genuine click (a press recorded within the last half second)
+            # that brought Emacs back from another application and landed
+            # inside an EAF view is replayed into the browser: it enables input
+            # mode (EAF regains focus, Emacs loses it) and drops the caret where
+            # the user clicked, so clicking a text box re-enters typing directly
+            # instead of leaving focus stuck on Emacs.  Run it after a short
+            # delay so Emacs has processed the click and selected the window
+            # that was clicked (see `_maybe_replay_click').
+            #
+            # A clickless return -- Cmd-Tab or a Hammerspoon app switch -- has
+            # no such press: instead reselect the Emacs window of the browser
+            # the user was typing in just before leaving, so the input-mode key
+            # afterwards targets that browser rather than an arbitrarily
+            # re-shown sibling.
+            returning_externally = (
+                previous_pid not in (None, self.emacs_pid, self.eaf_pid) and
+                not self._drag_freeze)
+            if returning_externally:
+                click_recent = (
+                    self._down_time is not None and
+                    time.monotonic() - self._down_time <= 0.5)
+                if click_recent:
+                    QTimer.singleShot(100, self._maybe_replay_click)
+                elif typing_buffer_id is not None:
+                    QTimer.singleShot(
+                        80, lambda bid=typing_buffer_id: eval_in_emacs(
+                            'eaf-focus-buffer', [bid]))
 
         if frontmost_pid == self.eaf_pid:
             # While typing (input mode) EAF itself is frontmost.  A focus
@@ -1038,6 +1078,47 @@ class MacOSWindowTracker(QObject):
             QTimer.singleShot(
                 400, lambda: self.bridge.activate_application(self.emacs_pid))
 
+    def focus_view_for_buffer(self, buffer_id, widget=None):
+        """Make the EAF view that owns BUFFER_ID the key window, focusing it.
+
+        Called from the input-mode path (`Browser._focus_input_window`).  The
+        browser widget's `window()` is unreliable when several EAF views exist
+        (it can report a phantom window at (0,0)), so activating it leaves a
+        sibling view as the key window -- after switching back to Emacs the
+        user types into the wrong browser.  Target the View itself (the
+        top-level window that owns this buffer's web contents) exactly as the
+        click-replay path does.
+
+        Returns True when the buffer's view was found and focused."""
+        for view in self.views():
+            buffer = getattr(view, 'buffer', None)
+            if (buffer is None or
+                    getattr(buffer, 'buffer_id', None) != buffer_id):
+                continue
+            try:
+                if not view.isVisible():
+                    view.try_show_top_view()
+                view.show()
+                view.raise_()
+                handle = view.windowHandle()
+                if handle is not None:
+                    self.bridge.make_key_window(handle.winId())
+                view.activateWindow()
+                target = widget or getattr(buffer, 'buffer_widget', None)
+                if target is not None:
+                    target.setFocus(Qt.FocusReason.ActiveWindowFocusReason)
+                    proxy = target.focusProxy()
+                    if proxy is not None:
+                        proxy.setFocus(Qt.FocusReason.ActiveWindowFocusReason)
+                self._log("  input-mode focus buffer=%s geom=%s" % (
+                    buffer_id, view.geometry()))
+                return True
+            except Exception:
+                self._log_exception()
+                return False
+        self._log("  input-mode focus: no view for buffer=%s" % (buffer_id,))
+        return False
+
     def _deliver_synthetic_click(self, view, global_pos):
         """Place the caret and hand web focus to VIEW at GLOBAL_POS.
 
@@ -1208,10 +1289,82 @@ class MacOSWindowTracker(QObject):
     def _poll_mouse_down(self):
         """Record the position/time of the left button going down (HID-wide)."""
         down = self.bridge.left_button_down()
-        if down and not self._was_down:
+        self._press_edge = bool(down and not self._was_down)
+        if self._press_edge:
             self._down_pos = QCursor.pos()
             self._down_time = time.monotonic()
         self._was_down = down
+
+    def _press_starts_frame_drag(self, windows):
+        """Return non-nil when the current press can only start a frame drag.
+
+        A left-button press that lands on an Emacs window but OUTSIDE every
+        visible EAF view is on the frame's chrome (title bar / mode line /
+        minibuffer).  Those presses never reach QtWebEngine, so the only thing
+        they can begin is a window move -- and it is safe to pre-grab the
+        screenshots for one.  A press inside a view is a browser click (link,
+        text selection, scrollbar) and is left alone.
+        """
+        if self._down_pos is None or not windows:
+            return False
+        point = self._down_pos
+        for view in self.views():
+            try:
+                if view.isVisible() and view.geometry().contains(point):
+                    return False
+            except Exception:
+                self._log_exception()
+        x, y = point.x(), point.y()
+        return any(self._contains(bounds, x, y)
+                   for bounds in windows.values())
+
+    def _precapture_views(self):
+        """Grab every visible view at press time, before any drag movement.
+
+        Only the Qt-side grab happens here; writing the JPEGs and the Emacs
+        placeholder insert still happen when the drag is actually detected
+        (`_start_drag_freeze'), so a plain click never touches the buffer.
+        """
+        captured = {}
+        for view in self.views():
+            try:
+                if not view.isVisible():
+                    continue
+                pixmap = view.screen_shot()
+                if (pixmap is not None and not pixmap.isNull()
+                        and pixmap.width() > 0 and pixmap.height() > 0):
+                    try:
+                        geom = view.geometry()
+                        size = (geom.width(), geom.height())
+                    except Exception:
+                        size = (view.width(), view.height())
+                    captured[view.buffer_id] = (pixmap, size)
+            except Exception:
+                self._log_exception()
+        self._drag_precapture = captured or None
+
+    def _on_drag_hold_elapsed(self):
+        """Freeze the views after a press-and-hold on the frame chrome.
+
+        Instead of waiting for the frame origin to move, a press that is held
+        for `_drag_hold_seconds' is treated as an intent to drag: the
+        pre-captured screenshots are painted and the live Qt views hidden
+        right away, so the moment the user actually starts moving there is
+        nothing left to do but move the already-zero-lag placeholder.
+        """
+        # Re-read the live HID state: the button may have been released
+        # between the last tracker tick and this timer firing.
+        if not self._was_down or not self.bridge.left_button_down():
+            return
+        if self._drag_freeze:
+            return
+        if self._drag_precapture is None:
+            return
+        if time.monotonic() < self._drag_freeze_retry_after:
+            return
+        self._log("drag-freeze: hold %.2fs elapsed; cover with screenshot"
+                  % self._drag_hold_seconds)
+        self._start_drag_freeze()
 
     def _sync_views_to_emacs_windows(self, windows):
         """Hide EAF views the instant their Emacs frame leaves the screen.
@@ -1260,9 +1413,33 @@ class MacOSWindowTracker(QObject):
         previous = self._drag_origins
         self._drag_origins = origins
 
+        # The tick the button goes down, grab the screenshots if the press
+        # could begin a frame drag.  Doing the grab here -- before any origin
+        # has moved -- keeps it off the critical path: by the time the drag is
+        # detected the images are already in hand, so the freeze does not have
+        # to wait for a synchronous `screen_shot' and the live view never gets
+        # a head start.  A press that turns out to be a click simply drops the
+        # pre-capture without ever touching the buffer.
+        if self._press_edge:
+            self._press_edge = False
+            if (self._was_down and not self._drag_freeze
+                    and self._press_starts_frame_drag(windows)):
+                self._precapture_views()
+                # Arm the press-and-hold path: if the user just holds the
+                # frame for a moment without moving, freeze at that point
+                # instead of waiting for the origin to move.
+                if self._drag_hold_seconds > 0 and self._drag_precapture:
+                    self._drag_hold_timer.start(
+                        int(self._drag_hold_seconds * 1000))
+            else:
+                self._drag_precapture = None
+                self._drag_hold_timer.stop()
+
         if not self._was_down:
+            self._drag_hold_timer.stop()
             if self._drag_freeze:
                 self._end_drag_freeze(windows)
+            self._drag_precapture = None
             return
 
         if self._drag_freeze or not previous:
@@ -1276,7 +1453,8 @@ class MacOSWindowTracker(QObject):
                 self._start_drag_freeze()
                 break
 
-    def _paint_placeholders_then_hide(self, require_all=False):
+    def _paint_placeholders_then_hide(self, require_all=False,
+                                      precaptured=None):
         """Insert fresh screenshots into Emacs, then hide the live Qt views.
 
         The screenshots are written to disk, pushed into the Emacs EAF buffers
@@ -1307,25 +1485,45 @@ class MacOSWindowTracker(QObject):
         all_views = list(self.views())
         for view in all_views:
             try:
-                if not view.isVisible():
-                    continue
-                visible_ids.add(view.buffer_id)
-                pixmap = view.screen_shot()
-                if (pixmap is not None and not pixmap.isNull()
-                        and pixmap.width() > 0 and pixmap.height() > 0):
-                    screenshots[view.buffer_id] = pixmap
-                    try:
-                        geom = view.geometry()
-                        captured_geoms[view.buffer_id] = (
-                            geom.width(), geom.height())
-                    except Exception:
-                        captured_geoms[view.buffer_id] = (
-                            view.width(), view.height())
-                else:
-                    self._log("drag-freeze: empty grab for %s"
-                              % view.buffer_id)
+                if view.isVisible():
+                    visible_ids.add(view.buffer_id)
             except Exception:
                 self._log_exception()
+
+        # Reuse the screenshots grabbed on the mouse-down that preceded this
+        # drag when they cover exactly the currently visible views (the normal
+        # case): the synchronous Qt grab is the slow part of the freeze, and
+        # paying it at press time keeps the drag start lag-free.  Any mismatch
+        # (a view appeared / vanished between press and drag) falls back to a
+        # fresh grab so a partial freeze is never painted.
+        precaptured = precaptured or {}
+        if visible_ids and set(precaptured) == visible_ids:
+            for buffer_id, (pixmap, size) in precaptured.items():
+                screenshots[buffer_id] = pixmap
+                captured_geoms[buffer_id] = size
+            self._log("drag-freeze: using %d pre-captured screenshot(s)"
+                      % len(screenshots))
+        else:
+            for view in all_views:
+                try:
+                    if not view.isVisible():
+                        continue
+                    pixmap = view.screen_shot()
+                    if (pixmap is not None and not pixmap.isNull()
+                            and pixmap.width() > 0 and pixmap.height() > 0):
+                        screenshots[view.buffer_id] = pixmap
+                        try:
+                            geom = view.geometry()
+                            captured_geoms[view.buffer_id] = (
+                                geom.width(), geom.height())
+                        except Exception:
+                            captured_geoms[view.buffer_id] = (
+                                view.width(), view.height())
+                    else:
+                        self._log("drag-freeze: empty grab for %s"
+                                  % view.buffer_id)
+                except Exception:
+                    self._log_exception()
 
         if require_all and set(screenshots) != visible_ids:
             self._log("drag-freeze: captured %d/%d visible buffers; "
@@ -1384,11 +1582,15 @@ class MacOSWindowTracker(QObject):
         # A click-replay scheduled by the focus transition that preceded this
         # drag must not re-show a live view while it is frozen.
         self._abort_replay()
+        self._drag_hold_timer.stop()
         self._log("drag-freeze: paint placeholders, then hide live views")
         self._drag_freeze = True
         self._drag_freeze_started = time.monotonic()
+        precapture = self._drag_precapture
+        self._drag_precapture = None
         try:
-            painted = self._paint_placeholders_then_hide(require_all=True)
+            painted = self._paint_placeholders_then_hide(
+                require_all=True, precaptured=precapture)
         except Exception:
             self._log_exception()
             painted = False
@@ -1400,6 +1602,7 @@ class MacOSWindowTracker(QObject):
     def _end_drag_freeze(self, windows):
         """Restore the live views after the frame drag ends."""
         self._drag_freeze = False
+        self._drag_hold_timer.stop()
         elapsed = time.monotonic() - self._drag_freeze_started
         self._log("drag-freeze: restore live views (%.2fs)" % elapsed)
         # If Emacs went off screen as the drag ended, leave the views hidden:

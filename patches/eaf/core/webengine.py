@@ -1510,6 +1510,14 @@ class BrowserBuffer(Buffer):
             if platform.system() == "Darwin":
                 tracker = QApplication.instance().macos_window_tracker
                 tracker.bridge.activate_application(tracker.eaf_pid)
+                # `self.buffer_widget.window()` is wrong when several EAF views
+                # exist: it can report a phantom window at (0,0), so a sibling
+                # view keeps the keyboard and typing lands in the wrong
+                # browser.  Focus the View that owns THIS buffer instead.
+                # (Same proven path as the click-replay focus.)
+                if tracker.focus_view_for_buffer(
+                        self.buffer_id, self.buffer_widget):
+                    return
             widget = self.buffer_widget
             window = widget.window()
             window.show()

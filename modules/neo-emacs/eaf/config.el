@@ -58,6 +58,9 @@ Core patches live under `patches/eaf/core/' and go to the
   ;; here) instead of using an arbitrary 16 ms phase.  Change this to
   ;; "qt-timer" and restart EAF to compare against the previous behavior.
   (setenv "EAF_MACOS_TRACKER_DRIVER" "display-link")
+  ;; Press-and-hold (seconds) on the Emacs frame's chrome before EAF covers
+  ;; the live browser with its frozen screenshot.  0 disables the hold path.
+  (setenv "EAF_MACOS_DRAG_HOLD_SECONDS" "0.1")
   (setq eaf-python-command "/opt/homebrew/bin/python3"
         eaf-browser-continue-where-left-off t
         eaf-browser-enable-adblocker t
