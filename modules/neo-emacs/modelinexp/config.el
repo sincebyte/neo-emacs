@@ -122,7 +122,8 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
         (unless (facep face) (make-face face))   ; set-face-attribute 不会自动建 face
         (set-face-attribute face nil
                             :inherit 'doom-modeline
-                            :background (and (stringp color) color)
+                            ;; 颜色算不出来时传 nil 同样会告警，回退到 `unspecified'
+                            :background (or (and (stringp color) color) 'unspecified)
                             :foreground "black"
                             :weight 'bold)))))
 
@@ -181,7 +182,9 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
   (set-face-attribute 'doom-modeline-panel nil
                     :inherit 'doom-modeline
                     :foreground "#68f3ca"
-                    :background nil)
+                    ;; `set-face-attribute' 不再接受 nil，必须显式用 `unspecified'
+                    ;; （否则启动时告警：nil value is invalid）。
+                    :background 'unspecified)
 
   (set-face-attribute 'doom-modeline-evil-normal-state nil
                     :inherit 'doom-modeline

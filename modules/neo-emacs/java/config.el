@@ -132,7 +132,7 @@
                       (bg (face-background 'vertico-current nil t)))
                       (setq company-tooltip-maximum-width 90)
                       (set-face-attribute 'company-tooltip nil :underline nil :background bg-tooltip :weight 'normal )
-                      (set-face-attribute 'company-tooltip-selection nil :foreground fg :background nil :inherit 'vertico-current)
+                      (set-face-attribute 'company-tooltip-selection nil :foreground fg :background 'unspecified :inherit 'vertico-current)
                       (set-face-attribute 'company-tooltip-mouse nil :foreground fg :background bg :inherit 'vertico-current)
                       (set-face-attribute 'company-tooltip-annotation-selection nil :foreground fg :background bg :inherit 'vertico-current)
                       (set-face-attribute 'company-tooltip-common nil :underline nil :weight 'normal )

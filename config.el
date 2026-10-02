@@ -462,6 +462,14 @@
   (advice-add 'tramp-recentf-cleanup :override #'ignore)
   (advice-add 'tramp-recentf-cleanup-all :override #'ignore))
 
+;; Flycheck：这些 major mode 根本没有任何可用的 checker（org-lint 在 org 模块里
+;; 已被禁用，clutch-mode 也没有），全局开启只会在 *Messages* 里反复刷
+;; "Flycheck: no syntax checker for X can run here"。用 `flycheck-global-modes'
+;; 直接排除，连 flycheck-mode 都不会在这些 buffer 里开启。
+(after! flycheck
+  (setq flycheck-global-modes
+        '(not org-mode clutch-mode clutch-redis-mode)))
+
 ;; 关掉所有会在空闲计时器/钩子里通过 TRAMP 跑远程命令的次要模式
 (defun my/disable-remote-touching-modes ()
   "关闭会在退出流程中触发远程访问的全局与本地次要模式。"
