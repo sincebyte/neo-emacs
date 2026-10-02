@@ -203,10 +203,38 @@ Core patches live under `patches/eaf/core/' and go to the
         (with-current-buffer buf
           (setq-local my/eaf-input-mode (equal state t)))))))
 
+(defun my/frontmost-bundle-id ()
+  "Return the bundle identifier of the frontmost application, or nil.
+
+Use lsappinfo (NSWorkspace) rather than System Events: when EAF's Qt window is
+frontmost, System Events wrongly reports Emacs (the Qt window is not a real
+app bundle), while lsappinfo correctly reports org.python.python."
+  (ignore-errors
+    (let* ((asn (string-trim (shell-command-to-string "lsappinfo front")))
+           (out (and (not (string-empty-p asn))
+                     (shell-command-to-string
+                      (format "lsappinfo info -only bundleID %s"
+                              (shell-quote-argument asn))))))
+      (when (and out (string-match "bundleID=\"\\([^\"]+\\)\"" out))
+        (match-string 1 out)))))
+
+(defun my/eaf-rime-switch-when-front ()
+  "切到 Rime 中文，但仅当 EAF(org.python.python) 确实在最前时。
+
+Squirrel 的 ascii 状态是按 App 分开的，而 Squirrel CLI 作用于「当前最前的
+App」。若在 EAF 尚未成为最前时就切，中文会落到 Emacs（或别的 App）头上，
+EAF 自己仍是英文 —— 表现就是「显示中文、却打出英文」。"
+  (when (equal (my/frontmost-bundle-id) "org.python.python")
+    (my/rime-switch-to-chinese)))
+
 (defun my/eaf-rime-on-input-mode (_buffer-id state)
-  "Switch to Rime (Chinese) input when EAF enters input mode."
+  "Switch to Rime (Chinese) input when EAF enters input mode.
+
+EAF 的激活是异步的，所以延迟重试几次，并且只在它真正成为最前的 App 时才切，
+避免把中文设到错误的 App。"
   (when (eq state t)
-    (my/mac-switch-to-rime)))
+    (dolist (delay '(0.0 0.15 0.35 0.6 0.9))
+      (run-at-time delay nil #'my/eaf-rime-switch-when-front))))
 (advice-add 'eaf--toggle-input-mode :after #'my/eaf-rime-on-input-mode)
 
 (defun my/eaf-auto-input-mode (&rest _)

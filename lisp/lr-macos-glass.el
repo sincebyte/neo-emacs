@@ -37,17 +37,22 @@
   (defvar salih/ns-alpha-glyphs-min-alpha 0.24
     "Minimum alpha for non-default glyph backgrounds on native glass builds.")
   ;; 原生玻璃材质：regular(常规,毛玻璃感) / clear(更清透) / nil(关闭原生玻璃)
-  (defvar salih/ns-glass-material 'regular
+  ;; 用 clear：macOS 的 regular(NSGlassEffectViewStyleRegular) 在窗口失焦时会变成乳白/
+  ;; 更透明（露出桌面），标题栏颜色明显变亮；clear 失焦几乎不变，见下面 tint-opacity 注释。
+  (defvar salih/ns-glass-material 'clear
     "Native glass material: `regular', `clear', or nil.")
-  ;; 玻璃上叠加"主题背景色"的不透明度：越大越偏主题色、越暗/越实
-  (defvar salih/ns-glass-tint-opacity 0.05
+  ;; 玻璃上叠加"主题背景色"的不透明度：越大越偏主题色、越暗/越实。
+  ;; 这一项同时决定透明标题栏的深浅：0.05→标题栏偏亮（透出桌面）；0.85→标题栏接近主题背景色。
+  ;; clear 材质下取 1.0：获焦/失焦标题栏色差最小（实测 ≈3/255，基本看不出）。
+  (defvar salih/ns-glass-tint-opacity 1.0
     "Native glass tint opacity.")
   ;; 窗口失焦时叠加层的饱和度倍数：>1 更鲜艳
   (defvar salih/ns-glass-saturation 1.9
     "Native glass inactive overlay saturation multiplier.")
-  ;; 窗口失焦时叠加层的不透明度：越大越遮挡/越暗；nil=不叠加
-  (defvar salih/ns-glass-inactive-opacity 0.05
-    "Native glass inactive overlay opacity.")
+  ;; 窗口失焦时叠加层的不透明度：越大越遮挡/越暗；0.0=失焦时与获焦完全同色；
+  ;; nil=自动（浅色底 0.35、深色底 0.85），并非"不叠加"。
+  (defvar salih/ns-glass-inactive-opacity 0.0
+    "Native glass inactive overlay opacity (0.0 keeps the color unchanged on focus loss).")
   ;; 玻璃视图的圆角半径（点）
   (defvar salih/ns-glass-corner-radius 2
     "Native glass corner radius.")
@@ -60,13 +65,13 @@
 
   (defconst salih/glass-presets
     '((macos-glass-regular        ; 预设A：默认毛玻璃（salih/glass-style 的默认值；材质见下）
-       :material  regular           ; 玻璃材质：clear=更清透/模糊更轻；regular=毛玻璃感更重
+       :material clear            ; 用 clear 而非 regular：regular 失焦会变乳白，标题栏变色明显
        :alpha 0.80                ; 帧背景 alpha：0=全透、1=不透明（越大越"实"）
        :glyphs-min-alpha 0.24     ; hl-line/选区等字形背景的最小 alpha
        :blur 0                    ; CGS 模糊半径（原生材质自带模糊，保持 0）
-       :tint-opacity 0.35         ; 玻璃上叠主题色调的不透明度：越大越暗/越实
+       :tint-opacity 1.0          ; 玻璃上叠主题色调的不透明度：clear 下 1.0 时失焦/获焦标题栏色差最小
        :saturation 1.9            ; 窗口失焦时叠加层的饱和度倍数：>1 更鲜艳
-       :inactive-opacity 0.05     ; 窗口失焦时叠加层不透明度：越大越暗；nil=不叠加
+       :inactive-opacity 0.0      ; 窗口失焦时叠加层不透明度：0.0=失焦与获焦同色；nil=自动
        :corner-radius 2           ; 玻璃区域圆角（点）
        :fallback-alpha 0.70       ; 【降级】无原生玻璃时的 alpha
        :fallback-blur 30)         ; 【降级】无原生玻璃时的模糊半径
@@ -77,7 +82,7 @@
        :blur 0                    ; CGS 模糊半径
        :tint-opacity 0.01         ; 玻璃色调不透明度（几乎不加色）
        :saturation 1.2            ; 失焦叠加层饱和度
-       :inactive-opacity nil      ; 失焦时不做叠加
+       :inactive-opacity 0.0      ; 失焦与获焦同色（原 nil 实为"自动"，会叠加 0.35/0.85）
        :corner-radius 0           ; 圆角为 0
        :fallback-alpha 0.78       ; 【降级】alpha
        :fallback-blur 40))        ; 【降级】模糊半径
