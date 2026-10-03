@@ -261,6 +261,54 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
   (add-hook '+workspace-new-hook #'fresh/modelineconfig)
   )))
 
+;;; 关闭 modeline 上的所有鼠标行为 ---------------------------------------
+;; mode-line 各段字符串会带 help-echo(悬浮提示)/mouse-face(悬浮高亮)/
+;; local-map & keymap(鼠标点击)/pointer(手型光标) 等文本属性, 鼠标移上去会
+;; 弹提示、变高亮、还能点击。这里在 doom-modeline 生成 mode-line 段的唯一
+;; 入口 `doom-modeline--prepare-segments' 上做 :around 处理, 把每个段求值结果
+;; 里的鼠标属性递归剥掉, 只保留 face/display 等绘制属性。内置段
+;; (buffer-encoding 等)与自定义段(my-major-mode 等)因此一次全部生效, 且不受
+;; `fresh/modelineconfig' 反复重定义段的影响。
+(defun my/modeline-strip-mouse (value)
+  "递归移除 VALUE 上所有鼠标相关文本属性, 保留 face/display 等绘制属性。"
+  (cond
+   ((stringp value)
+    (condition-case nil
+        (remove-text-properties
+         0 (length value)
+         '(help-echo nil mouse-face nil local-map nil keymap nil
+           pointer nil mouse-1 nil mouse-2 nil mouse-3 nil)
+         value)
+      (error nil))
+    value)
+   ((consp value)
+    (dolist (elt value) (my/modeline-strip-mouse elt))
+    value)
+   (t value)))
+
+(defun my/modeline--prepare-segments-strip (orig segments)
+  "让每个 mode-line 段求值后都经过 `my/modeline-strip-mouse'。"
+  (mapcar
+   (lambda (form)
+     (cond
+      ((and (consp form) (eq (car form) :eval))
+       (list :eval (list 'my/modeline-strip-mouse (cadr form))))
+      ((stringp form)
+       (my/modeline-strip-mouse form))
+      (t form)))
+   (funcall orig segments)))
+
+(after! doom-modeline
+  (unless (advice-member-p #'my/modeline--prepare-segments-strip
+                           'doom-modeline--prepare-segments)
+    (advice-add 'doom-modeline--prepare-segments
+                :around #'my/modeline--prepare-segments-strip))
+  ;; 内置 modeline 在上面 advice 安装前就已定义, 这里重新生成所有已注册的
+  ;; modeline, 让既有定义也走一遍上面的包装。
+  (dolist (def doom-modeline--modelines)
+    (when (cdr def)
+      (doom-modeline-def-modeline (car def) (cadr def) (caddr def)))))
+
 ; available value of separator
 ;; arrow, arrow, arrow, arrow, arrow, arrow, wave, arrow, and nil.
 (defun fresh/modelineconfig ()

@@ -1,7 +1,11 @@
 ;;; lr-macos-glass.el --- Ghostty-like macOS glass frame -*- lexical-binding: t; -*-
 
 (when (eq system-type 'darwin)
-  ;; 标题栏是否透明：t=透明（露出玻璃材质），nil=不透明
+  ;; 标题栏是否透明：t=透明。设 t 后 AppKit 仍会用 NSTitlebarBackgroundView 盖住标题栏
+  ;; （只剩平色、没有毛玻璃，且该视图无法被可靠染色）；ns-glass-effect.patch 在启用玻璃时
+  ;; 隐藏它，并在标题栏区域叠一层 theme @ alpha_background，标题栏便与内容区完全一致
+  ;; （颜色 + 毛玻璃都对齐，零色差）。
+  ;; nil=不透明，标题栏是系统实色，与玻璃内容区有一深一浅的色差（实测 ≈14/255）。
   (defvar salih/ns-transparent-titlebar t
     "Non-nil makes the macOS titlebar transparent.")
   ;; 当前使用的玻璃预设名：macos-glass-regular / macos-glass-clear
@@ -28,6 +32,9 @@
   ;; mode line 例外：由 ns-glass-effect.patch 按 glyph row 的 `mode_line_p' 判断，
   ;; 单独保持不透明——Powerline 分隔符是不透明图片，这样 segment 与箭头零色差，
   ;; 而其它"字形背景"照常透明。
+  ;; echo area / minibuffer 同样例外：补丁再按 `MINI_WINDOW_P (s->w)' 判断，
+  ;; 让 mode line 下面那一行（如切换 Workspace 时的 "[1] name" 标签）也保持不透明，
+  ;; 避免这些标签背景被玻璃透明影响而偏色。
   (defvar salih/ns-alpha-elements
     '(ns-alpha-default ns-alpha-fringe ns-alpha-box ns-alpha-stipple ns-alpha-relief
       ns-alpha-glyphs)
@@ -65,11 +72,11 @@
 
   (defconst salih/glass-presets
     '((macos-glass-regular        ; 预设A：默认毛玻璃（salih/glass-style 的默认值；材质见下）
-       :material regular          ; 用 clear 而非 regular：regular 失焦会变乳白，标题栏变色明显
-       :alpha 0.80                ; 帧背景 alpha：0=全透、1=不透明（越大越"实"）
+       :material clear         ; 用 clear 而非 regular：regular 失焦会变乳白，标题栏变色明显
+       :alpha 0.50                ; 帧背景 alpha：0=全透、1=不透明（越大越"实"）
        :glyphs-min-alpha 0.24     ; hl-line/选区等字形背景的最小 alpha
        :blur 0                    ; CGS 模糊半径（原生材质自带模糊，保持 0）
-       :tint-opacity 0.5          ; 玻璃上叠主题色调的不透明度：clear 下 1.0 时失焦/获焦标题栏色差最小
+       :tint-opacity 0.9          ; 玻璃上叠主题色调的不透明度：clear 下 1.0 时失焦/获焦标题栏色差最小
        :saturation 1.9            ; 窗口失焦时叠加层的饱和度倍数：>1 更鲜艳
        :inactive-opacity 0.0      ; 窗口失焦时叠加层不透明度：0.0=失焦与获焦同色；nil=自动
        :corner-radius 2           ; 玻璃区域圆角（点）

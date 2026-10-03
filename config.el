@@ -206,15 +206,17 @@
 ;; 所以 org 加载后再统一一次背景。
 (after! org
   (my/org-unify-block-table-bg))
-(after! avy (set-face-attribute 'avy-lead-face nil
-                    :foreground "#000000"
-                    :weight 'bold)
-            (set-face-attribute 'avy-lead-face-0 nil
-                    :foreground "#000000"
-                    :weight 'bold)
-            (set-face-attribute 'avy-lead-face-1 nil
-                    :foreground "#000000"
-                    :weight 'bold))
+;; avy 跳转提示字符：保留 avy 自带的彩色底框，同时让它不透明。
+;; 毛玻璃的 alpha 只作用于"非默认字形背景"，带底色的 avy 标签因此会被一起透明化。
+;; 打上 `:ns-opaque-background t' 后，原生层 (ns_alpha_glyphs_background_alpha)
+;; 会对这些 face 跳过 alpha，底框保持 100% 不透明，看起来更清晰。
+;; 依赖 emacs-plus@31 编译时带 ns-opaque-background-faces.patch（见 ~/.config/emacs-plus）。
+(after! avy
+  (dolist (face '(avy-lead-face avy-lead-face-0 avy-lead-face-1 avy-lead-face-2))
+    (set-face-attribute face nil
+                        :foreground "#000000"
+                        :weight 'bold
+                        :ns-opaque-background t)))
 
 
 ;; (setq initial-frame-alist '((height . 50)))
@@ -401,9 +403,15 @@
                 (lambda () (select-frame-set-input-focus frame))))))
 
 ;; macOS Liquid Glass (原生 NSGlassEffectView 玻璃/模糊背景) —— 已启用
-;; 整体不透明度约 70%（预设 macos-glass-regular 的 :alpha=0.70），即约 30% 透视。
+;; 标题栏与内容区共用同一层玻璃、同样有毛玻璃、零色差。玻璃视图本身就覆盖整个窗口
+;; （含标题栏），但 AppKit 的 NSTitlebarBackgroundView 会盖住标题栏且无法被可靠染色；
+;; 补丁在启用玻璃时隐藏它，并在标题栏区域叠一层与内容区默认 face 完全相同的
+;; theme @ alpha_background，于是标题栏 = 玻璃 + 主题色，与内容区逐像素一致。
+;; （仅靠 salih/ns-transparent-titlebar=t 不够：标题栏仍是平色、无毛玻璃。）
+;; 整体不透明度约 50%（预设 macos-glass-regular 的 :alpha=0.50），即约 50% 透视。
 ;; 玻璃材质：clear（比 regular 更清透、模糊更轻）。
-;; modeline/hl-line/选区保持实色（ns-alpha-elements 刻意排除 ns-alpha-glyphs），Powerline 零色差。
+;; modeline 与 echo area(minibuffer) 保持实色（补丁按 mode_line_p / MINI_WINDOW_P 判定），
+;; hl-line/选区等其余"字形背景"仍随玻璃半透明。
 ;; 想临时关掉：M-x salih/toggle-glass。
 ;; 依赖: emacs-plus@31 编译时应用 frame-transparency + ns-glass-effect 补丁
 ;;   ~/.config/emacs-plus/build.yml
