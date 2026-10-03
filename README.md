@@ -73,6 +73,20 @@ There have many emacs distribution,just choose one and install it.
         set PATH $EMACS_APP/bin $PATH
 
 
+## emacs-plus custom patches
+
+On macOS, the glass effect and a few UI tweaks need emacs-plus built with our own patches.
+The patches and `build.yml` live in this repo under [patches/emacs31/](./patches/emacs31/); the real config at `~/.config/emacs-plus/` is just a symlink to the repo.
+
+Set it up once:
+
+    ln -sfn ~/.doom.d/patches/emacs31/build.yml ~/.config/emacs-plus/build.yml
+
+Then rebuild emacs-plus, and the patches are applied automatically:
+
+    brew reinstall emacs-plus@31
+
+
 ## Clone project
 
 clone doom-emacs and neo-emacs from github.  

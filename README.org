@@ -81,6 +81,20 @@ set -x EMACS_APP            /opt/homebrew/Cellar/emacs-plus@31/31.0.90
 set PATH $EMACS_APP/bin $PATH
 #+end_src
 
+** emacs-plus custom patches
+On macOS, the glass effect and a few UI tweaks need emacs-plus built with our own patches.
+The patches and =build.yml= live in this repo under [[./patches/emacs31/][patches/emacs31/]]; the real config at =~/.config/emacs-plus/= is just a symlink to the repo.
+
+Set it up once:
+#+begin_src shell
+ln -sfn ~/.doom.d/patches/emacs31/build.yml ~/.config/emacs-plus/build.yml
+#+end_src
+
+Then rebuild emacs-plus, and the patches are applied automatically:
+#+begin_src shell
+brew reinstall emacs-plus@31
+#+end_src
+
 ** Clone project
 clone doom-emacs and neo-emacs from github.
 #+BEGIN_SRC shell
