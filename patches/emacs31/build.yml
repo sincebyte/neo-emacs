@@ -1,0 +1,15 @@
+# emacs-plus build configuration
+#
+# 正本在本仓库：~/.doom.d/patches/emacs31/build.yml
+# 实际读取的 ~/.config/emacs-plus/build.yml 是指向本文件的软链接。
+# 补丁 url 用 `~' 开头（绝对 home 展开），与 build.yml 所在目录无关，
+# 因此软链接后仍能正确定位。
+
+patches:
+  - frame-transparency
+  - ns-glass-effect:
+      url: ~/.doom.d/patches/emacs31/ns-glass-effect.patch
+      sha256: 302f0e26a9b48431ef44734dcd91a6c0d20e35d6ee53ddb624ebcfd691761ae8
+  - ns-opaque-background-faces:
+      url: ~/.doom.d/patches/emacs31/ns-opaque-background-faces.patch
+      sha256: ebf3b72bfbc7cd1b6eece5a4c1effe9dcd949b419101b033b67ecb7a86a3a58f

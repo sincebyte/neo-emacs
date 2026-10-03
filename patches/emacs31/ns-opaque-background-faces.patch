@@ -1,0 +1,128 @@
+diff -ruN base/src/dispextern.h A/src/dispextern.h
+--- base/src/dispextern.h	2026-10-03 17:43:12
++++ A/src/dispextern.h	2026-10-03 17:44:11
+@@ -1729,6 +1729,7 @@
+   LFACE_FONTSET_INDEX,
+   LFACE_DISTANT_FOREGROUND_INDEX,
+   LFACE_EXTEND_INDEX,
++  LFACE_NS_OPAQUE_BACKGROUND_INDEX,
+   LFACE_VECTOR_SIZE
+ };
+ 
+diff -ruN base/src/nsterm.m A/src/nsterm.m
+--- base/src/nsterm.m	2026-10-03 17:43:12
++++ A/src/nsterm.m	2026-10-03 17:44:11
+@@ -4493,6 +4493,12 @@
+ double
+ ns_alpha_glyphs_background_alpha (struct frame *f, struct face *face)
+ {
++  /* Faces marked `:ns-opaque-background' keep their glyph background
++     fully opaque, so the frame background alpha and the glass blur do
++     not fade them.  */
++  if (face && EQ (face->lface[LFACE_NS_OPAQUE_BACKGROUND_INDEX], Qt))
++    return 1.0;
++
+   if (face && face->background == FRAME_BACKGROUND_PIXEL (f))
+     return f->alpha_background;
+ 
+diff -ruN base/src/xfaces.c A/src/xfaces.c
+--- base/src/xfaces.c	2026-10-03 17:43:12
++++ A/src/xfaces.c	2026-10-03 17:44:11
+@@ -1810,6 +1810,8 @@
+ #define LFACE_INHERIT(LFACE)	    AREF (LFACE, LFACE_INHERIT_INDEX)
+ #define LFACE_FONTSET(LFACE)	    AREF (LFACE, LFACE_FONTSET_INDEX)
+ #define LFACE_EXTEND(LFACE)	    AREF (LFACE, LFACE_EXTEND_INDEX)
++#define LFACE_NS_OPAQUE_BACKGROUND(LFACE) \
++  AREF (LFACE, LFACE_NS_OPAQUE_BACKGROUND_INDEX)
+ #define LFACE_DISTANT_FOREGROUND(LFACE) \
+   AREF (LFACE, LFACE_DISTANT_FOREGROUND_INDEX)
+ 
+@@ -1868,6 +1870,10 @@
+ 	   || RESET_P (attrs[LFACE_EXTEND_INDEX])
+ 	   || SYMBOLP (attrs[LFACE_EXTEND_INDEX])
+ 	   || STRINGP (attrs[LFACE_EXTEND_INDEX]));
++  eassert (UNSPECIFIEDP (attrs[LFACE_NS_OPAQUE_BACKGROUND_INDEX])
++	   || IGNORE_DEFFACE_P (attrs[LFACE_NS_OPAQUE_BACKGROUND_INDEX])
++	   || RESET_P (attrs[LFACE_NS_OPAQUE_BACKGROUND_INDEX])
++	   || SYMBOLP (attrs[LFACE_NS_OPAQUE_BACKGROUND_INDEX]));
+   eassert (UNSPECIFIEDP (attrs[LFACE_OVERLINE_INDEX])
+ 	   || IGNORE_DEFFACE_P (attrs[LFACE_OVERLINE_INDEX])
+ 	   || RESET_P (attrs[LFACE_OVERLINE_INDEX])
+@@ -2985,6 +2991,13 @@
+ 		  else
+ 		    err = true;
+ 		}
++	      else if (EQ (keyword, QCns_opaque_background))
++		{
++		  if (EQ (value, Qt) || NILP (value))
++		    to[LFACE_NS_OPAQUE_BACKGROUND_INDEX] = value;
++		  else
++		    err = true;
++		}
+ 	      else
+ 		err = true;
+ 
+@@ -3558,6 +3571,20 @@
+       old_value = LFACE_EXTEND (lface);
+       ASET (lface, LFACE_EXTEND_INDEX, value);
+     }
++  else if (EQ (attr, QCns_opaque_background))
++    {
++      if (!UNSPECIFIEDP (value)
++	  && !IGNORE_DEFFACE_P (value)
++	  && !RESET_P (value))
++	{
++	  CHECK_SYMBOL (value);
++	  if (!EQ (value, Qt) && !NILP (value))
++	    signal_error ("Invalid ns-opaque-background face attribute value",
++			  value);
++	}
++      old_value = LFACE_NS_OPAQUE_BACKGROUND (lface);
++      ASET (lface, LFACE_NS_OPAQUE_BACKGROUND_INDEX, value);
++    }
+   else if (EQ (attr, QCforeground))
+     {
+       HANDLE_INVALID_NIL_VALUE (QCforeground, face);
+@@ -4278,6 +4305,8 @@
+     value = LFACE_INHERIT (lface);
+   else if (EQ (keyword, QCextend))
+     value = LFACE_EXTEND (lface);
++  else if (EQ (keyword, QCns_opaque_background))
++    value = LFACE_NS_OPAQUE_BACKGROUND (lface);
+   else if (EQ (keyword, QCfont))
+     value = LFACE_FONT (lface);
+   else if (EQ (keyword, QCfontset))
+@@ -4306,6 +4335,7 @@
+   if (EQ (attr, QCunderline) || EQ (attr, QCoverline)
+       || EQ (attr, QCstrike_through)
+       || EQ (attr, QCinverse_video)
++      || EQ (attr, QCns_opaque_background)
+       || EQ (attr, QCextend))
+     result = list2 (Qt, Qnil);
+ 
+@@ -6049,6 +6079,9 @@
+   if (UNSPECIFIEDP (LFACE_EXTEND (lface)))
+     ASET (lface, LFACE_EXTEND_INDEX, Qnil);
+ 
++  if (UNSPECIFIEDP (LFACE_NS_OPAQUE_BACKGROUND (lface)))
++    ASET (lface, LFACE_NS_OPAQUE_BACKGROUND_INDEX, Qnil);
++
+   if (UNSPECIFIEDP (LFACE_UNDERLINE (lface)))
+     ASET (lface, LFACE_UNDERLINE_INDEX, Qnil);
+ 
+@@ -7441,6 +7474,7 @@
+   face_attr_sym[LFACE_FONTSET_INDEX] = QCfontset;
+   face_attr_sym[LFACE_DISTANT_FOREGROUND_INDEX] = QCdistant_foreground;
+   face_attr_sym[LFACE_EXTEND_INDEX] = QCextend;
++  face_attr_sym[LFACE_NS_OPAQUE_BACKGROUND_INDEX] = QCns_opaque_background;
+ }
+ 
+ void
+@@ -7480,6 +7514,7 @@
+   DEFSYM (QCbox, ":box");
+   DEFSYM (QCinherit, ":inherit");
+   DEFSYM (QCextend, ":extend");
++  DEFSYM (QCns_opaque_background, ":ns-opaque-background");
+ 
+   /* Symbols used for Lisp face attribute values.  */
+   DEFSYM (QCcolor, ":color");

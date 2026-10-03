@@ -1,0 +1,801 @@
+diff -ruN a/src/frame.c b/src/frame.c
+--- a/src/frame.c	2026-10-03 11:24:38
++++ b/src/frame.c	2026-10-03 11:24:41
+@@ -1210,6 +1210,12 @@
+   f->ns_appearance = ns_appearance_system_default;
+   f->ns_transparent_titlebar = false;
+   f->ns_background_blur = 0;
++  f->ns_alpha_glyphs_alpha = -1.0;
++  f->ns_glass_material = 0;
++  f->ns_glass_tint_opacity = 0.01;
++  f->ns_glass_saturation = 1.2;
++  f->ns_glass_inactive_opacity = -1.0;
++  f->ns_glass_corner_radius = 0.0;
+ #endif
+ #endif
+   f->select_mini_window_flag = false;
+@@ -4886,6 +4892,12 @@
+   {"ns-transparent-titlebar",	SYMBOL_INDEX (Qns_transparent_titlebar)},
+   {"ns-background-blur",	SYMBOL_INDEX (Qns_background_blur)},
+   {"ns-alpha-elements",	SYMBOL_INDEX (Qns_alpha_elements)},
++  {"ns-alpha-glyphs-alpha",	SYMBOL_INDEX (Qns_alpha_glyphs_alpha)},
++  {"ns-glass-material",	SYMBOL_INDEX (Qns_glass_material)},
++  {"ns-glass-tint-opacity",	SYMBOL_INDEX (Qns_glass_tint_opacity)},
++  {"ns-glass-saturation",	SYMBOL_INDEX (Qns_glass_saturation)},
++  {"ns-glass-inactive-opacity",	SYMBOL_INDEX (Qns_glass_inactive_opacity)},
++  {"ns-glass-corner-radius",	SYMBOL_INDEX (Qns_glass_corner_radius)},
+ #endif
+ };
+ 
+@@ -7323,6 +7335,12 @@
+   DEFSYM (Qns_transparent_titlebar, "ns-transparent-titlebar");
+   DEFSYM (Qns_background_blur, "ns-background-blur");
+   DEFSYM (Qns_alpha_elements, "ns-alpha-elements");
++  DEFSYM (Qns_alpha_glyphs_alpha, "ns-alpha-glyphs-alpha");
++  DEFSYM (Qns_glass_material, "ns-glass-material");
++  DEFSYM (Qns_glass_tint_opacity, "ns-glass-tint-opacity");
++  DEFSYM (Qns_glass_saturation, "ns-glass-saturation");
++  DEFSYM (Qns_glass_inactive_opacity, "ns-glass-inactive-opacity");
++  DEFSYM (Qns_glass_corner_radius, "ns-glass-corner-radius");
+ #endif
+ 
+   DEFSYM (Qalpha, "alpha");
+diff -ruN a/src/frame.h b/src/frame.h
+--- a/src/frame.h	2026-10-03 11:24:38
++++ b/src/frame.h	2026-10-03 11:24:41
+@@ -737,6 +737,12 @@
+   enum ns_appearance_type ns_appearance;
+   bool_bf ns_transparent_titlebar;
+   int ns_background_blur;
++  double ns_alpha_glyphs_alpha;
++  int ns_glass_material;
++  double ns_glass_tint_opacity;
++  double ns_glass_saturation;
++  double ns_glass_inactive_opacity;
++  double ns_glass_corner_radius;
+ #endif
+ 
+ #ifdef HAVE_TEXT_CONVERSION
+@@ -1259,6 +1265,12 @@
+ #define FRAME_NS_APPEARANCE(f) ((f)->ns_appearance)
+ #define FRAME_NS_TRANSPARENT_TITLEBAR(f) ((f)->ns_transparent_titlebar)
+ #define FRAME_NS_BACKGROUND_BLUR(f) ((f)->ns_background_blur)
++#define FRAME_NS_ALPHA_GLYPHS_ALPHA(f) ((f)->ns_alpha_glyphs_alpha)
++#define FRAME_NS_GLASS_MATERIAL(f) ((f)->ns_glass_material)
++#define FRAME_NS_GLASS_TINT_OPACITY(f) ((f)->ns_glass_tint_opacity)
++#define FRAME_NS_GLASS_SATURATION(f) ((f)->ns_glass_saturation)
++#define FRAME_NS_GLASS_INACTIVE_OPACITY(f) ((f)->ns_glass_inactive_opacity)
++#define FRAME_NS_GLASS_CORNER_RADIUS(f) ((f)->ns_glass_corner_radius)
+ #endif
+ #else /* not HAVE_WINDOW_SYSTEM */
+ #define FRAME_OVERRIDE_REDIRECT(f) ((void) (f), 0)
+diff -ruN a/src/macfont.m b/src/macfont.m
+--- a/src/macfont.m	2026-10-03 11:24:38
++++ b/src/macfont.m	2026-10-03 11:24:41
+@@ -3006,7 +3006,15 @@
+                 alpha = f->alpha_background;
+             }
+           else if (ns_alpha_element_enabled (f, Qns_alpha_glyphs))
+-            alpha = f->alpha_background;
++	    /* Keep the mode line and the echo area / minibuffer opaque.
++	       Powerline separators are drawn as opaque images, and the
++	       workspace tab line is shown in the echo area; neither must
++	       be blended with the (translucent) desktop.  */
++            alpha = ((s->row
++                      && (s->row->mode_line_p
++                          || (s->w && MINI_WINDOW_P (s->w))))
++                     ? 1.0
++                     : ns_alpha_glyphs_background_alpha (f, face));
+           CGContextSetAlpha (context, alpha);
+           CG_SET_FILL_COLOR_WITH_FACE_BACKGROUND (context, face);
+         }
+diff -ruN a/src/nsfns.m b/src/nsfns.m
+--- a/src/nsfns.m	2026-10-03 11:24:38
++++ b/src/nsfns.m	2026-10-03 11:24:41
+@@ -320,6 +320,7 @@
+           [[view window] setOpaque: YES];
+ #ifdef NS_IMPL_COCOA
+       ns_update_background_blur (f);
++      ns_update_glass_material (f);
+ #endif
+ 
+       face = FRAME_DEFAULT_FACE (f);
+@@ -378,6 +379,7 @@
+   SET_FRAME_GARBAGED (f);
+ #ifdef NS_IMPL_COCOA
+   ns_update_background_blur (f);
++  ns_update_glass_material (f);
+ #endif
+ }
+ 
+@@ -1154,6 +1156,12 @@
+   ns_set_transparent_titlebar,
+   ns_set_background_blur,
+   NULL,
++  ns_set_alpha_glyphs_alpha,
++  ns_set_glass_material,
++  ns_set_glass_tint_opacity,
++  ns_set_glass_saturation,
++  ns_set_glass_inactive_opacity,
++  ns_set_glass_corner_radius,
+ #endif
+ };
+ 
+@@ -1464,6 +1472,18 @@
+                          NULL, NULL, RES_TYPE_NUMBER);
+   gui_default_parameter (f, parms, Qns_alpha_elements, Qnil,
+                          NULL, NULL, RES_TYPE_SYMBOL);
++  gui_default_parameter (f, parms, Qns_alpha_glyphs_alpha, Qnil,
++                         NULL, NULL, RES_TYPE_NUMBER);
++  gui_default_parameter (f, parms, Qns_glass_material, Qnil,
++                         NULL, NULL, RES_TYPE_SYMBOL);
++  gui_default_parameter (f, parms, Qns_glass_tint_opacity, make_float (0.01),
++                         NULL, NULL, RES_TYPE_NUMBER);
++  gui_default_parameter (f, parms, Qns_glass_saturation, make_float (1.2),
++                         NULL, NULL, RES_TYPE_NUMBER);
++  gui_default_parameter (f, parms, Qns_glass_inactive_opacity, Qnil,
++                         NULL, NULL, RES_TYPE_NUMBER);
++  gui_default_parameter (f, parms, Qns_glass_corner_radius, Qnil,
++                         NULL, NULL, RES_TYPE_NUMBER);
+ #endif
+ 
+   parent_frame = gui_display_get_arg (dpyinfo, parms, Qparent_frame, NULL, NULL,
+diff -ruN a/src/nsterm.h b/src/nsterm.h
+--- a/src/nsterm.h	2026-10-03 11:24:38
++++ b/src/nsterm.h	2026-10-03 11:24:41
+@@ -936,6 +936,8 @@
+ {
+ #ifdef __OBJC__
+   EmacsView *view;
++  NSView *glass_effect_view;
++  NSView *glass_tint_overlay;
+   id miniimage;
+   NSColor *cursor_color;
+   NSColor *foreground_color;
+@@ -946,6 +948,8 @@
+   EmacsToolbar *toolbar;
+ #else
+   void *view;
++  void *glass_effect_view;
++  void *glass_tint_overlay;
+   void *miniimage;
+   void *cursor_color;
+   void *foreground_color;
+@@ -1245,6 +1249,24 @@
+ extern void ns_set_background_blur (struct frame *f, Lisp_Object new_value,
+                                     Lisp_Object old_value);
+ extern void ns_update_background_blur (struct frame *f);
++extern double ns_alpha_glyphs_alpha (struct frame *f);
++extern double ns_alpha_glyphs_background_alpha (struct frame *f,
++                                                struct face *face);
++extern void ns_set_alpha_glyphs_alpha (struct frame *f,
++                                       Lisp_Object new_value,
++                                       Lisp_Object old_value);
++extern void ns_set_glass_material (struct frame *f, Lisp_Object new_value,
++                                   Lisp_Object old_value);
++extern void ns_set_glass_tint_opacity (struct frame *f, Lisp_Object new_value,
++                                       Lisp_Object old_value);
++extern void ns_set_glass_saturation (struct frame *f, Lisp_Object new_value,
++                                     Lisp_Object old_value);
++extern void ns_set_glass_inactive_opacity (struct frame *f,
++                                           Lisp_Object new_value,
++                                           Lisp_Object old_value);
++extern void ns_set_glass_corner_radius (struct frame *f, Lisp_Object new_value,
++                                        Lisp_Object old_value);
++extern void ns_update_glass_material (struct frame *f);
+ extern bool ns_alpha_element_enabled (struct frame *f, Lisp_Object element);
+ #endif
+ extern int ns_select (int nfds, fd_set *readfds, fd_set *writefds,
+diff -ruN a/src/nsterm.m b/src/nsterm.m
+--- a/src/nsterm.m	2026-10-03 11:24:38
++++ b/src/nsterm.m	2026-10-03 11:45:01
+@@ -72,6 +72,7 @@
+ #include "macfont.h"
+ #include <Carbon/Carbon.h>
+ #include <IOSurface/IOSurface.h>
++#import <QuartzCore/QuartzCore.h>
+ extern int CGSSetWindowBackgroundBlurRadius (int connection,
+                                              int windowNumber,
+                                              int radius);
+@@ -87,6 +88,7 @@
+ static EmacsMenu *dockMenu;
+ #ifdef NS_IMPL_COCOA
+ static EmacsMenu *mainMenu;
++static void ns_remove_glass_material (struct frame *);
+ #endif
+ 
+ /* The last known monitor attributes list.  */
+@@ -1778,6 +1780,10 @@
+   if (f->output_data.ns->miniimage != nil)
+     [f->output_data.ns->miniimage release];
+ 
++#ifdef NS_IMPL_COCOA
++  ns_remove_glass_material (f);
++#endif
++
+   [[view window] close];
+   [view removeFromSuperview];
+   [view release];
+@@ -2172,7 +2178,449 @@
+ #endif /* MAC_OS_X_VERSION_MAX_ALLOWED >= 101000 */
+ }
+ 
++enum ns_glass_material
++  {
++    ns_glass_material_none = 0,
++    ns_glass_material_regular,
++    ns_glass_material_clear,
++    ns_glass_material_visual_effect
++  };
++
++static bool
++ns_lisp_symbol_name_p (Lisp_Object value, const char *name)
++{
++  return SYMBOLP (value) && strcmp (SSDATA (SYMBOL_NAME (value)), name) == 0;
++}
++
++static int
++ns_glass_material_from_lisp (Lisp_Object value)
++{
++  if (NILP (value))
++    return ns_glass_material_none;
++  if (ns_lisp_symbol_name_p (value, "regular")
++      || ns_lisp_symbol_name_p (value, "macos-glass-regular"))
++    return ns_glass_material_regular;
++  if (ns_lisp_symbol_name_p (value, "clear")
++      || ns_lisp_symbol_name_p (value, "macos-glass-clear"))
++    return ns_glass_material_clear;
++  if (ns_lisp_symbol_name_p (value, "visual-effect"))
++    return ns_glass_material_visual_effect;
++
++  error ("Invalid `ns-glass-material' value");
++}
++
++static double
++ns_lisp_glass_number (Lisp_Object value, double fallback, double min,
++                      double max, const char *parameter)
++{
++  double number;
++
++  if (NILP (value))
++    return fallback;
++  else if (FLOATP (value))
++    number = XFLOAT_DATA (value);
++  else if (FIXNUMP (value))
++    number = XFIXNUM (value);
++  else
++    error ("Invalid `%s' value", parameter);
++
++  if (!isfinite (number) || number < min || number > max)
++    error ("Invalid `%s' value", parameter);
++
++  return number;
++}
++
++static NSColor *
++ns_glass_frame_background_color (struct frame *f)
++{
++  NSColor *color = f->output_data.ns->background_color;
++  NSColor *converted;
++
++  if (color == nil)
++    color = [NSColor windowBackgroundColor];
++
++  converted = [color colorUsingColorSpace:[NSColorSpace sRGBColorSpace]];
++  return converted != nil ? converted : color;
++}
++
++static bool
++ns_glass_color_is_light (NSColor *color)
++{
++  CGFloat red = 0, green = 0, blue = 0, alpha = 1;
++  NSColor *converted = [color colorUsingColorSpace:[NSColorSpace sRGBColorSpace]];
++
++  if (converted == nil)
++    converted = color;
++
++  [converted getRed:&red green:&green blue:&blue alpha:&alpha];
++  return (0.2126 * red + 0.7152 * green + 0.0722 * blue) > 0.5;
++}
++
++static NSColor *
++ns_glass_color_adjusting_saturation (NSColor *color, CGFloat factor)
++{
++  CGFloat hue = 0, saturation = 0, brightness = 0, alpha = 1;
++  NSColor *converted = [color colorUsingColorSpace:[NSColorSpace sRGBColorSpace]];
++
++  if (converted == nil)
++    converted = color;
++
++  [converted getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
++  saturation = fmax (0.0, fmin (1.0, saturation * factor));
++
++  return [NSColor colorWithHue:hue saturation:saturation
++                    brightness:brightness alpha:alpha];
++}
++
++static bool
++ns_glass_wants_native_glass (struct frame *f)
++{
++#if MAC_OS_X_VERSION_MAX_ALLOWED >= 260000
++  if (@available(macOS 26.0, *))
++    return (FRAME_NS_GLASS_MATERIAL (f) == ns_glass_material_regular
++            || FRAME_NS_GLASS_MATERIAL (f) == ns_glass_material_clear)
++      && NSClassFromString (@"NSGlassEffectView") != Nil;
++#endif
++  return false;
++}
++
++static bool
++ns_glass_view_is_native_glass (NSView *view)
++{
++#if MAC_OS_X_VERSION_MAX_ALLOWED >= 260000
++  Class glass_class = NSClassFromString (@"NSGlassEffectView");
++  return glass_class != Nil && [view isKindOfClass:glass_class];
++#else
++  return false;
++#endif
++}
++
+ static void
++ns_remove_glass_material (struct frame *f)
++{
++  if (!f->output_data.ns)
++    return;
++
++  if (f->output_data.ns->glass_tint_overlay != nil)
++    {
++      [f->output_data.ns->glass_tint_overlay removeFromSuperview];
++      f->output_data.ns->glass_tint_overlay = nil;
++    }
++
++  if (f->output_data.ns->glass_effect_view != nil)
++    {
++      [f->output_data.ns->glass_effect_view removeFromSuperview];
++      f->output_data.ns->glass_effect_view = nil;
++    }
++}
++
++static void
++ns_insert_glass_view (NSView *container, NSView *view, NSView *relative,
++                      NSWindowOrderingMode ordering)
++{
++  [view setFrame:[container bounds]];
++  [view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
++  [container addSubview:view positioned:ordering relativeTo:relative];
++}
++
++static NSView *
++ns_glass_container_view (NSWindow *window)
++{
++  NSView *content_view = [window contentView];
++  NSView *frame_view = [content_view superview];
++
++  return frame_view != nil ? frame_view : content_view;
++}
++
++static NSView *
++ns_glass_relative_view (NSWindow *window, EmacsView *emacs_view)
++{
++  NSView *content_view = [window contentView];
++
++  return [content_view superview] != nil ? content_view : emacs_view;
++}
++
++/* An inert view used to tint the titlebar exactly like the content area
++   (the content paints the theme background at `alpha_background' over the
++   glass).  A dedicated class lets us recognise our own overlay among the
++   titlebar's subviews without relying on `NSView -setTag:' (which does
++   not exist on macOS).  */
++@interface NSGlassTitlebarOverlayView : NSView
++@end
++
++@implementation NSGlassTitlebarOverlayView
++@end
++
++static NSView *
++ns_glass_titlebar_view (NSWindow *window)
++{
++  NSView *theme_view = [[window contentView] superview];
++  NSView *sub;
++
++  if (theme_view == nil)
++    return nil;
++
++  for (sub in [theme_view subviews])
++    if ([sub isKindOfClass:NSClassFromString (@"NSTitlebarContainerView")])
++      return sub;
++
++  return nil;
++}
++
++/* Tint the titlebar like the content area.  AppKit's own
++   `NSTitlebarBackgroundView' cannot be relied upon to reproduce that tint
++   (it may ignore the window background entirely, leaving the titlebar at
++   bare glass), so hide it and add our own overlay painted with the same
++   colour and alpha as the default face's background.  When ENABLE is
++   false, remove the overlay and let AppKit's titlebar background return.  */
++
++static void
++ns_update_glass_titlebar (struct frame *f, NSWindow *window,
++                          NSColor *base_color, bool enable)
++{
++  NSView *titlebar = ns_glass_titlebar_view (window);
++  NSView *sub;
++  NSView *background = nil;
++  NSView *overlay = nil;
++
++  if (titlebar == nil)
++    return;
++
++  for (sub in [titlebar subviews])
++    {
++      if ([NSStringFromClass ([sub class])
++            isEqualToString:@"NSTitlebarBackgroundView"])
++        background = sub;
++      else if ([sub isKindOfClass:[NSGlassTitlebarOverlayView class]])
++        overlay = sub;
++    }
++
++  if (background != nil)
++    [background setHidden:enable];
++
++  if (!enable)
++    {
++      if (overlay != nil)
++        [overlay removeFromSuperview];
++      return;
++    }
++
++  if (overlay == nil)
++    {
++      overlay = [[NSGlassTitlebarOverlayView alloc]
++                  initWithFrame:[titlebar bounds]];
++      [overlay setWantsLayer:YES];
++      [overlay setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
++      [titlebar addSubview:overlay positioned:NSWindowBelow relativeTo:nil];
++      [overlay release];
++    }
++
++  if (base_color != nil)
++    [[overlay layer] setBackgroundColor:
++      [[base_color colorWithAlphaComponent:f->alpha_background] CGColor]];
++}
++
++void
++ns_update_glass_material (struct frame *f)
++{
++  EmacsView *emacs_view;
++  NSWindow *window;
++  NSView *container;
++  NSView *relative_view;
++  NSView *effect_view;
++  NSView *overlay_view;
++  NSColor *base_color;
++  NSColor *overlay_color;
++  CGFloat tint_opacity;
++  CGFloat saturation;
++  CGFloat inactive_opacity;
++  CGFloat corner_radius;
++  bool wants_native_glass;
++
++  if (!f || !f->output_data.ns)
++    return;
++
++  emacs_view = (EmacsView *) FRAME_NS_VIEW (f);
++  if (emacs_view == nil)
++    return;
++
++  window = [emacs_view window];
++  if (window == nil)
++    return;
++
++  if (FRAME_NS_GLASS_MATERIAL (f) == ns_glass_material_none)
++    {
++      ns_remove_glass_material (f);
++      [window setOpaque:f->alpha_background == 1.0];
++      /* Drop the titlebar tint overlay so AppKit's own titlebar
++	 background can show again.  */
++      ns_update_glass_titlebar (f, window, nil, false);
++      return;
++    }
++
++  container = ns_glass_container_view (window);
++  if (container == nil)
++    return;
++  relative_view = ns_glass_relative_view (window, emacs_view);
++
++  wants_native_glass = ns_glass_wants_native_glass (f);
++  effect_view = f->output_data.ns->glass_effect_view;
++  if (effect_view != nil
++      && ([effect_view superview] != container
++          || wants_native_glass != ns_glass_view_is_native_glass (effect_view)))
++    {
++      ns_remove_glass_material (f);
++      effect_view = nil;
++    }
++
++  if (effect_view == nil)
++    {
++      if (wants_native_glass)
++        {
++#if MAC_OS_X_VERSION_MAX_ALLOWED >= 260000
++          Class glass_class = NSClassFromString (@"NSGlassEffectView");
++          effect_view = [[glass_class alloc] initWithFrame:[container bounds]];
++#endif
++        }
++      else
++        {
++          NSVisualEffectView *visual_effect_view;
++          visual_effect_view = [[NSVisualEffectView alloc]
++                                  initWithFrame:[container bounds]];
++          [visual_effect_view
++            setBlendingMode:NSVisualEffectBlendingModeBehindWindow];
++          if (@available(macOS 10.14, *))
++            [visual_effect_view
++              setMaterial:NSVisualEffectMaterialUnderWindowBackground];
++          else
++            [visual_effect_view
++              setMaterial:NSVisualEffectMaterialAppearanceBased];
++          [visual_effect_view setState:NSVisualEffectStateFollowsWindowActiveState];
++          effect_view = visual_effect_view;
++        }
++
++      if (effect_view != nil)
++        {
++          f->output_data.ns->glass_effect_view = effect_view;
++          ns_insert_glass_view (container, effect_view, relative_view,
++                                NSWindowBelow);
++          [effect_view release];
++        }
++    }
++
++  effect_view = f->output_data.ns->glass_effect_view;
++  if (effect_view == nil)
++    return;
++
++  base_color = ns_glass_frame_background_color (f);
++  tint_opacity = FRAME_NS_GLASS_TINT_OPACITY (f);
++  saturation = FRAME_NS_GLASS_SATURATION (f);
++  corner_radius = FRAME_NS_GLASS_CORNER_RADIUS (f);
++
++#if MAC_OS_X_VERSION_MAX_ALLOWED >= 260000
++  if (wants_native_glass)
++    {
++      if (@available(macOS 26.0, *))
++        {
++          NSGlassEffectView *glass_view = (NSGlassEffectView *) effect_view;
++          glass_view.style =
++            FRAME_NS_GLASS_MATERIAL (f) == ns_glass_material_clear
++            ? NSGlassEffectViewStyleClear
++            : NSGlassEffectViewStyleRegular;
++          glass_view.tintColor = [base_color colorWithAlphaComponent:tint_opacity];
++          glass_view.cornerRadius = corner_radius;
++        }
++    }
++#endif
++
++  overlay_view = f->output_data.ns->glass_tint_overlay;
++  if (overlay_view == nil)
++    {
++      overlay_view = [[NSView alloc] initWithFrame:[container bounds]];
++      [overlay_view setWantsLayer:YES];
++      f->output_data.ns->glass_tint_overlay = overlay_view;
++      ns_insert_glass_view (container, overlay_view, effect_view,
++                            NSWindowAbove);
++      [overlay_view release];
++    }
++
++  overlay_color = ns_glass_color_adjusting_saturation (base_color, saturation);
++  overlay_view.layer.backgroundColor = [overlay_color CGColor];
++  inactive_opacity = FRAME_NS_GLASS_INACTIVE_OPACITY (f);
++  if (inactive_opacity < 0.0)
++    inactive_opacity = ns_glass_color_is_light (base_color) ? 0.35 : 0.85;
++  [overlay_view setAlphaValue:[window isKeyWindow] ? 0.0 : inactive_opacity];
++
++  [window setOpaque:NO];
++  /* `titlebarAppearsTransparent' alone is not enough, and AppKit's own
++     `NSTitlebarBackgroundView' cannot be relied upon to reproduce the
++     content tint (it may ignore the window background entirely, leaving
++     the titlebar at bare glass while the content also paints the theme
++     background at `alpha_background').  Hide that view and paint the
++     titlebar with the same colour and alpha as the default face so the
++     two match, while still letting the glass show through.  */
++  ns_update_glass_titlebar (f, window, base_color, true);
++}
++
++void
++ns_set_glass_material (struct frame *f, Lisp_Object new_value,
++                       Lisp_Object old_value)
++{
++  NSTRACE ("ns_set_glass_material");
++
++  FRAME_NS_GLASS_MATERIAL (f) = ns_glass_material_from_lisp (new_value);
++  ns_update_glass_material (f);
++}
++
++void
++ns_set_glass_tint_opacity (struct frame *f, Lisp_Object new_value,
++                           Lisp_Object old_value)
++{
++  NSTRACE ("ns_set_glass_tint_opacity");
++
++  FRAME_NS_GLASS_TINT_OPACITY (f)
++    = ns_lisp_glass_number (new_value, 0.01, 0.0, 1.0,
++                            "ns-glass-tint-opacity");
++  ns_update_glass_material (f);
++}
++
++void
++ns_set_glass_saturation (struct frame *f, Lisp_Object new_value,
++                         Lisp_Object old_value)
++{
++  NSTRACE ("ns_set_glass_saturation");
++
++  FRAME_NS_GLASS_SATURATION (f)
++    = ns_lisp_glass_number (new_value, 1.2, 0.0, 10.0,
++                            "ns-glass-saturation");
++  ns_update_glass_material (f);
++}
++
++void
++ns_set_glass_inactive_opacity (struct frame *f, Lisp_Object new_value,
++                               Lisp_Object old_value)
++{
++  NSTRACE ("ns_set_glass_inactive_opacity");
++
++  FRAME_NS_GLASS_INACTIVE_OPACITY (f)
++    = ns_lisp_glass_number (new_value, -1.0, 0.0, 1.0,
++                            "ns-glass-inactive-opacity");
++  ns_update_glass_material (f);
++}
++
++void
++ns_set_glass_corner_radius (struct frame *f, Lisp_Object new_value,
++                            Lisp_Object old_value)
++{
++  NSTRACE ("ns_set_glass_corner_radius");
++
++  FRAME_NS_GLASS_CORNER_RADIUS (f)
++    = ns_lisp_glass_number (new_value, 0.0, 0.0, 1024.0,
++                            "ns-glass-corner-radius");
++  ns_update_glass_material (f);
++}
++
++static void
+ ns_apply_background_blur (struct frame *f)
+ {
+   EmacsView *view = (EmacsView *)FRAME_NS_VIEW (f);
+@@ -3964,6 +4412,45 @@
+   return false;
+ }
+ 
++double
++ns_alpha_glyphs_alpha (struct frame *f)
++{
++  double alpha = FRAME_NS_ALPHA_GLYPHS_ALPHA (f);
++
++  return alpha < 0.0 ? f->alpha_background : alpha;
++}
++
++double
++ns_alpha_glyphs_background_alpha (struct frame *f, struct face *face)
++{
++  if (face && face->background == FRAME_BACKGROUND_PIXEL (f))
++    return f->alpha_background;
++
++  return ns_alpha_glyphs_alpha (f);
++}
++
++static double
++ns_glyph_background_alpha (struct glyph_string *s, struct face *face)
++{
++  if (s->row && (s->row->mode_line_p
++                 || (s->w && MINI_WINDOW_P (s->w))))
++    return 1.0;
++
++  return ns_alpha_glyphs_background_alpha (s->f, face);
++}
++
++void
++ns_set_alpha_glyphs_alpha (struct frame *f, Lisp_Object new_value,
++                           Lisp_Object old_value)
++{
++  NSTRACE ("ns_set_alpha_glyphs_alpha");
++
++  FRAME_NS_ALPHA_GLYPHS_ALPHA (f)
++    = ns_lisp_glass_number (new_value, -1.0, 0.0, 1.0,
++                            "ns-alpha-glyphs-alpha");
++  SET_FRAME_GARBAGED (f);
++}
++
+ /* Set up colors for the relief lines around glyph string S.  */
+ 
+ static void
+@@ -4299,7 +4786,8 @@
+ 		 ? [NSColor colorWithUnsignedLong:NS_FACE_BACKGROUND (face)]
+ 		 : FRAME_BACKGROUND_COLOR (s->f));
+ 	      if (ns_alpha_element_enabled (s->f, Qns_alpha_glyphs))
+-		color = [color colorWithAlphaComponent: s->f->alpha_background];
++		color = [color colorWithAlphaComponent:
++			  ns_glyph_background_alpha (s, face)];
+ 	      [color set];
+ 	    }
+ 	  else if (face && (NS_FACE_BACKGROUND (face)
+@@ -4445,7 +4933,8 @@
+     NSColor *color =
+       [NSColor colorWithUnsignedLong:NS_FACE_BACKGROUND (face)];
+     if (ns_alpha_element_enabled (s->f, Qns_alpha_glyphs))
+-      color = [color colorWithAlphaComponent: s->f->alpha_background];
++      color = [color colorWithAlphaComponent:
++		ns_glyph_background_alpha (s, face)];
+     [color set];
+   }
+ 
+@@ -4519,7 +5008,8 @@
+       [FRAME_CURSOR_COLOR (s->f) set];
+       tdCol = [NSColor colorWithUnsignedLong: NS_FACE_BACKGROUND (face)];
+       if (ns_alpha_element_enabled (s->f, Qns_alpha_glyphs))
+-        tdCol = [tdCol colorWithAlphaComponent: s->f->alpha_background];
++        tdCol = [tdCol colorWithAlphaComponent:
++		  ns_glyph_background_alpha (s, face)];
+     }
+   else
+     tdCol = [NSColor colorWithUnsignedLong: NS_FACE_FOREGROUND (face)];
+@@ -4617,7 +5107,8 @@
+ 		  [NSColor colorWithUnsignedLong: face->background];
+ 		if (ns_alpha_element_enabled (s->f, Qns_alpha_glyphs))
+ 		  color = [color colorWithAlphaComponent:
+-				 s->f->alpha_background];
++				 ns_glyph_background_alpha (s,
++								   face)];
+ 		[color set];
+ 	      }
+ 	    }
+@@ -4627,7 +5118,8 @@
+ 		[NSColor colorWithUnsignedLong: s->face->background];
+ 	      if (ns_alpha_element_enabled (s->f, Qns_alpha_glyphs))
+ 		color = [color colorWithAlphaComponent:
+-			       s->f->alpha_background];
++			       ns_glyph_background_alpha (s,
++								 s->face)];
+ 	      [color set];
+ 	    }
+ 	  NSRectFill (NSMakeRect (x, y, w, h));
+@@ -4703,7 +5195,8 @@
+ 		[NSColor colorWithUnsignedLong: s->face->background];
+ 	      if (ns_alpha_element_enabled (s->f, Qns_alpha_glyphs))
+ 		color = [color colorWithAlphaComponent:
+-			       s->f->alpha_background];
++			       ns_glyph_background_alpha (s,
++								 s->face)];
+ 	      [color set];
+ 	    }
+ 
+@@ -8584,6 +9077,8 @@
+ 
+ #ifdef NS_IMPL_COCOA
+   EmacsView *view = FRAME_NS_VIEW (emacsframe);
++  ns_update_glass_material (emacsframe);
++
+   /* Make sure we have focus and the timer isn't already scheduled.  */
+   if (self.window.firstResponder == view
+       && !ns_deferred_UAZoomChangeFocus_timer)
+@@ -8661,6 +9156,9 @@
+ 
+   emacsframe->mouse_moved = 0;
+   ns_frame_rehighlight (emacsframe);
++#ifdef NS_IMPL_COCOA
++  ns_update_glass_material (emacsframe);
++#endif
+ 
+   /* FIXME: for some reason needed on second and subsequent clicks away
+             from sole-frame Emacs to get hollow box to show.  */
+@@ -10010,6 +10508,7 @@
+         [self setOpaque:NO];
+ #ifdef NS_IMPL_COCOA
+       ns_update_background_blur (f);
++      ns_update_glass_material (f);
+ #endif
+ 
+       /* toolbar support */
