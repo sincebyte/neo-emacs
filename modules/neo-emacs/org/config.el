@@ -14,9 +14,7 @@
  org-roam-directory            "~/org/org-roam"
  yas-indent-line               'fixed
  yas-also-auto-indent-first-line t
- global-auto-revert-mode       1
  org-export-with-broken-links  t ;; org link broken but do not effect
- auto-revert-verbose           nil ;; 禁用自动显示 Auto-Revert 的消息
  org-roam-v2-ack               t
  org-agenda-files              (list (concat org-roam-directory "/agenda/GTD.org"))
  org-image-actual-width        '(300)
@@ -233,35 +231,6 @@
   (setq org-modern-indent-begin (propertize "┌" 'face 'org-modern-indent-bracket-line)
         org-modern-indent-guide (propertize "│ " 'face 'org-modern-indent-bracket-line)
         org-modern-indent-end   (propertize "└" 'face 'org-modern-indent-bracket-line)))
-
-;; (use-package emt
-;;   :defer t
-;;   :hook (after-init . emt-mode)
-;;   :config (setq emt-lib-path (concat doom-user-dir "neoemacs/libEMT-aarch64.dylib" )))
-
-;; so queer there should a delay
-;;(defun open-company-english-helper ()
-;;  (run-at-time "1 sec" nil #'open-company-english-helper-dy))
-;;
-;;(defun open-company-english-helper-dy ()
-;;  (interactive)
-;;  (progn
-;;    (setq company-backends (remove 'company-english-helper-search company-backends))
-;;    ;; I need remove `company-english-helper-search' with `company-yasnippet',
-;;    ;; it's not enough just remove `company-english-helper-search' from `company-backends'
-;;    (setq company-backends (remove '(company-english-helper-search :with company-yasnippet) company-backends))
-;;    (setq company-english-helper-active-p nil))
-;;  (if (not company-mode)
-;;      (company-mode t))
-;;  (setq company-english-helper-active-p nil)
-;;  (add-to-list 'company-backends 'company-english-helper-search)
-;;  (setq company-english-helper-active-p t)
-;;  (message "English helper has enable."))
-
-;; (use-package company-english-helper
-;;   :load-path "~/.doom.d/neoemacs/company-english-helper"
-;;   :config
-;;   (add-hook 'org-mode-hook #'open-company-english-helper))
 
 (use-package focus
   :after org-roam

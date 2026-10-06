@@ -230,6 +230,15 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type nil)
 
+;; 后台自动重载磁盘上被外部改写的文件（例如 OpenCode 在你正编辑时改动了同一文件）。
+;; 关键点：`global-auto-revert-mode' 是次要模式，必须“调用函数”来开启；
+;; 用 `setq' 设置同名变量只会改值，不会安装任何计时器/钩子，等于没开。
+(after! autorevert
+  (setq auto-revert-verbose nil      ; 重载时不刷 "Reverting buffer ..." 消息
+        auto-revert-use-notify t     ; 优先用文件通知，改动后近乎即时重载
+        auto-revert-interval 2)      ; 通知不可用时的轮询兜底间隔（默认 5s）
+  (global-auto-revert-mode 1))
+
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
