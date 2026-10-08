@@ -563,3 +563,42 @@
 
 ;; 兜底：即使从其它路径直接 kill-emacs，也先关掉远程相关模式
 (add-hook 'kill-emacs-hook #'my/disable-remote-touching-modes -95)
+
+;;; Git gutter(左侧改动竖线)在较高行之间断裂的修复
+;; 现象(见截图)：`vc-gutter +pretty' 把"改动行"画成左侧 fringe 里的一条灰色竖条；
+;;   当有连续多行改动时，相邻竖条之间会出现缝隙，竖线看起来是断开的。
+;; 原因：该竖条是一个 fringe 位图，高度由 `(frame-char-height)' 决定(≈22px，基于帧
+;;   默认的拉丁字体 JetBrains Mono 17)。但正文里只要含有 CJK 字体(方正悠宋 20pt)
+;;   或 org 标题/表格等更高字体的行，实际行高就会更高(实测普通 CJK 行≈23px、
+;;   org 表格行≈27px、标题≈25px)。竖条只画满 22px，画不满整行，于是相邻改动行之间
+;;   留下缝隙。此处 `line-spacing' 为 nil、也没
+;;   有 text-scale，所以 doom+ 现有的补偿逻辑（只补 line-spacing/text-scale）覆盖不到。
+;; 修复：把 `diff-hl-bmp-middle' 这个纯色竖条位图做得足够高(整列仍然同色)。Emacs 绘制
+;;   时会按行高居中裁剪到当前这一行(见 src/fringe.c 的 draw_fringe_bitmap_1 与
+;;   nsterm.m 的 ns_draw_fringe_bitmap)，因此它会自动填满任意行高 —— 相邻改动行的
+;;   竖条便首尾相接。字体、字号、行距都不做任何改动。
+(defun my/vc-gutter-fix-fringe-height (&rest _)
+  "把 diff-hl 的改动竖线位图加高, 使其填满整行, 消除相邻改动行之间的断裂。"
+  (when (and (display-graphic-p)
+             (boundp 'diff-hl-side)
+             (boundp 'diff-hl-bmp-max-width))
+    (let* ((w (min (or (frame-parameter nil
+                                       (intern (format "%s-fringe" diff-hl-side)))
+                      diff-hl-bmp-max-width)
+                   diff-hl-bmp-max-width))
+           (w (if (zerop w) diff-hl-bmp-max-width w))
+           ;; 只要比"最高的一行"更高即可; 多出的部分由 Emacs 裁剪, 所以给足余量。
+           (h (min 255 (max 64 (* 6 (frame-char-height)))))
+           (half-w (1- (/ w 2)))
+           (row (string-to-number
+                 (concat (make-string half-w ?1)
+                         (make-string (- w half-w) ?0))
+                 2)))
+      (define-fringe-bitmap 'diff-hl-bmp-middle
+        (make-vector h row) nil nil 'center))))
+
+;; 后加入的 :after advice 会后执行, 因此这里会覆盖 doom+ 的 +pretty 位图高度。
+(after! diff-hl
+  (advice-add 'diff-hl-define-bitmaps :after #'my/vc-gutter-fix-fringe-height)
+  ;; 位图是全局对象, 立即重定义一次即可生效, 无需等下一次 diff-hl 刷新。
+  (my/vc-gutter-fix-fringe-height))
