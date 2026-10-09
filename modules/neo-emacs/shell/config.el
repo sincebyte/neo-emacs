@@ -27,6 +27,37 @@
 
 (add-hook 'eshell-mode-hook (lambda () (interactive) (setq-local mode-line-format nil)))
 
+;; eshell 不是终端模拟器，只认回车符 \r（见 `eshell-handle-control-codes'）。
+;; 现在很多 CLI（node 的 ora / log-update、各种构建工具）重画同一行用的是
+;; ANSI「清行」(ESC[2K) +「光标回到行首」(ESC[1G)，eshell 只会把它们删掉而
+;; 不会覆盖，于是每一帧都叠加，日志就刷成满屏重复的 "building for
+;; production..."。这里把光标复位序列还原成 \r（eshell 会就地覆盖），并丢掉
+;; 其余终端控制序列；落在一次读取末尾的 \r 先缓存，等下一段文本到达再拼上
+;; （eshell 只有在 \r 后面还有内容时才会擦除上一行）。
+(defvar-local my/eshell--pending-cr "")
+
+(defun my/eshell-normalize-control-sequences (string)
+  "Translate terminal redraw sequences so eshell overwrites in place."
+  (when (and string (> (length string) 0))
+    (unless (string= my/eshell--pending-cr "")
+      (setq string (concat my/eshell--pending-cr string)
+            my/eshell--pending-cr ""))
+    ;; ESC[<n>G（光标移到第 n 列）-> \r
+    (setq string (replace-regexp-in-string "\033\\[[0-9]*G" "\r" string t t))
+    ;; 去掉清行/滚屏/光标移动/私有模式等终端序列，保留 SGR 颜色 (\e[...m)
+    (setq string (replace-regexp-in-string
+                  "\033\\[[0-9;?]*[ABCDEFHIJKSTfhl]" "" string t t))
+    (when (string-suffix-p "\r" string)
+      (setq my/eshell--pending-cr "\r"
+            string (substring string 0 -1)))
+    string))
+
+(with-eval-after-load 'eshell
+  (add-hook 'eshell-preoutput-filter-functions
+            #'my/eshell-normalize-control-sequences)
+  (add-hook 'eshell-pre-command-hook
+            (lambda () (setq my/eshell--pending-cr ""))))
+
 ;; win fzf fg exec Home dir
 (defun shell/configOnWin()
   (progn
