@@ -5,10 +5,10 @@
 
 (setq
  doom-modeline-modal-icon                   nil
- doom-modeline-icon                         nil
+ doom-modeline-icon                         t
  doom-modeline-time-icon                    nil
  doom-modeline-lsp-icon                     nil
- doom-modeline-major-mode-icon              nil
+ doom-modeline-major-mode-icon              t
  doom-modeline-buffer-encoding              t
  doom-modeline-lsp                          nil
  doom-modeline-modal                        t
@@ -110,6 +110,9 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
     (doom-modeline-evil-visual-alpha-state  . doom-modeline-evil-visual-state)
     (doom-modeline-evil-replace-alpha-state . doom-modeline-evil-replace-state)
     (doom-modeline-evil-motion-alpha-state  . doom-modeline-evil-motion-state)
+    (doom-modeline-major-mode-alpha         . doom-modeline-major-mode-state)
+    (doom-modeline-git-alpha                . doom-modeline-git-state)
+    (doom-modeline-time-alpha               . doom-modeline-time-state)
     (doom-modeline-mode-line-alpha          . mode-line))
   "Powerline 专用 `-alpha' face 及其对应的 segment face。")
 
@@ -134,6 +137,162 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
     (advice-add fn :after (lambda (&rest _) (my/refresh-modeline-alpha-faces))))
   (my/refresh-modeline-alpha-faces))
 
+;;; 按"相邻段色差最大"自动给 modeline 各段挑主题颜色 ---------------------
+;; 颜色全部取自主题 face（`my/modeline-color-faces'），不写死十六进制；
+;; 每次加载主题时重新计算，具体会选中哪个 face 不固定——换主题也能自适应。
+(defvar my/modeline-color-faces
+  '(font-lock-variable-name-face   ; 蓝紫（默认作为 NORMAL 的锚点）
+    font-lock-string-face          ; 绿
+    font-lock-type-face            ; 棕
+    font-lock-warning-face         ; 琥珀
+    font-lock-keyword-face         ; 青
+    font-lock-builtin-face         ; 浅青
+    font-lock-constant-face        ; 藕荷
+    font-lock-preprocessor-face    ; 紫
+    error                          ; 红
+    show-paren-match)              ; 薄荷
+  "候选主题 face。modeline 各段的颜色从这里按色差自动挑选。
+想扩宽可选色，往这个列表里加 face 即可（取它们的 :foreground 作为颜色）。
+列表顺序在同分时也作为优先级。")
+
+(defvar my/modeline-preferred-normal
+  '(font-lock-variable-name-face)
+  "NORMAL 段优先使用的主题 face，按顺序取第一个存在的。
+留空则不锚定，完全交给算法挑。这里写的是主题 face（主题变量），不是写死颜色。")
+
+(defvar my/modeline-role-faces
+  '((major . font-lock-keyword-face)         ; 右侧 Org / major-mode → 青
+    (git   . font-lock-warning-face)         ; 右侧 master / git 分支 → 琥珀
+    (time  . font-lock-variable-name-face))  ; 右侧 时间 → 蓝紫
+  "右侧三段固定的主题 face（用户选的 3 号的右侧配色）。
+这些角色不参与自动挑色，直接用这里指定的主题 face 取色；
+写成主题 face（主题变量），不写死颜色。留空则右侧也交给算法自动挑。")
+
+(defconst my/modeline-segment-adjacency
+  '((normal   filename visual insert)          ; NORMAL / git 分支
+    (filename normal visual insert replace motion) ; 文件名挨着任意 evil 状态
+    (visual   normal filename)                 ; major-mode(Org)
+    (insert   normal filename)                 ; 时间
+    (replace  filename)
+    (motion   filename))
+  "各颜色角色之间的\"相邻\"关系：这些段会直接贴在一起，
+所以它们的颜色必须尽量拉开。")
+
+(defvar my/modeline-colors nil
+  "`my/modeline-update-colors' 算出的 (角色 . 颜色) 表，供段与分隔符取用。")
+
+(defun my/modeline--face-color (face)
+  "取 FACE 的前景色（主题变量）；取不到或不合法时返回 nil。"
+  (let ((c (and (facep face) (face-foreground face nil t))))
+    (and (stringp c)
+         (string-match-p "\\`#[0-9a-fA-F]\\{6\\}\\'" c)
+         c)))
+
+(defun my/modeline--hex->rgb (color)
+  "把 \"#RRGGBB\" 转成 `color-distance' 要的 (R G B) 列表（0-65535）。"
+  (when (and (stringp color)
+             (string-match-p "\\`#[0-9a-fA-F]\\{6\\}\\'" color))
+    (list (* 257 (string-to-number (substring color 1 3) 16))
+          (* 257 (string-to-number (substring color 3 5) 16))
+          (* 257 (string-to-number (substring color 5 7) 16)))))
+
+(defun my/modeline--color-distance (a b)
+  "A、B 两色的感知距离。用整数 RGB 调 `color-distance'，解析失败返回 0。"
+  (let ((ra (my/modeline--hex->rgb a))
+        (rb (my/modeline--hex->rgb b)))
+    (if (and ra rb)
+        (condition-case nil (color-distance ra rb) (error 0))
+      0)))
+
+(defun my/modeline--greedy-colors (cands roles)
+  "候选不足/过多时的兜底：按相邻关系贪心挑色。CANDS 为 (FACE . COLOR)。"
+  (let (assigned used)
+    (dolist (role roles)
+      (let* ((avoid (delq nil (mapcar (lambda (r) (cdr (assq r assigned)))
+                                      (cdr (assq role my/modeline-segment-adjacency)))))
+             (best nil) (bd -1))
+        (dolist (c cands)
+          (unless (member (cdr c) used)
+            (let ((d (if avoid
+                         (cl-loop for x in avoid minimize (my/modeline--color-distance (cdr c) x))
+                       0)))
+              (when (> d bd) (setq best c bd d)))))
+        (unless best (setq best (car cands)))
+        (push (cons role (cdr best)) assigned)
+        (push (cdr best) used)))
+    (nreverse assigned)))
+
+(defun my/modeline-update-colors ()
+  "按\"相邻段色差最大\"从 `my/modeline-color-faces' 给各角色挑颜色。
+最大化\"最小相邻色差\"，结果存入 `my/modeline-colors'。
+颜色全部来自主题 face，每次加载主题都重算，所以挑中哪个 face 不写死。
+若 `my/modeline-preferred-normal' 里的 face 存在，则 NORMAL 段用它作锚点，
+其余段再按色差自动挑。"
+  (let* ((cands (cl-remove-duplicates
+                 (delq nil (mapcar (lambda (f)
+                                     (let ((c (my/modeline--face-color f)))
+                                       (and c (cons f c))))
+                                   my/modeline-color-faces))
+                 :key #'cdr :test #'string=))
+         (roles '(normal filename visual insert replace motion))
+         (n (length cands))
+         (anchor-color (cl-loop for f in my/modeline-preferred-normal
+                                for c = (cdr (assq f cands))
+                                when c return c))
+         (anchor-idx (and anchor-color
+                          (cl-position anchor-color cands :key #'cdr :test #'string=)))
+         (role-pos (cl-loop for r in roles for i from 0 collect (cons r i)))
+         (pair-pos (cl-loop for cell in my/modeline-segment-adjacency
+                            append (cl-loop for nb in (cdr cell)
+                                            collect (cons (cdr (assq (car cell) role-pos))
+                                                          (cdr (assq nb role-pos)))))))
+    (if (or (< n (length roles))
+            (and (null anchor-idx) (> n 8)))
+        ;; 候选太少，或（未锚定时）太多：不枚举，贪心兜底
+        (setq my/modeline-colors (my/modeline--greedy-colors cands roles))
+      ;; 预计算 n×n 色差矩阵，枚举分配时只查表，避免重复算距离
+      (let ((mat (make-vector (* n n) 0)))
+        (cl-loop for i below n do
+                 (cl-loop for j below n do
+                          (aset mat (+ (* i n) j)
+                                (if (= i j) 0
+                                  (my/modeline--color-distance
+                                   (cdr (nth i cands)) (cdr (nth j cands)))))))
+        ;; 给各角色选不同颜色，最大化"最小相邻色差"；锚点时先钉住 NORMAL。
+        ;; 直接递归到目标深度，并对每个叶子只做查表。
+        (let ((best nil) (best-score -1) (v (make-vector (length roles) 0)))
+          (when anchor-idx (aset v 0 anchor-idx))   ; v[0] 固定是 normal
+          (cl-labels ((search (remaining depth)
+                        (if (= depth (length roles))
+                            (let ((score (cl-loop for (p . q) in pair-pos
+                                                  minimize (aref mat (+ (* (aref v p) n)
+                                                                        (aref v q))))))
+                              (when (> score best-score)
+                                (setq best-score score best (append v nil))))
+                          (dolist (i remaining)
+                            (aset v depth i)
+                            (search (remove i remaining) (1+ depth))))))
+            (search (if anchor-idx
+                        (remove anchor-idx (number-sequence 0 (1- n)))
+                      (number-sequence 0 (1- n)))
+                    (if anchor-idx 1 0)))
+          (when best
+            (setq my/modeline-colors
+                  (cl-mapcar #'cons roles
+                             (mapcar (lambda (i) (cdr (nth i cands))) best))))))
+    ;; 右侧三段用固定配色（`my/modeline-role-faces'），不参与上面的自动挑色。
+    (dolist (cell my/modeline-role-faces)
+      (let ((color (my/modeline--face-color (cdr cell))))
+        (when color
+          (setf (alist-get (car cell) my/modeline-colors) color))))
+    my/modeline-colors)))
+
+(defun my/modeline-role-color (role)
+  "取 ROLE 对应的主题颜色；没算出来时回退到 string face 的颜色。"
+  (or (cdr (assq role my/modeline-colors))
+      (my/modeline--face-color 'font-lock-string-face)
+      (face-foreground 'default nil t)))
+
 (defun my/create-modeline-fontset ()
   (create-fontset-from-fontset-spec
    "-*-JetBrains Mono-normal-*-*-*-17-*-*-*-*-*-fontset-modeline,
@@ -148,6 +307,8 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
 (add-hook 'doom-load-theme-hook
 (lambda ()
 (with-eval-after-load 'doom-modeline
+  ;; 主题一变，重新按"相邻段色差最大"挑一遍各段颜色
+  (my/modeline-update-colors)
   ;(let ((highlight-foreground (face-attribute 'org-date-selected :foreground))
   ;      (highlight-background (face-attribute 'org-date-selected :background)))
   ;  (custom-set-faces  '(indent-bars-face                  ((t (:family "Kode Mono" ))))
@@ -163,12 +324,12 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
   (set-face-attribute 'doom-modeline-buffer-file nil
                       :fontset (my/create-modeline-fontset)
                       :foreground "black"
-                      :background (face-foreground 'font-lock-type-face )
+                      :background (my/modeline-role-color 'filename)
                       :weight 'bold)
   (set-face-attribute 'doom-modeline-buffer-modified nil
                       :fontset (my/create-modeline-fontset)
                       :foreground "#45556C"
-                      :background (face-foreground 'font-lock-type-face )
+                      :background (my/modeline-role-color 'filename)
                       :weight 'bold)
   (defface doom-modeline-buffer-file-alpha
     '((t :inherit doom-modeline))
@@ -188,7 +349,7 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
 
   (set-face-attribute 'doom-modeline-evil-normal-state nil
                     :inherit 'doom-modeline
-                    :background (face-foreground 'font-lock-string-face)
+                    :background (my/modeline-role-color 'normal)
                     :foreground "black"
                     :weight 'bold)
   (defface doom-modeline-evil-normal-alpha-state
@@ -202,7 +363,7 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
 
   (set-face-attribute 'doom-modeline-evil-insert-state nil
                       :inherit 'doom-modeline
-                      :background (face-foreground 'font-lock-keyword-face )
+                      :background (my/modeline-role-color 'insert)
                       :foreground "black"
                       :weight 'bold)
   (defface doom-modeline-evil-insert-alpha-state
@@ -217,7 +378,7 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
   (set-face-attribute 'doom-modeline-evil-visual-state nil
                       :inherit 'doom-modeline
                       :foreground "black"
-                      :background (face-foreground 'font-lock-builtin-face )
+                      :background (my/modeline-role-color 'visual)
                       :weight 'bold)
   (defface doom-modeline-evil-visual-alpha-state
     '((t :inherit doom-modeline))
@@ -230,7 +391,7 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
 
   (set-face-attribute 'doom-modeline-evil-replace-state nil
                       :inherit 'doom-modeline
-                      :background (face-foreground 'font-lock-variable-name-face)
+                      :background (my/modeline-role-color 'replace)
                       :foreground "black"
                       :weight 'bold)
   (defface doom-modeline-evil-replace-alpha-state
@@ -244,7 +405,7 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
 
   (set-face-attribute 'doom-modeline-evil-motion-state nil
                       :inherit 'doom-modeline
-                      :background (face-foreground 'font-lock-type-face)
+                      :background (my/modeline-role-color 'motion)
                       :foreground "black"
                       :weight 'bold)
   (defface doom-modeline-evil-motion-alpha-state
@@ -253,6 +414,61 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
     :group 'doom-modeline)
   (set-face-attribute 'doom-modeline-evil-motion-alpha-state nil
                     :background (my/modeline-alpha 'doom-modeline-evil-motion-state :background)
+                    :foreground "black"
+                    :weight 'bold)
+
+  ;; 右侧三段独立配色（来自用户选的 3 号的右侧），不再与左侧 evil 状态共用颜色。
+  (defface doom-modeline-major-mode-state
+    '((t :inherit doom-modeline))
+    "group doc"
+    :group 'doom-modeline)
+  (set-face-attribute 'doom-modeline-major-mode-state nil
+                    :inherit 'doom-modeline
+                    :background (my/modeline-role-color 'major)
+                    :foreground "black"
+                    :weight 'bold)
+  (defface doom-modeline-major-mode-alpha
+    '((t :inherit doom-modeline))
+    "group doc"
+    :group 'doom-modeline)
+  (set-face-attribute 'doom-modeline-major-mode-alpha nil
+                    :background (my/modeline-alpha 'doom-modeline-major-mode-state :background)
+                    :foreground "black"
+                    :weight 'bold)
+
+  (defface doom-modeline-git-state
+    '((t :inherit doom-modeline))
+    "group doc"
+    :group 'doom-modeline)
+  (set-face-attribute 'doom-modeline-git-state nil
+                    :inherit 'doom-modeline
+                    :background (my/modeline-role-color 'git)
+                    :foreground "black"
+                    :weight 'bold)
+  (defface doom-modeline-git-alpha
+    '((t :inherit doom-modeline))
+    "group doc"
+    :group 'doom-modeline)
+  (set-face-attribute 'doom-modeline-git-alpha nil
+                    :background (my/modeline-alpha 'doom-modeline-git-state :background)
+                    :foreground "black"
+                    :weight 'bold)
+
+  (defface doom-modeline-time-state
+    '((t :inherit doom-modeline))
+    "group doc"
+    :group 'doom-modeline)
+  (set-face-attribute 'doom-modeline-time-state nil
+                    :inherit 'doom-modeline
+                    :background (my/modeline-role-color 'time)
+                    :foreground "black"
+                    :weight 'bold)
+  (defface doom-modeline-time-alpha
+    '((t :inherit doom-modeline))
+    "group doc"
+    :group 'doom-modeline)
+  (set-face-attribute 'doom-modeline-time-alpha nil
+                    :background (my/modeline-alpha 'doom-modeline-time-state :background)
                     :foreground "black"
                     :weight 'bold)
 
@@ -353,6 +569,25 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
                                           'doom-modeline-evil-normal-alpha-state)
                                         'doom-modeline-mode-line-alpha ))))
 
+  ;; 直接从 evil-state 段过渡到文件名段：只用一个箭头。
+  ;; 原来的 `powerline-evil-right' + `powerline-filename-right-1' 会在中间
+  ;; 露出 mode-line 底色，形成一个箭头形状的空白；这里把目标 face 直接设成
+  ;; `doom-modeline-buffer-file-alpha'，让两个色块无缝衔接。
+  (doom-modeline-def-segment powerline-evil-filename-right
+    "Powerline separator from the evil-state segment straight into the buffer-file segment."
+    (propertize " " 'display
+                (powerline-arrow-left
+                 (if (doom-modeline--active)
+                     (cond
+                      ((eq evil-state 'normal)   'doom-modeline-evil-normal-alpha-state)
+                      ((eq evil-state 'insert)   'doom-modeline-evil-insert-alpha-state)
+                      ((eq evil-state 'visual)   'doom-modeline-evil-visual-alpha-state)
+                      ((eq evil-state 'replace)  'doom-modeline-evil-replace-alpha-state)
+                      ((eq evil-state 'motion)   'doom-modeline-evil-motion-alpha-state)
+                      (t                         'doom-modeline-evil-normal-alpha-state))
+                   'doom-modeline-evil-normal-alpha-state)
+                 'doom-modeline-buffer-file-alpha)))
+
   (doom-modeline-def-segment powerline-filename-right-1
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
@@ -379,7 +614,7 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
     (propertize " " 'display
         (powerline-arrow-right
                 'doom-modeline-mode-line-alpha
-                'doom-modeline-evil-visual-alpha-state)))
+                'doom-modeline-major-mode-alpha)))
 
   (doom-modeline-def-segment powerline-separator-left-vcs
     "Insert a Powerline separator into the Doom Modeline."
@@ -393,7 +628,7 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
     (propertize " " 'display
         (powerline-arrow-right
                 'doom-modeline-mode-line-alpha
-                'doom-modeline-evil-insert-alpha-state)))
+                'doom-modeline-time-alpha)))
 
   (doom-modeline-def-segment powerline-separator-left-time-db
     "Insert a Powerline separator into the Doom Modeline."
@@ -406,8 +641,31 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
         (powerline-arrow-right
-                'doom-modeline-evil-visual-alpha-state
+                'doom-modeline-major-mode-alpha
                 'doom-modeline-mode-line-alpha)))
+
+  ;; 右侧：major-mode(Org) -> git 分支(master)，直接过渡。
+  ;; 原来的 `powerline-separator-left-git-empty' + `powerline-separator-left-vcs'
+  ;; 会在两个色块之间露出 mode-line 底色（左侧那个箭头空白问题的镜像）。
+  ;; 这里合成一个箭头；没有 git 分支时本段为空，交给下面的 mt 段处理过渡。
+  (doom-modeline-def-segment powerline-separator-left-om
+    "Direct Powerline separator from major-mode straight into the git branch."
+    (when (my-git-branch-with-dirty)
+      (propertize " " 'display
+        (powerline-arrow-right
+                'doom-modeline-major-mode-alpha
+                'doom-modeline-git-alpha))))
+
+  ;; 右侧：git 分支(master) -> 时间，直接过渡。
+  ;; 若当前不在 git 仓库，则退化为 major-mode(Org) -> 时间。
+  (doom-modeline-def-segment powerline-separator-left-mt
+    "Direct Powerline separator from the git branch straight into the time segment."
+    (propertize " " 'display
+        (powerline-arrow-right
+                (if (my-git-branch-with-dirty)
+                    'doom-modeline-git-alpha
+                  'doom-modeline-major-mode-alpha)
+                'doom-modeline-time-alpha)))
 
 
   (doom-modeline-def-segment my-major-mode
@@ -438,7 +696,7 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
                " (%-d)")
              text-scale-mode-amount))
        (doom-modeline-spc)))
-     'face 'doom-modeline-evil-visual-state))
+     'face 'doom-modeline-major-mode-state))
 
   (doom-modeline-def-segment my-custom-segment
     (my-add-x-to-segment 'doom-modeline--major-mode-segment))
@@ -460,7 +718,7 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
   (doom-modeline-def-segment my-time
     "Display the current time in HH:mm:ss format."
     (propertize (format-time-string " %H:%M ")
-                'face 'doom-modeline-evil-insert-state))
+                'face 'doom-modeline-time-state))
 (defun my-buffer-file-name ()
   "Return a short file name for current buffer.
 If another buffer has the same file name, include one parent directory
@@ -493,11 +751,27 @@ to disambiguate."
 
   (doom-modeline-def-segment my-filename
     "Show buffer filename with disambiguation if needed."
-    (propertize
-     (concat " " (my-buffer-file-name) (if (buffer-modified-p) "꙳" "") " ")
-     'face (if (buffer-modified-p)
-               'doom-modeline-buffer-modified
-             'doom-modeline-buffer-file)))
+    (concat
+     ;; 文件类型图标：字形保留 nerd-icons 的颜色，但背景必须对齐文件名色块。
+     ;; 不能用 `doom-modeline--buffer-mode-icon'：它会把图标和后面的半角空格
+     ;; 都 inherit 到 `doom-modeline'（modeline 底色），于是色块里露出空隙。
+     (when (doom-modeline-icon-displayable-p)
+       (let ((icon (doom-modeline-icon-for-buffer)))
+         (when (and (stringp icon) (not (string-empty-p icon)))
+           (let ((face (get-text-property 0 'face icon)))
+             (concat
+              ;; 图标左侧留一个空格，让图标不贴着箭头、视觉上更居中。
+              ;; 空格用文件名色块 face，背景与图标一致，不会露出底色。
+              (propertize " " 'face 'doom-modeline-buffer-file)
+              (propertize icon 'face
+                          (append (if (listp face) face (list :inherit face))
+                                  (list :foreground "black"
+                                        :background (my/modeline-role-color 'filename)))))))))
+     (propertize
+      (concat " " (my-buffer-file-name) (if (buffer-modified-p) "꙳" "") " ")
+      'face (if (buffer-modified-p)
+                'doom-modeline-buffer-modified
+              'doom-modeline-buffer-file))))
   (defun my-git-branch-with-dirty ()
     "Return git branch name, with * if buffer or repo is modified."
     (if-let* ((file (buffer-file-name))
@@ -510,18 +784,30 @@ to disambiguate."
   (doom-modeline-def-segment my-git-branch
     "Show git branch, with * if modified."
     (when-let ((branch (my-git-branch-with-dirty)))
-      (propertize branch 'face 'doom-modeline-evil-normal-state)))
+      (concat
+       ;; 分支图标：nerd 字形，黑色前景 + git 色块背景（与文件名段风格一致）。
+       (when (doom-modeline-icon-displayable-p)
+         (let ((icon (nerd-icons-devicon "nf-dev-git_branch")))
+           (when (and (stringp icon) (not (string-empty-p icon)))
+             (let ((face (get-text-property 0 'face icon)))
+               (concat
+                ;; 图标左侧留一个空格，避免贴着前面的箭头
+                (propertize " " 'face 'doom-modeline-git-state)
+                (propertize icon 'face
+                            (append (if (listp face) face (list :inherit face))
+                                    (list :foreground "black"
+                                          :background (my/modeline-role-color 'git)))))))))
+       (propertize branch 'face 'doom-modeline-git-state))))
 
   (doom-modeline-def-segment empty-segment
     (propertize (concat " " "") 'face 'doom-modeline-evil-emacs-state))
   ;; (display-battery-mode 1)
   (display-time-mode 1)
   (doom-modeline-def-modeline 'main
-    '(my-segment powerline-evil-right powerline-filename-right-1 my-filename powerline-filename-right-2 wechat-msg-count matches parrot selection-info)
+    '(my-segment powerline-evil-filename-right my-filename powerline-filename-right-2 wechat-msg-count matches parrot selection-info)
     '(misc-info minor-modes input-method buffer-encoding powerline-separator-left my-major-mode
-      powerline-separator-left-git-empty powerline-separator-left-vcs my-git-branch 
-        powerline-separator-left-time-db 
-        powerline-separator-left-time my-time ))
+      powerline-separator-left-om my-git-branch
+        powerline-separator-left-mt my-time ))
   (doom-modeline-def-modeline 'vcs
     '(my-segment powerline-evil-right wechat-msg-count matches parrot selection-info)
     '(compilation misc-info  irc mu4e gnus github debug minor-modes buffer-encoding process empty-segment powerline-separator-left my-major-mode
