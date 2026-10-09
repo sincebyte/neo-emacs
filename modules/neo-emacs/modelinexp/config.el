@@ -36,6 +36,32 @@
          minor-mode-alist))
   (doom-modeline-override-eglot))
 
+;; Java buffer 的 modeline 图标：在文件名色块里直接显示 “Java” 文字
+;; （黑字、跟随 modeline 字体，TTY 也能显示）。判断见 `my/java-buffer-p'。
+;; 其余取图标的地方（dired 等）仍走 nerd-icons，这里统一改成烧水壶。
+(after! nerd-icons
+  (setf (alist-get "java" nerd-icons-extension-icon-alist nil nil #'equal)
+        '(nerd-icons-mdicon "nf-md-kettle_steam" :face nerd-icons-purple))
+  (dolist (mode '(java-mode java-ts-mode))
+    (setf (alist-get mode nerd-icons-mode-icon-alist)
+          '(nerd-icons-mdicon "nf-md-kettle_steam" :face nerd-icons-purple))))
+
+(defun my/java-buffer-p ()
+  "当前 buffer 是否为 Java：java-mode / java-ts-mode，或 .java 文件。"
+  (or (derived-mode-p 'java-mode 'java-ts-mode)
+      (and (buffer-file-name)
+           (string= "java"
+                    (downcase (or (file-name-extension (buffer-file-name)) ""))))))
+
+(defun my/java-modeline-text ()
+  "Java buffer 在 modeline 文件名色块里的 “Java” 文字（黑字、加粗、跟随 modeline 字体）。"
+  (concat
+   (propertize " " 'face 'doom-modeline-buffer-file)
+   (propertize "Java" 'face
+               (list :weight 'bold
+                     :foreground "black"
+                     :background (my/modeline-role-color 'filename)))))
+
 (with-eval-after-load 'which-key
   (set-face-attribute 'which-key-key-face nil :family "IBM Plex Mono")
   (set-face-attribute 'which-key-command-description-face nil :family "IBM Plex Mono")
@@ -630,6 +656,17 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
                 'doom-modeline-mode-line-alpha
                 'doom-modeline-time-alpha)))
 
+  ;; vcs/magit：major-mode -> 时间，直接过渡。
+  ;; 原先 `powerline-separator-left-git-empty' + `powerline-separator-left-time'
+  ;; 会在中间露出 mode-line 底色，形成一个箭头形状的空白（见 `main' 的同款修复）；
+  ;; 这里合成一个箭头，让两个色块无缝衔接。
+  (doom-modeline-def-segment powerline-separator-left-major-time
+    "Direct Powerline separator from major-mode straight into the time segment."
+    (propertize " " 'display
+        (powerline-arrow-right
+                'doom-modeline-major-mode-alpha
+                'doom-modeline-time-alpha)))
+
   (doom-modeline-def-segment powerline-separator-left-time-db
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
@@ -755,7 +792,9 @@ to disambiguate."
      ;; 文件类型图标：字形保留 nerd-icons 的颜色，但背景必须对齐文件名色块。
      ;; 不能用 `doom-modeline--buffer-mode-icon'：它会把图标和后面的半角空格
      ;; 都 inherit 到 `doom-modeline'（modeline 底色），于是色块里露出空隙。
-     (when (doom-modeline-icon-displayable-p)
+     (when (my/java-buffer-p)
+       (my/java-modeline-text))
+     (when (and (not (my/java-buffer-p)) (doom-modeline-icon-displayable-p))
        (let ((icon (doom-modeline-icon-for-buffer)))
          (when (and (stringp icon) (not (string-empty-p icon)))
            (let ((face (get-text-property 0 'face icon)))
@@ -811,7 +850,7 @@ to disambiguate."
   (doom-modeline-def-modeline 'vcs
     '(my-segment powerline-evil-right wechat-msg-count matches parrot selection-info)
     '(compilation misc-info  irc mu4e gnus github debug minor-modes buffer-encoding process empty-segment powerline-separator-left my-major-mode
-      powerline-separator-left-git-empty powerline-separator-left-time my-time ))
+      powerline-separator-left-major-time my-time ))
   (doom-modeline-def-modeline 'dashboard
     '(modals buffer-default-directory-simple remote-host)
     '(my-segment)))
