@@ -92,6 +92,38 @@
 ;; (add-hook 'buffer-list-update-hook 'add-line-padding)
 ;;
 
+;; vterm 与 modeline 完全一致：同字体 (JetBrains Mono)、同字号、同粗细。
+;; 关键点：全局 default fontset 把私用区 U+E0A0..E0B3 映射到了
+;; "Symbols Nerd Font Mono"（三角墨迹仅 ~101% em）。所以即使 face 里写
+;; `:family "JetBrains Mono"'，Powerline 三角仍会从那个字体取，比色块矮、露出
+;; 缺口。这里给 vterm 单独建一个 fontset，把该区间显式改回 JetBrains Mono：
+;; 它的 U+E0B0 墨迹 132% em，正好等于自己的 132% 行盒，三角铺满色块；U+E0A0
+;; 分支图标也与 modeline 同字形。只影响 vterm，不动 modeline / 其它 buffer。
+(defface my/vterm-default nil
+  "vterm 默认 face：与 modeline 相同的 JetBrains Mono。")
+
+(defvar my/vterm-fontsets nil
+  "vterm fontset 缓存：(SIZE . FONTSET-NAME)。")
+(defun my/vterm-fontset (size)
+  "建/取 vterm 专用 fontset：Powerline 区间强制用 JetBrains Mono。"
+  (or (cdr (assq size my/vterm-fontsets))
+      (let ((name (format "fontset-vterm%d" size)))
+        ;; XLFD 必须写全 14 段，否则 `create-fontset-from-fontset-spec' 报错。
+        (create-fontset-from-fontset-spec
+         (format "-*-JetBrains Mono-normal-*-*-*-%d-*-*-*-*-*-%s" size name))
+        (set-fontset-font name '(#xe0a0 . #xe0b3)
+                          (font-spec :family "JetBrains Mono" :size size))
+        (push (cons size name) my/vterm-fontsets)
+        name)))
+
+(defun my/vterm-apply-font (size)
+  "vterm 默认 face = JetBrains Mono SIZE pt + JetBrains Powerline，buffer 局部 remap。"
+  (set-face-attribute 'my/vterm-default nil
+                      :family "JetBrains Mono"
+                      :height (* size 10)
+                      :fontset (my/vterm-fontset size))
+  (setq-local face-remapping-alist '((default my/vterm-default default))))
+
 ;; 设置不同模式下的字体
 (defun my-set-font-for-mode ()
   (if (bound-and-true-p doom-big-font-mode)
@@ -106,7 +138,7 @@
      ((derived-mode-p 'sparkweather-mode)
       (setq-local face-remapping-alist '((default (:family "SF Mono" :height 210) default))))
      ((derived-mode-p 'vterm-mode)
-      (setq-local face-remapping-alist '((default (:family "Kode Mono" :height 210) default)))))
+      (my/vterm-apply-font 20)))
     ;; 小号字
     (cond
      ((derived-mode-p 'python-mode)
@@ -118,7 +150,7 @@
      ((derived-mode-p 'sparkweather-mode)
       (setq-local face-remapping-alist '((default (:family "SF Mono" :height 160) default))))
      ((derived-mode-p 'vterm-mode)
-      (setq-local face-remapping-alist '((default (:family "Kode Mono" :height 160) default)))))))
+      (my/vterm-apply-font 17)))))
 
 (add-hook 'after-change-major-mode-hook #'my-set-font-for-mode)
 
