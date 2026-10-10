@@ -205,6 +205,21 @@
                           ,@(when home `(:home ,home)))))
       `(:java ,java-config))))
 
+(declare-function eglot--workspace-configuration-plist "eglot" (server &optional path))
+
+(defun +eglot-java--workspace-configuration-advice (orig server &optional path)
+  "为 JDT server 注入 neo-emacs 的 Java workspace 配置。
+
+`eglot-workspace-configuration' 只能保存一个全局值，而且 Doom 的 cc 模块
+会用 `add-to-list' 往它里面塞 ccls 配置（期望它是个 list）。因此不要把函数
+存进这个变量（会撑爆 `add-to-list'），改为在这里按 server 计算 Java 配置。"
+  (let ((base (funcall orig server path)))
+    (if (+eglot-java--jdt-server-p server)
+        (+eglot-java--plist-merge
+         (or base '())
+         (+eglot-java--workspace-configuration server))
+      base)))
+
 (defun +eglot-java--build-workspace (server)
   (when (+eglot-java--jdt-server-p server)
     (ignore-errors
@@ -217,7 +232,8 @@
     (+eglot-java--execute-workspace-edit server command arguments))
   (advice-add #'eglot-initialization-options :around #'+eglot-java--initialization-options-advice)
   (+eglot-java--setup-jdt-uri-handler)
-  (setq eglot-workspace-configuration #'+eglot-java--workspace-configuration)
+  (advice-add #'eglot--workspace-configuration-plist
+              :around #'+eglot-java--workspace-configuration-advice)
   (add-hook 'eglot-connect-hook #'+eglot-java--build-workspace)
   (define-key doom-leader-map (kbd "c f") #'eglot-format))
 
