@@ -330,6 +330,19 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
    "-*-JetBrains Mono-normal-*-*-*-20-*-*-*-*-*-fontset-modeline,
    han:-*-Noto Serif CJK SC-bold-*-*-*-19-*-*-*-*-*-*,
    cjk-misc:-*-Noto Serif CJK SC-bold-*-*-*-19-*-*-*-*-*-*"))
+
+(defun my/create-modeline-git-fontset (&optional size)
+  "Git 段专用 fontset：JetBrains Mono SIZE（默认 17）。
+把 Nerd 图标区间 U+E0A0..E0B3 也交给 JetBrains Mono——否则全局 default
+fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图标的高度就会
+和 fish 提示符里的 JetBrains 图标对不上。"
+  (let* ((size (or size 17))
+         (name (format "fontset-mygit%d" size)))
+    (create-fontset-from-fontset-spec
+     (format "-*-JetBrains Mono-normal-*-*-*-%d-*-*-*-*-*-%s" size name))
+    (set-fontset-font name '(#xe0a0 . #xe0b3)
+                      (font-spec :family "JetBrains Mono" :size size))
+    name))
 (add-hook 'doom-load-theme-hook
 (lambda ()
 (with-eval-after-load 'doom-modeline
@@ -468,6 +481,7 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
     :group 'doom-modeline)
   (set-face-attribute 'doom-modeline-git-state nil
                     :inherit 'doom-modeline
+                    :fontset (my/create-modeline-git-fontset)
                     :background (my/modeline-role-color 'git)
                     :foreground "black"
                     :weight 'bold)
@@ -786,6 +800,11 @@ to disambiguate."
           ;; 无重复 → 只显示文件名
           basename))))))
 
+  ;; 文件名前的类型图标（书/数据库等）在色块里偏低，用 display 的 raise
+  ;; 往上挪一点，和文字视觉居中。单位是行高的倍数，想再高/低就调这个值。
+  (defvar my-modeline-filename-icon-raise 0.1
+    "Vertical raise (in line-height units) for the buffer-file type icon.")
+
   (doom-modeline-def-segment my-filename
     "Show buffer filename with disambiguation if needed."
     (concat
@@ -805,7 +824,8 @@ to disambiguate."
               (propertize icon 'face
                           (append (if (listp face) face (list :inherit face))
                                   (list :foreground "black"
-                                        :background (my/modeline-role-color 'filename)))))))))
+                                        :background (my/modeline-role-color 'filename)))
+                          'display (list 'raise my-modeline-filename-icon-raise)))))))
      (propertize
       (concat " " (my-buffer-file-name) (if (buffer-modified-p) "꙳" "") " ")
       'face (if (buffer-modified-p)
@@ -826,16 +846,12 @@ to disambiguate."
       (concat
        ;; 分支图标：nerd 字形，黑色前景 + git 色块背景（与文件名段风格一致）。
        (when (doom-modeline-icon-displayable-p)
-         (let ((icon (nerd-icons-devicon "nf-dev-git_branch")))
+         (let ((icon (nerd-icons-powerline "nf-pl-branch")))
            (when (and (stringp icon) (not (string-empty-p icon)))
-             (let ((face (get-text-property 0 'face icon)))
-               (concat
-                ;; 图标左侧留一个空格，避免贴着前面的箭头
-                (propertize " " 'face 'doom-modeline-git-state)
-                (propertize icon 'face
-                            (append (if (listp face) face (list :inherit face))
-                                    (list :foreground "black"
-                                          :background (my/modeline-role-color 'git)))))))))
+             (concat
+              ;; 图标左侧留一个空格，避免贴着前面的箭头
+              (propertize " " 'face 'doom-modeline-git-state)
+              (propertize icon 'face 'doom-modeline-git-state)))))
        (propertize branch 'face 'doom-modeline-git-state))))
 
   (doom-modeline-def-segment empty-segment
@@ -918,14 +934,16 @@ to disambiguate."
          '(mode-line ((t (:family "IBM Plex Mono" :box nil :height 175))))
          '(mode-line-inactive ((t (:family "IBM Plex Mono" :box nil :height 175)))))
         (set-face-attribute 'doom-modeline-buffer-file nil :fontset (my/create-modeline-big-fontset))
-        (set-face-attribute 'doom-modeline-buffer-modified nil :fontset (my/create-modeline-big-fontset)))
+        (set-face-attribute 'doom-modeline-buffer-modified nil :fontset (my/create-modeline-big-fontset))
+        (set-face-attribute 'doom-modeline-git-state nil :fontset (my/create-modeline-git-fontset 20)))
     (progn
       (custom-set-faces
        '(indent-bars-face                  ((t (:family "Kode Mono" :height 170))))
        '(mode-line ((t (:family "IBM Plex Mono" :box nil :height 150))))
        '(mode-line-inactive ((t (:family "IBM Plex Mono" :box nil :height 150)))))
       (set-face-attribute 'doom-modeline-buffer-file nil :fontset (my/create-modeline-fontset))
-      (set-face-attribute 'doom-modeline-buffer-modified nil :fontset (my/create-modeline-fontset)))
+      (set-face-attribute 'doom-modeline-buffer-modified nil :fontset (my/create-modeline-fontset))
+      (set-face-attribute 'doom-modeline-git-state nil :fontset (my/create-modeline-git-fontset 17)))
     (setq powerline-scale (if doom-big-font-mode 1.5 1))
     (powerline-reset)))
 (defun my-update-powerline-scale ()
