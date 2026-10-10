@@ -109,6 +109,34 @@
   (when (and (derived-mode-p 'vterm-mode) (not (eq mode-line-format nil)))
     (my/force-hide-vterm-modeline))))
 
+;; 毛玻璃（lr-macos-glass）会按 `ns-alpha-glyphs' 把"非默认字形背景"整体
+;; 半透明化，于是 fish 提示符的色块也被一起透明，看起来发灰。
+;; 原生层（ns-opaque-background-faces.patch）对带 `:ns-opaque-background t'
+;; 的 face 跳过 alpha。vterm 的每个格子是 C 模块动态生成的匿名 face（带
+;; `:background'），elisp 拿不到，所以在 `vterm--insert' 插入前把该属性补上。
+;; 只对"有显式背景色"的格子生效，终端默认底色仍随玻璃半透明。
+(defun my/vterm-opaque-cell-background (string)
+  "给 STRING 上带 `:background' 的 `font-lock-face' 补 `:ns-opaque-background t'。"
+  (when (and (stringp string) (> (length string) 0))
+    (let ((face (get-text-property 0 'font-lock-face string)))
+      (when (and (listp face)
+                 (plist-member face :background)
+                 (not (plist-member face :ns-opaque-background)))
+        (put-text-property 0 (length string) 'font-lock-face
+                           (plist-put (copy-sequence face)
+                                      :ns-opaque-background t)
+                           string))))
+  string)
+
+(defun my/vterm-opaque-insert (orig &rest content)
+  "围绕 `vterm--insert'：把色块格子标记为不透明，绕过毛玻璃 alpha。"
+  (dolist (arg content)
+    (my/vterm-opaque-cell-background arg))
+  (apply orig content))
+
+(with-eval-after-load 'vterm
+  (advice-add 'vterm--insert :around #'my/vterm-opaque-insert))
+
 (advice-add 'set-window-vscroll :after
   (defun me/vterm-toggle-scroll (&rest _)
     (when (eq major-mode 'vterm-mode)
