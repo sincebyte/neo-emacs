@@ -69,6 +69,13 @@
         corfu-popupinfo-max-height 0)
   (custom-set-faces!
     '(corfu-current :background "#2C3946" :foreground "#7BB6E2" :weight bold))
+  ;; Corfu 选中项(corfu-current)自带底色，会被毛玻璃的 glyphs alpha 一起透明化；
+  ;; 打上 `:ns-opaque-background t' 后原生层对该 face 跳过 alpha，选中项保持不透明。
+  ;; 注意：`:ns-opaque-background' 不是标准属性，写进 `custom-set-faces!' 的 face
+  ;; spec 会被 `face-spec-set-2' 按 `face-x-resources' 过滤掉，必须用
+  ;; `set-face-attribute' 单独设置（与 config.el 里 avy 标签同理）。
+  ;; 依赖 emacs-plus@31 编译时带 ns-opaque-background-faces.patch。
+  (set-face-attribute 'corfu-current nil :ns-opaque-background t)
   (define-key corfu-map (kbd "<escape>") nil))
 
 (with-eval-after-load 'vertico
