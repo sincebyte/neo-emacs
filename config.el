@@ -154,6 +154,50 @@
 
 (add-hook 'after-change-major-mode-hook #'my-set-font-for-mode)
 
+;; vterm 命令行左侧总空出一小列：那不是 fish 提示符，而是 Doom popup 给弹窗加的
+;; 「内边距」（window margin）。vterm 缓冲区被当作 popup（底部 side window）显示，
+;; `+popup-adjust-margins-h' 会给这种弹窗窗口左右各加 `+popup-margin-width'
+;; （本 fork 默认 1 个字符 ≈10px）的 margin。这正是「单独一个窗口时没有、分屏/
+;; 弹窗时才有」的原因——单独满屏时它不是 popup，就没有内边距。
+;; 下面保证 vterm 窗口永远既没有 fringe 也没有 margin；其它 buffer 的 diff-hl
+;; 左侧 fringe 竖线不受影响（只针对 vterm）。
+(defun my/vterm-hug-left ()
+  "让当前 vterm 的命令提示符贴到窗口最左边（fringe=0，margin=0）。
+对配置生效前创建、mode hook 不会再跑的旧 vterm，可 `M-x my/vterm-hug-left' 手动调用。"
+  (interactive)
+  (setq-local left-fringe-width 0
+              right-fringe-width 0
+              left-margin-width 0
+              right-margin-width 0)
+  (dolist (win (get-buffer-window-list (current-buffer) nil t))
+    (set-window-fringes win 0 0)
+    (set-window-margins win 0 0)))
+
+(add-hook 'vterm-mode-hook #'my/vterm-hug-left)
+
+;; 复用已有 vterm / 分屏等路径：显示 vterm 时清掉该窗口遗留的 fringe/margin。
+(defun my/vterm-zero-left-padding-a (orig window buffer &optional keep-margins)
+  "显示 vterm 的窗口，fringe 与 margin 都清零。"
+  (prog1 (funcall orig window buffer keep-margins)
+    (when (and (window-live-p window)
+               (buffer-live-p (get-buffer buffer))
+               (with-current-buffer buffer (derived-mode-p 'vterm-mode)))
+      (set-window-fringes window 0 0)
+      (set-window-margins window 0 0))))
+(advice-add 'set-window-buffer :around #'my/vterm-zero-left-padding-a)
+
+;; 兜底：任何给 vterm 窗口设 margin 的代码（首当其冲是 popup 的
+;; `+popup-adjust-margins-h'）一律被强制为 0，提示符就不会被内边距推开。
+(defun my/vterm-no-margins-a (fn window left &optional right)
+  "vterm 窗口的 window margin 恒为 0。"
+  (let ((win (or window (selected-window))))
+    (if (and (window-live-p win)
+             (with-current-buffer (window-buffer win)
+               (derived-mode-p 'vterm-mode)))
+        (funcall fn win 0 0)
+      (funcall fn window left right))))
+(advice-add 'set-window-margins :around #'my/vterm-no-margins-a)
+
 (defun my/fix-line-number-face ()
   (set-face-attribute 'line-number nil :family "JetBrains Mono" :weight 'normal :slant 'italic )
   (let* ((hl-bg (face-attribute 'hl-line :background nil t))
