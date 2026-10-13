@@ -59,7 +59,7 @@
    (propertize " " 'face 'doom-modeline-buffer-file)
    (propertize "Java" 'face
                (list :weight 'bold
-                     :foreground "black"
+                     :foreground (my/modeline-role-fg 'filename)
                      :background (my/modeline-role-color 'filename)))))
 
 (with-eval-after-load 'which-key
@@ -154,7 +154,10 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
                             ;; 颜色算不出来时传 nil 同样会告警，回退到 `unspecified'
                             :background (or (and (stringp color) color) 'unspecified)
                             :foreground "black"
-                            :weight 'bold)))))
+                            :weight 'bold))))
+  ;; powerline 会把分隔符图片按 face 名缓存；颜色变了必须清缓存，
+  ;; 否则箭头仍是旧颜色（memo key 只含 face 符号，不含颜色）。
+  (when (fboundp 'powerline-reset) (powerline-reset)))
 
 ;; glass 参数一变（切 preset / 调 alpha），立刻重算分隔符颜色
 (with-eval-after-load 'lr-macos-glass
@@ -193,6 +196,22 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
   "右侧三段固定的主题 face（用户选的 3 号的右侧配色）。
 这些角色不参与自动挑色，直接用这里指定的主题 face 取色；
 写成主题 face（主题变量），不写死颜色。留空则右侧也交给算法自动挑。")
+
+;; 参考配色（用户喜欢的 Neovim 状态栏，Tokyo Night 风格）：
+;; 显式写死各段的背景/前景色，覆盖主题自动挑色，保证样式稳定不随主题漂移。
+;; 想恢复"跟随主题自动挑色"，把 `my/modeline-block-palette' 设成 nil 即可。
+(defvar my/modeline-block-palette
+  '((normal   :bg "#7aa2f7" :fg "black")     ; NORMAL 模式 → 蓝底黑字
+    (filename :bg "#3b4261" :fg "#7aa2f7")   ; 文件名 → 石板灰底浅蓝字（用 evil 模式底色）
+    (git      :bg "#3b4261" :fg "#7aa2f7")   ; git 分支 → 石板灰底浅蓝字
+    (time     :bg "#292e42" :fg "#ffffff"))  ; 时间 → 深蓝底白字（白钟表的指针即深色）
+  "modeline 各段的显式配色（:bg 背景 / :fg 前景）。
+非 nil 时覆盖主题自动挑色与 `my/modeline-role-faces'；nil 表示全部跟随主题。")
+
+(defun my/modeline-role-fg (role)
+  "取 ROLE 的前景色：优先 `my/modeline-block-palette'，否则回退到黑色。"
+  (or (plist-get (cdr (assq role my/modeline-block-palette)) :fg)
+      "black"))
 
 (defconst my/modeline-segment-adjacency
   '((normal   filename visual insert)          ; NORMAL / git 分支
@@ -311,6 +330,10 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
       (let ((color (my/modeline--face-color (cdr cell))))
         (when color
           (setf (alist-get (car cell) my/modeline-colors) color))))
+    ;; 显式参考配色最后覆盖（背景色）；设 nil 时本段自动跳过。
+    (dolist (cell my/modeline-block-palette)
+      (when-let ((bg (plist-get (cdr cell) :bg)))
+        (setf (alist-get (car cell) my/modeline-colors) bg)))
     my/modeline-colors)))
 
 (defun my/modeline-role-color (role)
@@ -362,12 +385,12 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
 
   (set-face-attribute 'doom-modeline-buffer-file nil
                       :fontset (my/create-modeline-fontset)
-                      :foreground "black"
+                      :foreground (my/modeline-role-fg 'filename)
                       :background (my/modeline-role-color 'filename)
                       :weight 'bold)
   (set-face-attribute 'doom-modeline-buffer-modified nil
                       :fontset (my/create-modeline-fontset)
-                      :foreground "#45556C"
+                      :foreground (my/modeline-role-fg 'filename)
                       :background (my/modeline-role-color 'filename)
                       :weight 'bold)
   (defface doom-modeline-buffer-file-alpha
@@ -483,7 +506,7 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
                     :inherit 'doom-modeline
                     :fontset (my/create-modeline-git-fontset)
                     :background (my/modeline-role-color 'git)
-                    :foreground "black"
+                    :foreground (my/modeline-role-fg 'git)
                     :weight 'bold)
   (defface doom-modeline-git-alpha
     '((t :inherit doom-modeline))
@@ -501,7 +524,7 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
   (set-face-attribute 'doom-modeline-time-state nil
                     :inherit 'doom-modeline
                     :background (my/modeline-role-color 'time)
-                    :foreground "black"
+                    :foreground (my/modeline-role-fg 'time)
                     :weight 'bold)
   (defface doom-modeline-time-alpha
     '((t :inherit doom-modeline))
@@ -707,16 +730,27 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
                 'doom-modeline-major-mode-alpha
                 'doom-modeline-git-alpha))))
 
-  ;; 右侧：git 分支(master) -> 时间，直接过渡。
-  ;; 若当前不在 git 仓库，则退化为 major-mode(Org) -> 时间。
-  (doom-modeline-def-segment powerline-separator-left-mt
-    "Direct Powerline separator from the git branch straight into the time segment."
+  ;; 右侧：buffer-encoding 直接接到 git 分支上（'main modeline 已不再显示
+  ;; major-mode 段）。没有 git 分支时直接过渡到时间，保证只有一个箭头。
+  (doom-modeline-def-segment powerline-separator-left-git-start
+    "Powerline separator from the mode-line background straight into the git branch."
     (propertize " " 'display
         (powerline-arrow-right
+                'doom-modeline-mode-line-alpha
                 (if (my-git-branch-with-dirty)
                     'doom-modeline-git-alpha
-                  'doom-modeline-major-mode-alpha)
-                'doom-modeline-time-alpha)))
+                  'doom-modeline-time-alpha))))
+
+  ;; 右侧：git 分支(master) -> 时间，直接过渡。
+  ;; 没有 git 分支时本段为空（前面的 `powerline-separator-left-git-start'
+  ;; 已经直接过渡到时间，避免出现两个箭头）。
+  (doom-modeline-def-segment powerline-separator-left-mt
+    "Direct Powerline separator from the git branch straight into the time segment."
+    (when (my-git-branch-with-dirty)
+      (propertize " " 'display
+        (powerline-arrow-right
+                'doom-modeline-git-alpha
+                'doom-modeline-time-alpha))))
 
 
   (doom-modeline-def-segment my-major-mode
@@ -766,10 +800,26 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
        ((= count 100) (propertize (concat "󰫈" "") 'face 'error) )
        (t (propertize (concat "󰫃" "") 'face 'diary)))))
 
+  ;; 时钟图标：白色表盘 + 深色指针（`nf-md-clock' 是实心表盘、指针为镂空），
+  ;; 用白色前景画在时间色块上。数字偏差用 display 的 raise 抬高对齐。
+  (defvar my-modeline-clock-icon-raise 0.1
+    "Vertical raise (in line-height units) for the modeline clock icon.")
+
   (doom-modeline-def-segment my-time
-    "Display the current time in HH:mm:ss format."
-    (propertize (format-time-string " %H:%M ")
-                'face 'doom-modeline-time-state))
+    "Display the current time preceded by a white clock icon."
+    (concat
+     (when (doom-modeline-icon-displayable-p)
+       (let ((icon (nerd-icons-mdicon "nf-md-clock")))
+         (when (and (stringp icon) (not (string-empty-p icon)))
+           (let ((face (get-text-property 0 'face icon)))
+             (concat
+              (propertize " " 'face 'doom-modeline-time-state)
+              (propertize icon 'face
+                          (append (if (listp face) face (list :inherit face))
+                                  (list :foreground "#ffffff"
+                                        :background (my/modeline-role-color 'time)))
+                          'display (list 'raise my-modeline-clock-icon-raise)))))))
+     (propertize (format-time-string " %H:%M ") 'face 'doom-modeline-time-state)))
 (defun my-buffer-file-name ()
   "Return a short file name for current buffer.
 If another buffer has the same file name, include one parent directory
@@ -823,7 +873,7 @@ to disambiguate."
               (propertize " " 'face 'doom-modeline-buffer-file)
               (propertize icon 'face
                           (append (if (listp face) face (list :inherit face))
-                                  (list :foreground "black"
+                                  (list :foreground (my/modeline-role-fg 'filename)
                                         :background (my/modeline-role-color 'filename)))
                           'display (list 'raise my-modeline-filename-icon-raise)))))))
      (propertize
@@ -860,9 +910,9 @@ to disambiguate."
   (display-time-mode 1)
   (doom-modeline-def-modeline 'main
     '(my-segment powerline-evil-filename-right my-filename powerline-filename-right-2 wechat-msg-count matches parrot selection-info)
-    '(misc-info minor-modes input-method buffer-encoding powerline-separator-left my-major-mode
-      powerline-separator-left-om my-git-branch
-        powerline-separator-left-mt my-time ))
+    '(misc-info minor-modes input-method buffer-encoding
+      powerline-separator-left-git-start my-git-branch
+      powerline-separator-left-mt my-time ))
   (doom-modeline-def-modeline 'vcs
     '(my-segment powerline-evil-right wechat-msg-count matches parrot selection-info)
     '(compilation misc-info  irc mu4e gnus github debug minor-modes buffer-encoding process empty-segment powerline-separator-left my-major-mode
