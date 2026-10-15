@@ -60,6 +60,7 @@
 (package! gnuplot             )
 (package! string-inflection   )
 (package! kaolin-themes       )
+(package! tokyonight-themes   :recipe (:host github :repo "xuchengpeng/tokyonight-themes"))
 (package! company-posframe    )
 (package! xml-format          )
 (package! elfeed              )

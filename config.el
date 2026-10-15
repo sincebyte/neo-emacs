@@ -257,8 +257,8 @@
 ;; (after! doom-themes
 ;;   (load-theme 'doom-winter-is-coming-dark-blue t))
 
-;; kaolin 主题里 org-block / org-table 用的是 bg2(#222225)，比默认背景 bg1(#18181B) 亮，
-;; 这里把它们统一成 `default' 的背景色，去掉那层偏亮的底色。
+;; 主题里 org-block / org-table 常带一层比 `default' 背景更亮的底色(如 kaolin 的
+;; bg2 #222225、tokyonight 的 bg-dark)，这里把它们统一成 `default' 的背景色，去掉那层底色。
 (defun my/org-unify-block-table-bg (&rest _)
   "把 org 代码块、表格等的背景统一为 `default' 背景色。"
   (let ((bg (face-attribute 'default :background nil t)))
@@ -276,7 +276,10 @@
             (set-face-attribute 'help-key-binding nil :box nil)
             (my/org-unify-block-table-bg)))
 
-(load-theme 'kaolin-dark t)
+;; TokyoNight 主题由 packages.el 安装 (xuchengpeng/tokyonight-themes)，首次需 `doom sync'。
+;; 4 套配色: tokyonight-night / tokyonight-storm / tokyonight-moon / tokyonight-day，
+;; 换配色只改下面这一行。改调色板则在加载前设 `tokyonight-<style>-palette-overrides'。
+(load-theme 'tokyonight-night t)
 
 ;; org 的 face 要等 org 真正加载时才定义（此时主题可能已加载完），
 ;; 所以 org 加载后再统一一次背景。
