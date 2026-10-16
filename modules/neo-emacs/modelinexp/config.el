@@ -204,7 +204,7 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
   '((normal   :bg "#7aa2f7" :fg "black")     ; NORMAL 模式 → 蓝底黑字
     (filename :bg "#3b4261" :fg "#7aa2f7")   ; 文件名 → 石板灰底浅蓝字（用 evil 模式底色）
     (git      :bg "#3b4261" :fg "#7aa2f7")   ; git 分支 → 石板灰底浅蓝字
-    (time     :bg "#292e42" :fg "#ffffff"))  ; 时间 → 深蓝底白字（白钟表的指针即深色）
+    (time     :bg "#7aa2f7" :fg "black"))    ; 时间 → 蓝底黑字（与 NORMAL 状态块一致）
   "modeline 各段的显式配色（:bg 背景 / :fg 前景）。
 非 nil 时覆盖主题自动挑色与 `my/modeline-role-faces'；nil 表示全部跟随主题。")
 
@@ -800,13 +800,13 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
        ((= count 100) (propertize (concat "󰫈" "") 'face 'error) )
        (t (propertize (concat "󰫃" "") 'face 'diary)))))
 
-  ;; 时钟图标：白色表盘 + 深色指针（`nf-md-clock' 是实心表盘、指针为镂空），
-  ;; 用白色前景画在时间色块上。数字偏差用 display 的 raise 抬高对齐。
+  ;; 时钟图标：实心表盘 + 镂空指针（`nf-md-clock'），前景与时间块文字同色
+  ;; （蓝底黑字，与 NORMAL 状态块一致）。数字偏差用 display 的 raise 抬高对齐。
   (defvar my-modeline-clock-icon-raise 0.1
     "Vertical raise (in line-height units) for the modeline clock icon.")
 
   (doom-modeline-def-segment my-time
-    "Display the current time preceded by a white clock icon."
+    "Display the current time preceded by a clock icon."
     (concat
      (when (doom-modeline-icon-displayable-p)
        (let ((icon (nerd-icons-mdicon "nf-md-clock")))
@@ -816,7 +816,7 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
               (propertize " " 'face 'doom-modeline-time-state)
               (propertize icon 'face
                           (append (if (listp face) face (list :inherit face))
-                                  (list :foreground "#ffffff"
+                                  (list :foreground (my/modeline-role-fg 'time)
                                         :background (my/modeline-role-color 'time)))
                           'display (list 'raise my-modeline-clock-icon-raise)))))))
      (propertize (format-time-string " %H:%M ") 'face 'doom-modeline-time-state)))
