@@ -139,7 +139,8 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
     (doom-modeline-major-mode-alpha         . doom-modeline-major-mode-state)
     (doom-modeline-git-alpha                . doom-modeline-git-state)
     (doom-modeline-time-alpha               . doom-modeline-time-state)
-    (doom-modeline-mode-line-alpha          . mode-line))
+    (doom-modeline-mode-line-alpha          . mode-line)
+    (doom-modeline-mode-line-inactive-alpha . mode-line-inactive))
   "Powerline 专用 `-alpha' face 及其对应的 segment face。")
 
 (defun my/refresh-modeline-alpha-faces ()
@@ -158,6 +159,25 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
   ;; powerline 会把分隔符图片按 face 名缓存；颜色变了必须清缓存，
   ;; 否则箭头仍是旧颜色（memo key 只含 face 符号，不含颜色）。
   (when (fboundp 'powerline-reset) (powerline-reset)))
+
+(defun my/modeline-active-window-p ()
+  "当前正在渲染的这块 mode line 是否属于\"活动\"窗口。
+活动窗口用 `mode-line' 作底色，非活动窗口（或所在 frame 失焦）用
+`mode-line-inactive' 作底色。"
+  (and (if (fboundp 'mode-line-window-selected-p)
+           ;; Emacs 29+：直接问\"正在渲染的是不是选中窗口\"的 mode line
+           (mode-line-window-selected-p)
+         (doom-modeline--active))
+       (if (fboundp 'frame-focus-state) (frame-focus-state) t)))
+
+(defun my/modeline-base-alpha-face ()
+  "Powerline 分隔符里\"mode-line 底色\"那一侧应使用的 face。
+分隔符是不透明预渲染图片，颜色在生成时写死；活动窗口用 `mode-line' 的颜色，
+非活动窗口必须换成 `mode-line-inactive' 的颜色，否则非活动窗口的 mode line
+会在箭头上下各露出一个色差三角（就是那两个\"黑三角\"）。"
+  (if (my/modeline-active-window-p)
+      'doom-modeline-mode-line-alpha
+    'doom-modeline-mode-line-inactive-alpha))
 
 ;; glass 参数一变（切 preset / 调 alpha），立刻重算分隔符颜色
 (with-eval-after-load 'lr-macos-glass
@@ -630,7 +650,7 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
                                              ((eq evil-state 'motion)   'doom-modeline-evil-motion-alpha-state)
                                              (t                         'doom-modeline-evil-normal-alpha-state))
                                           'doom-modeline-evil-normal-alpha-state)
-                                        'doom-modeline-mode-line-alpha ))))
+                                        (my/modeline-base-alpha-face) ))))
 
   ;; 直接从 evil-state 段过渡到文件名段：只用一个箭头。
   ;; 原来的 `powerline-evil-right' + `powerline-filename-right-1' 会在中间
@@ -655,7 +675,7 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
                 (powerline-arrow-left
-                 'doom-modeline-mode-line-alpha
+                 (my/modeline-base-alpha-face)
                  'doom-modeline-buffer-file-alpha)))
 
   (doom-modeline-def-segment powerline-filename-right-2
@@ -663,34 +683,34 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
     (propertize " " 'display
                 (powerline-arrow-left
                  'doom-modeline-buffer-file-alpha
-                 'doom-modeline-mode-line-alpha)))
+                 (my/modeline-base-alpha-face))))
 
   (doom-modeline-def-segment powerline-separator-right-vert
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
                 (powerline-arrow-right
                  'doom-modeline-evil-normal-alpha-state
-                 'doom-modeline-mode-line-alpha)))
+                 (my/modeline-base-alpha-face))))
 
   (doom-modeline-def-segment powerline-separator-left
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
         (powerline-arrow-right
-                'doom-modeline-mode-line-alpha
+                (my/modeline-base-alpha-face)
                 'doom-modeline-major-mode-alpha)))
 
   (doom-modeline-def-segment powerline-separator-left-vcs
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
         (powerline-arrow-right
-                'doom-modeline-mode-line-alpha
+                (my/modeline-base-alpha-face)
                 'doom-modeline-evil-normal-alpha-state)))
 
   (doom-modeline-def-segment powerline-separator-left-time
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
         (powerline-arrow-right
-                'doom-modeline-mode-line-alpha
+                (my/modeline-base-alpha-face)
                 'doom-modeline-time-alpha)))
 
   ;; vcs/magit：major-mode -> 时间，直接过渡。
@@ -709,14 +729,14 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
     (propertize " " 'display
         (powerline-arrow-right
                 'doom-modeline-evil-normal-alpha-state
-                'doom-modeline-mode-line-alpha)))
+                (my/modeline-base-alpha-face))))
 
   (doom-modeline-def-segment powerline-separator-left-git-empty
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
         (powerline-arrow-right
                 'doom-modeline-major-mode-alpha
-                'doom-modeline-mode-line-alpha)))
+                (my/modeline-base-alpha-face))))
 
   ;; 右侧：major-mode(Org) -> git 分支(master)，直接过渡。
   ;; 原来的 `powerline-separator-left-git-empty' + `powerline-separator-left-vcs'
@@ -736,7 +756,7 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
     "Powerline separator from the mode-line background straight into the git branch."
     (propertize " " 'display
         (powerline-arrow-right
-                'doom-modeline-mode-line-alpha
+                (my/modeline-base-alpha-face)
                 (if (my-git-branch-with-dirty)
                     'doom-modeline-git-alpha
                   'doom-modeline-time-alpha))))
