@@ -281,6 +281,16 @@
 ;; 换配色只改下面这一行。改调色板则在加载前设 `tokyonight-<style>-palette-overrides'。
 (load-theme 'tokyonight-night t)
 
+;; Doom 默认开启 window-divider-mode（doom-emacs.el），它在【上下】相邻窗口之间也画
+;; 一条 1px 横线；在 modeline 与回显区之间，那就是那条多余的有色横线（主题给的颜色
+;; 是 #414868）。上下窗口本来各有一条 modeline 做分隔、modeline 与回显区的背景也已有
+;; 色差，所以底部横线是多余的：这里把它的宽度设为 0，只保留左右分屏的竖线。
+(setq window-divider-default-bottom-width 0)
+;; 已经开着 window-divider-mode 时（例如 M-x doom/reload），立即重算一次宽度。
+(when (bound-and-true-p window-divider-mode)
+  (window-divider-mode -1)
+  (window-divider-mode 1))
+
 ;; org 的 face 要等 org 真正加载时才定义（此时主题可能已加载完），
 ;; 所以 org 加载后再统一一次背景。
 (after! org
