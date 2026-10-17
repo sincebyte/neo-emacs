@@ -391,6 +391,12 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
 (with-eval-after-load 'doom-modeline
   ;; 主题一变，重新按"相邻段色差最大"挑一遍各段颜色
   (my/modeline-update-colors)
+  ;; 回显区里 `+workspace/display' 列出的工作区标签：当前选中的那个块与 modeline
+  ;; 的 evil 状态块同色——前景保持黑色，底色取 NORMAL 块的背景色
+  ;; （`my/modeline-block-palette' 的 normal，即 modeline 上 " NORMAL " 那块的底色）。
+  (set-face-attribute '+workspace-tab-selected-face nil
+                      :foreground "black"
+                      :background (my/modeline-role-color 'normal))
   ;(let ((highlight-foreground (face-attribute 'org-date-selected :foreground))
   ;      (highlight-background (face-attribute 'org-date-selected :background)))
   ;  (custom-set-faces  '(indent-bars-face                  ((t (:family "Kode Mono" ))))
