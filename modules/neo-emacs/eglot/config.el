@@ -47,6 +47,20 @@
   (set-face-attribute 'corfu-current nil :ns-opaque-background t)
   (define-key corfu-map (kbd "<escape>") nil))
 
+;; Corfu 候选右侧的灰色注解来自 eglot 的 `:annotation-function'，内容是 LSP 的
+;; detail。JDT LS 返回的 detail 是“类名.方法签名”，与左侧候选文本重复，还会把
+;; 弹窗撑得很宽。这里从 eglot 的 capf 结果中移除该属性，Corfu 便不再显示这段。
+(require 'cl-lib)
+
+(defun +eglot--drop-completion-annotation (capf)
+  "Drop `:annotation-function' from eglot completion CAPF."
+  (when (and (consp capf) (consp (nthcdr 3 capf)))
+    (cl-remf (nthcdr 3 capf) :annotation-function))
+  capf)
+
+(advice-add 'eglot-completion-at-point :filter-return
+            #'+eglot--drop-completion-annotation)
+
 (with-eval-after-load 'vertico
   (keymap-set vertico-map "C-j" #'vertico-next)
   (keymap-set vertico-map "C-k" #'vertico-previous))
