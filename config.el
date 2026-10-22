@@ -691,3 +691,27 @@
   (advice-add 'diff-hl-define-bitmaps :after #'my/vc-gutter-fix-fringe-height)
   ;; 位图是全局对象, 立即重定义一次即可生效, 无需等下一次 diff-hl 刷新。
   (my/vc-gutter-fix-fringe-height))
+
+;; 上面修的是竖线的"长度", 这里修的是竖线的"颜色"。tokyonight 主题把 diff-hl 的
+;; 三个 face 写成 `:foreground 背景色 + :background 填充色'(见 tokyonight-themes.el
+;; 里的 diff-hl-change/delete/insert), 而 doom+ 的 +pretty 又会把它们的
+;; :background 清成 nil(避免整行染色)。两个合起来的结果是: foreground 等于背景色,
+;; 而 fringe 位图正是用 foreground 画的 —— 于是工作区改动、新增、删除的竖线全部
+;; 隐形, 与"改没改"无关。这里按 hunk 类型给一个可见的 foreground(配色取 tokyonight
+;; 原本给这三个 face 的背景色), background 继续留空。
+(defun my/vc-gutter-visible-faces-h ()
+  "让 diff-hl 在 fringe 里画出的改动竖线真正可见。"
+  (dolist (c '((diff-hl-change           . "#e0af68") ; yellow
+               (diff-hl-insert           . "#9ece6a") ; green
+               (diff-hl-delete           . "#f7768e") ; red
+               ;; show-staged-changes 为 nil 时, 已 stage 的改动走 reference 系列
+               (diff-hl-reference-change . "#e0af68")
+               (diff-hl-reference-insert . "#9ece6a")
+               (diff-hl-reference-delete . "#f7768e")))
+    (when (facep (car c))
+      (set-face-attribute (car c) nil :foreground (cdr c) :background nil))))
+
+;; 换主题后主题会重新定义这些 face, 所以挂在主题加载钩子上, 而不是只在启动时设一次。
+(add-hook 'doom-load-theme-hook #'my/vc-gutter-visible-faces-h)
+(after! diff-hl
+  (my/vc-gutter-visible-faces-h))
