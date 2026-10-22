@@ -6,6 +6,15 @@
 ;; seamless integration with LLMs, MCP servers, and various development tools.
 ;; This configuration sets up opencode for optimal use in the neo-emacs environment.
 
+;;; 打开 agent-shell 时不自动带入光标所在行
+;; `agent-shell-context-sources' 默认是 (files region error line)，其中 `line`
+;; 会让 `agent-shell' 的 DWIM 把光标所在整行（连同文件名和行号）自动插入输入框，
+;; 看起来就像"打开时复制了光标处的内容"。这里去掉 `line'。
+;; 保留的源：files（dired/图片）、region（显式选区）、error（光标处诊断）。
+;; 如果希望彻底关闭自动上下文，直接设为 nil 即可。
+(after! agent-shell
+  (setq agent-shell-context-sources '(files region error)))
+
 ;; Setup beautify effects: hide mode-line and adjust window size
 (defun opencode-setup-beautify ()
   "Setup美化效果：隐藏mode-line并调整窗口大小"
