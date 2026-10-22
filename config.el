@@ -383,7 +383,7 @@
 (map! :ne  "M-k"      'drag-stuff-up                         )
 (map! :ne  "; w"      'save-buffer                           )
 (map! :ne  "; b"      'switch-to-buffer                      )
-(map! :ne "; d"       'zygospore-toggle-delete-other-windows )
+(map! :ne "; d"       'opencode-toggle-maximize-or-agent-shell )
 (map! :ne  "; q"      'ace-window       )
 (map! :ne  "; f"      'dirvish                               )
 (map! :map dirvish-mode-map :ne "; f" #'+dired/quit-all      )

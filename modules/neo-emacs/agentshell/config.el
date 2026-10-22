@@ -15,6 +15,11 @@
 (after! agent-shell
   (setq agent-shell-context-sources '(files region error)))
 
+(defcustom opencode-shell-window-width 60
+  "Width in columns of an agent-shell window shown beside its project."
+  :type 'integer
+  :group 'agent-shell)
+
 ;; Setup beautify effects: hide mode-line and adjust window size
 (defun opencode-setup-beautify ()
   "Setup美化效果：隐藏mode-line并调整窗口大小"
@@ -23,7 +28,7 @@
   (run-with-timer 0.1 nil
                   (lambda ()
                     (condition-case nil
-                        (let ((desired-width 60))
+                        (let ((desired-width opencode-shell-window-width))
                           (when (window-parent)
                             (window-resize (selected-window) (- desired-width (window-total-width)) t)))
                       (error nil))))))
@@ -44,6 +49,8 @@
 (declare-function agent-shell-set-session-config-option "agent-shell" ())
 (declare-function agent-shell-cycle-session-mode "agent-shell" ())
 (declare-function agent-shell-interrupt "agent-shell" ())
+(declare-function agent-shell-project-buffers "agent-shell" ())
+(declare-function zygospore-toggle-delete-other-windows "zygospore" ())
 (require 'subr-x)
 (require 'seq)
 (require 'comint)
@@ -447,7 +454,7 @@ With prefix OVERRIDE, use the busy-agent override route."
     (setq agent-shell-thought-process-expand-by-default t)
     (let* ((initial-window (selected-window))
            (main-width (window-total-width))
-           (target-width 60)
+           (target-width opencode-shell-window-width)
            (left-width (- main-width target-width))
            (left-window initial-window))
       ;; Split the window horizontally, keeping the left window at calculated width
@@ -472,7 +479,7 @@ With prefix OVERRIDE, use the busy-agent override route."
     (setq agent-shell-thought-process-expand-by-default t)
     (let* ((initial-window (selected-window))
            (main-width (window-total-width))
-           (target-width 60)
+           (target-width opencode-shell-window-width)
            (left-width (- main-width target-width))
            (left-window initial-window))
       ;; Split the window horizontally, keeping the left window at calculated width
@@ -492,3 +499,52 @@ With prefix OVERRIDE, use the busy-agent override route."
 ;; Optional: Set up key bindings for opencode functionality
 (map! :nv "SPC d a" 'open-opencode-session-in-right-window)
 (map! :nv "SPC d c" 'open-cursor-session-in-right-window)
+
+;;; 智能 `; d' 窗口布局
+;; 单窗口时，如果当前 buffer 所属 project 已经有 agent-shell，就左右分屏并把
+;; agent-shell 放到右侧（宽度用 `opencode-shell-window-width'，即 agent-shell
+;; 定义的 60 列）；否则保持原逻辑：最大化当前窗口 / 恢复上一次的窗口布局。
+
+(defun opencode--project-shell-buffer ()
+  "Return the most recently used agent-shell buffer of the current project."
+  (require 'agent-shell nil t)
+  (when (fboundp 'agent-shell-project-buffers)
+    ;; A buffer outside any project must never break the plain maximize command.
+    (ignore-errors
+      (seq-find #'buffer-live-p (agent-shell-project-buffers)))))
+
+(defun opencode--compose-window (transcript)
+  "Return the agent input window paired with TRANSCRIPT window."
+  (seq-find (lambda (window)
+              (eq (window-parameter window 'opencode-compose-transcript)
+                  transcript))
+            (window-list (window-frame transcript) 'no-minibuffer)))
+
+(defun opencode--show-shell-in-right-window (shell)
+  "Display SHELL in a new right window `opencode-shell-window-width' wide."
+  (let* ((main (selected-window))
+         (width (max window-min-width
+                     (min opencode-shell-window-width
+                          (- (window-total-width main) window-min-width 1))))
+         (right (split-window main (- width) 'right)))
+    (set-window-buffer right shell)
+    (select-window right)
+    ;; Let agent-shell rebuild the transcript/input pair in the new window.
+    (opencode-compose--schedule-layout)
+    (when-let* ((input (opencode--compose-window right)))
+      (select-window input))))
+
+(defun opencode-toggle-maximize-or-agent-shell ()
+  "Toggle the window layout, preferring the current project's agent-shell.
+With a single window in the frame and an agent-shell buffer for the
+current project, split left/right and show that shell on the right.
+Otherwise behave like `zygospore-toggle-delete-other-windows': maximize
+the current window, or restore the layout before maximizing."
+  (interactive)
+  (let ((shell (and (one-window-p t)
+                    (not (derived-mode-p 'agent-shell-mode))
+                    (not (derived-mode-p 'opencode-compose-mode))
+                    (opencode--project-shell-buffer))))
+    (if shell
+        (opencode--show-shell-in-right-window shell)
+      (zygospore-toggle-delete-other-windows))))
