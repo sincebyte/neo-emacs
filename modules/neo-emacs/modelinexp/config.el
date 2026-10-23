@@ -224,6 +224,7 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
   '((normal   :bg "#7aa2f7" :fg "black")     ; NORMAL 模式 → 蓝底黑字
     (filename :bg "#3b4261" :fg "#7aa2f7")   ; 文件名 → 石板灰底浅蓝字（用 evil 模式底色）
     (git      :bg "#3b4261" :fg "#7aa2f7")   ; git 分支 → 石板灰底浅蓝字
+    (major    :bg "#3b4261" :fg "#7aa2f7")   ; major-mode（vcs/magit）→ 与 git 分支同色
     (time     :bg "#7aa2f7" :fg "black"))    ; 时间 → 蓝底黑字（与 NORMAL 状态块一致）
   "modeline 各段的显式配色（:bg 背景 / :fg 前景）。
 非 nil 时覆盖主题自动挑色与 `my/modeline-role-faces'；nil 表示全部跟随主题。")
@@ -513,7 +514,7 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
   (set-face-attribute 'doom-modeline-major-mode-state nil
                     :inherit 'doom-modeline
                     :background (my/modeline-role-color 'major)
-                    :foreground "black"
+                    :foreground (my/modeline-role-fg 'major)
                     :weight 'bold)
   (defface doom-modeline-major-mode-alpha
     '((t :inherit doom-modeline))
@@ -941,8 +942,8 @@ to disambiguate."
       powerline-separator-left-mt my-time ))
   (doom-modeline-def-modeline 'vcs
     '(my-segment powerline-evil-right wechat-msg-count matches parrot selection-info)
-    '(compilation misc-info  irc mu4e gnus github debug minor-modes buffer-encoding process empty-segment powerline-separator-left my-major-mode
-      powerline-separator-left-major-time my-time ))
+    '(compilation misc-info  irc mu4e gnus github debug minor-modes buffer-encoding process empty-segment powerline-separator-left-git-start my-major-mode
+      powerline-separator-left-mt my-time ))
   (doom-modeline-def-modeline 'dashboard
     '(modals buffer-default-directory-simple remote-host)
     '(my-segment)))

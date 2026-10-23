@@ -55,7 +55,7 @@ Keep the native rendering/cache and heartbeat, including clickable menus."
               #'opencode-shell--split-header)
   (add-hook 'agent-shell-mode-hook #'opencode-shell--header-faces))
 
-(defcustom opencode-shell-window-width 50
+(defcustom opencode-shell-window-width 55
   "Width in columns of an agent-shell window shown beside its project."
   :type 'integer
   :group 'agent-shell)
@@ -91,6 +91,8 @@ Keep the native rendering/cache and heartbeat, including clickable menus."
 (declare-function agent-shell-interrupt "agent-shell" ())
 (declare-function agent-shell-project-buffers "agent-shell" ())
 (declare-function zygospore-toggle-delete-other-windows "zygospore" ())
+(declare-function evil-local-set-key "evil-core" (state key def))
+(declare-function evil-initialize-local-keymaps "evil-core" ())
 (require 'subr-x)
 (require 'seq)
 (require 'comint)
@@ -112,6 +114,7 @@ Keep the native rendering/cache and heartbeat, including clickable menus."
     (define-key map (kbd "C-c C-m") #'opencode-compose-set-session-mode)
     (define-key map (kbd "C-c C-t") #'opencode-compose-set-session-thought-level)
     (define-key map (kbd "C-c C-s") #'opencode-compose-set-session-config-option)
+    (define-key map (kbd "TAB") #'opencode-compose-cycle-session-mode)
     (define-key map (kbd "C-<tab>") #'opencode-compose-cycle-session-mode)
     (define-key map (kbd "C-c C-k") #'opencode-compose-interrupt)
     (define-key map (kbd "M-RET") #'opencode-compose-submit-override)
@@ -142,9 +145,24 @@ Overfill slightly and let redisplay clip at the window's right edge."
 ;; Repair decorations before painting, not on the next input command/timer.
 (add-hook 'pre-redisplay-functions #'opencode-compose--ensure-rules t)
 
+;; `$DOOMDIR/config.el' binds TAB to `yas-expand' in `evil-insert-state-map'.
+;; Evil's state keymaps take precedence over major mode keymaps, so binding TAB
+;; in `opencode-compose-mode-map' alone would never fire in insert state.  Set
+;; the binding buffer-locally in the compose buffer instead, leaving every
+;; other buffer's TAB untouched.
+(defun opencode-compose--bind-mode-switch-key ()
+  "Make TAB cycle the session mode in the current compose buffer."
+  (when (require 'evil nil t)
+    (unless (and (boundp 'evil-insert-state-local-map)
+                 (keymapp evil-insert-state-local-map))
+      (evil-initialize-local-keymaps))
+    (evil-local-set-key 'insert (kbd "TAB")
+                        #'opencode-compose-cycle-session-mode)))
+
 (define-derived-mode opencode-compose-mode fundamental-mode "Agent Input"
   "Edit agent-shell prompts in a fixed bottom window."
   (opencode-compose--decorate)
+  (opencode-compose--bind-mode-switch-key)
   (setq-local truncate-lines nil)
   (setq-local show-trailing-whitespace nil))
 
@@ -489,7 +507,8 @@ With prefix OVERRIDE, use the busy-agent override route."
 (dolist (buffer (buffer-list))
   (with-current-buffer buffer
     (when (derived-mode-p 'opencode-compose-mode)
-      (opencode-compose--decorate))))
+      (opencode-compose--decorate)
+      (opencode-compose--bind-mode-switch-key))))
 (opencode-compose--schedule-layout)
 
 (defun open-opencode-session-right ()
