@@ -15,6 +15,46 @@
 (after! agent-shell
   (setq agent-shell-context-sources '(files region error)))
 
+;;; Two-row session header
+;; Emacs header lines cannot contain multiple text rows.  Use the tab line
+;; for agent/model/mode and leave project/activity in the header line.
+(defun opencode-shell--split-header (&rest _)
+  "Split the native text header before its project name.
+Keep the native rendering/cache and heartbeat, including clickable menus."
+  (when (and (derived-mode-p 'agent-shell-mode)
+             (eq agent-shell-header-style 'text)
+             (stringp header-line-format))
+    (when-let* ((project-start
+                (text-property-any 0 (length header-line-format)
+                                   'font-lock-face 'agent-shell-session-directory
+                                   header-line-format)))
+      (let* ((top (substring header-line-format 0 (max 0 (- project-start 3))))
+             (bottom (concat " " (substring header-line-format project-start)))
+             (position 0))
+        ;; Native menus are bound to header-line events.  Adapt copies for
+        ;; the tab line without modifying the cached header's keymaps.
+        (while (< position (length top))
+          (let ((end (next-single-property-change position 'local-map top
+                                                  (length top)))
+                (map (get-text-property position 'local-map top)))
+            (when map
+              (let ((copy (copy-keymap map)))
+                (define-key copy [tab-line] (lookup-key map [header-line]))
+                (put-text-property position end 'local-map copy top)))
+            (setq position end)))
+        (setq-local tab-line-format (list top))
+        (setq-local header-line-format bottom)))))
+
+(defun opencode-shell--header-faces ()
+  "Match the two session header rows to the same face."
+  (require 'face-remap)
+  (face-remap-add-relative 'tab-line 'header-line))
+
+(after! agent-shell
+  (advice-add 'agent-shell--update-header-and-mode-line :after
+              #'opencode-shell--split-header)
+  (add-hook 'agent-shell-mode-hook #'opencode-shell--header-faces))
+
 (defcustom opencode-shell-window-width 60
   "Width in columns of an agent-shell window shown beside its project."
   :type 'integer
