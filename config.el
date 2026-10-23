@@ -471,6 +471,13 @@
 (require 'acp)
 (require 'agent-shell)
 
+;; agent-shell 渲染 Markdown 时会把 `![](https://...)' 远程图片同步下载到
+;; ~/Library/Caches/agent-shell/content/（文件名是 URL 的 md5）。搜索新闻时
+;; 回答里动辄几十张配图，全部落到缓存目录，而且下载发生在 `display-graphic-p'
+;; 判断之前——即使图片最终没显示出来也照样下载。
+;; 覆盖掉下载函数后不再写缓存，远程图片退化为可点击、用浏览器打开的链接。
+(advice-add 'agent-shell-markdown--fetch-remote-image :override #'ignore)
+
 (use-package! redis)
 (use-package! msgpack)
 (use-package! tramp-rpc)

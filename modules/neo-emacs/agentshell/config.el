@@ -55,7 +55,7 @@ Keep the native rendering/cache and heartbeat, including clickable menus."
               #'opencode-shell--split-header)
   (add-hook 'agent-shell-mode-hook #'opencode-shell--header-faces))
 
-(defcustom opencode-shell-window-width 60
+(defcustom opencode-shell-window-width 50
   "Width in columns of an agent-shell window shown beside its project."
   :type 'integer
   :group 'agent-shell)
