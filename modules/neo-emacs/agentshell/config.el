@@ -108,6 +108,29 @@ Overfill slightly and let redisplay clip at the window's right edge."
   (setq-local truncate-lines nil)
   (setq-local show-trailing-whitespace nil))
 
+(defun opencode-compose--setup-completion ()
+  "Complete files and commands from the compose buffer's shell."
+  (require 'agent-shell-completion)
+  (setq-local agent-shell-completion--shell-buffer opencode-compose--shell)
+  (setq-local default-directory
+              (buffer-local-value 'default-directory opencode-compose--shell))
+  (agent-shell-completion-mode 1)
+  (corfu-mode 1))
+
+(defun opencode-compose--corfu-popup (original pos &rest args)
+  "Keep Corfu anchored when the compose completion start scrolls offscreen.
+Use point as a fallback.  If redisplay still yields no position, hide the
+popup until the next update rather than passing nil coordinates to Corfu."
+  (if (or pos (not (derived-mode-p 'opencode-compose-mode)))
+      (apply original pos args)
+    (redisplay t)
+    (if-let* ((position (posn-at-point (point))))
+        (apply original position args)
+      (corfu--popup-hide))))
+
+(with-eval-after-load 'corfu
+  (advice-add 'corfu--popup-show :around #'opencode-compose--corfu-popup))
+
 (defun opencode-compose--decorate ()
   "Draw boundaries outside editable text and resize after draft edits."
   (setq-local opencode-compose--decorated t)
@@ -263,6 +286,8 @@ Overfill slightly and let redisplay clip at the window's right edge."
             (opencode-compose-mode)
             (setq-local opencode-compose--shell shell)
             (opencode-compose--reset)))
+        (with-current-buffer input
+          (opencode-compose--setup-completion))
         (with-current-buffer shell (setq-local opencode-compose--buffer input))
         (set-window-buffer bottom input)
         (set-window-parameter bottom 'opencode-compose-transcript window)
