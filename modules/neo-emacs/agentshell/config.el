@@ -585,6 +585,9 @@ With prefix OVERRIDE, use the busy-agent override route."
 (map! :nv "SPC d c" 'open-cursor-session-in-right-window)
 
 ;;; 智能 `; d' 窗口布局
+;; 光标在 agent-shell 面板（会话窗口 `agent-shell-mode' 或其下方的输入窗口
+;; `opencode-compose-mode'）里时，`; d' 收起整个侧边面板：删掉这两个窗口
+;; （buffer 保留），回到面板左边的窗口，之后还能再用 `; d' 把面板贴回来。
 ;; 单窗口时，如果当前 buffer 所属 project 已经有 agent-shell，就左右分屏并把
 ;; agent-shell 放到右侧（宽度用 `opencode-shell-window-width'，即 agent-shell
 ;; 定义的 60 列）；否则保持原逻辑：最大化当前窗口 / 恢复上一次的窗口布局。
@@ -618,17 +621,63 @@ With prefix OVERRIDE, use the busy-agent override route."
     (when-let* ((input (opencode--compose-window right)))
       (select-window input))))
 
+(defun opencode--agent-shell-panel-transcript (window)
+  "Return the agent-shell transcript window of WINDOW, or nil.
+WINDOW may be the transcript itself (`agent-shell-mode') or the fixed
+input window shown below it (`opencode-compose-mode')."
+  (with-current-buffer (window-buffer window)
+    (cond
+     ((derived-mode-p 'agent-shell-mode) window)
+     ((derived-mode-p 'opencode-compose-mode)
+      (when-let* ((transcript
+                   (window-parameter window 'opencode-compose-transcript)))
+        (when (and (window-live-p transcript)
+                   (with-current-buffer (window-buffer transcript)
+                     (derived-mode-p 'agent-shell-mode)))
+          transcript))))))
+
+(defun opencode--close-agent-shell-panel ()
+  "Close the agent-shell panel around the selected window.
+Delete the transcript window and its fixed input window, but keep their
+buffers alive so `; d' can show the panel again.  Select the window to
+the left of the panel.  Return non-nil when a panel was closed."
+  (when-let* ((transcript
+               (opencode--agent-shell-panel-transcript (selected-window)))
+              (frame (window-frame transcript)))
+    (let* ((input (opencode--compose-window transcript))
+           (panel (delq nil (list transcript input)))
+           (others (seq-remove (lambda (window) (memq window panel))
+                               (window-list frame 'no-minibuffer))))
+      ;; A panel that covers the whole frame cannot be closed by deleting
+      ;; windows; leave that case to the maximize/restore command below.
+      (when others
+        (let ((target (or (window-in-direction 'left transcript)
+                          (car others))))
+          (dolist (window panel)
+            ;; A dedicated window refuses to be deleted.
+            (set-window-dedicated-p window nil)
+            (when (window-live-p window)
+              (delete-window window)))
+          (when (window-live-p target)
+            (select-window target))
+          t)))))
+
 (defun opencode-toggle-maximize-or-agent-shell ()
   "Toggle the window layout, preferring the current project's agent-shell.
-With a single window in the frame and an agent-shell buffer for the
-current project, split left/right and show that shell on the right.
-Otherwise behave like `zygospore-toggle-delete-other-windows': maximize
-the current window, or restore the layout before maximizing."
+Inside an agent-shell panel (the transcript or its input window) close
+that panel and return to the window beside it.  With a single window in
+the frame and an agent-shell buffer for the current project, split
+left/right and show that shell on the right.  Otherwise behave like
+`zygospore-toggle-delete-other-windows': maximize the current window, or
+restore the layout before maximizing."
   (interactive)
-  (let ((shell (and (one-window-p t)
-                    (not (derived-mode-p 'agent-shell-mode))
-                    (not (derived-mode-p 'opencode-compose-mode))
-                    (opencode--project-shell-buffer))))
-    (if shell
+  (cond
+   ((opencode--close-agent-shell-panel))
+   ((and (one-window-p t)
+         (not (derived-mode-p 'agent-shell-mode))
+         (not (derived-mode-p 'opencode-compose-mode)))
+    (if-let* ((shell (opencode--project-shell-buffer)))
         (opencode--show-shell-in-right-window shell)
-      (zygospore-toggle-delete-other-windows))))
+      (zygospore-toggle-delete-other-windows)))
+   (t
+    (zygospore-toggle-delete-other-windows))))
