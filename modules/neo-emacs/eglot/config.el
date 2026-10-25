@@ -414,6 +414,9 @@
 (add-hook 'find-file-hook #'+eglot-java-ts-mode-for-jdt-decompiled)
 (after! eglot
     (setq eglot-sync-connect              nil
+          ;; JDT 会请求监听项目的父目录；递归扫描整个 workspace 会阻塞主线程。
+          ;; 保留项目内监听，不监听项目外依赖及相邻项目的磁盘变动。
+          eglot-watch-files-outside-project-root nil
           eldoc-echo-area-use-multiline-p nil))
 
 (after! focus
