@@ -18,8 +18,10 @@
 4. 域名：=v.example.com=、=https://stream.example.com/...= 里的主机名
 5. 中国大陆手机号（含 =+86= 前缀）
 6. PEM 私钥块（=-----BEGIN ... PRIVATE KEY-----=），逐行遮挡
+7. 敏感词表 =redact-words=：人名、公司名、项目名等无法用正则识别的词
 
-不处理：用户名、人名、邮箱、身份证、银行卡、IP 地址。
+默认不处理：用户名、邮箱、身份证、银行卡、IP 地址。需要遮时把词加进
+=redact-words=。
 
 **实现要点**
 
@@ -40,6 +42,23 @@
 - =vterm= 暂不接入（它自己维护缓冲区渲染）。
 - 大文件超过 =font-lock-maximum-size=（当前配置 500KB）时 font-lock 不工作，
   规则也不会生效。
+
+** 敏感词表
+
+人名、公司名这类没有固定格式的内容，用 =redact-words= 配置，可写多个：
+
+#+begin_src emacs-lisp
+(setq redact-words '("张三" "李四" "van" "北京某某公司"))
+#+end_src
+
+英文按整词匹配，=van= 不会命中 =vanish=，大小写不敏感；中文按子串匹配。
+运行中维护：
+
+| 命令 | 作用 |
+|---|---|
+| =M-x redact-add-word= | 把 region 内容或输入加入词表 |
+| =M-x redact-remove-word= | 从词表移除 |
+| =M-x redact-refresh= | 用 =setq= 改完后刷新已渲染区域 |
 
 **加规则**
 

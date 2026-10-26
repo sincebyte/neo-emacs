@@ -9,13 +9,14 @@
 ;; 用法：
 ;;   SPC t k    全局开关（默认开启）
 ;;
-;; 识别范围（只看这三类）：
+;; 识别范围：
 ;;   1. 凭据赋值：password=... / api_key: ... / "client_secret": "..."
 ;;   2. 已知形态的密钥：OpenAI / AWS / GitHub / GitLab / Slack / Google /
 ;;      Stripe / 阿里云 / 腾讯云 / JWT / Bearer token / 连接串里的密码
-;;   3. 中国大陆手机号
+;;   3. 域名、中国大陆手机号
+;;   4. 敏感词表 `redact-words'：人名、公司名等无法用正则识别的词
 ;;
-;; 不识别：用户名、人名、邮箱、身份证、银行卡。需要时再加。
+;; 不识别：邮箱、身份证、银行卡、IP 地址。需要时把词加进 `redact-words'。
 
 ;;; Code:
 
@@ -55,6 +56,29 @@
   "值黑名单（小写比较），命中时不遮挡。"
   :type '(repeat string)
   :group 'redact)
+
+(defvar redact--words-cache nil
+  "`redact-words' 的正则缓存，形如 (WORDS . REGEXP)。")
+
+(defcustom redact-words nil
+  "始终遮挡的词表，可配置多个。
+用于人名、公司名、项目名等没有固定格式、无法用正则识别的词。
+英文按整词匹配（van 不会命中 vanish），中文按子串匹配。
+例如：
+
+  (setq redact-words (quote (\"张三\" \"李四\" \"van\")))
+
+启动时用 `setq' 即可；运行中增删建议用 `redact-add-word' /
+`redact-remove-word'，或改完调用 `redact-refresh' 刷新已 fontify 的区域。"
+  :type '(repeat string)
+  :group 'redact
+  :set (lambda (sym val)
+         (set-default sym val)
+         (setq redact--words-cache nil)
+         (dolist (buf (buffer-list))
+           (with-current-buffer buf
+             (when (bound-and-true-p redact-mode)
+               (font-lock-flush))))))
 
 (defface redact-mask-face
   '((t :inherit shadow))
@@ -152,6 +176,37 @@
 (defconst redact--domain-ignore-first-labels
   '("com" "org" "net" "edu" "gov" "mil" "int" "cn" "io")
   "Java 包名等反向域名的常见开头，不按域名遮挡。")
+
+(defun redact--build-words-regexp (words)
+  "把 WORDS 编译成一个匹配正则。
+纯 ASCII 的词加整词边界，避免 van 命中 vanish；含中文的词按子串匹配。"
+  (let (ascii other)
+    (dolist (word words)
+      (if (string-match-p "\\`[[:ascii:]]+\\'" word)
+          (push word ascii)
+        (push word other)))
+    (let ((parts nil))
+      (when ascii
+        (push (concat "\\<" (regexp-opt ascii) "\\>") parts))
+      (when other
+        (push (regexp-opt other) parts))
+      (when parts
+        (mapconcat #'identity (nreverse parts) "\\|")))))
+
+(defun redact--words-regexp ()
+  "返回 `redact-words' 对应的正则；词表变化时重建缓存。"
+  (let ((words (delq nil
+                     (mapcar (lambda (word)
+                               (when (stringp word)
+                                 (let ((w (string-trim word)))
+                                   (unless (string-empty-p w) w))))
+                             redact-words))))
+    (if (and redact--words-cache
+             (equal (car redact--words-cache) words))
+        (cdr redact--words-cache)
+      (setq redact--words-cache
+            (cons words (redact--build-words-regexp words)))
+      (cdr redact--words-cache))))
 
 (defconst redact--pem-begin-regexp
   "-----BEGIN \\(?:[A-Z0-9 ]+\\)PRIVATE KEY-----"
@@ -271,16 +326,27 @@
           (throw 'found t))))
     nil))
 
+(defun redact--match-word (limit)
+  "匹配 `redact-words' 中配置的敏感词。"
+  (when-let* ((regexp (redact--words-regexp)))
+    (catch 'found
+      (while (redact--search regexp limit)
+        (throw 'found t))
+      nil)))
+
 ;;; 打码
 
 (defun redact--apply-mask (beg end)
-  "把 BEG..END 显示为 `redact-mask'。"
-  (add-text-properties
-   beg end
-   (list 'face 'redact-mask-face
-         'display redact-mask
-         'help-echo "已遮挡"
-         'redact t)))
+  "把 BEG..END 显示为 `redact-mask'。
+文本属性变化也会把 buffer 标记为已修改，这里用
+`with-silent-modifications' 保持原来的 modified 状态。"
+  (with-silent-modifications
+    (add-text-properties
+     beg end
+     (list 'face 'redact-mask-face
+           'display redact-mask
+           'help-echo "已遮挡"
+           'redact t))))
 
 (defconst redact--font-lock-keywords
   `((redact--match-credential
@@ -296,6 +362,8 @@
     (redact--match-domain
      (0 (progn (redact--apply-mask (match-beginning 0) (match-end 0)) nil)))
     (redact--match-phone
+     (0 (progn (redact--apply-mask (match-beginning 0) (match-end 0)) nil)))
+    (redact--match-word
      (0 (progn (redact--apply-mask (match-beginning 0) (match-end 0)) nil))))
   "font-lock 规则。命中后加 `display' 属性，不依赖 face 关键字。")
 
@@ -366,16 +434,18 @@
 ;;; 清除
 
 (defun redact--strip-masks (beg end)
-  "移除 BEG..END 内由本模块添加的显示属性。"
-  (save-excursion
-    (goto-char beg)
-    (while (< (point) end)
-      (let ((next (next-single-property-change (point) 'redact nil end)))
-        (when (get-text-property (point) 'redact)
-          (remove-text-properties
-           (point) next
-           '(display nil help-echo nil face nil redact nil)))
-        (goto-char next)))))
+  "移除 BEG..END 内由本模块添加的显示属性。
+同样不能因此把 buffer 标记为已修改。"
+  (with-silent-modifications
+    (save-excursion
+      (goto-char beg)
+      (while (< (point) end)
+        (let ((next (next-single-property-change (point) 'redact nil end)))
+          (when (get-text-property (point) 'redact)
+            (remove-text-properties
+             (point) next
+             '(display nil help-echo nil face nil redact nil)))
+          (goto-char next))))))
 
 ;;; minor mode
 
@@ -389,33 +459,37 @@
   ;; 注意：`define-minor-mode' 会先设置 `redact-mode' 再执行 body，
   ;; 所以这里不能用 `(unless redact-mode ...)' 判断；用独立标志保证幂等。
   (unless redact--enabled
-    (setq redact--enabled t)
-    (setq redact--saved-managed-props font-lock-extra-managed-props)
-    (setq-local font-lock-extra-managed-props
-                (delete-dups
-                 (append '(display help-echo redact)
-                         (ensure-list font-lock-extra-managed-props))))
-    (font-lock-add-keywords nil redact--font-lock-keywords 'append)
-    (unless font-lock-mode
-      (font-lock-mode 1))
-    (font-lock-flush)
-    (add-hook 'after-change-functions #'redact--pem-after-change nil t)
-    (redact--refresh-pem)
-    ;; 当前可见区域立即重算，别等 idle 定时器
-    (when-let* ((win (get-buffer-window)))
-      (with-selected-window win
-        (font-lock-ensure (window-start) (window-end nil t))))))
+    ;; font-lock 自己会保护 modified 状态，但启动/重排是同步执行的，
+    ;; 这里再包一层，确保任何路径都不会把 clean 的 buffer 变成 modified。
+    (with-silent-modifications
+      (setq redact--enabled t)
+      (setq redact--saved-managed-props font-lock-extra-managed-props)
+      (setq-local font-lock-extra-managed-props
+                  (delete-dups
+                   (append '(display help-echo redact)
+                           (ensure-list font-lock-extra-managed-props))))
+      (font-lock-add-keywords nil redact--font-lock-keywords 'append)
+      (unless font-lock-mode
+        (font-lock-mode 1))
+      (font-lock-flush)
+      (add-hook 'after-change-functions #'redact--pem-after-change nil t)
+      (redact--refresh-pem)
+      ;; 当前可见区域立即重算，别等 idle 定时器
+      (when-let* ((win (get-buffer-window)))
+        (with-selected-window win
+          (font-lock-ensure (window-start) (window-end nil t)))))))
 
 (defun redact--disable ()
   (when redact--enabled
-    (setq redact--enabled nil)
-    (font-lock-remove-keywords nil redact--font-lock-keywords)
-    (setq-local font-lock-extra-managed-props redact--saved-managed-props)
-    (remove-hook 'after-change-functions #'redact--pem-after-change t)
-    (redact--clear-overlays)
-    (redact--strip-masks (point-min) (point-max))
-    (when font-lock-mode
-      (font-lock-flush))))
+    (with-silent-modifications
+      (setq redact--enabled nil)
+      (font-lock-remove-keywords nil redact--font-lock-keywords)
+      (setq-local font-lock-extra-managed-props redact--saved-managed-props)
+      (remove-hook 'after-change-functions #'redact--pem-after-change t)
+      (redact--clear-overlays)
+      (redact--strip-masks (point-min) (point-max))
+      (when font-lock-mode
+        (font-lock-flush)))))
 
 (defface redact-modeline-face
   '((t :family "Symbols Nerd Font Mono" :height 1.0))
@@ -442,6 +516,41 @@
 (define-globalized-minor-mode global-redact-mode
   redact-mode redact--turn-on
   :group 'redact)
+
+;;; 词表维护
+
+(defun redact-add-word (word)
+  "把 WORD 加入 `redact-words' 并立即刷新。
+有 region 时用 region 内容，否则提示输入。"
+  (interactive
+   (list (string-trim
+          (if (use-region-p)
+              (buffer-substring-no-properties (region-beginning) (region-end))
+            (read-string "要遮挡的词: ")))))
+  (when (string-empty-p word)
+    (user-error "词不能为空"))
+  (if (member word redact-words)
+      (message "已在词表中：%s" word)
+    (customize-set-variable 'redact-words (cons word redact-words))
+    (message "已加入词表：%s" word)))
+
+(defun redact-remove-word (word)
+  "从 `redact-words' 移除 WORD 并立即刷新。"
+  (interactive
+   (list (completing-read "移除词: " redact-words nil t)))
+  (customize-set-variable 'redact-words (remove word redact-words))
+  (message "已移除：%s" word))
+
+(defun redact-refresh ()
+  "清掉词表缓存并刷新所有启用 `redact-mode' 的 buffer。
+用 `setq' 改过 `redact-words' 后调用。"
+  (interactive)
+  (setq redact--words-cache nil)
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (bound-and-true-p redact-mode)
+        (font-lock-flush))))
+  (message "redact 规则已刷新"))
 
 ;;; 启动后初始化
 ;;
