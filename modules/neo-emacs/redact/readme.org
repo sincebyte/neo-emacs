@@ -1,0 +1,47 @@
+#+title: redact — 屏幕遮挡密码 / 密钥 / 手机号
+
+录屏时避免把敏感明文留在画面上。只改显示层，buffer 内容和磁盘文件都不变。
+
+**快捷键**
+
+| 按键 | 作用 |
+|---|---|
+| =SPC t k= | 全局开关（默认开启） |
+
+**遮挡范围**
+
+1. 凭据赋值：=password=...=、=api_key: ...=、="client_secret": "...">= 等；
+   中文键名 =密码/口令/密钥/私钥/令牌/凭证= 也识别，支持表格竖线
+2. Spring 占位符默认值：=@Value("${uap.global.jwt:...}")=、=${db.password:...}=
+3. 已知形态的密钥：OpenAI、AWS、GitHub、GitLab、Slack、Google、Stripe、
+   阿里云、腾讯云、JWT、=Bearer= token、=scheme://user:pass@host= 中的密码
+4. 域名：=v.example.com=、=https://stream.example.com/...= 里的主机名
+5. 中国大陆手机号（含 =+86= 前缀）
+6. PEM 私钥块（=-----BEGIN ... PRIVATE KEY-----=），逐行遮挡
+
+不处理：用户名、人名、邮箱、身份证、银行卡、IP 地址。
+
+**实现要点**
+
+- =font-lock= + =display= 文本属性：增量、随编辑自动重排。
+- 遮挡串固定 6 个星号，不按原长生成，避免泄露长度。
+- 启用时 modeline 显示锁图标：=Symbols Nerd Font Mono= 的 =nf-fa-lock=
+  字形（U+F023），不用彩色 emoji。
+- 域名只认常见 TLD；=sh/pl/md/rs/so/in/zip/cc= 等同时是代码文件扩展名的
+  后缀不在白名单里，避免把 =run.sh=、=README.md= 当成域名。
+- PEM 私钥块跨行，用 overlay 逐行遮挡，保留行数。
+- 值短于 =redact-min-length=（默认 6）或命中 =redact-ignored-values= 时不遮。
+- Spring 占位符只遮 =${key:default}= 里的默认值，键名保持可见。
+
+**已知限制**
+
+- 只影响屏幕：=kill-ring=、=save-buffer=、=buffer-substring= 拿到的仍是原文。
+- =isearch= / =swiper= / =consult-line= / =occur= 会重新显示原文。
+- =vterm= 暂不接入（它自己维护缓冲区渲染）。
+- 大文件超过 =font-lock-maximum-size=（当前配置 500KB）时 font-lock 不工作，
+  规则也不会生效。
+
+**加规则**
+
+编辑 =config.el= 里的 =redact--credential-regexp= / =redact--token-regexp=，
+或在 =redact-ignored-values= 里加白名单。改完 =M-x doom/reload= 即可。

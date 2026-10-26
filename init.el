@@ -213,6 +213,7 @@
         ;; alpha            ; make emacs background transparent
         git                 ; magit wit
         agentshell          ; ai integration
+        redact              ; mask secrets on screen
         ;; eaf               ; emacs application framework
         ;; windows             ; toggle window by popwin
         ;; addspace         ; add space when typing
