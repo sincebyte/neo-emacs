@@ -363,30 +363,124 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
       (my/modeline--face-color 'font-lock-string-face)
       (face-foreground 'default nil t)))
 
+;;; TTY 兼容 ----------------------------------------------------------------
+;; 同一份配置要同时跑 GUI 和 `emacs -nw'，有两处终端做不到：
+;;   1. face 的 :fontset 属性。终端没有字体集，`set-face-attribute' 直接抛
+;;      (error "Window system is not in use or not initialized")，整个启动中断；
+;;   2. powerline 的 XPM 箭头。`powerline-arrow-left/right' 在无窗口系统时返回
+;;      nil，modeline 上只剩空格，看起来像"分隔符丢了"。
+;; 下面几个 helper 把差异收口，调用点不必到处写 `display-graphic-p'。
+
+(defun my/gui-p ()
+  "当前 frame 是否为图形界面；`emacs -nw' 下为 nil。"
+  (display-graphic-p))
+
+(defun my/set-face-fontset (face fontset)
+  "给 FACE 设置 :fontset。终端没有字体集，静默跳过；FONTSET 为 nil 时也跳过。"
+  (when (and fontset (my/gui-p))
+    (set-face-attribute face nil :fontset fontset)))
+
+(defun my/powerline-separator (dir face1 face2)
+  "生成 FACE1→FACE2 的 Powerline 分隔符，DIR 为 `left' 或 `right'。
+图形界面用 XPM 箭头（可与色块无缝拼接）；终端退化为 UTF-8 三角
+（U+E0B0 / U+E0B2），字形由终端字体（Nerd Font）提供。"
+  (if (my/gui-p)
+      (funcall (intern (format "powerline-arrow-%s" dir)) face1 face2)
+    (funcall (intern (format "powerline-utf-8-%s" dir)) face1 face2)))
+
+(defun my/powerline-arrow-left (face1 face2)
+  "TTY 兼容版 `powerline-arrow-left'。"
+  (my/powerline-separator 'left face1 face2))
+
+(defun my/powerline-arrow-right (face1 face2)
+  "TTY 兼容版 `powerline-arrow-right'。"
+  (my/powerline-separator 'right face1 face2))
+
+;; doom-modeline 的右对齐在终端下会多减一列：
+;;   (* (or (car (window-margins)) 1) (frame-char-width))
+;; 没有 margin 时 `window-margins' 返回 (nil . nil)，`(or nil 1)' 兜底成 1，
+;; 于是永远按“1 个字符宽”预留空间。GUI 里那是十几个像素的留白（原样保留），
+;; 终端里 1 字符宽恰好是 1 列，右侧就空出一列 `mode-line' 底色，也就是时间块
+;; 与右边框之间的那条缝。这里只在终端把兜底值改成 0。
+;; 用函数而非宏：宏体会在 eager macro-expansion 时求值，那时
+;; `doom-modeline--modelines' 还不存在（配置先于包加载），会直接让整个
+;; config 加载失败。函数版在 `fresh/modelineconfig' 真正被调用时才执行。
+(defun my/doom-modeline-def-modeline (name lhs &optional rhs)
+  "Same as `doom-modeline-def-modeline', with TTY right-align fixed."
+  (let ((def (assq name doom-modeline--modelines)))
+    (if def
+        (setcdr def (list lhs rhs))
+      (push (cons name (list lhs rhs)) doom-modeline--modelines)))
+  (let ((sym (intern (format "doom-modeline-format--%s" name)))
+        (lhs-forms (doom-modeline--prepare-segments lhs))
+        (rhs-forms (doom-modeline--prepare-segments rhs)))
+    (defalias sym
+      (lambda ()
+        (list lhs-forms
+              (let* ((rhs-str (format-mode-line `("" ,@rhs-forms)))
+                     (rhs-width (progn
+                                  (add-face-text-property
+                                   0 (length rhs-str) 'mode-line t rhs-str)
+                                  (doom-modeline-string-pixel-width rhs-str))))
+                (propertize
+                 " "
+                 'face (doom-modeline-face)
+                 'display
+                 ;; Backport from `mode-line-right-align-edge' in 30
+                 (if (and (display-graphic-p)
+                          (not (eq mode-line-right-align-edge 'window)))
+                     `(space :align-to (- ,mode-line-right-align-edge
+                                          (,rhs-width)))
+                   `(space :align-to (,(- (window-pixel-width)
+                                          (window-scroll-bar-width)
+                                          (window-right-divider-width)
+                                          ;; 上游是 `(or ... 1)'；终端没有
+                                          ;; margin 时会多减一列，见上方注释。
+                                          (* (or (car (window-margins))
+                                                 (if (display-graphic-p) 1 0))
+                                             (frame-char-width))
+                                          (pcase mode-line-right-align-edge
+                                            ('right-margin
+                                             (or (cdr (window-margins)) 0))
+                                            ('right-fringe
+                                             (or (cadr (window-fringes)) 0))
+                                            (_ 0))
+                                          rhs-width))))))
+              rhs-forms))
+      (concat "Modeline:\n"
+              (format "  %s\n  %s"
+                      (prin1-to-string lhs)
+                      (prin1-to-string rhs))))))
+(put 'my/doom-modeline-def-modeline 'lisp-indent-function 'defun)
+
+
 (defun my/create-modeline-fontset ()
-  (create-fontset-from-fontset-spec
-   "-*-JetBrains Mono-normal-*-*-*-17-*-*-*-*-*-fontset-modeline,
+  (when (my/gui-p)
+    (create-fontset-from-fontset-spec
+     "-*-JetBrains Mono-normal-*-*-*-17-*-*-*-*-*-fontset-modeline,
    han:-*-Noto Serif CJK SC-bold-*-*-*-16-*-*-*-*-*-*,
-   cjk-misc:-*-Noto Serif CJK SC-bold-*-*-*-16-*-*-*-*-*-*"))
+   cjk-misc:-*-Noto Serif CJK SC-bold-*-*-*-16-*-*-*-*-*-*")))
 
 (defun my/create-modeline-big-fontset ()
-  (create-fontset-from-fontset-spec
-   "-*-JetBrains Mono-normal-*-*-*-20-*-*-*-*-*-fontset-modeline,
+  (when (my/gui-p)
+    (create-fontset-from-fontset-spec
+     "-*-JetBrains Mono-normal-*-*-*-20-*-*-*-*-*-fontset-modeline,
    han:-*-Noto Serif CJK SC-bold-*-*-*-19-*-*-*-*-*-*,
-   cjk-misc:-*-Noto Serif CJK SC-bold-*-*-*-19-*-*-*-*-*-*"))
+   cjk-misc:-*-Noto Serif CJK SC-bold-*-*-*-19-*-*-*-*-*-*")))
 
 (defun my/create-modeline-git-fontset (&optional size)
   "Git 段专用 fontset：JetBrains Mono SIZE（默认 17）。
 把 Nerd 图标区间 U+E0A0..E0B3 也交给 JetBrains Mono——否则全局 default
 fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图标的高度就会
-和 fish 提示符里的 JetBrains 图标对不上。"
-  (let* ((size (or size 17))
-         (name (format "fontset-mygit%d" size)))
-    (create-fontset-from-fontset-spec
-     (format "-*-JetBrains Mono-normal-*-*-*-%d-*-*-*-*-*-%s" size name))
-    (set-fontset-font name '(#xe0a0 . #xe0b3)
-                      (font-spec :family "JetBrains Mono" :size size))
-    name))
+和 fish 提示符里的 JetBrains 图标对不上。终端下直接返回 nil。"
+  (when (my/gui-p)
+    (let* ((size (or size 17))
+           (name (format "fontset-mygit%d" size)))
+      (create-fontset-from-fontset-spec
+       (format "-*-JetBrains Mono-normal-*-*-*-%d-*-*-*-*-*-%s" size name))
+      (set-fontset-font name '(#xe0a0 . #xe0b3)
+                        (font-spec :family "JetBrains Mono" :size size))
+      name)))
 (add-hook 'doom-load-theme-hook
 (lambda ()
 (with-eval-after-load 'doom-modeline
@@ -410,13 +504,13 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
   ;                    :weight 'bold)
 
 
+  (my/set-face-fontset 'doom-modeline-buffer-file (my/create-modeline-fontset))
   (set-face-attribute 'doom-modeline-buffer-file nil
-                      :fontset (my/create-modeline-fontset)
                       :foreground (my/modeline-role-fg 'filename)
                       :background (my/modeline-role-color 'filename)
                       :weight 'bold)
+  (my/set-face-fontset 'doom-modeline-buffer-modified (my/create-modeline-fontset))
   (set-face-attribute 'doom-modeline-buffer-modified nil
-                      :fontset (my/create-modeline-fontset)
                       :foreground (my/modeline-role-fg 'filename)
                       :background (my/modeline-role-color 'filename)
                       :weight 'bold)
@@ -529,9 +623,9 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
     '((t :inherit doom-modeline))
     "group doc"
     :group 'doom-modeline)
+  (my/set-face-fontset 'doom-modeline-git-state (my/create-modeline-git-fontset))
   (set-face-attribute 'doom-modeline-git-state nil
                     :inherit 'doom-modeline
-                    :fontset (my/create-modeline-git-fontset)
                     :background (my/modeline-role-color 'git)
                     :foreground (my/modeline-role-fg 'git)
                     :weight 'bold)
@@ -643,10 +737,9 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
        (propertize (concat "" charc "") 'face face))))
   (doom-modeline-def-segment powerline-evil-right
     "Insert a Powerline separator into the Doom Modeline."
-    (let* ((separator 'arrow) ;; 获取当前分隔符
-           (separator-fn (intern (format "powerline-%s-%s"
-                                         separator
-                                         (cdr powerline-default-separator-dir))))) ;; 获取分隔符函数
+    (let* ((separator-dir (cdr powerline-default-separator-dir))
+           ;; 统一走 `my/powerline-separator'：图形界面 XPM 箭头，终端 UTF-8 三角。
+           (separator-fn (intern (format "my/powerline-arrow-%s" separator-dir))))
       (propertize " " 'display (funcall separator-fn
                                         (if (doom-modeline--active)
                                             (cond
@@ -666,7 +759,7 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
   (doom-modeline-def-segment powerline-evil-filename-right
     "Powerline separator from the evil-state segment straight into the buffer-file segment."
     (propertize " " 'display
-                (powerline-arrow-left
+                (my/powerline-arrow-left
                  (if (doom-modeline--active)
                      (cond
                       ((eq evil-state 'normal)   'doom-modeline-evil-normal-alpha-state)
@@ -681,42 +774,42 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
   (doom-modeline-def-segment powerline-filename-right-1
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
-                (powerline-arrow-left
+                (my/powerline-arrow-left
                  (my/modeline-base-alpha-face)
                  'doom-modeline-buffer-file-alpha)))
 
   (doom-modeline-def-segment powerline-filename-right-2
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
-                (powerline-arrow-left
+                (my/powerline-arrow-left
                  'doom-modeline-buffer-file-alpha
                  (my/modeline-base-alpha-face))))
 
   (doom-modeline-def-segment powerline-separator-right-vert
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
-                (powerline-arrow-right
+                (my/powerline-arrow-right
                  'doom-modeline-evil-normal-alpha-state
                  (my/modeline-base-alpha-face))))
 
   (doom-modeline-def-segment powerline-separator-left
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
-        (powerline-arrow-right
+        (my/powerline-arrow-right
                 (my/modeline-base-alpha-face)
                 'doom-modeline-major-mode-alpha)))
 
   (doom-modeline-def-segment powerline-separator-left-vcs
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
-        (powerline-arrow-right
+        (my/powerline-arrow-right
                 (my/modeline-base-alpha-face)
                 'doom-modeline-evil-normal-alpha-state)))
 
   (doom-modeline-def-segment powerline-separator-left-time
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
-        (powerline-arrow-right
+        (my/powerline-arrow-right
                 (my/modeline-base-alpha-face)
                 'doom-modeline-time-alpha)))
 
@@ -727,21 +820,21 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
   (doom-modeline-def-segment powerline-separator-left-major-time
     "Direct Powerline separator from major-mode straight into the time segment."
     (propertize " " 'display
-        (powerline-arrow-right
+        (my/powerline-arrow-right
                 'doom-modeline-major-mode-alpha
                 'doom-modeline-time-alpha)))
 
   (doom-modeline-def-segment powerline-separator-left-time-db
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
-        (powerline-arrow-right
+        (my/powerline-arrow-right
                 'doom-modeline-evil-normal-alpha-state
                 (my/modeline-base-alpha-face))))
 
   (doom-modeline-def-segment powerline-separator-left-git-empty
     "Insert a Powerline separator into the Doom Modeline."
     (propertize " " 'display
-        (powerline-arrow-right
+        (my/powerline-arrow-right
                 'doom-modeline-major-mode-alpha
                 (my/modeline-base-alpha-face))))
 
@@ -753,7 +846,7 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
     "Direct Powerline separator from major-mode straight into the git branch."
     (when (my-git-branch-with-dirty)
       (propertize " " 'display
-        (powerline-arrow-right
+        (my/powerline-arrow-right
                 'doom-modeline-major-mode-alpha
                 'doom-modeline-git-alpha))))
 
@@ -762,7 +855,7 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
   (doom-modeline-def-segment powerline-separator-left-git-start
     "Powerline separator from the mode-line background straight into the git branch."
     (propertize " " 'display
-        (powerline-arrow-right
+        (my/powerline-arrow-right
                 (my/modeline-base-alpha-face)
                 (if (my-git-branch-with-dirty)
                     'doom-modeline-git-alpha
@@ -775,7 +868,7 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
     "Direct Powerline separator from the git branch straight into the time segment."
     (when (my-git-branch-with-dirty)
       (propertize " " 'display
-        (powerline-arrow-right
+        (my/powerline-arrow-right
                 'doom-modeline-git-alpha
                 'doom-modeline-time-alpha))))
 
@@ -935,16 +1028,16 @@ to disambiguate."
     (propertize (concat " " "") 'face 'doom-modeline-evil-emacs-state))
   ;; (display-battery-mode 1)
   (display-time-mode 1)
-  (doom-modeline-def-modeline 'main
+  (my/doom-modeline-def-modeline 'main
     '(my-segment powerline-evil-filename-right my-filename powerline-filename-right-2 wechat-msg-count matches parrot selection-info)
     '(misc-info minor-modes input-method buffer-encoding
       powerline-separator-left-git-start my-git-branch
       powerline-separator-left-mt my-time ))
-  (doom-modeline-def-modeline 'vcs
+  (my/doom-modeline-def-modeline 'vcs
     '(my-segment powerline-evil-right wechat-msg-count matches parrot selection-info)
     '(compilation misc-info  irc mu4e gnus github debug minor-modes buffer-encoding process empty-segment powerline-separator-left-git-start my-major-mode
       powerline-separator-left-mt my-time ))
-  (doom-modeline-def-modeline 'dashboard
+  (my/doom-modeline-def-modeline 'dashboard
     '(modals buffer-default-directory-simple remote-host)
     '(my-segment)))
 
@@ -1010,17 +1103,17 @@ to disambiguate."
          '(indent-bars-face                  ((t (:family "Kode Mono" :height 210))))
          '(mode-line ((t (:family "IBM Plex Mono" :box nil :height 175))))
          '(mode-line-inactive ((t (:family "IBM Plex Mono" :box nil :height 175)))))
-        (set-face-attribute 'doom-modeline-buffer-file nil :fontset (my/create-modeline-big-fontset))
-        (set-face-attribute 'doom-modeline-buffer-modified nil :fontset (my/create-modeline-big-fontset))
-        (set-face-attribute 'doom-modeline-git-state nil :fontset (my/create-modeline-git-fontset 20)))
+        (my/set-face-fontset 'doom-modeline-buffer-file (my/create-modeline-big-fontset))
+        (my/set-face-fontset 'doom-modeline-buffer-modified (my/create-modeline-big-fontset))
+        (my/set-face-fontset 'doom-modeline-git-state (my/create-modeline-git-fontset 20)))
     (progn
       (custom-set-faces
        '(indent-bars-face                  ((t (:family "Kode Mono" :height 170))))
        '(mode-line ((t (:family "IBM Plex Mono" :box nil :height 150))))
        '(mode-line-inactive ((t (:family "IBM Plex Mono" :box nil :height 150)))))
-      (set-face-attribute 'doom-modeline-buffer-file nil :fontset (my/create-modeline-fontset))
-      (set-face-attribute 'doom-modeline-buffer-modified nil :fontset (my/create-modeline-fontset))
-      (set-face-attribute 'doom-modeline-git-state nil :fontset (my/create-modeline-git-fontset 17)))
+      (my/set-face-fontset 'doom-modeline-buffer-file (my/create-modeline-fontset))
+      (my/set-face-fontset 'doom-modeline-buffer-modified (my/create-modeline-fontset))
+      (my/set-face-fontset 'doom-modeline-git-state (my/create-modeline-git-fontset 17)))
     (setq powerline-scale (if doom-big-font-mode 1.5 1))
     (powerline-reset)))
 (defun my-update-powerline-scale ()

@@ -118,10 +118,17 @@
 
 (defun my/vterm-apply-font (size)
   "vterm 默认 face = JetBrains Mono SIZE pt + JetBrains Powerline，buffer 局部 remap。"
-  (set-face-attribute 'my/vterm-default nil
-                      :family "JetBrains Mono"
-                      :height (* size 10)
-                      :fontset (my/vterm-fontset size))
+  (if (display-graphic-p)
+      (set-face-attribute 'my/vterm-default nil
+                          :family "JetBrains Mono"
+                          :height (* size 10)
+                          :fontset (my/vterm-fontset size))
+    ;; 终端只认终端自己设的字体，:fontset 赋值会抛
+    ;; "Window system is not in use or not initialized"，这里只留字族名。
+    (set-face-attribute 'my/vterm-default nil
+                        :family "JetBrains Mono"
+                        :height 'unspecified
+                        :fontset 'unspecified))
   (setq-local face-remapping-alist '((default my/vterm-default default))))
 
 ;; 设置不同模式下的字体
@@ -523,8 +530,11 @@
 ;;   ~/.config/emacs-plus/ns-glass-effect.patch
 ;; 源码: https://github.com/larrasket/emacs-liquid-glass
 ;; 用法: M-x salih/set-glass-style / salih/toggle-glass / salih/set-glass
+;; 只在图形界面下加载：终端里没有原生毛玻璃/alpha，iTerm2 自身的透明也不受
+;; Emacs 控制，加载这套代码没有意义，反而会白白增加启动时间。
 (add-to-list 'load-path "~/.doom.d/lisp")
-(require 'lr-macos-glass)
+(when (display-graphic-p)
+  (require 'lr-macos-glass))
 
 ;; 覆盖 doom+ 默认实现: yank 路径时不用 ~ 缩写, 保持绝对路径
 (defun my/yank-buffer-path-full (&optional root)
@@ -722,3 +732,80 @@
 (add-hook 'doom-load-theme-hook #'my/vc-gutter-visible-faces-h)
 (after! diff-hl
   (my/vc-gutter-visible-faces-h))
+
+;;; Git gutter: 终端里用彩色竖条代替 + / ! / - 字符
+;; 现象(见截图)：图形界面里 diff-hl 用 fringe 位图画一条彩色竖条；在终端
+;; (emacs -nw) 里没有 fringe，`diff-hl-fallback-to-margin' 会自动改用 margin，
+;; 并画 `diff-hl-margin-symbols-alist' 中的字符：新增 "+"、修改 "!"、删除 "-"。
+;; 这里把符号统一换成块字符"▌"(左半块)，用前景色画出竖条，宽度约为整格的一半，
+;; 和图形界面/VSCode 的细条观感一致。图形界面不走 margin，仍由上面的 fringe
+;; 位图负责，因此两边互不影响。
+;; 可调(由细到粗)：▏ ▎ ▍ ▌ ▋ ▊ ▉ █
+(defconst my/vc-gutter-margin-block-char "▌"
+  "终端里 diff-hl 用的色块字符。可用 \"▎\"(更细) / \"▉\"(更粗)。")
+(defun my/vc-gutter-margin-apply-h ()
+  "把 diff-hl 的 margin 符号与 face 设成彩色竖条。幂等，不刷新 buffer。"
+  ;; `diff-hl-margin-*' 这些 face 定义在 diff-hl-margin.el 里，而该文件是按需
+  ;; autoload 的。必须先加载，否则下面的 `facep' 全为假，颜色设不上去。
+  (require 'diff-hl-margin nil t)
+  (setq diff-hl-margin-symbols-alist
+        `((insert . ,my/vc-gutter-margin-block-char)
+          (delete . ,my/vc-gutter-margin-block-char)
+          (change . ,my/vc-gutter-margin-block-char)
+          (unknown . " ") (ignored . " ")
+          (reference . ,my/vc-gutter-margin-block-char))
+        ;; `diff-hl-margin-symbols-alist' 换成 setq 时不会触发它的 :set，
+        ;; 必须手动清掉这份缓存，否则仍会画旧的 +/-。
+        diff-hl-margin-spec-cache nil)
+  (dolist (c '((diff-hl-margin-change           . "#e0af68")
+               (diff-hl-margin-insert           . "#9ece6a")
+               (diff-hl-margin-delete           . "#f7768e")
+               (diff-hl-margin-reference-change . "#e0af68")
+               (diff-hl-margin-reference-insert . "#9ece6a")
+               (diff-hl-margin-reference-delete . "#f7768e")))
+    (when (facep (car c))
+      ;; 用块字符本身占的宽度画条，所以只要前景色；背景必须显式清掉，
+      ;; 否则切换过来时还会残留整格色带。
+      (set-face-attribute (car c) nil
+                          :foreground (cdr c)
+                          :background nil))))
+
+(defun my/vc-gutter-margin-setup-h ()
+  "在当前 buffer 里确保终端 margin 竖条已就位，并立即算一次 diff。
+挂在 `diff-hl-mode-hook' 上，所以不论用 recentf、find-file、dired 还是别的方式
+打开文件，只要 diff-hl 启用就会走到这里，不会出现\"有时没有竖条\"。"
+  (my/vc-gutter-margin-apply-h)
+  (when (and (not (display-graphic-p))
+             buffer-file-name
+             ;; 远程文件不同步跑 git，否则打开文件会卡在 TRAMP 上。
+             (not (file-remote-p buffer-file-name)))
+    ;; `diff-hl-update-async' 的线程方式偶尔会漏刷新；打开文件时同步算一次，
+    ;; 保证竖条立刻出现。
+    (let ((diff-hl-update-async nil))
+      (ignore-errors (diff-hl-update)))))
+
+(defun my/vc-gutter-margin-blocks-h ()
+  "手动刷新：重设符号与 face，并重算所有已开启 diff-hl 的 buffer。"
+  (interactive)
+  (my/vc-gutter-margin-apply-h)
+  (when (not (display-graphic-p))
+    (let ((width-var (intern (format "%s-margin-width" diff-hl-side))))
+      (dolist (buf (buffer-list))
+        (with-current-buffer buf
+          (when (bound-and-true-p diff-hl-mode)
+            (set (make-local-variable width-var) 1)
+            (ignore-errors (diff-hl-update))
+            (dolist (win (get-buffer-window-list buf nil t))
+              (set-window-buffer win buf))))))))
+
+;; 换主题会重设 face，所以挂在主题钩子上(不刷新 buffer，避免每次切主题都重算)。
+;; 新 buffer 则统一由 `diff-hl-mode-hook' 处理，与打开方式无关。
+(add-hook 'doom-load-theme-hook #'my/vc-gutter-margin-apply-h)
+(after! diff-hl
+  (my/vc-gutter-margin-apply-h)
+  (unless (display-graphic-p)
+    (setq diff-hl-update-async nil))
+  (add-hook 'diff-hl-mode-hook #'my/vc-gutter-margin-setup-h))
+(after! diff-hl-margin
+  (my/vc-gutter-margin-apply-h)
+  (add-hook 'diff-hl-mode-hook #'my/vc-gutter-margin-setup-h))

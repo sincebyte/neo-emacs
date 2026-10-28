@@ -109,33 +109,41 @@
   (when (and (derived-mode-p 'vterm-mode) (not (eq mode-line-format nil)))
     (my/force-hide-vterm-modeline))))
 
-;; 毛玻璃（lr-macos-glass）会按 `ns-alpha-glyphs' 把"非默认字形背景"整体
-;; 半透明化，于是 fish 提示符的色块也被一起透明，看起来发灰。
+;; vterm 把每个格子的颜色写成 `font-lock-face' 文本属性（vterm-module.c 里
+;; Qface 就是它）。但 Emacs 只在 Font Lock mode 开启时才认这个属性（见
+;; Emacs Lisp 手册 "Special Properties"），而 vterm buffer 里
+;; `font-lock-mode' 一直是关的（vterm-mode 只设了 `font-lock-defaults'，
+;; 用来禁止自动 fontification）。结果就是终端里整个提示符都退回默认前景色。
+;; 这里把它同时镜像到 `face'：Font Lock 开或关，颜色都能正常显示。
+;;
+;; 另外，毛玻璃（lr-macos-glass）会按 `ns-alpha-glyphs' 把"非默认字形背景"
+;; 整体半透明化，于是 fish 提示符的色块也被一起透明，看起来发灰。
 ;; 原生层（ns-opaque-background-faces.patch）对带 `:ns-opaque-background t'
 ;; 的 face 跳过 alpha。vterm 的每个格子是 C 模块动态生成的匿名 face（带
 ;; `:background'），elisp 拿不到，所以在 `vterm--insert' 插入前把该属性补上。
 ;; 只对"有显式背景色"的格子生效，终端默认底色仍随玻璃半透明。
-(defun my/vterm-opaque-cell-background (string)
-  "给 STRING 上带 `:background' 的 `font-lock-face' 补 `:ns-opaque-background t'。"
+(defun my/vterm-normalize-cell-face (string)
+  "把 STRING 的格子 face 镜像到 `face'，并给色块补不透明标记。"
   (when (and (stringp string) (> (length string) 0))
-    (let ((face (get-text-property 0 'font-lock-face string)))
-      (when (and (listp face)
-                 (plist-member face :background)
-                 (not (plist-member face :ns-opaque-background)))
-        (put-text-property 0 (length string) 'font-lock-face
-                           (plist-put (copy-sequence face)
-                                      :ns-opaque-background t)
-                           string))))
+    (let ((face (get-text-property 0 'font-lock-face string))
+          (len (length string)))
+      (when (listp face)
+        (when (and (plist-member face :background)
+                   (not (plist-member face :ns-opaque-background)))
+          (setq face (plist-put (copy-sequence face)
+                                :ns-opaque-background t))
+          (put-text-property 0 len 'font-lock-face face string))
+        (put-text-property 0 len 'face face string))))
   string)
 
-(defun my/vterm-opaque-insert (orig &rest content)
-  "围绕 `vterm--insert'：把色块格子标记为不透明，绕过毛玻璃 alpha。"
+(defun my/vterm-normalize-insert (orig &rest content)
+  "围绕 `vterm--insert'：补齐格子颜色与不透明度。"
   (dolist (arg content)
-    (my/vterm-opaque-cell-background arg))
+    (my/vterm-normalize-cell-face arg))
   (apply orig content))
 
 (with-eval-after-load 'vterm
-  (advice-add 'vterm--insert :around #'my/vterm-opaque-insert))
+  (advice-add 'vterm--insert :around #'my/vterm-normalize-insert))
 
 (advice-add 'set-window-vscroll :after
   (defun me/vterm-toggle-scroll (&rest _)
