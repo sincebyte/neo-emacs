@@ -145,12 +145,219 @@
 (with-eval-after-load 'vterm
   (advice-add 'vterm--insert :around #'my/vterm-normalize-insert))
 
-(advice-add 'set-window-vscroll :after
-  (defun me/vterm-toggle-scroll (&rest _)
-    (when (eq major-mode 'vterm-mode)
-      (if (> (window-end) (buffer-size))
-          (when vterm-copy-mode (vterm-copy-mode-done nil))
-        (vterm-copy-mode 1)))))
+;;; vterm：C-k / C-j 翻历史时暂停输出 ----------------------------------------
+;; 往上翻历史时，子进程的输出仍会继续插入，把刚翻到的地方不断顶走。这里用
+;; 终端流控解决：`C-k'（`evil-scroll-up'）把窗口滚离底部时 `vterm-send-stop'
+;; （pty 的 TCOOFF，子进程会阻塞而不会丢输出）；`C-j' 翻回底部、或 `G'
+;; （`vterm-reset-cursor-point'）回到缓冲区末尾时再 `vterm-send-start'
+;; （TCOON）恢复。判断直接挂在 `evil-scroll-up' / `evil-scroll-down' 这两个
+;; 命令上，而不是在 `post-command-hook' 里比对 `this-command'；鼠标滚轮、
+;; `scroll-up-command' 之类完全不参与。
+(defvar-local my/vterm-output-paused nil
+  "非 nil 表示当前 vterm 的输出已被 `vterm-send-stop' 暂停。")
+
+(defvar-local my/vterm--last-scroll-info nil
+  "最近一次 C-k / C-j 的判定结果，排查问题时用。")
+
+(defconst my/vterm-escape-commands '(evil-force-normal-state
+                                     evil-exit-visual-state
+                                     evil-normal-state)
+  "按 ESC 时 evil 会执行的命令。
+这些命令之后要顺手收起 vterm 的选区和复制提示。")
+
+(defun my/vterm--at-bottom-p ()
+  "当前 buffer 的窗口是否已显示到缓冲区末尾。"
+  (when-let* ((win (get-buffer-window (current-buffer) t)))
+    (>= (window-end win t) (point-max))))
+
+(defun my/vterm--pause-output ()
+  "暂停当前 vterm 的输出（已暂停则什么也不做）。"
+  (unless my/vterm-output-paused
+    (setq my/vterm-output-paused t)
+    (vterm-send-stop)
+    (message "vterm: 已暂停输出，C-j 或 G 回到底部恢复")))
+
+(defun my/vterm--resume-output ()
+  "恢复当前 vterm 的输出（未暂停则什么也不做）。
+在 `vterm-copy-mode' 里回到底部时顺手退出 copy-mode，由 vterm 自己
+`vterm-send-start'，输出重新显示。"
+  (when my/vterm-output-paused
+    (setq my/vterm-output-paused nil)
+    (if (bound-and-true-p vterm-copy-mode)
+        (vterm-copy-mode -1)
+      (vterm-send-start))
+    (message "vterm: 恢复输出")))
+
+(defun my/vterm--after-scroll-up ()
+  "C-k 执行完后的判定：离开底部就暂停输出。"
+  (when (derived-mode-p 'vterm-mode)
+    (let ((at-bottom (my/vterm--at-bottom-p)))
+      (setq my/vterm--last-scroll-info
+            (list :command this-command :at-bottom at-bottom
+                  :time (current-time)))
+      (unless at-bottom
+        (my/vterm--pause-output)))))
+
+(defun my/vterm--after-scroll-down ()
+  "C-j 执行完后的判定：回到底部就恢复输出。"
+  (when (derived-mode-p 'vterm-mode)
+    (let ((at-bottom (my/vterm--at-bottom-p)))
+      (setq my/vterm--last-scroll-info
+            (list :command this-command :at-bottom at-bottom
+                  :time (current-time)))
+      (when at-bottom
+        (my/vterm--resume-output)))))
+
+(defun my/vterm--scroll-up-advice (orig &rest args)
+  "按 C-k（`evil-scroll-up'）之后：离开底部就暂停输出。
+`evil-scroll-up' 在 buffer 顶部会 signal `beginning-of-buffer'，这里吞掉，
+保证判定照常执行。"
+  (if (not (derived-mode-p 'vterm-mode))
+      (apply orig args)
+    (condition-case nil
+        (apply orig args)
+      (beginning-of-buffer nil))
+    (my/vterm--after-scroll-up)))
+
+(defun my/vterm--scroll-down-advice (orig &rest args)
+  "按 C-j（`evil-scroll-down'）之后：回到底部就恢复输出。
+`evil-scroll-down' 在 buffer 末尾会 signal `end-of-buffer'（这正是按 C-j
+回到底部的情形），吞掉它，判定照常执行。"
+  (if (not (derived-mode-p 'vterm-mode))
+      (apply orig args)
+    (condition-case nil
+        (apply orig args)
+      (end-of-buffer nil))
+    (my/vterm--after-scroll-down)))
+
+(with-eval-after-load 'evil
+  (advice-add 'evil-scroll-up :around #'my/vterm--scroll-up-advice)
+  (advice-add 'evil-scroll-down :around #'my/vterm--scroll-down-advice))
+
+(defun my/vterm--follow-output ()
+  "在 vterm 里处理 G 与 ESC。
+G（`vterm-reset-cursor-point'）回到缓冲区末尾时恢复输出；ESC 时取消
+选区并清掉“刚复制”的提示。C-k / C-j 见上面的 advice。"
+  (when (derived-mode-p 'vterm-mode)
+    (cond
+     ;; ESC：取消仍活动的选区，并清掉“刚复制”的提示。
+     ;; 放在 copy-mode 判断之前，copy-mode 里按 ESC 也要生效。
+     ((memq this-command my/vterm-escape-commands)
+      (deactivate-mark t)
+      (my/vterm-clear-copied-region))
+     ;; G：直接回到底部，恢复输出。
+     ((and my/vterm-output-paused
+           (eq this-command 'vterm-reset-cursor-point))
+      (my/vterm--resume-output)))))
+
+(defun my/vterm--setup-follow-output ()
+  "在当前 vterm buffer 中启用输出跟随/暂停。
+`my/vterm-output-paused' 由 `defvar-local' 自动初始化为 nil，重载配置时
+不会把正在暂停的 buffer 当成已恢复。"
+  (add-hook 'post-command-hook #'my/vterm--follow-output nil t))
+
+(add-hook 'vterm-mode-hook #'my/vterm--setup-follow-output)
+
+;; 配置重载前已经开着的 vterm 不会重跑 mode hook，这里补一次。
+(dolist (buf (buffer-list))
+  (with-current-buffer buf
+    (when (derived-mode-p 'vterm-mode)
+      (my/vterm--setup-follow-output))))
+
+;;; vterm：保留“刚复制过哪一段”的提示 --------------------------------------
+;; vterm 里每次按键都会 `deactivate-mark'（见 `vterm-send-key'），选区高亮随即
+;; 消失，但 kill-ring / 剪贴板里的内容其实还在。这里复制后额外画一块 overlay，
+;; 直到下一次复制或手动 `my/vterm-clear-copied-region' 才清除，方便核对。
+(defface my/vterm-copied-region
+  '((t :inherit region :extend t))
+  "vterm 中最近一次复制区域的提示底色。")
+
+;; 毛玻璃（lr-macos-glass）按 `ns-alpha-glyphs' 把选区/高亮等字形底色整体
+;; 半透明化；原生层会跳过带 `:ns-opaque-background t' 的 face，让提示底色
+;; 保持清晰。未打该补丁的构建会在这里报错，忽略即可。
+(ignore-errors
+  (set-face-attribute 'my/vterm-copied-region nil :ns-opaque-background t))
+
+(defvar-local my/vterm--copied-overlay nil
+  "标记最近一次 vterm 复制区域的 overlay。")
+
+(defun my/vterm-clear-copied-region ()
+  "清除 vterm 中最近一次复制的提示底色。"
+  (interactive)
+  (when (overlayp my/vterm--copied-overlay)
+    (delete-overlay my/vterm--copied-overlay))
+  (setq my/vterm--copied-overlay nil))
+
+(defun my/vterm--highlight-copied-region (beg end)
+  "用 overlay 标出 vterm 中刚复制的 BEG..END。"
+  (when (and (derived-mode-p 'vterm-mode)
+             (integer-or-marker-p beg)
+             (integer-or-marker-p end)
+             (< beg end))
+    (my/vterm-clear-copied-region)
+    (let ((ov (make-overlay beg end)))
+      (overlay-put ov 'face 'my/vterm-copied-region)
+      (overlay-put ov 'priority 1000)
+      (overlay-put ov 'evaporate t)
+      (setq my/vterm--copied-overlay ov))))
+
+(defun my/vterm--copy-region-advice (orig beg end &optional region)
+  "`kill-ring-save' 之后标出复制区域（含 `vterm-copy-mode-done' 的复制）。"
+  (if (derived-mode-p 'vterm-mode)
+      (let* ((use-region (and region (use-region-p)))
+             (start (if use-region (region-beginning) beg))
+             (stop  (if use-region (region-end) end)))
+        (prog1 (funcall orig beg end region)
+          (my/vterm--highlight-copied-region start stop)))
+    (funcall orig beg end region)))
+
+(advice-add 'kill-ring-save :around #'my/vterm--copy-region-advice)
+
+;; 鼠标拖选（`select-active-regions' 已经把它放进剪贴板）之后直接敲键时，
+;; mark 会被 `vterm-send-key' 里的 `deactivate-mark' 取消；在取消前把刚才的
+;; 选区记下来，照样保留提示底色。
+(defun my/vterm--remember-region-before-deactivate ()
+  "在 vterm 中选区被取消时，保留刚才选中范围的提示底色。"
+  (when (and (derived-mode-p 'vterm-mode)
+             (mark t))
+    (let ((beg (min (point) (mark t)))
+          (end (max (point) (mark t))))
+      (when (< beg end)
+        (my/vterm--highlight-copied-region beg end)))))
+
+(add-hook 'deactivate-mark-hook #'my/vterm--remember-region-before-deactivate)
+
+;; 开始新选区时先清掉上一次“刚复制”的提示，避免两块底色叠在一起。
+(defun my/vterm--clear-copied-region-on-activate ()
+  "在 vterm 中开始新选区时清除上一次的复制提示。"
+  (when (derived-mode-p 'vterm-mode)
+    (my/vterm-clear-copied-region)))
+
+(add-hook 'activate-mark-hook #'my/vterm--clear-copied-region-on-activate)
+
+(defun my/vterm--evil-yank-advice (orig beg end &rest args)
+  "evil 的 yank 之后标出复制区域。"
+  (prog1 (apply orig beg end args)
+    (my/vterm--highlight-copied-region beg end)))
+
+(with-eval-after-load 'evil
+  (advice-add 'evil-yank :around #'my/vterm--evil-yank-advice))
+
+;; vterm-copy-mode 里 `use-local-map' 会把 vterm-mode-map 摘掉，若此时还在
+;; insert state，按 j/k 会变成往只读缓冲区里自插入（报错并顺手清掉选区）。
+;; 进入 copy mode 时统一切到 normal state，j/k 才是“移动/扩展选区”。
+(defun my/vterm--copy-mode-changed ()
+  "同步 `vterm-copy-mode' 与 `my/vterm-output-paused'。
+vterm 进入 copy-mode 时会 `vterm-send-stop'，退出时会 `vterm-send-start'，
+这里跟着记录，免得两套暂停状态互相打脸。"
+  (when (derived-mode-p 'vterm-mode)
+    (setq my/vterm-output-paused (and vterm-copy-mode t))
+    (when (and vterm-copy-mode
+               (bound-and-true-p evil-mode))
+      (evil-normal-state))))
+
+(with-eval-after-load 'vterm
+  (add-hook 'vterm-copy-mode-hook #'my/vterm--copy-mode-changed))
 
 ;; Remap C-k and C-j in eshell to use evil-scroll instead of default prompt navigation
 ;; These bindings will work in evil normal mode in eshell

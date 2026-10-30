@@ -68,7 +68,9 @@
         corfu-popupinfo-max-width 0      ; 确保弹窗尺寸为零
         corfu-popupinfo-max-height 0)
   (custom-set-faces!
-    '(corfu-current :background "#2C3946" :foreground "#7BB6E2" :weight bold))
+    ;; tokyonight-night 的 blue0(#3D59A1)：比原 #2C3946 更亮更蓝，
+    ;; 在 0.18 alpha 的弹框里选中项更醒目；想更收敛可退回 #3B4A70。
+    '(corfu-current :background "#3D59A1" :foreground "#7BB6E2" :weight bold))
   ;; Corfu 选中项(corfu-current)自带底色，会被毛玻璃的 glyphs alpha 一起透明化；
   ;; 打上 `:ns-opaque-background t' 后原生层对该 face 跳过 alpha，选中项保持不透明。
   ;; 注意：`:ns-opaque-background' 不是标准属性，写进 `custom-set-faces!' 的 face
