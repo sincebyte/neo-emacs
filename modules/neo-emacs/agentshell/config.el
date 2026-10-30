@@ -20,16 +20,25 @@
 ;; for agent/model/mode and leave project/activity in the header line.
 (defun opencode-shell--split-header (&rest _)
   "Split the native text header before its project name.
-Keep the native rendering/cache and heartbeat, including clickable menus."
+Keep the native rendering/cache and heartbeat, including clickable menus.
+The project name is followed by the checkout's git branch."
   (when (and (derived-mode-p 'agent-shell-mode)
              (eq agent-shell-header-style 'text)
              (stringp header-line-format))
+    (opencode-shell--refresh-branch)
     (when-let* ((project-start
                 (text-property-any 0 (length header-line-format)
                                    'font-lock-face 'agent-shell-session-directory
                                    header-line-format)))
       (let* ((top (substring header-line-format 0 (max 0 (- project-start 3))))
-             (bottom (concat " " (substring header-line-format project-start)))
+             (project-end (next-single-property-change
+                           project-start 'font-lock-face header-line-format
+                           (length header-line-format)))
+             (bottom (concat " "
+                             (substring header-line-format
+                                        project-start project-end)
+                             (opencode-shell--branch-label)
+                             (substring header-line-format project-end)))
              (position 0))
         ;; Native menus are bound to header-line events.  Adapt copies for
         ;; the tab line without modifying the cached header's keymaps.
@@ -45,6 +54,104 @@ Keep the native rendering/cache and heartbeat, including clickable menus."
         (setq-local tab-line-format (list top))
         (setq-local header-line-format bottom)))))
 
+;;; Branch beside the project name
+;; The second header row starts with the project name.  Show the checkout's
+;; git branch right after it, separated by the same arrow the header uses
+;; elsewhere, so a session's working branch is visible at a glance.
+
+(defface opencode-shell-branch
+  '((t :inherit font-lock-function-name-face))
+  "Face for the git branch shown in the agent-shell session header."
+  :group 'agent-shell)
+
+(defconst opencode-shell--branch-refresh-interval 1.0
+  "Seconds between git branch re-reads while the header is repainted.")
+
+(defvar-local opencode-shell--branch nil
+  "Git branch of this shell's `default-directory', or nil outside git.")
+
+(defvar-local opencode-shell--branch-checked nil
+  "Value of `float-time' when `opencode-shell--branch' was last read.")
+
+(defun opencode-shell--git-dir (directory)
+  "Return the git directory governing DIRECTORY, or nil outside a checkout.
+Remote directories are skipped: the header must not touch TRAMP."
+  (unless (file-remote-p directory)
+    (when-let* ((root (locate-dominating-file directory ".git")))
+      (let ((dotgit (expand-file-name ".git" root)))
+        (cond
+         ((file-directory-p dotgit) dotgit)
+         ;; A worktree or submodule keeps `.git' as a file pointing at the
+         ;; real git directory.
+         ((file-readable-p dotgit)
+          (with-temp-buffer
+            (insert-file-contents dotgit)
+            (goto-char (point-min))
+            (when (looking-at "gitdir:[ \t]*\\(.+\\)[ \t]*$")
+              (expand-file-name (match-string 1) root)))))))))
+
+(defun opencode-shell--git-branch (&optional directory)
+  "Return the branch checked out in DIRECTORY.
+Fall back to the abbreviated commit for a detached HEAD, and nil outside
+git.  `.git/HEAD' is read directly instead of shelling out, so this stays
+cheap enough for the header's update path."
+  (when-let* ((gitdir (opencode-shell--git-dir (or directory default-directory)))
+              (head (expand-file-name "HEAD" gitdir))
+              ((file-readable-p head)))
+    (with-temp-buffer
+      (insert-file-contents head)
+      (goto-char (point-min))
+      (cond
+       ((looking-at "ref:[ \t]*refs/heads/\\([^ \t\r\n]+\\)")
+        (match-string 1))
+       ((looking-at "\\([[:xdigit:]]\\{7\\}\\)[[:xdigit:]]*")
+        (match-string 1))))))
+
+(defun opencode-shell--refresh-branch (&optional force)
+  "Re-read this shell's git branch.
+Return non-nil when the branch changed.  Unless FORCE, read at most once
+per `opencode-shell--branch-refresh-interval' so heartbeat ticks drawing
+the busy indicator do not hit the file system on every beat."
+  (when (or force
+            (null opencode-shell--branch-checked)
+            (>= (- (float-time) opencode-shell--branch-checked)
+                opencode-shell--branch-refresh-interval))
+    (setq opencode-shell--branch-checked (float-time))
+    (let ((branch (opencode-shell--git-branch default-directory)))
+      (unless (equal branch opencode-shell--branch)
+        (setq opencode-shell--branch branch)
+        t))))
+
+(defun opencode-shell--branch-label ()
+  "Return the branch separator drawn after the project name in the header."
+  (when opencode-shell--branch
+    (concat " ➤ " (propertize opencode-shell--branch
+                              'font-lock-face 'opencode-shell-branch))))
+
+(defun opencode-shell--shell-for-header (window)
+  "Return the agent-shell buffer WINDOW's header belongs to, or nil.
+WINDOW is the transcript itself (`agent-shell-mode') or the fixed input
+below it (`opencode-compose-mode')."
+  (let ((buffer (window-buffer window)))
+    (with-current-buffer buffer
+      (cond
+       ((derived-mode-p 'agent-shell-mode) buffer)
+       ((derived-mode-p 'opencode-compose-mode)
+        (when-let* ((transcript
+                     (window-parameter window 'opencode-compose-transcript)))
+          (when (window-live-p transcript)
+            (window-buffer transcript))))))))
+
+(defun opencode-shell--sync-header-branch (&rest _)
+  "Repaint a visible session header when its checkout's branch changed.
+Runs on window selection, so switching branch in Magit and returning to
+the session shows the new branch without waiting for agent activity."
+  (when-let* ((shell (opencode-shell--shell-for-header (selected-window))))
+    (with-current-buffer shell
+      (when (and (derived-mode-p 'agent-shell-mode)
+                 (opencode-shell--refresh-branch))
+        (agent-shell--update-header-and-mode-line)))))
+
 (defun opencode-shell--header-faces ()
   "Match the two session header rows to the same face."
   (require 'face-remap)
@@ -53,7 +160,11 @@ Keep the native rendering/cache and heartbeat, including clickable menus."
 (after! agent-shell
   (advice-add 'agent-shell--update-header-and-mode-line :after
               #'opencode-shell--split-header)
-  (add-hook 'agent-shell-mode-hook #'opencode-shell--header-faces))
+  (add-hook 'agent-shell-mode-hook #'opencode-shell--header-faces)
+  ;; `window-selection-change-functions' exists since Emacs 30.
+  (when (boundp 'window-selection-change-functions)
+    (add-hook 'window-selection-change-functions
+              #'opencode-shell--sync-header-branch)))
 
 (defcustom opencode-shell-window-width 55
   "Width in columns of an agent-shell window shown beside its project."
@@ -437,6 +548,109 @@ Keep the historical name for callbacks already installed in live sessions."
 (add-hook 'window-buffer-change-functions #'opencode-compose--schedule-layout 90)
 (add-hook 'doom-switch-buffer-hook #'opencode-compose--schedule-layout 90)
 
+;;; Follow the transcript while a reply streams
+;; The transcript and the input are different windows, and a window keeps its
+;; own point, so nothing follows output the way a prompt typed straight into
+;; the transcript would: shell-maker's auto-scroll check (`eobp' plus the end
+;; visible in the window) fails for the transcript window, and its window
+;; point never advances as text arrives, so a sent message and the reply it
+;; starts land below whatever the window last showed.  Sending a prompt arms
+;; following explicitly: the transcript is scrolled to its end and every new
+;; chunk is coalesced into the same scroll.  Scrolling the window away from
+;; the end that was last shown stops the follow instead of fighting the user.
+
+(defconst opencode-compose--follow-delay 0.05
+  "Seconds to coalesce streaming updates before scrolling the transcript.")
+
+(defvar-local opencode-compose--following nil
+  "Non-nil when new output should keep the transcript at its end.")
+
+(defvar-local opencode-compose--follow-timer nil
+  "Pending debounced transcript scroll for this shell buffer.")
+
+(defvar-local opencode-compose--follow-anchor nil
+  "Marker left visible by the last follow scroll.
+Following is still wanted while the windows show this position, so a window
+that no longer does was scrolled away by the user.")
+
+(defun opencode-compose--transcript-windows (shell)
+  "Return the windows on SHELL's frame that show SHELL's transcript.
+Windows on other frames are skipped: selecting one would switch frames
+behind the user's back."
+  (when-let* ((shown (get-buffer-window shell t))
+              (frame (window-frame shown)))
+    (get-buffer-window-list shell 'no-mini frame)))
+
+(defun opencode-compose--scroll-transcript-to-end (&optional shell)
+  "Scroll SHELL's transcript windows down to the newest line.
+SHELL defaults to this input window's session.  Point is left at the end of
+the transcript, which is also recorded as the follow anchor."
+  (let ((shell (or shell opencode-compose--shell)))
+    (when (and (buffer-live-p shell)
+               (with-current-buffer shell (derived-mode-p 'agent-shell-mode)))
+      (with-current-buffer shell
+        (dolist (window (opencode-compose--transcript-windows shell))
+          (with-selected-window window
+            (goto-char (point-max))
+            (recenter -1)))
+        (unless (markerp opencode-compose--follow-anchor)
+          (setq opencode-compose--follow-anchor (make-marker)))
+        (set-marker opencode-compose--follow-anchor (point-max))))))
+
+(defun opencode-compose--transcript-at-anchor-p (windows)
+  "Return non-nil when every window in WINDOWS still shows the follow anchor."
+  (let ((anchor opencode-compose--follow-anchor))
+    (or (not (markerp anchor))
+        (not (marker-buffer anchor))
+        (seq-every-p (lambda (window)
+                       ;; Asked while narrowed, the check can signal
+                       ;; `args-out-of-range'; read that as scrolled away.
+                       (ignore-errors
+                         (pos-visible-in-window-p anchor window)))
+                     windows))))
+
+(defun opencode-compose--follow-now (shell)
+  "Keep SHELL's transcript at its end, or stop following after a scroll back."
+  (when (buffer-live-p shell)
+    (with-current-buffer shell
+      (setq opencode-compose--follow-timer nil)
+      (when (and opencode-compose--following
+                 (derived-mode-p 'agent-shell-mode)
+                 (buffer-live-p opencode-compose--buffer))
+        (let ((windows (opencode-compose--transcript-windows shell)))
+          (cond
+           ((null windows) nil)
+           ((opencode-compose--transcript-at-anchor-p windows)
+            (opencode-compose--scroll-transcript-to-end shell))
+           (t
+            (setq opencode-compose--following nil))))))))
+
+(defun opencode-compose--output-changed (&rest _)
+  "Schedule a transcript scroll after output changed."
+  (when (and opencode-compose--following
+             (buffer-live-p opencode-compose--buffer))
+    (unless (timerp opencode-compose--follow-timer)
+      (setq opencode-compose--follow-timer
+            (run-at-time opencode-compose--follow-delay nil
+                         #'opencode-compose--follow-now (current-buffer))))))
+
+(defun opencode-compose--follow-transcript (&rest _)
+  "Arm following and scroll this shell's transcript after a prompt is sent."
+  (when (and (derived-mode-p 'agent-shell-mode)
+             (buffer-local-value 'opencode-compose--buffer (current-buffer)))
+    (setq opencode-compose--following t)
+    (when (timerp opencode-compose--follow-timer)
+      (cancel-timer opencode-compose--follow-timer)
+      (setq opencode-compose--follow-timer nil))
+    (opencode-compose--scroll-transcript-to-end (current-buffer))))
+
+(after! agent-shell
+  ;; Reloading this file must not stack the advice on every evaluation.
+  (unless (advice-member-p #'opencode-compose--follow-transcript
+                           'agent-shell-submit)
+    (advice-add 'agent-shell-submit :after
+                #'opencode-compose--follow-transcript)))
+
 (defun opencode-compose-submit (&optional override)
   "Send the compose text through agent-shell's native submission path.
 With prefix OVERRIDE, use the busy-agent override route."
@@ -476,6 +690,7 @@ With prefix OVERRIDE, use the busy-agent override route."
   "Open the fixed input when agent-shell becomes visible."
   (opencode-compose--schedule-layout)
   (add-hook 'after-change-functions #'opencode-compose--refresh nil t)
+  (add-hook 'after-change-functions #'opencode-compose--output-changed nil t)
   (add-hook 'shell-maker-finish-output-hook #'opencode-compose--refresh nil t))
 
 (add-hook 'agent-shell-mode-hook #'opencode-compose--setup)
@@ -503,6 +718,7 @@ With prefix OVERRIDE, use the busy-agent override route."
             (setq-local opencode-compose--buffer input)))))
     (when (derived-mode-p 'agent-shell-mode)
       (add-hook 'after-change-functions #'opencode-compose--refresh nil t)
+      (add-hook 'after-change-functions #'opencode-compose--output-changed nil t)
       (add-hook 'shell-maker-finish-output-hook #'opencode-compose--refresh nil t))))
 (dolist (buffer (buffer-list))
   (with-current-buffer buffer
