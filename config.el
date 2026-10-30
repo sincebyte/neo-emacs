@@ -536,6 +536,36 @@
 (when (display-graphic-p)
   (require 'lr-macos-glass))
 
+;; Corfu 弹框透明化（macOS）
+;; 候选窗是独立 child frame，macOS 下就是独立 NSWindow；创建时会从
+;; `default-frame-alist' 继承主窗口的毛玻璃参数（alpha-background 0.5 +
+;; ns-glass-material clear），弹框区域里因此又叠了一层 NSGlassEffectView，
+;; 于是 alpha 调多小都看着发实。这里在 frame 建好后单独处理弹框：关掉它
+;; 自己的玻璃层，只保留 alpha 混合，弹框才能透出后面的代码。
+;; my/corfu-popup-alpha：1.0 = 不透明，0.0 = 全透明；0.18 约 70% 透光
+;; （frame 背景与字形背景各混合一次，实际比这个数值更实一点）。想更实调大
+;; （0.3），想更透调小（0.1）。选中行的 `corfu-current' 仍由 java/eglot
+;; 模块里的 `:ns-opaque-background t' 保持不透明，保证可读性。
+(defvar my/corfu-popup-alpha 0.78
+  "Opacity of the Corfu popup background.
+1.0 is opaque, 0.0 is fully transparent; 0.18 is roughly 70% see-through.")
+
+(defun my/corfu-popup-transparency (frame)
+  "Apply translucent frame parameters to the Corfu child FRAME.
+Only the popup frame is touched; the main frame keeps the macOS glass."
+  (when (and (eq system-type 'darwin) (display-graphic-p frame))
+    (modify-frame-parameters
+     frame
+     `((alpha-background . ,my/corfu-popup-alpha)
+       (ns-alpha-glyphs-alpha . ,my/corfu-popup-alpha)
+       ;; 弹框自己的玻璃层会把背景刷实，必须关掉。child NSWindow 没有
+       ;; 标题栏，`ns_update_glass_titlebar' 会直接返回，不会影响主窗口。
+       (ns-glass-material . nil))))
+  frame)
+
+(after! corfu
+  (advice-add 'corfu--make-frame :filter-return #'my/corfu-popup-transparency))
+
 ;; 覆盖 doom+ 默认实现: yank 路径时不用 ~ 缩写, 保持绝对路径
 (defun my/yank-buffer-path-full (&optional root)
   "Copy the current buffer's absolute path to the kill ring."
