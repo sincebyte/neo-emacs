@@ -231,6 +231,11 @@ cat ~/.local/state/typing-agent/token
 任务开始时如果目标文件已经在窗口里，不会多弹一次选择框。任务结束*不做任何恢复*：
 不会切回任务开始前的 buffer，也不会恢复原来的多窗口布局，画面就停在最后编辑或
 查看的那个 buffer 上。失败、取消同样如此。
+
+编辑的 buffer 里语法检查的诊断会改走回显区（=flycheck-display-errors-function=），
+不再用 =flycheck-popup-tip=。原因很实在：=popup.el= 为了撑出提示框高度会往
+buffer 末尾插空行，任务结束时那些空行会留在文件里。回显区不碰 buffer 内容，
+诊断照样看得到；这个 buffer 局部设置会一直保留。
 手动 =SPC t y r= 进入的录制模式仍会保存并在 =SPC t y R= 时恢复布局（那是用户显式操作）。
 
 * 快捷键
