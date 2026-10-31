@@ -20,6 +20,7 @@ Typing Agent 把修改拆成一个个操作（定位、进入 Insert、逐字符
 - *内容可信*：输入完成后逐个字符比对 buffer；保存前按 `expected` 校验，保存后回读磁盘比对。
 - *可回滚*：任务开始时保存快照，`undo` 回到快照并把结果写回文件。
 - *不改你的配置*：任务期间只做动态绑定，临时关闭自动缩进/配对等干扰，结束即恢复。
+  唯一例外是让该 buffer 的语法诊断改走回显区，避免 `popup.el` 往文件末尾插空行。
 
 * 目录结构
 
@@ -28,14 +29,14 @@ Typing Agent 把修改拆成一个个操作（定位、进入 Insert、逐字符
 | =typing-agent.el= | 配置项、任务结构、状态机、JSON 工具、任务表 |
 | =typing-agent-engine.el= | 任务提交与调度、逐字符输入、保存校验、暂停/继续/取消、任务级撤销 |
 | =typing-agent-evil.el= | Evil 状态检测与切换、定位、搜索、移动、删除、缩进 |
-| =typing-agent-humanizer.el= | 打字速度、停顿、错字与纠正、burst |
+| =typing-agent-humanizer.el= | 打字速度、停顿、burst |
 | =typing-agent-completion.el= | Eglot + corfu 补全弹框接入、唯一候选选择与精确性校验 |
 | =typing-agent-validator.el= | =expected= 校验（contains/regexp/content/sha256/line_count） |
 | =typing-agent-diff.el= | Unified Diff → 任务操作的转换（基础版） |
 | =typing-agent-recording.el= | 录制模式的窗口准备与恢复 |
 | =typing-agent-server.el= | 本地 HTTP/1.1 服务、Bearer 鉴权、路由 |
 | =config.el= | Doom 模块入口、快捷键、自动启动 |
-| =test/typing-agent-test.el= | 40 项 ERT 测试（含 HTTP 全流程、dired 创建与补全纯逻辑） |
+| =test/typing-agent-test.el= | 41 项 ERT 测试（含 HTTP 全流程、dired 创建与补全纯逻辑） |
 | =opencode/= | 可直接复制到 OpenCode 配置目录的 tool 与 skill |
 | =mcp/typing-agent-mcp.ts= | 可选的 MCP stdio server，把 HTTP API 包装成 MCP 工具 |
 
@@ -209,6 +210,15 @@ emacsclient -e '(typing-agent-server-status)'
 cat ~/.local/state/typing-agent/token
 #+end_src
 
+* 打字节奏
+
+- 基础速度 6.5 字符/秒（=typing-agent-typing-speed=），约合每分钟 390 个字符
+  （约 78 WPM），属于人类里打字偏快的那一档；每个字符还有 ±30% 的随机浮动。
+- 小概率进入 burst（=typing-agent-burst-speed= 9.5 字符/秒），只是手顺了一小段，
+  不会出现 20+ 字符/秒的机器连发。
+- 标点、换行、开新行后都会停顿；极少数情况下会停下来「思考」一下。
+- *不模拟打错字*：写进 buffer 的每个字符都是对的，没有打错再退格的表演。
+
 * 窗口行为
 
 任务开始时（以及 =/open=、撤销任务时）Typing Agent 会先把画面准备好，再开始敲键：
@@ -295,7 +305,7 @@ curl -s -H "$AUTH" $BASE/buffer | jq '{buffer, line, evil_state}'
 cat > /tmp/task.json <<'JSON'
 {
   "file": "/Users/van/project/src/main/java/UserService.java",
-  "options": {"speed": 1.0, "typo_probability": 0.01},
+  "options": {"speed": 1.0},
   "operations": [
     {"type": "search_text", "text": "public User find(Long id) {"},
     {"type": "replace_region",
@@ -442,7 +452,6 @@ curl -s -H "$AUTH" $BASE/task/<id> | jq '{status, index, total, error, result}'
 | 选项 | 默认 | 说明 |
 |------|------|------|
 | =speed= | 1.0 | 打字速度倍率（Characters per second 的乘数） |
-| =typo_probability= | 0.015 | 模拟打错再纠正的概率，0 关闭 |
 | =allow_dirty= | false | 允许目标 buffer 有未保存修改 |
 | =save= | false | 任务结束后自动保存 |
 | =recording= | false | 进入录制模式整理窗口 |
@@ -465,7 +474,8 @@ curl -s -H "$AUTH" $BASE/task/<id> | jq '{status, index, total, error, result}'
 * 录制流程建议
 
 1. =SPC t y r= 进入录制准备，摆好窗口。
-2. 用 OpenCode 提交任务；默认速度按需要设 =speed=：演示 0.6–0.8，正常 1.0，快 2.0+。
+2. 用 OpenCode 提交任务；默认 =speed= 1.0 已经是偏快的真人手速（约 6.5 字符/秒），
+   想再慢一点设 0.6–0.8，一般不建议超过 1.2。
 3. 中途想停下讲解就 =SPC t y p=，讲完 =SPC t y c=。
 4. 出错或想重来，=SPC t y u= 回到任务开始前（文件一起回滚）。
 5. 录完 =SPC t y R= 退出录制。
@@ -517,6 +527,6 @@ HTTP 测试使用端口 18766；如果当前进程已有服务在跑会跳过，
 - *401*：token 不匹配，重新读 =~/.local/state/typing-agent/token=。
 - *409 有未保存修改*：先 =POST /save=，或确认后传 =options.allow_dirty: true=。
 - *422 定位失败*：=search= 文本与文件实际内容不一致（缩进、换行、全角空格）。重新读文件再改。
-- *打字太快/太慢*：调 =options.speed=；要完全关掉错字模拟设 =typo_probability: 0=。
+- *打字太快/太慢*：调 =options.speed=，默认 1.0 为偏快的真人手速。
 - *撤销失败*：buffer 撤销被禁用，或回退 =typing-agent-undo-max-steps= 步后仍未回到快照；
   错误会明确抛出，不会假装成功。

@@ -40,7 +40,7 @@ Normal/Insert 状态、逐字符按键把修改真实地打出来，最后校验
    里把文件创建出来。
 2. **设计操作**：优先用少量 `replace_region`，每个都带唯一、精确的 `search`。
 3. **提交任务**：`action: "task"`，传 `file`、`operations`，`options.speed` 按录制需要
-   （正常 1.0，慢速演示 0.6–0.8，快 2.0+）。默认会等待任务结束。
+   （默认 1.0 已是偏快的真人手速；更慢设 0.6–0.8，一般不超过 1.2）。默认会等待任务结束。
    任务开始时 Emacs 会让目标文件独占当前 frame（单窗口、光标居中），已经显示时
    不会再弹选择框。任务结束不做恢复：停在最后编辑或查看的 buffer，不切回原 buffer。
 4. **看结果**：`ok: true` 且 `status: "completed"` 才算成功；`result.saved` 表示已写盘。
@@ -130,7 +130,7 @@ Emacs 里看到的是真人会做的动作，不是一次性灌入文本：
 {
   "action": "task",
   "file": "/Users/van/project/src/main/java/UserService.java",
-  "options": { "speed": 1.0, "typo_probability": 0.01 },
+  "options": { "speed": 1.0 },
   "operations": [
     { "type": "search_text", "text": "public User find(Long id) {" },
     { "type": "replace_region",
@@ -149,8 +149,7 @@ Emacs 里看到的是真人会做的动作，不是一次性灌入文本：
 
 | 选项 | 默认 | 说明 |
 | --- | --- | --- |
-| `speed` | 1.0 | 打字速度倍率 |
-| `typo_probability` | 0.015 | 模拟打错并自动改正的概率，0 关闭 |
+| `speed` | 1.0 | 打字速度倍率（1.0 ≈ 6.5 字符/秒，偏快的真人手速） |
 | `allow_dirty` | false | 允许目标 buffer 有未保存修改 |
 | `save` | false | 任务结束后自动保存 |
 | `recording` | false | 进入录制模式（整理窗口） |

@@ -9,8 +9,9 @@
 ;;   - 基础速度 + 每人不同的随机抖动；
 ;;   - 遇到标点、换行稍作停顿；
 ;;   - 小概率进入 burst（连续快速输入一段）；
-;;   - 小概率停下来「思考」；
-;;   - 小概率打错字符，停顿后删除并重新输入。
+;;   - 小概率停下来「思考」。
+;;
+;; 不模拟打错字：写进文件的内容必须一次就是对的。
 ;;
 ;; 所有参数都可以通过任务 options 覆盖，见 `typing-agent-humanizer-delay'。
 
@@ -24,28 +25,31 @@
   :group 'typing-agent
   :prefix "typing-agent-")
 
-(defcustom typing-agent-typing-speed 11.0
+(defcustom typing-agent-typing-speed 6.5
   "基础打字速度，单位：字符/秒。
-11 大约相当于每分钟 130 个字符，录屏时不会太拖沓。"
+6.5 约合每分钟 390 个字符（约 78 WPM），是人类里打字偏快那一档；
+再快就不像真人了。"
   :type 'number
   :group 'typing-agent-humanizer)
 
-(defcustom typing-agent-typing-speed-variation 0.35
-  "每个字符速度的随机浮动比例，0.35 表示 ±35%。"
+(defcustom typing-agent-typing-speed-variation 0.30
+  "每个字符速度的随机浮动比例，0.30 表示 ±30%。"
   :type 'number
   :group 'typing-agent-humanizer)
 
-(defcustom typing-agent-burst-probability 0.16
+(defcustom typing-agent-burst-probability 0.12
   "开始一段连续快速输入的概率（在每个普通字符前判定）。"
   :type 'number
   :group 'typing-agent-humanizer)
 
-(defcustom typing-agent-burst-speed 22.0
-  "连续快速输入时的速度，单位：字符/秒。"
+(defcustom typing-agent-burst-speed 9.5
+  "连续快速输入时的速度，单位：字符/秒。
+9.5 约合每分钟 570 个字符（约 114 WPM），是真人手速的上限区间，
+不会出现机器般的连发。"
   :type 'number
   :group 'typing-agent-humanizer)
 
-(defcustom typing-agent-burst-length '(4 . 12)
+(defcustom typing-agent-burst-length '(3 . 8)
   "一段 burst 持续的字符数范围。"
   :type '(cons integer integer)
   :group 'typing-agent-humanizer)
@@ -88,17 +92,6 @@
   :type '(cons number number)
   :group 'typing-agent-humanizer)
 
-(defcustom typing-agent-typo-probability 0.015
-  "打错字符的概率。
-只对 ASCII 字母、数字和常见符号生效；中文不模拟错字。"
-  :type 'number
-  :group 'typing-agent-humanizer)
-
-(defcustom typing-agent-correction-delay '(0.18 . 0.42)
-  "发现打错到按下退格之间的停顿范围，单位：秒。"
-  :type '(cons number number)
-  :group 'typing-agent-humanizer)
-
 (defcustom typing-agent-key-delay-jitter 0.012
   "每个字符额外加上的固定抖动上限，单位：秒。"
   :type 'number
@@ -132,88 +125,11 @@
         min
       (+ min (* (- max min) (/ (float (random 10000)) 10000.0))))))
 
-(defun typing-agent-humanizer--clamp (value min max)
-  "把 VALUE 限制在 MIN..MAX。"
-  (max min (min max value)))
-
 (defun typing-agent-humanizer-punctuation-p (char)
   "CHAR 是否是标点。"
   (and (characterp char)
        (string-match-p (regexp-quote (char-to-string char))
                        typing-agent-punctuation-chars)))
-
-(defun typing-agent-humanizer--ascii-code-char-p (char)
-  "CHAR 是否是可以模拟打错的代码字符。"
-  (and (characterp char)
-       (< 31 char 127)
-       (not (memq char '(?\n ?\r ?\t)))))
-
-(defconst typing-agent-humanizer--typo-map
-  '((?a . (?s ?q ?z))
-    (?b . (?v ?n ?g))
-    (?c . (?x ?v ?d))
-    (?d . (?s ?f ?e))
-    (?e . (?w ?r ?d))
-    (?f . (?d ?g ?r))
-    (?g . (?f ?h ?t))
-    (?h . (?g ?j ?y))
-    (?i . (?u ?o ?k))
-    (?j . (?h ?k ?u))
-    (?k . (?j ?l ?i))
-    (?l . (?k ?\; ?o))
-    (?m . (?n ?j ?k))
-    (?n . (?b ?m ?h))
-    (?o . (?i ?p ?l))
-    (?p . (?o ?\[ ?l))
-    (?q . (?w ?a ?1))
-    (?r . (?e ?t ?f))
-    (?s . (?a ?d ?w))
-    (?t . (?r ?y ?g))
-    (?u . (?y ?i ?j))
-    (?v . (?c ?b ?f))
-    (?w . (?q ?e ?s))
-    (?x . (?z ?c ?s))
-    (?y . (?t ?u ?h))
-    (?z . (?x ?a ?s))
-    (?0 . (?9 ?o ?p))
-    (?1 . (?2 ?q ?`))
-    (?2 . (?3 ?w ?1))
-    (?3 . (?4 ?e ?2))
-    (?4 . (?5 ?r ?3))
-    (?5 . (?6 ?t ?4))
-    (?6 . (?7 ?y ?5))
-    (?7 . (?8 ?u ?6))
-    (?8 . (?9 ?i ?7))
-    (?9 . (?0 ?o ?8))
-    (?\; . (?l ?' ?:))
-    (?, . (?m ?. ?<))
-    (?. . (?, ?/ ?>))
-    (?- . (?= ?0 ?\[))
-    (?= . (?- ?+ ?\])))
-  "相邻键位映射，用来生成「像手滑按到旁边键」的错字。")
-
-(defun typing-agent-humanizer-typo-char (char)
-  "为 CHAR 生成一个相邻键位的错字；没有映射时返回 nil。"
-  (let ((candidates (cdr (assq char typing-agent-humanizer--typo-map))))
-    (and candidates
-         (nth (random (length candidates)) candidates))))
-
-(defun typing-agent-humanizer-should-typo-p (char &optional speed)
-  "是否应该为 CHAR 模拟一次打错。
-SPEED 是整体速度倍率；打字越快，错字概率越低。"
-  (and (typing-agent-humanizer--ascii-code-char-p char)
-       (typing-agent-humanizer-typo-char char)
-       (> typing-agent-typo-probability 0)
-       (< (random 10000)
-          (round (* 10000
-                    (typing-agent-humanizer--clamp
-                     (* typing-agent-typo-probability
-                        (or speed typing-agent-humanizer--speed-multiplier))
-                     0.0 1.0))))))
-
-(defun typing-agent-humanizer-correction-delay ()
-  "按下退格前的停顿。"
-  (typing-agent-humanizer--random-range typing-agent-correction-delay))
 
 (defun typing-agent-humanizer-delay (char &optional speed)
   "计算输入 CHAR 之前应该等待的时间（秒）。

@@ -226,9 +226,6 @@ JSON 里可能传入 CRLF，而 Emacs buffer 内部使用 LF。"
      (cons :speed
            (let ((value (typing-agent-plist-number options :speed 1.0)))
              (if (> value 0) value 1.0)))
-     (cons :typo_probability
-           (typing-agent-plist-number options :typo_probability
-                                      typing-agent-typo-probability))
      (cons :allow_dirty
            (typing-agent-plist-boolean options :allow_dirty
                                        typing-agent-allow-dirty-buffer))
@@ -939,8 +936,7 @@ Normal。START 是校验起点，EXPECTED 是应写入 buffer 的内容；OPEN �
               :auto-exit auto-exit
               :start (copy-marker start)
               :expected expected
-              :speed (typing-agent-engine--option task :speed 1.0)
-              :skip-typo nil))
+              :speed (typing-agent-engine--option task :speed 1.0)))
   (typing-agent-engine--lines-next task))
 
 ;;; 补全
@@ -1073,67 +1069,32 @@ CHAR-INDEX 非 nil 时，用它替换 STATE 里的字符索引（选中候选后
           (typing-agent-engine--schedule
            task 0.03 #'typing-agent-engine--lines-next)))
 
-       ;; 刚刚输入了一个错字，等待后按退格。
-       ((eq phase 'typo-wait)
-        (typing-agent-evil-send-char ?\177)
-        (setf (plist-get state :phase) 'retry)
-        (setf (typing-agent-task-op-state task) state)
-        (typing-agent-engine--schedule
-         task 0.06 #'typing-agent-engine--lines-next))
-
-       ;; 退格完成，重新输入当前字符，但这一轮不再打错。
-       ((eq phase 'retry)
-        (setf (plist-get state :phase) 'type)
-        (setf (plist-get state :skip-typo) t)
-        (setf (typing-agent-task-op-state task) state)
-        (typing-agent-engine--schedule
-         task 0.04 #'typing-agent-engine--lines-next))
-
        ;; 输入当前行的字符。
        (t
         (let* ((line (nth index lines))
                (char-index (plist-get state :char-index)))
           (if (>= char-index (length line))
               (typing-agent-engine--lines-finish-line task state)
-            (let* ((char (aref line char-index))
-                   (typo-probability
-                    (typing-agent-engine--option
-                     task :typo_probability typing-agent-typo-probability))
-                   (typo (and (not (plist-get state :skip-typo))
-                              (> typo-probability 0)
-                              (let ((typing-agent-typo-probability
-                                     (float typo-probability)))
-                                (typing-agent-humanizer-should-typo-p char)))))
-              (if typo
+            (let ((char (aref line char-index)))
+              (typing-agent-evil-send-char char)
+              (setf (plist-get state :char-index) (1+ char-index))
+              (setf (typing-agent-task-op-state task) state)
+              (if (typing-agent-engine--completion-start-p
+                   line (1+ char-index) char)
                   (progn
-                    (typing-agent-evil-send-char
-                     (typing-agent-humanizer-typo-char char))
-                    (setf (plist-get state :phase) 'typo-wait)
+                    (setf (plist-get state :phase) 'completion-show)
+                    (setf (plist-get state :completion-tries) 0)
                     (setf (typing-agent-task-op-state task) state)
-                    (typing-agent-task-log task 'debug "模拟打错字符 %c" char)
                     (typing-agent-engine--schedule
-                     task (typing-agent-humanizer-correction-delay)
-                     #'typing-agent-engine--lines-next))
-                (typing-agent-evil-send-char char)
-                (setf (plist-get state :char-index) (1+ char-index))
-                (setf (plist-get state :skip-typo) nil)
-                (setf (typing-agent-task-op-state task) state)
-                (if (typing-agent-engine--completion-start-p
-                     line (1+ char-index) char)
-                    (progn
-                      (setf (plist-get state :phase) 'completion-show)
-                      (setf (plist-get state :completion-tries) 0)
-                      (setf (typing-agent-task-op-state task) state)
-                      (typing-agent-engine--schedule
-                       task typing-agent-completion-settle
-                       #'typing-agent-engine--completion-next))
-                  ;; 一个词已经写完：收起还开着的弹框，继续普通输入。
-                  (when (and typing-agent--completion-active
-                             (typing-agent-completion-popup-p))
-                    (typing-agent-completion-quit))
-                  (typing-agent-engine--schedule
-                   task (typing-agent-humanizer-delay char speed)
-                   #'typing-agent-engine--lines-next)))))))))))
+                     task typing-agent-completion-settle
+                     #'typing-agent-engine--completion-next))
+                ;; 一个词已经写完：收起还开着的弹框，继续普通输入。
+                (when (and typing-agent--completion-active
+                           (typing-agent-completion-popup-p))
+                  (typing-agent-completion-quit))
+                (typing-agent-engine--schedule
+                 task (typing-agent-humanizer-delay char speed)
+                 #'typing-agent-engine--lines-next))))))))))
 
 (defun typing-agent-engine--lines-finish-line (task state)
   "当前行输入完毕：行尾回 Normal 用 `o' 开新行，行中则用 RET 继续。

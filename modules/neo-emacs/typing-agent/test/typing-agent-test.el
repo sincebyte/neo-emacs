@@ -74,10 +74,21 @@ BODY 中变量 `file' 是文件路径。"
   (should (typing-agent-humanizer-punctuation-p ?\)))
   (should-not (typing-agent-humanizer-punctuation-p ?a)))
 
-(ert-deftest typing-agent-test-humanizer-typo-map ()
-  (should (typing-agent-humanizer-typo-char ?a))
-  (should-not (typing-agent-humanizer-typo-char ?中))
-  (should-not (typing-agent-humanizer-typo-char ?\n)))
+(ert-deftest typing-agent-test-humanizer-human-pace ()
+  ;; 偏快的真人手速：基础 6.5 字符/秒上下，单字符间隔不低于 0.1 秒，
+  ;; 再怎么抖也不会快得像机器连发。
+  (typing-agent-humanizer-reset 1.0)
+  (let ((typing-agent-thinking-probability 0)
+        (typing-agent-burst-probability 0)
+        (delay (typing-agent-humanizer-delay ?a)))
+    (should (>= delay 0.10))
+    (should (<= delay 0.30)))
+  ;; 不再模拟错字：打错的实现和任务选项都已移除。
+  (should-not (fboundp 'typing-agent-humanizer-should-typo-p))
+  (should-not (assq :typo_probability
+                    (typing-agent-engine-parse-options
+                     (list (cons :options
+                                 (list (cons :typo_probability 0.5))))))))
 
 (ert-deftest typing-agent-test-json-prepare ()
   (let* ((object (list (cons :ok t)
