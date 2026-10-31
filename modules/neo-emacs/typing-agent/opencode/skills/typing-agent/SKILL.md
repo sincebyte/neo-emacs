@@ -81,11 +81,17 @@ Emacs 里看到的是真人会做的动作，不是一次性灌入文本：
 
 - 目标文件不存在时先走 dired，把创建过程完整演出来：打开父目录的 dired → 按
   「新建空文件」（Doom 下是 `c`）→ 逐字符输入文件名
-  （`typing-agent-create-char-delay`，默认 0.12 秒/字符）→ 停
+  （`typing-agent-create-char-delay`，默认 0.15 秒/字符）→ 停
   `typing-agent-confirm-pause`（默认 1 秒）再回车创建 → 等文件出现在目录里 →
   回车打开 → 才开始输入；每步之间还有 `typing-agent-create-pause` 的停顿。
   每一步都等上一步真的生效；超过 `typing-agent-create-timeout`（默认 6 秒）才回退
   直接创建，并在任务日志里记一条 warn。
+- 查看或编辑别的文件时同样走选择框：`/open`（follow 插件）和编辑任务开始前，
+  目标文件不在眼前就弹出 `consult-buffer` / `consult-recent-file` /
+  `project-find-file`，停 `typing-agent-visit-pause`（默认 0.6 秒）后逐字符输入
+  文件名（`typing-agent-visit-char-delay`，默认 0.15 秒/字符），停
+  `typing-agent-confirm-pause` 再回车；超时 `typing-agent-visit-timeout`
+  （默认 6 秒）才收掉选择框直接切换。文件已在当前窗口时只跳行。
 - 多行文本每写完一行就 `ESC` 回 Normal，再用 `o` 开新行重新进 Insert；行与行之间
   有明显停顿（`ESC`→`o`、新行→开始输入各停一下，可用
   `typing-agent-line-break-pause`、`typing-agent-next-line-pause` 调整）。

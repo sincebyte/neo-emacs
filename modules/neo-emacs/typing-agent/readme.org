@@ -213,11 +213,14 @@ cat ~/.local/state/typing-agent/token
 
 任务开始时（以及 =/open=、撤销任务时）Typing Agent 会先把画面准备好，再开始敲键：
 
-1. *查看其他文件先弹选择框*：=read= 其他文件（follow 插件触发 =/open=）时，
-   不直接切 buffer，而是像人一样弹出选择框 —— 已经打开的 buffer 用
-   =consult-buffer=，否则按最近文件 / 项目文件 / =find-file= 选择 —— 输入文件名，
-   回车跳过去。整个过程分步注入按键，选择框会停留一小会儿，录制里看得见。
-   文件已经在当前窗口时只跳行，不打扰画面。
+1. *查看或编辑别的文件先弹选择框*：=read=（follow 插件触发 =/open=）和编辑
+   任务开始时，如果目标文件还没显示在眼前，不直接切 buffer，而是像人一样弹出
+   选择框 —— 已经打开的 buffer 用 =consult-buffer=，否则按最近文件 / 项目文件 /
+   =find-file= 选择 —— 停 =typing-agent-visit-pause=（默认 0.6 秒），再逐字符
+   输入文件名（=typing-agent-visit-char-delay=，默认 0.15 秒一个字符），停
+   =typing-agent-confirm-pause=（默认 1 秒）再回车跳过去。每一步都等上一步真的
+   生效；超过 =typing-agent-visit-timeout=（默认 6 秒）才收掉选择框直接切换，
+   不会卡在 minibuffer 里。文件已经在当前窗口时只跳行，不打扰画面。
 2. 让窗口独占当前 frame（=delete-other-windows=），代码更大、录制更清楚；
 3. 光标居中，方便观看。
 

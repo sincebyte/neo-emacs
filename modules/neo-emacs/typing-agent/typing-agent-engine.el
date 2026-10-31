@@ -379,22 +379,10 @@ TASK 为 nil 时只按 `typing-agent-maximize-window' 判断。"
       (recenter))
     t))
 
-(defun typing-agent-engine--begin (task &optional started)
-  "开始执行 TASK。
-STARTED 非 nil 表示调用前任务已经占用执行权（例如刚在 dired 中建好文件），
-此时不再重复检查忙碌状态。"
-  (unless started
-    (when (typing-agent-task-busy-p)
-      (typing-agent-engine--fail
-       task
-       (list 'typing-agent-busy-error "已有任务正在执行")))
-    (setf (typing-agent-task-status task) typing-agent-status-running)
-    (setf (typing-agent-task-started-at task) (typing-agent--now))
-    (setq typing-agent--active-task task))
+(defun typing-agent-engine--start-typing (task buffer)
+  "TASK 的 BUFFER 已经在眼前，准备输入并开始执行。"
   (condition-case err
-      (let ((buffer (typing-agent-task-buffer task)))
-        (unless (buffer-live-p buffer)
-          (signal 'typing-agent-state-error (list "目标 buffer 已关闭")))
+      (progn
         ;; 先找到文件并最大化窗口，再开始敲键。
         ;; 不保存任务开始前的窗口布局：任务结束就停在最后编辑/查看的 buffer。
         (typing-agent-engine--focus-buffer task buffer)
@@ -414,6 +402,52 @@ STARTED 非 nil 表示调用前任务已经占用执行权（例如刚在 dired 
         (typing-agent-engine--schedule task 0.05))
     (error
      (typing-agent-engine--fail task err))))
+
+(defun typing-agent-engine--begin-after-visit (task buffer)
+  "先像人一样切到 TASK 的 BUFFER，再开始执行。
+跳转本身由 `typing-agent-evil-visit-file' 弹出选择框、输入名字、回车完成。"
+  (let ((file (typing-agent-task-file task))
+        (deadline (+ (float-time) 10.0)))
+    (typing-agent-evil-visit-file
+     file nil (and (find-buffer-visiting file) t))
+    (cl-labels
+        ((check ()
+           (cond
+            ((eq (window-buffer (selected-window)) buffer)
+             (typing-agent-engine--start-typing task buffer))
+            ((>= (float-time) deadline)
+             (typing-agent-task-log task 'warn "跳转等待超时，直接开始")
+             (typing-agent-engine--start-typing task buffer))
+            (t
+             (run-at-time 0.1 nil #'check)))))
+      (run-at-time 0.1 nil #'check))))
+
+(defun typing-agent-engine--begin (task &optional started)
+  "开始执行 TASK。
+STARTED 非 nil 表示调用前任务已经占用执行权（例如刚在 dired 中建好文件），
+此时不再重复检查忙碌状态。目标是已存在的文件、且它还没显示在眼前时，
+先像人一样弹选择框跳过去，再开始输入。"
+  (unless started
+    (when (typing-agent-task-busy-p)
+      (typing-agent-engine--fail
+       task
+       (list 'typing-agent-busy-error "已有任务正在执行")))
+    (setf (typing-agent-task-status task) typing-agent-status-running)
+    (setf (typing-agent-task-started-at task) (typing-agent--now))
+    (setq typing-agent--active-task task))
+  (let ((buffer (typing-agent-task-buffer task)))
+    (cond
+     ((not (buffer-live-p buffer))
+      (typing-agent-engine--fail
+       task (list 'typing-agent-state-error "目标 buffer 已关闭")))
+     ;; 批处理里没有命令循环；文件已经显示；或正卡在 minibuffer 里时直接开始。
+     ((or noninteractive
+          (eq (window-buffer (selected-window)) buffer)
+          (active-minibuffer-window)
+          (not (fboundp 'typing-agent-evil-visit-file)))
+      (typing-agent-engine--start-typing task buffer))
+     (t
+      (typing-agent-engine--begin-after-visit task buffer)))))
 
 (defun typing-agent-engine--create-and-begin (task)
   "在 dired 中像人一样创建 TASK 的目标文件，创建完再开始执行。

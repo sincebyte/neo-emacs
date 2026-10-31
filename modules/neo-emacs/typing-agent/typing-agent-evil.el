@@ -494,8 +494,68 @@ COUNT 为重复次数，默认 1。"
                  (const direct))
   :group 'typing-agent)
 
+(defcustom typing-agent-visit-pause 0.6
+  "文件跳转时，选择框出现后停多久再输入名字，单位：秒。"
+  :type 'number
+  :group 'typing-agent)
+
+(defcustom typing-agent-visit-char-delay 0.15
+  "文件跳转时，在选择框里逐字符输入名字的间隔，单位：秒。"
+  :type 'number
+  :group 'typing-agent)
+
+(defcustom typing-agent-visit-timeout 6.0
+  "文件跳转时，等待每一步生效的最长时间，单位：秒。
+超时就收掉还开着的选择框并直接切换，避免卡在 minibuffer 里。"
+  :type 'number
+  :group 'typing-agent)
+
 (defvar typing-agent-evil--visit-token 0
   "当前这次「人式切换」的编号，用来丢弃过期的按键序列。")
+
+(defun typing-agent-evil--poll-until (pred ok &optional timeout delay guard on-timeout)
+  "轮询 PRED，为真时停 DELAY 秒再调用 OK。
+GUARD 返回 nil 时停止轮询；超过 TIMEOUT 秒调用 ON-TIMEOUT。
+DELAY 为 0 表示立刻调用 OK。"
+  (let ((deadline (+ (float-time) (or timeout typing-agent-visit-timeout))))
+    (cl-labels
+        ((check ()
+           (cond
+            ((and guard (not (funcall guard))) nil)
+            ((funcall pred)
+             (run-at-time (if (numberp delay) delay 0.5) nil ok))
+            ((>= (float-time) deadline)
+             (when on-timeout (funcall on-timeout)))
+            (t
+             (run-at-time 0.08 nil #'check)))))
+      (run-at-time 0 nil #'check))))
+
+(defun typing-agent-evil--visit-prompt-p ()
+  "当前 minibuffer 是否已经变成了文件 / buffer 选择框。
+不同选择器的提示词不一样（Doom 的 consult-buffer 是 “Switch to: ”），
+所以只排除 M-x 这类命令提示，其余都当作选择框。"
+  (and (active-minibuffer-window)
+       (ignore-errors
+         (with-selected-window (active-minibuffer-window)
+           (let ((prompt (minibuffer-prompt)))
+             (and (stringp prompt)
+                  (not (string-match-p "\\`M-x " prompt))))))))
+
+(defun typing-agent-evil--visit-abort-minibuffer ()
+  "选择框还开着时按 C-g 收掉它。"
+  (when (active-minibuffer-window)
+    (typing-agent-evil--push-events (vector 7))))
+
+(defun typing-agent-evil--visit-force-direct (file line tries)
+  "最多试 TRIES 次收掉选择框，然后直接打开 FILE 的 LINE。"
+  (if (and (> tries 0) (active-minibuffer-window))
+      (progn
+        (typing-agent-evil--visit-abort-minibuffer)
+        (run-at-time
+         0.3 nil
+         (lambda ()
+           (typing-agent-evil--visit-force-direct file line (1- tries)))))
+    (typing-agent-evil--visit-direct file line)))
 
 (defun typing-agent-evil--command-keys (command)
   "返回 COMMAND 在当前按键映射中的按键序列，找不到时返回 nil。"
@@ -558,50 +618,87 @@ ALREADY 非空表示 FILE 的 buffer 已经打开，此时用 buffer 选择器�
     (typing-agent-evil--visit-finish file line)))
 
 (defun typing-agent-evil--visit-with-selector (base keys input file line)
-  "在 BASE buffer 中注入启动键 KEYS，输入 INPUT，回车，再跳到 FILE 的 LINE。
-分步注入：先弹选择框，停一下再输入名字，再停一下回车，让过程可见。"
-  (let ((token (cl-incf typing-agent-evil--visit-token)))
-    (run-at-time
-     0 nil
-     (lambda ()
-       (when (= token typing-agent-evil--visit-token)
-         ;; 按键由命令循环在 current buffer 中执行；先把它切成用户
-         ;; 正在看的 buffer，Doom 的 SPC 前缀才会命中。
-         (set-buffer base)
-         (when (typing-agent-evil-insert-p)
-           (typing-agent-evil--push-events (vector 27)))
-         (typing-agent-evil--push-events keys))))
-    (run-at-time
-     0.35 nil
-     (lambda ()
-       (when (= token typing-agent-evil--visit-token)
-         (if (active-minibuffer-window)
-             (typing-agent-evil--push-events (string-to-vector input))
-           ;; 选择框没打开：别把文件名打进文件里，直接切过去收尾。
-           (cl-incf typing-agent-evil--visit-token)
-           (typing-agent-evil--visit-direct file line)))))
-    (run-at-time
-     (+ 0.35 typing-agent-confirm-pause) nil
-     (lambda ()
-       (when (and (= token typing-agent-evil--visit-token)
-                  (active-minibuffer-window))
-         (typing-agent-evil--push-events (kbd "RET")))))
-    (run-at-time
-     (+ 0.35 typing-agent-confirm-pause 0.45) nil
-     (lambda ()
-       (when (= token typing-agent-evil--visit-token)
-         (typing-agent-evil--visit-finish file line))))
-    t))
+  "在 BASE buffer 中按 KEYS 弹出选择框，逐字输入 INPUT，回车后跳到 FILE 的 LINE。
+每一步都等上一步真的生效：选择框出现、名字逐字出现在提示框里、回车后
+buffer 真的切过去。超时（`typing-agent-visit-timeout'）才收掉选择框直接切换，
+避免卡在 minibuffer 里。"
+  (let* ((token (cl-incf typing-agent-evil--visit-token))
+         (target (expand-file-name file))
+         (name (or input (file-name-nondirectory file)))
+         (alive (lambda () (= token typing-agent-evil--visit-token)))
+         (give-up
+          (lambda ()
+            (when (funcall alive)
+              (cl-incf typing-agent-evil--visit-token)
+              (typing-agent-evil--visit-force-direct file line 3)))))
+    (cl-labels
+        ((confirm ()
+           (when (funcall alive)
+             (if (not (active-minibuffer-window))
+                 (funcall give-up)
+               ;; 名字停够时间再回车。
+               (typing-agent-evil--push-events (kbd "RET"))
+               (typing-agent-evil--poll-until
+                (lambda ()
+                  ;; 选择框关掉、文件 buffer 也在，就算跳转完成；
+                  ;; 窗口由 `typing-agent-evil--visit-finish' 统一整理。
+                  (let ((buffer (find-buffer-visiting target)))
+                    (and (buffer-live-p buffer)
+                         (not (active-minibuffer-window)))))
+                (lambda ()
+                  (when (funcall alive)
+                    (typing-agent-evil--visit-finish file line)))
+                typing-agent-visit-timeout 0 alive give-up))))
+         (type-name (chars index)
+           (when (funcall alive)
+             (if (>= index (length chars))
+                 (run-at-time typing-agent-confirm-pause nil #'confirm)
+               (let ((before (typing-agent-evil--create-minibuffer-contents)))
+                 (typing-agent-evil--push-events (vector (aref chars index)))
+                 ;; 等这个字符真的出现在提示框里，再敲下一个，避免事件乱序。
+                 (typing-agent-evil--poll-until
+                  (lambda ()
+                    (let ((now (typing-agent-evil--create-minibuffer-contents)))
+                      (and (stringp now)
+                           (not (equal now before)))))
+                  (lambda ()
+                    (run-at-time typing-agent-visit-char-delay nil
+                                 (lambda ()
+                                   (type-name chars (1+ index)))))
+                  typing-agent-visit-timeout 0 alive give-up))))))
+      (run-at-time
+       0 nil
+       (lambda ()
+         (when (funcall alive)
+           ;; 按键由命令循环在选中窗口的 buffer 里执行；先把它切成
+           ;; 用户正在看的 buffer，Doom 的 SPC 前缀才会命中。
+           (set-buffer base)
+           (let ((start (lambda ()
+                          (when (funcall alive)
+                            (typing-agent-evil--push-events keys)))))
+             (if (typing-agent-evil-insert-p)
+                 ;; ESC 和后面的键分开送，否则会被当成 Meta 前缀。
+                 (progn
+                   (typing-agent-evil--push-events (vector 27))
+                   (run-at-time 0.3 nil start))
+               (funcall start))))))
+      (typing-agent-evil--poll-until
+       #'typing-agent-evil--visit-prompt-p
+       (lambda ()
+         (when (funcall alive)
+           (type-name (string-to-vector name) 0)))
+       typing-agent-visit-timeout typing-agent-visit-pause alive give-up)
+      t)))
 
 ;;; 像人一样创建文件（dired）
 
-(defcustom typing-agent-create-pause 0.5
+(defcustom typing-agent-create-pause 0.6
   "在 dired 中创建文件时，每个阶段之间的停顿，单位：秒。
 dired 出现、按下新建键、输入完文件名、创建完成、打开文件，各停一下。"
   :type 'number
   :group 'typing-agent)
 
-(defcustom typing-agent-create-char-delay 0.12
+(defcustom typing-agent-create-char-delay 0.15
   "在「Create empty file:」提示里逐字符输入文件名时的间隔，单位：秒。"
   :type 'number
   :group 'typing-agent)
@@ -716,24 +813,39 @@ GUARD 返回 nil 时中止后续按键（用于任务被取消）。LOG 是
              (when (active-minibuffer-window)
                (typing-agent-evil--push-events (vector 7)))
              (run-at-time
-              0.3 nil
+              0.35 nil
               (lambda ()
                 (when (or (null guard) (funcall guard))
                   (typing-agent-evil--create-direct file callback))))))
          (poll-until (pred ok reason &optional delay)
-           (let ((deadline (+ (float-time) typing-agent-create-timeout))
-                 (delay (or delay pause)))
-             (cl-labels
-                 ((check ()
-                    (cond
-                     ((not (alive-p)) nil)
-                     ((funcall pred)
-                      (run-at-time delay nil ok))
-                     ((>= (float-time) deadline)
-                      (fail reason))
-                     (t
-                      (run-at-time 0.08 nil #'check)))))
-               (run-at-time 0 nil #'check))))
+           (typing-agent-evil--poll-until
+            pred ok typing-agent-create-timeout delay #'alive-p
+            (lambda () (fail reason))))
+         (open-created ()
+           (when (alive-p)
+             (let ((buffer (window-buffer (selected-window))))
+               (if (not (typing-agent-evil--dired-mode-p buffer))
+                   (fail "创建完成后不在 dired 里")
+                 (let ((found
+                        (with-current-buffer buffer
+                          (goto-char (point-min))
+                          (ignore-errors (dired-goto-file target))
+                          (let ((shown (ignore-errors
+                                        (dired-get-filename nil t))))
+                            (and shown
+                                 (string= (file-truename
+                                           (expand-file-name shown))
+                                          target))))))
+                   (if (not found)
+                       (fail "dired 里找不到新建的文件")
+                     (note "回车打开新建的文件")
+                     (with-current-buffer buffer
+                       (typing-agent-evil--execute-keys (kbd "RET")))
+                     (poll-until
+                      (lambda () (find-buffer-visiting target))
+                      #'open-file
+                      "打开文件失败"
+                      pause)))))))
          (confirm-create ()
            (when (alive-p)
              (if (not (active-minibuffer-window))
@@ -748,7 +860,8 @@ GUARD 返回 nil 时中止后续按键（用于任务被取消）。LOG 是
                                  (lambda ()
                                    (note "文件已创建，等 dired 刷新")
                                    (open-created))
-                                 "文件没有创建出来")))))))
+                                 "文件没有创建出来"
+                                 pause)))))))
          (type-each (chars index)
            (when (alive-p)
              (if (>= index (length chars))
@@ -792,40 +905,24 @@ GUARD 返回 nil 时中止后续按键（用于任务被取消）。LOG 是
              (let ((buffer (window-buffer (selected-window))))
                (if (not (typing-agent-evil--dired-mode-p buffer))
                    (fail "没有进入 dired")
-                 (when (with-current-buffer buffer (typing-agent-evil-insert-p))
-                   (typing-agent-evil--push-events (vector 27)))
-                 (note "在 dired 里按新建空文件键")
-                 (typing-agent-evil--push-events
-                  (with-current-buffer buffer
-                    (typing-agent-evil--create-keys)))
-                 (poll-until
-                  #'typing-agent-evil--create-prompt-p
-                  #'type-file-name
-                  "新建文件提示没有出现")))))
-         (open-created ()
-           (when (alive-p)
-             (let ((buffer (window-buffer (selected-window))))
-               (if (not (typing-agent-evil--dired-mode-p buffer))
-                   (fail "创建完成后不在 dired 里")
-                 (let ((found
-                        (with-current-buffer buffer
-                          (goto-char (point-min))
-                          (ignore-errors (dired-goto-file target))
-                          (let ((shown (ignore-errors
-                                        (dired-get-filename nil t))))
-                            (and shown
-                                 (string= (file-truename
-                                           (expand-file-name shown))
-                                          target))))))
-                   (if (not found)
-                       (fail "dired 里找不到新建的文件")
-                     (note "回车打开新建的文件")
-                     (with-current-buffer buffer
-                       (typing-agent-evil--execute-keys (kbd "RET")))
-                     (poll-until
-                      (lambda () (find-buffer-visiting target))
-                      #'open-file
-                      "打开文件失败"))))))))
+                 (let ((send
+                        (lambda ()
+                          (when (alive-p)
+                            (typing-agent-evil--push-events
+                             (with-current-buffer buffer
+                               (typing-agent-evil--create-keys)))
+                            (poll-until
+                             #'typing-agent-evil--create-prompt-p
+                             #'type-file-name
+                             "新建文件提示没有出现"
+                             pause)))))
+                   (note "在 dired 里按新建空文件键")
+                   (if (with-current-buffer buffer (typing-agent-evil-insert-p))
+                       ;; ESC 和新建键分开送，否则会被当成 Meta 前缀。
+                       (progn
+                         (typing-agent-evil--push-events (vector 27))
+                         (run-at-time 0.3 nil send))
+                     (funcall send))))))))
       (cond
        ((file-exists-p file)
         (open-file)
@@ -835,7 +932,7 @@ GUARD 返回 nil 时中止后续按键（用于任务被取消）。LOG 是
         (typing-agent-evil--create-direct file callback)
         t)
        ;; 已经在 minibuffer 里，没法再弹 dired。
-       ((minibufferp base)
+       ((or (minibufferp base) (active-minibuffer-window))
         (fail "当前在 minibuffer")
         t)
        (t
@@ -865,7 +962,7 @@ GUARD 返回 nil 时中止后续按键（用于任务被取消）。LOG 是
      ((and already buffer (eq base buffer))
       (typing-agent-evil--visit-finish file line))
      ;; 在 minibuffer 里或明确要求直接打开。
-     ((or (minibufferp) (eq typing-agent-visit-method 'direct))
+     ((or (active-minibuffer-window) (eq typing-agent-visit-method 'direct))
       (typing-agent-evil--visit-direct file line))
      (t
       ;; 按键要落在用户正在看的 buffer 里，所以在这个 buffer 中查键位。
