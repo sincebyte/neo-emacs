@@ -74,6 +74,24 @@
   "Typing Agent 执行期间的按键覆盖表。
 通过 `minor-mode-overriding-map-alist' 安装，优先级高于 Evil 的状态键位。" )
 
+(defun typing-agent--avoid-popup-tip-padding ()
+  "让 `flycheck-popup-tip' 在这个 buffer 里改用回显区显示诊断。
+它用 popup.el 弹提示，而 popup.el 会在 buffer 末尾插入空行来撑出提示
+所需的高度（`popup-create'），这些空行随后虽然会被删掉，但每次显示都会
+让文件末尾短暂多出几行，任务结束时甚至会留在 buffer 里。改成回显区显示，
+既不丢诊断，又不会碰文件内容。"
+  (when (and (boundp 'flycheck-display-errors-function)
+             (fboundp 'flycheck-popup-tip-show-popup)
+             (eq flycheck-display-errors-function
+                 #'flycheck-popup-tip-show-popup))
+    (let ((fallback
+           (or (and (boundp 'flycheck-popup-tip-old-display-function)
+                    flycheck-popup-tip-old-display-function)
+               (and (fboundp 'flycheck-display-error-messages)
+                    #'flycheck-display-error-messages))))
+      (when (functionp fallback)
+        (setq-local flycheck-display-errors-function fallback)))))
+
 (defun typing-agent--quiesce-buffer ()
   "在当前 buffer 中关闭会干扰逐字符输入的局部行为。
 保存原值，任务结束后由 `typing-agent--restore-buffer' 恢复。"
@@ -105,6 +123,9 @@
     (setq typing-agent--saved-electric-indent-local
           (local-variable-p 'electric-indent-inhibit))
     (setq-local electric-indent-inhibit t)
+    ;; `flycheck-popup-tip' 会往 buffer 末尾插空行撑提示高度，任务期间会污染
+    ;; 文件内容；这个 buffer 里的诊断一律改走回显区。
+    (typing-agent--avoid-popup-tip-padding)
     (when (boundp 'corfu-auto)
       (setq-local typing-agent--saved-corfu-auto corfu-auto)
       (setq-local corfu-auto nil))

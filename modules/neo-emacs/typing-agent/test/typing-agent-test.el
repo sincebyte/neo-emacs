@@ -403,6 +403,21 @@ BODY 中变量 `file' 是文件路径。"
                          (buffer-substring-no-properties
                           (point-min) (point-max)))))))))
 
+(ert-deftest typing-agent-test-popup-tip-does-not-touch-buffer ()
+  ;; `flycheck-popup-tip' 用 popup.el 弹提示，而 popup.el 会往 buffer 末尾插
+  ;; 空行来撑高度。任务开始时这个 buffer 的诊断改走回显区，文件内容因此不会
+  ;; 被多余空行污染。
+  (cl-letf (((symbol-function 'flycheck-popup-tip-show-popup) #'ignore)
+            ((symbol-function 'flycheck-display-error-messages) #'ignore))
+    (with-temp-buffer
+      (setq-local flycheck-display-errors-function
+                  #'flycheck-popup-tip-show-popup)
+      (typing-agent--quiesce-buffer)
+      (should-not (eq flycheck-display-errors-function
+                      #'flycheck-popup-tip-show-popup))
+      (should (functionp flycheck-display-errors-function))
+      (typing-agent--restore-buffer))))
+
 (ert-deftest typing-agent-test-visit-file-already-shown ()
   ;; 文件已经在当前窗口：只跳行，不再弹选择框、不换 buffer。
   (skip-unless (fboundp 'evil-mode))
