@@ -35,7 +35,7 @@ Typing Agent 把修改拆成一个个操作（定位、进入 Insert、逐字符
 | =typing-agent-recording.el= | 录制模式的窗口准备与恢复 |
 | =typing-agent-server.el= | 本地 HTTP/1.1 服务、Bearer 鉴权、路由 |
 | =config.el= | Doom 模块入口、快捷键、自动启动 |
-| =test/typing-agent-test.el= | 39 项 ERT 测试（含 HTTP 全流程与补全纯逻辑） |
+| =test/typing-agent-test.el= | 40 项 ERT 测试（含 HTTP 全流程、dired 创建与补全纯逻辑） |
 | =opencode/= | 可直接复制到 OpenCode 配置目录的 tool 与 skill |
 | =mcp/typing-agent-mcp.ts= | 可选的 MCP stdio server，把 HTTP API 包装成 MCP 工具 |
 
@@ -355,13 +355,24 @@ curl -s -H "$AUTH" $BASE/task/<id> | jq '{status, index, total, error, result}'
 
 编辑器里看到的动作是真人会做的那些，而不是一次性灌入文本：
 
-1. *新建文件走 dired*：目标文件不存在时，任务先像人一样浏览目录 —— 打开父目录的
-   dired，按「新建空文件」的键（Doom / Dirvish 下是 =c=）弹出 =Create empty file:=，
-   输入文件名，停 =typing-agent-confirm-pause=（默认 1 秒）再回车创建，然后回车
-   打开，才开始进入 Insert 输入。每一步之间停 =typing-agent-create-pause=
-   （默认 0.5 秒），录制里能看清文件是怎么出现的。
-   任务日志会记「目标文件不存在：在 dired 中创建」和「文件已创建」。
-   批处理环境（没有命令循环）或 dired 流程失败时退回直接创建，任务不会卡住。
+1. *新建文件走 dired*：目标文件不存在时，任务先像人一样在目录里创建它，而不是
+   直接跳进一个空 buffer ——
+   - 打开父目录的 dired（整个 frame 只剩它），停 =typing-agent-create-pause=
+     （默认 0.5 秒）让目录列表出来；
+   - 按 dired 的「新建空文件」键（Doom / Dirvish 下是 =c=，没有绑定就用 M-x），
+     弹出 =Create empty file:=；
+   - 逐字符输入文件名（=typing-agent-create-char-delay=，默认 0.12 秒一个字符），
+     每敲一个字符都确认它真的出现在提示框里；
+   - 停 =typing-agent-confirm-pause=（默认 1 秒）再回车创建；
+   - 等文件真的存在、dired 刷新，在目录里定位到新文件，停一下再回车打开；
+   - 进入文件 buffer 后才开始 Insert 输入。
+
+   窗口在整个过程中停在 dired 里，录制里能看清文件名是怎么敲出来、文件是怎么出现在
+   目录里的。每一步都等上一步真的生效才继续；任一步超过
+   =typing-agent-create-timeout=（默认 6 秒）才放弃，记一条 =warn= 后退回直接创建，
+   任务不会卡住。任务日志依次是：打开 dired 目录、按新建键、输入文件名、
+   回车创建、回车打开、文件已创建。
+   批处理环境（没有命令循环）仍然直接创建。
 2. *按行切换模式*：多行 =type_text= 每写完一行就 =ESC= 回 Normal，再用 =o=
    开新行、重新进 Insert。行与行之间会明显停顿：=ESC= 与 =o= 之间是
    =typing-agent-line-break-pause=，新行出现到开始输入是
@@ -473,10 +484,10 @@ emacs --batch -Q -L . -L "$EVIL" -L "$EVIL/dir" \
       -f ert-run-tests-batch-and-exit
 #+end_src
 
-当前 39 项全通过，覆盖：JSON 编码、diff 解析、校验器、逐字符输入、保存、任务级撤销、
+当前 40 项全通过，覆盖：JSON 编码、diff 解析、校验器、逐字符输入、保存、任务级撤销、
 HTTP 鉴权与 =/status=、=/buffer=、=/tasks=、=/task= 全流程、=/undo=、=/diff=、404，
-以及补全的触发字符、检查位置、候选与目标行匹配、纯文本/清理后的 LSP item、
-=completion= 选项。
+新建文件（dired 创建、新建键与打开目录）、以及补全的触发字符、检查位置、候选与
+目标行匹配、纯文本/清理后的 LSP item、=completion= 选项。
 
 HTTP 测试使用端口 18766；如果当前进程已有服务在跑会跳过，避免影响真实服务。
 

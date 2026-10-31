@@ -79,9 +79,13 @@ Normal/Insert 状态、逐字符按键把修改真实地打出来，最后校验
 
 Emacs 里看到的是真人会做的动作，不是一次性灌入文本：
 
-- 目标文件不存在时先走 dired：打开父目录、按「新建空文件」、输入文件名，停
-  `typing-agent-confirm-pause`（默认 1 秒）再回车创建，再回车打开，然后才开始输入；
-  每步之间还有 `typing-agent-create-pause` 的停顿。
+- 目标文件不存在时先走 dired，把创建过程完整演出来：打开父目录的 dired → 按
+  「新建空文件」（Doom 下是 `c`）→ 逐字符输入文件名
+  （`typing-agent-create-char-delay`，默认 0.12 秒/字符）→ 停
+  `typing-agent-confirm-pause`（默认 1 秒）再回车创建 → 等文件出现在目录里 →
+  回车打开 → 才开始输入；每步之间还有 `typing-agent-create-pause` 的停顿。
+  每一步都等上一步真的生效；超过 `typing-agent-create-timeout`（默认 6 秒）才回退
+  直接创建，并在任务日志里记一条 warn。
 - 多行文本每写完一行就 `ESC` 回 Normal，再用 `o` 开新行重新进 Insert；行与行之间
   有明显停顿（`ESC`→`o`、新行→开始输入各停一下，可用
   `typing-agent-line-break-pause`、`typing-agent-next-line-pause` 调整）。

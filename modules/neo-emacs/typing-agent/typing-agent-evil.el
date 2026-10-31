@@ -38,6 +38,7 @@
 (declare-function project-find-file "project")
 (declare-function project-current "project")
 (declare-function dired "dired")
+(declare-function dired-noselect "dired")
 (declare-function dired-goto-file "dired")
 (declare-function dired-get-filename "dired")
 (declare-function dired-create-empty-file "dired-aux")
@@ -595,8 +596,19 @@ ALREADY 非空表示 FILE 的 buffer 已经打开，此时用 buffer 选择器�
 ;;; 像人一样创建文件（dired）
 
 (defcustom typing-agent-create-pause 0.5
-  "在 dired 中创建文件时，每一步按键之间的停顿，单位：秒。
-打开目录、输入文件名、回车创建、回车打开，都会各停一下，录屏时看得清。"
+  "在 dired 中创建文件时，每个阶段之间的停顿，单位：秒。
+dired 出现、按下新建键、输入完文件名、创建完成、打开文件，各停一下。"
+  :type 'number
+  :group 'typing-agent)
+
+(defcustom typing-agent-create-char-delay 0.12
+  "在「Create empty file:」提示里逐字符输入文件名时的间隔，单位：秒。"
+  :type 'number
+  :group 'typing-agent)
+
+(defcustom typing-agent-create-timeout 6.0
+  "dired 创建流程中等待每一步生效的最长时间，单位：秒。
+超过这个时间就记录原因并退回直接创建，避免任务卡死。"
   :type 'number
   :group 'typing-agent)
 
@@ -606,14 +618,15 @@ ALREADY 非空表示 FILE 的 buffer 已经打开，此时用 buffer 选择器�
 (defun typing-agent-evil--create-direct (file callback)
   "不经过 dired，直接创建空文件 FILE，然后调用 CALLBACK。
 只在没有命令循环或 dired 流程失败时使用。"
-  (let ((file (expand-file-name file)))
-    (make-directory (file-name-directory file) t)
-    (with-temp-file file)
-    (let ((buffer (find-file-noselect file)))
-      (unless (eq (window-buffer (selected-window)) buffer)
-        (ignore-errors (switch-to-buffer buffer)))
-      (when callback (funcall callback buffer))
-      buffer)))
+  (let* ((file (expand-file-name file))
+         (buffer (progn
+                   (make-directory (file-name-directory file) t)
+                   (with-temp-file file)
+                   (find-file-noselect file))))
+    (unless (eq (window-buffer (selected-window)) buffer)
+      (ignore-errors (switch-to-buffer buffer)))
+    (when callback (funcall callback buffer))
+    buffer))
 
 (defun typing-agent-evil--dired-mode-p (buffer)
   "BUFFER 是否是 dired。"
@@ -622,154 +635,221 @@ ALREADY 非空表示 FILE 的 buffer 已经打开，此时用 buffer 选择器�
          (derived-mode-p 'dired-mode))))
 
 (defun typing-agent-evil--create-keys ()
-  "返回在 dired 中新建空文件的按键序列。"
+  "返回在 dired 中新建空文件的按键序列。
+没有直接绑定时退回 M-x 调用，画面里仍然看得到命令和提示。"
   (or (where-is-internal 'dired-create-empty-file nil t)
       (kbd "M-x dired-create-empty-file RET")))
 
-(defun typing-agent-evil--create-name-events (file name)
-  "返回在「Create empty file:」提示里输入文件名的按键事件。
-提示框通常已经预填了目录，这时只输入 NAME；否则输入完整 FILE。"
-  (let* ((window (active-minibuffer-window))
-         (contents (and window
-                        (with-selected-window window
-                          (minibuffer-contents-no-properties)))))
-    (if (and (stringp contents) (string-suffix-p "/" contents))
-        (string-to-vector name)
-      (string-to-vector file))))
+(defun typing-agent-evil--create-prompt-p ()
+  "当前 minibuffer 是否已经是「Create empty file」的文件名提示。
+用来确认 M-x 或新建键之后真的停在了等待输入文件名的地方。"
+  (and (active-minibuffer-window)
+       (ignore-errors
+         (with-selected-window (active-minibuffer-window)
+           (let ((prompt (minibuffer-prompt)))
+             (and (stringp prompt)
+                  (string-match-p "empty file" prompt)))))))
 
-(defun typing-agent-evil-create-file (file callback &optional guard)
+(defun typing-agent-evil--create-log (log level message)
+  "把 MESSAGE 交给任务的日志函数 LOG。"
+  (when log
+    (ignore-errors (funcall log level message))))
+
+(defun typing-agent-evil--create-minibuffer-contents ()
+  "返回当前 minibuffer 的内容；没有 minibuffer 时返回 nil。"
+  (let ((window (active-minibuffer-window)))
+    (and window
+         (with-selected-window window
+           (minibuffer-contents-no-properties)))))
+
+(defun typing-agent-evil--create-show-dired (dir)
+  "把 DIR 的 dired 显示在当前窗口，并让整个 frame 只留它。"
+  (let ((buffer (dired-noselect (file-name-as-directory dir))))
+    (unless (eq (window-buffer (selected-window)) buffer)
+      (switch-to-buffer buffer))
+    (when (> (length (window-list)) 1)
+      (ignore-errors (delete-other-windows)))
+    (with-current-buffer buffer
+      (goto-char (point-min)))
+    buffer))
+
+(defun typing-agent-evil-create-file (file callback &optional guard log)
   "在 dired 中像人一样创建 FILE，完成后调用 CALLBACK。
-过程完全由真实按键驱动：打开父目录的 dired，按新建文件键，输入文件名，
-回车创建，再回车打开。每一步都留出 `typing-agent-create-pause' 的停顿。
-GUARD 返回 nil 时中止后续按键（用于任务被取消）。CALLBACK 收到文件 buffer。
-批处理环境或 dired 流程失败时退回直接创建，保证任务仍能继续。"
+过程由真实按键驱动，每一步都等到状态真的变化才继续：
+
+  1. 打开父目录的 dired，停一下让目录列表出现；
+  2. 按 dired 的「新建空文件」键，等文件名提示出现；
+  3. 逐字符输入文件名；
+  4. 停 `typing-agent-confirm-pause' 再回车创建；
+  5. 等文件真的出现、dired 刷新后，按回车打开它。
+
+GUARD 返回 nil 时中止后续按键（用于任务被取消）。LOG 是
+\(LEVEL MESSAGE) 形式的日志函数，可省略。CALLBACK 收到文件 buffer。
+批处理环境或某一步超时（`typing-agent-create-timeout'）时退回直接创建，
+并记录原因，保证任务仍能继续。"
   (let* ((file (expand-file-name file))
          (dir (file-name-directory file))
          (name (file-name-nondirectory file))
+         (target (file-truename file))
          (token (cl-incf typing-agent-evil--create-token))
          (base (window-buffer (selected-window)))
          (pause typing-agent-create-pause)
-         (alive (lambda ()
-                  (and (= token typing-agent-evil--create-token)
-                       (or (null guard) (funcall guard)))))
-         fallback open-keys)
-    (setq fallback
-          (lambda (_reason)
-            (when (funcall alive)
-              ;; 放弃后续序列，避免半截按键继续打进别的 buffer。
-              (cl-incf typing-agent-evil--create-token)
-              (typing-agent-evil--create-direct file callback))))
-    (cond
-     ((file-exists-p file)
-      (when callback (funcall callback (find-buffer-visiting file)))
-      t)
-     ;; 批处理里没有命令循环，按键注入不会被执行。
-     (noninteractive
-      (typing-agent-evil--create-direct file callback)
-      t)
-     ;; 正在 minibuffer 里，没法再弹 dired 提示。
-     ((minibufferp base)
-      (funcall fallback "当前在 minibuffer")
-      t)
-     (t
-      (ignore-errors (make-directory dir t))
-      ;; 用真实路径，避免 /tmp 与 /private/tmp 这类符号链接让 dired 定位失败。
-      (setq dir (file-name-as-directory (file-truename dir)))
-      (setq open-keys (with-current-buffer base
-                        (typing-agent-evil--command-keys 'dired)))
-      ;; 1. 打开父目录的 dired。
-      (run-at-time
-       0 nil
-       (lambda ()
-         (when (funcall alive)
-           (set-buffer base)
-           (when (typing-agent-evil-insert-p)
-             (typing-agent-evil--push-events (vector 27)))
-           (typing-agent-evil--push-events (or open-keys (kbd "C-x d"))))))
-      ;; 2. 在「Dired (directory):」里输入目录。
-      (run-at-time
-       pause nil
-       (lambda ()
-         (when (funcall alive)
-           (if (active-minibuffer-window)
-               (typing-agent-evil--push-events
-                (string-to-vector (file-name-as-directory dir)))
-             (funcall fallback "dired 没有打开目录提示")))))
-      ;; 3. 回车，dired 打开。
-      (run-at-time
-       (* 2 pause) nil
-       (lambda ()
-         (when (and (funcall alive) (active-minibuffer-window))
-           (typing-agent-evil--push-events (kbd "RET")))))
-      ;; 4. 在 dired 里按「新建空文件」。
-      (run-at-time
-       (* 3 pause) nil
-       (lambda ()
-         (when (funcall alive)
-           (let ((buffer (window-buffer (selected-window))))
-             (if (typing-agent-evil--dired-mode-p buffer)
-                 (progn
-                   (when (with-current-buffer buffer
-                           (typing-agent-evil-insert-p))
-                     (typing-agent-evil--push-events (vector 27)))
-                   (typing-agent-evil--push-events
-                    (with-current-buffer buffer
-                      (typing-agent-evil--create-keys))))
-               (funcall fallback "没有进入 dired"))))))
-      ;; 5. 输入文件名。
-      (run-at-time
-       (* 4 pause) nil
-       (lambda ()
-         (when (funcall alive)
-           (if (active-minibuffer-window)
-               (typing-agent-evil--push-events
-                (typing-agent-evil--create-name-events file name))
-             (funcall fallback "新建文件提示没有出现")))))
-      ;; 6. 停一下再回车创建。
-      (run-at-time
-       (+ (* 5 pause) typing-agent-confirm-pause) nil
-       (lambda ()
-         (when (and (funcall alive) (active-minibuffer-window))
-           (typing-agent-evil--push-events (kbd "RET")))))
-      ;; 7. 建好后回车打开；定位不到目标文件就不冒险回车。
-      (run-at-time
-       (+ (* 6 pause) typing-agent-confirm-pause) nil
-       (lambda ()
-         (when (funcall alive)
-           (cond
-            ((not (file-exists-p file))
-             (funcall fallback "文件没有创建出来"))
-            ((typing-agent-evil--dired-mode-p (window-buffer (selected-window)))
-             (let* ((buffer (window-buffer (selected-window)))
-                    (target (file-truename file))
-                    (found
+         (aborted nil))
+    (cl-labels
+        ((alive-p ()
+           (and (not aborted)
+                (= token typing-agent-evil--create-token)
+                (or (null guard) (funcall guard))))
+         (note (message)
+           (typing-agent-evil--create-log log 'info message))
+         (open-file ()
+           (when callback
+             (funcall callback (find-buffer-visiting target))))
+         (fail (reason)
+           (unless aborted
+             (setq aborted t)
+             (setq typing-agent-evil--create-token
+                   (1+ typing-agent-evil--create-token))
+             (typing-agent-evil--create-log
+              log 'warn (format "dired 创建文件失败（%s），退回直接创建" reason))
+             ;; 收掉还开着的提示框，避免后续按键落进 minibuffer。
+             (when (active-minibuffer-window)
+               (typing-agent-evil--push-events (vector 7)))
+             (run-at-time
+              0.3 nil
+              (lambda ()
+                (when (or (null guard) (funcall guard))
+                  (typing-agent-evil--create-direct file callback))))))
+         (poll-until (pred ok reason &optional delay)
+           (let ((deadline (+ (float-time) typing-agent-create-timeout))
+                 (delay (or delay pause)))
+             (cl-labels
+                 ((check ()
+                    (cond
+                     ((not (alive-p)) nil)
+                     ((funcall pred)
+                      (run-at-time delay nil ok))
+                     ((>= (float-time) deadline)
+                      (fail reason))
+                     (t
+                      (run-at-time 0.08 nil #'check)))))
+               (run-at-time 0 nil #'check))))
+         (confirm-create ()
+           (when (alive-p)
+             (if (not (active-minibuffer-window))
+                 (fail "输入文件名时提示框已经关闭")
+               (note "文件名校对后回车创建")
+               (run-at-time typing-agent-confirm-pause nil
+                            (lambda ()
+                              (when (alive-p)
+                                (typing-agent-evil--push-events (kbd "RET"))
+                                (poll-until
+                                 (lambda () (file-exists-p file))
+                                 (lambda ()
+                                   (note "文件已创建，等 dired 刷新")
+                                   (open-created))
+                                 "文件没有创建出来")))))))
+         (type-each (chars index)
+           (when (alive-p)
+             (if (>= index (length chars))
+                 (run-at-time pause nil #'confirm-create)
+               (let ((before (typing-agent-evil--create-minibuffer-contents)))
+                 (typing-agent-evil--push-events (vector (aref chars index)))
+                 ;; 等这个字符真的出现在提示里，再敲下一个，避免事件乱序。
+                 (poll-until
+                  (lambda ()
+                    (let ((now (typing-agent-evil--create-minibuffer-contents)))
+                      (and (stringp now)
+                           (not (equal now before)))))
+                  (lambda ()
+                    (run-at-time typing-agent-create-char-delay nil
+                                 (lambda ()
+                                   (type-each chars (1+ index)))))
+                  "输入文件名时按键没有生效"
+                  0)))))
+         (type-file-name ()
+           (when (alive-p)
+             (let ((contents (typing-agent-evil--create-minibuffer-contents)))
+               (if (and (stringp contents)
+                        (not (string-empty-p contents))
+                        (not (string-suffix-p "/" contents)))
+                   ;; 提示框里预填了别的内容：先清空再重来。
+                   (progn
+                     (typing-agent-evil--push-events (kbd "C-a C-k"))
+                     (poll-until
+                      (lambda ()
+                        (let ((now (typing-agent-evil--create-minibuffer-contents)))
+                          (and (stringp now)
+                               (or (string-empty-p now)
+                                   (string-suffix-p "/" now)))))
+                      #'type-file-name
+                      "清空文件名提示失败"
+                      0))
+                 (note (format "输入文件名：%s" name))
+                 (type-each (string-to-vector name) 0)))))
+         (press-create-key ()
+           (when (alive-p)
+             (let ((buffer (window-buffer (selected-window))))
+               (if (not (typing-agent-evil--dired-mode-p buffer))
+                   (fail "没有进入 dired")
+                 (when (with-current-buffer buffer (typing-agent-evil-insert-p))
+                   (typing-agent-evil--push-events (vector 27)))
+                 (note "在 dired 里按新建空文件键")
+                 (typing-agent-evil--push-events
+                  (with-current-buffer buffer
+                    (typing-agent-evil--create-keys)))
+                 (poll-until
+                  #'typing-agent-evil--create-prompt-p
+                  #'type-file-name
+                  "新建文件提示没有出现")))))
+         (open-created ()
+           (when (alive-p)
+             (let ((buffer (window-buffer (selected-window))))
+               (if (not (typing-agent-evil--dired-mode-p buffer))
+                   (fail "创建完成后不在 dired 里")
+                 (let ((found
+                        (with-current-buffer buffer
+                          (goto-char (point-min))
+                          (ignore-errors (dired-goto-file target))
+                          (let ((shown (ignore-errors
+                                        (dired-get-filename nil t))))
+                            (and shown
+                                 (string= (file-truename
+                                           (expand-file-name shown))
+                                          target))))))
+                   (if (not found)
+                       (fail "dired 里找不到新建的文件")
+                     (note "回车打开新建的文件")
                      (with-current-buffer buffer
-                       (goto-char (point-min))
-                       (ignore-errors (dired-goto-file target))
-                       (let ((shown (ignore-errors
-                                      (dired-get-filename nil t))))
-                         (and shown
-                              (string= (file-truename shown) target))))))
-               (if found
-                   ;; 光标已经落在新文件那一行，回车打开。
-                   (typing-agent-evil--push-events (kbd "RET"))
-                 (typing-agent-evil--visit-direct file nil))))
-            (t
-             (typing-agent-evil--push-events (kbd "RET")))))))
-      ;; 8. 收尾：确认文件 buffer 已经打开。
-      (run-at-time
-       (+ (* 7 pause) typing-agent-confirm-pause) nil
-       (lambda ()
-         (when (funcall alive)
-           (let ((buffer (find-buffer-visiting file)))
-             (cond
-              (buffer (when callback (funcall callback buffer)))
-              ((file-exists-p file)
-               (typing-agent-evil--visit-direct file nil)
-               (when callback
-                 (funcall callback (find-buffer-visiting file))))
-              (t (funcall fallback "打开文件失败")))))))
-      t))))
+                       (typing-agent-evil--execute-keys (kbd "RET")))
+                     (poll-until
+                      (lambda () (find-buffer-visiting target))
+                      #'open-file
+                      "打开文件失败"))))))))
+      (cond
+       ((file-exists-p file)
+        (open-file)
+        t)
+       ;; 批处理里没有命令循环，注入的按键不会被执行。
+       (noninteractive
+        (typing-agent-evil--create-direct file callback)
+        t)
+       ;; 已经在 minibuffer 里，没法再弹 dired。
+       ((minibufferp base)
+        (fail "当前在 minibuffer")
+        t)
+       (t
+        (ignore-errors (make-directory dir t))
+        ;; 用真实路径，避免 /tmp 与 /private/tmp 这类符号链接让 dired 定位失败。
+        (run-at-time
+         0 nil
+         (lambda ()
+           (when (alive-p)
+             (let ((buffer (typing-agent-evil--create-show-dired dir)))
+               (when (typing-agent-evil--dired-mode-p buffer)
+                 (note (format "打开 dired 目录：%s" dir))
+                 (run-at-time pause nil #'press-create-key))))))
+        t)))))
 
 (defun typing-agent-evil-visit-file (file &optional line already)
   "像人一样打开或切换到 FILE，并跳到 LINE。

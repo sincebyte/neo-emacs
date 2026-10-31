@@ -428,7 +428,9 @@ STARTED 非 nil 表示调用前任务已经占用执行权（例如刚在 dired 
          (typing-agent-task-file task)
          (lambda (buffer) (typing-agent-engine--created task buffer))
          (lambda () (eq (typing-agent-task-status task)
-                        typing-agent-status-running)))
+                        typing-agent-status-running))
+         (lambda (level message)
+           (typing-agent-task-log task level "%s" message)))
       (error
        (typing-agent-engine--fail task err)))))
 

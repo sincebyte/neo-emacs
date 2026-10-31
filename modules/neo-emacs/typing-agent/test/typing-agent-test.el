@@ -536,6 +536,25 @@ BODY 中变量 `file' 是文件路径。"
         (kill-buffer created))
       (ignore-errors (delete-directory dir t)))))
 
+(ert-deftest typing-agent-test-create-show-dired-and-keys ()
+  ;; 打开父目录的 dired，并在该 buffer 里找到「新建空文件」的按键。
+  (skip-unless (fboundp 'dired-noselect))
+  (let* ((dir (make-temp-file "typing-agent-dired-" t))
+         (buffer nil))
+    (unwind-protect
+        (progn
+          (setq buffer (typing-agent-evil--create-show-dired dir))
+          (should (typing-agent-evil--dired-mode-p buffer))
+          (should (eq (window-buffer (selected-window)) buffer))
+          (should (= 1 (length (window-list))))
+          ;; Doom 的 dired 里新建空文件绑在 c；没绑定时退回 M-x 调用。
+          (should (member (typing-agent-evil--create-keys)
+                          (list (string-to-vector "c")
+                                (kbd "M-x dired-create-empty-file RET")))))
+      (when (and buffer (buffer-live-p buffer))
+        (kill-buffer buffer))
+      (ignore-errors (delete-directory dir t)))))
+
 (ert-deftest typing-agent-test-task-creates-missing-file ()
   ;; 目标文件不存在时，任务先创建空文件，再编辑并保存。
   (skip-unless (fboundp 'evil-mode))
