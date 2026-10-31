@@ -19,6 +19,7 @@
 (require 'cl-lib)
 (require 'subr-x)
 (require 'typing-agent)
+(require 'typing-agent-keycast)
 (require 'typing-agent-completion)
 
 (declare-function evil-mode "evil")
@@ -108,7 +109,9 @@
   "在当前 buffer 中执行键盘宏 MACRO。
 `execute-kbd-macro' 把每条命令都执行在 selected window 的 buffer 上：
 窗口没跟着切换时（比如 batch 测试），按键就会落到别的 buffer。这里先把
-当前 buffer 放进 selected window，执行完再把当前 buffer 切回来。"
+当前 buffer 放进 selected window，执行完再把当前 buffer 切回来。
+执行前先把这个宏里的按键镜像到 KeyCastr，让录制里看得到手速。"
+  (typing-agent-keycast-mirror-events macro)
   (let ((buffer (current-buffer)))
     (let ((window (selected-window)))
       (when (and (windowp window)
@@ -139,6 +142,7 @@ RET 发送为 Return 键；TAB 用 `insert' 精确插入，避免触发 yasnippe
    ((eq char ?\t)
     ;; Doom 的 Insert 状态把 TAB 绑定到 yas-expand；这里直接插入制表符，
     ;; 保证文件内容与任务预期完全一致。
+    (typing-agent-keycast-mirror-event ?\t)
     (insert "\t"))
    ((characterp char)
     (typing-agent-evil--execute-keys (vector char)))
@@ -563,7 +567,9 @@ DELAY 为 0 表示立刻调用 OK。"
       (where-is-internal command (current-global-map) t)))
 
 (defun typing-agent-evil--push-events (events)
-  "把 EVENTS 注入 `unread-command-events'，让命令循环当成真实按键处理。"
+  "把 EVENTS 注入 `unread-command-events'，让命令循环当成真实按键处理。
+这些按键同样不会进 macOS 的按键流，先镜像到 KeyCastr。"
+  (typing-agent-keycast-mirror-events events)
   (setq unread-command-events
         (append (append events nil) unread-command-events)))
 

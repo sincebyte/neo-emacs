@@ -15,11 +15,15 @@
 (require 'cl-lib)
 (require 'typing-agent)
 (require 'typing-agent-humanizer)
+(require 'typing-agent-keycast)
 (require 'typing-agent-completion)
 (require 'typing-agent-validator)
 (require 'typing-agent-diff)
 (require 'typing-agent-engine)
 (require 'typing-agent-server)
+
+;; 测试期间不要往用户真正开着的 KeyCastr 里灌按键。
+(setq typing-agent-keycast-enabled nil)
 
 ;; 纯 `emacs -Q' + Evil 的环境没有 Doom 的撤销后端配置，
 ;; 这里显式退回到 Emacs 内置 undo；在 Doom 中该变量已由用户配置。
@@ -868,6 +872,75 @@ BODY 为字符串时按 JSON 发送；TOKEN 为 nil 时使用当前 token。"
   (should-not (alist-get :completion
                          (typing-agent-engine-parse-options
                           '(:options (:completion :false))))))
+
+(ert-deftest typing-agent-test-keycast-event-text ()
+  ;; 特殊键与 KeyCastr 自己的显示保持一致。
+  (should (equal (typing-agent-keycast--event-text ?a) "a"))
+  (should (equal (typing-agent-keycast--event-text ?\s) "␣"))
+  (should (equal (typing-agent-keycast--event-text ?\t) "⇥"))
+  (should (equal (typing-agent-keycast--event-text ?\r) "⏎"))
+  (should (equal (typing-agent-keycast--event-text ?\n) "⏎"))
+  (should (equal (typing-agent-keycast--event-text ?\d) "⌫"))
+  (should (equal (typing-agent-keycast--event-text ?\e) "⎋"))
+  (should (equal (typing-agent-keycast--event-text ?\C-g) "C-g"))
+  (should (equal (typing-agent-keycast--event-text 'tab) "⇥"))
+  (should (equal (typing-agent-keycast--event-text 'return) "⏎"))
+  (should (equal (typing-agent-keycast--event-text ?中) "中")))
+
+(ert-deftest typing-agent-test-keycast-mirror-text ()
+  ;; 用真正的数据报 socket 走一遍协议，确认 KeyCastr 收到 JSON 行。
+  (let* ((path (make-temp-file "typing-agent-keycast-" nil ".sock"))
+         (received nil)
+         (typing-agent-keycast-socket path)
+         (typing-agent-keycast-enabled t)
+         (typing-agent-keycast--process nil)
+         (typing-agent-keycast--attempt nil)
+         (server nil))
+    (unwind-protect
+        (progn
+          ;; bind 之前必须把 make-temp-file 建出来的普通文件删掉。
+          (delete-file path)
+          (setq server
+                (make-network-process
+                 :name "typing-agent-keycast-test"
+                 :family 'local :service path :server t :type 'datagram
+                 :noquery t :coding 'utf-8-unix
+                 :filter (lambda (_process string) (push string received))))
+          (typing-agent-keycast-mirror-text "a ")
+          (typing-agent-keycast-mirror-events (vector ?\r ?\t))
+          (accept-process-output nil 1.0)
+          (let ((payload (apply #'concat (nreverse received))))
+            (should (string-match-p "\"text\":\"a\"" payload))
+            (should (string-match-p "\"text\":\"␣\"" payload))
+            (should (string-match-p "\"text\":\"⏎\"" payload))
+            (should (string-match-p "\"text\":\"⇥\"" payload))))
+      (when (process-live-p typing-agent-keycast--process)
+        (delete-process typing-agent-keycast--process))
+      (when (process-live-p server)
+        (delete-process server))
+      (ignore-errors (delete-file path)))))
+
+(ert-deftest typing-agent-test-keycast-disabled ()
+  (let ((typing-agent-keycast-enabled nil)
+        (typing-agent-keycast--process nil)
+        (typing-agent-keycast--attempt nil))
+    (typing-agent-keycast-mirror-text "abc")
+    (should-not typing-agent-keycast--process)))
+
+(ert-deftest typing-agent-test-keycast-missing-socket ()
+  ;; KeyCastr 没开时静默降级，并且退避期内不反复尝试连接。
+  (let* ((path (concat (make-temp-file "typing-agent-keycast-missing-") ".sock"))
+         (typing-agent-keycast-socket path)
+         (typing-agent-keycast-enabled t)
+         (typing-agent-keycast--process nil)
+         (typing-agent-keycast--attempt nil))
+    (unwind-protect
+        (progn
+          (should-not (typing-agent-keycast-connected-p))
+          (typing-agent-keycast-mirror-text "ab")
+          (should-not typing-agent-keycast--process)
+          (should (floatp typing-agent-keycast--attempt)))
+      (ignore-errors (delete-file path)))))
 
 (provide 'typing-agent-test)
 ;;; typing-agent-test.el ends here

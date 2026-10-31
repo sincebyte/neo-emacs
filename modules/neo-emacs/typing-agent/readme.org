@@ -30,6 +30,7 @@ Typing Agent 把修改拆成一个个操作（定位、进入 Insert、逐字符
 | =typing-agent-engine.el= | 任务提交与调度、逐字符输入、保存校验、暂停/继续/取消、任务级撤销 |
 | =typing-agent-evil.el= | Evil 状态检测与切换、定位、搜索、移动、删除、缩进 |
 | =typing-agent-humanizer.el= | 打字速度、停顿、burst |
+| =typing-agent-keycast.el= | 把打字动作镜像到 KeyCastr 的按键显示 |
 | =typing-agent-completion.el= | Eglot + corfu 补全弹框接入、唯一候选选择与精确性校验 |
 | =typing-agent-validator.el= | =expected= 校验（contains/regexp/content/sha256/line_count） |
 | =typing-agent-diff.el= | Unified Diff → 任务操作的转换（基础版） |
@@ -218,6 +219,25 @@ cat ~/.local/state/typing-agent/token
   不会出现 20+ 字符/秒的机器连发。
 - 标点、换行、开新行后都会停顿；极少数情况下会停下来「思考」一下。
 - *不模拟打错字*：写进 buffer 的每个字符都是对的，没有打错再退格的表演。
+
+* KeyCastr 按键显示
+
+录制时想让每个键都浮在屏幕上：Typing Agent 会把要敲的按键镜像到本机 KeyCastr。
+这些按键是 Emacs 内部的键盘宏（=execute-kbd-macro= / =unread-command-events=），
+不产生 macOS 的 CGEvent，所以 KeyCastr 自己的 event tap 看不到；镜像走一个本地
+socket，由 KeyCastr 直接交给当前 visualizer 显示。
+
+- KeyCastr 侧是本仓库配套的 fork：监听 =/tmp/keycastr-inject-<uid>.sock=
+  （Unix 数据报，权限 0600），收到 ={"text":"a"}= 这样的 JSON 就显示。
+- 空格、TAB、RET、DEL、ESC 分别显示 =␣=、=⇥=、=⏎=、=⌫=、=⎋=，与 KeyCastr
+  识别真实按键时一致；组合键显示成 =C-a= 这种形式。补全插入的文本也会逐字符显示。
+- 没开 KeyCastr、socket 不存在、或 =typing-agent-keycast-enabled= 为 nil 时完全
+  静默：任务照常执行，最多每 =typing-agent-keycast-retry-interval=（默认 5 秒）
+  重连一次，不影响打字节奏。
+- 用户手动停止 Casting 时不显示；如果 KeyCastr 没拿到 Input Monitoring 权限，
+  注入仍然有效（那种情况下 event tap 本来就收不到任何按键）。
+
+不想用：=(setq typing-agent-keycast-enabled nil)=。
 
 * 窗口行为
 
@@ -502,10 +522,11 @@ emacs --batch -Q -L . -L "$EVIL" -L "$EVIL/dir" \
       -f ert-run-tests-batch-and-exit
 #+end_src
 
-当前 40 项全通过，覆盖：JSON 编码、diff 解析、校验器、逐字符输入、保存、任务级撤销、
+当前 45 项全通过，覆盖：JSON 编码、diff 解析、校验器、逐字符输入、保存、任务级撤销、
 HTTP 鉴权与 =/status=、=/buffer=、=/tasks=、=/task= 全流程、=/undo=、=/diff=、404，
 新建文件（dired 创建、新建键与打开目录）、以及补全的触发字符、检查位置、候选与
-目标行匹配、纯文本/清理后的 LSP item、=completion= 选项。
+目标行匹配、纯文本/清理后的 LSP item、=completion= 选项，以及 KeyCastr
+镜像的特殊键映射和真实 socket 收发。
 
 HTTP 测试使用端口 18766；如果当前进程已有服务在跑会跳过，避免影响真实服务。
 
@@ -530,3 +551,6 @@ HTTP 测试使用端口 18766；如果当前进程已有服务在跑会跳过，
 - *打字太快/太慢*：调 =options.speed=，默认 1.0 为偏快的真人手速。
 - *撤销失败*：buffer 撤销被禁用，或回退 =typing-agent-undo-max-steps= 步后仍未回到快照；
   错误会明确抛出，不会假装成功。
+- *KeyCastr 不亮*：确认 KeyCastr 在运行、版本带注入 socket
+  （=ls /tmp/keycastr-inject-$(id -u).sock=），且 =typing-agent-keycast-enabled= 为 t。
+  不影响编辑任务本身。

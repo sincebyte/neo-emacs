@@ -21,6 +21,7 @@
 (require 'cl-lib)
 (require 'subr-x)
 (require 'typing-agent)
+(require 'typing-agent-keycast)
 
 (defvar corfu--base)
 (defvar corfu--candidates)
@@ -218,7 +219,12 @@ textEdit、snippet 和 additionalTextEdits（例如自动 import）都会让
         (insert before)
         (goto-char (+ beg (length before)))
         (signal 'typing-agent-verify-error
-                (list (format "补全插入的内容与候选不一致: %S" actual)))))))
+                (list (format "补全插入的内容与候选不一致: %S" actual)))))
+    ;; 补全补上的那一段也算打字，镜像到 KeyCastr。
+    (typing-agent-keycast-mirror-text
+     (if (and (stringp before) (string-prefix-p before plain))
+         (substring plain (length before))
+       plain))))
 
 ;;; 检查入口
 
