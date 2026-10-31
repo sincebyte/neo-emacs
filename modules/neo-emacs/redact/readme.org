@@ -26,6 +26,10 @@
 **实现要点**
 
 - =font-lock= + =display= 文本属性：增量、随编辑自动重排。
+- 启用时同步 =font-lock-ensure=，不等 redisplay 的 jit-lock 分块 fontify；
+  否则进入 buffer 的第一帧会先露出明文，下一帧才变成星号。
+- =window-buffer-change-functions= 在窗口切换 buffer、绘制前再兜底一次：
+  补启用漏掉的 buffer，并同步遮挡可见区域。
 - 遮挡串固定 6 个星号，不按原长生成，避免泄露长度。
 - 启用时 modeline 显示锁图标：=Symbols Nerd Font Mono= 的 =nf-fa-lock=
   字形（U+F023），不用彩色 emoji。
@@ -42,6 +46,9 @@
 - =vterm= 暂不接入（它自己维护缓冲区渲染）。
 - 大文件超过 =font-lock-maximum-size=（当前配置 500KB）时 font-lock 不工作，
   规则也不会生效。
+- 超过 =redact-eager-fontify-max-size=（默认 2MB）的 buffer 只在显示时
+  同步遮挡可见区域，滚动到未 fontify 的部分仍可能短暂露出原文；
+  需要绝对安全时调大这个值。
 
 ** 敏感词表
 

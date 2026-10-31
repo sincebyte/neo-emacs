@@ -23,6 +23,10 @@
 (require 'subr-x)
 (require 'seq)
 
+;; `redact--fontify-window' 在 `define-minor-mode' 之前定义，先声明变量，
+;; 避免字节编译时把它当成自由变量。
+(defvar redact-mode)
+
 (defgroup redact nil
   "在屏幕上遮挡敏感信息。"
   :group 'editing
@@ -43,6 +47,16 @@
 (defcustom redact-min-length 6
   "键值对中，值短于该长度时不遮挡。
 短值通常是占位符（如 xxx、todo、123），遮了反而干扰阅读。"
+  :type 'integer
+  :group 'redact)
+
+(defcustom redact-eager-fontify-max-size 2000000
+  "启用遮挡时同步 fontify 整个 buffer 的大小上限（字节）。
+
+遮挡依赖 font-lock 的 `display' 属性，而 jit-lock 默认等到 redisplay
+才 fontify，屏幕上会先露出明文。为此启用时直接同步 fontify 整个 buffer。
+超过该上限的大文件只同步处理可见窗口，其余区域由 jit-lock 兜底，滚动时
+仍可能短暂露出原文；需要绝对安全时把它调大。"
   :type 'integer
   :group 'redact)
 
@@ -348,6 +362,25 @@
            'help-echo "已遮挡"
            'redact t))))
 
+(defun redact--fontify-window (window)
+  "同步 fontify WINDOW 中 buffer 的可见区域，立即完成遮挡。
+`font-lock-ensure' 是同步的，不会像 jit-lock 那样留到下一次 redisplay。"
+  (with-current-buffer (window-buffer window)
+    (when (and font-lock-mode redact-mode)
+      (let ((beg (window-start window))
+            (end (window-end window t)))
+        (when (and beg end (< beg end))
+          (font-lock-ensure beg end))))))
+
+(defun redact--ensure-fontified ()
+  "同步 fontify 当前 buffer，避免进入 buffer 时先露出明文。
+小 buffer 整块处理；超过 `redact-eager-fontify-max-size' 时只处理可见窗口。"
+  (when font-lock-mode
+    (if (<= (buffer-size) redact-eager-fontify-max-size)
+        (font-lock-ensure (point-min) (point-max))
+      (dolist (window (get-buffer-window-list (current-buffer) nil t))
+        (redact--fontify-window window)))))
+
 (defconst redact--font-lock-keywords
   `((redact--match-credential
      (1 (progn (redact--apply-mask (match-beginning 1) (match-end 1)) nil)))
@@ -468,16 +501,17 @@
                   (delete-dups
                    (append '(display help-echo redact)
                            (ensure-list font-lock-extra-managed-props))))
+      ;; 先移除再添加，避免 major mode 切换后重复启用时累积同一批规则。
+      (font-lock-remove-keywords nil redact--font-lock-keywords)
       (font-lock-add-keywords nil redact--font-lock-keywords 'append)
       (unless font-lock-mode
         (font-lock-mode 1))
       (font-lock-flush)
       (add-hook 'after-change-functions #'redact--pem-after-change nil t)
       (redact--refresh-pem)
-      ;; 当前可见区域立即重算，别等 idle 定时器
-      (when-let* ((win (get-buffer-window)))
-        (with-selected-window win
-          (font-lock-ensure (window-start) (window-end nil t)))))))
+      ;; 关键：不等 redisplay 的 jit-lock，启用时同步 fontify。
+      ;; 否则 buffer 第一次显示时可能先画出明文，下一帧才变成星号。
+      (redact--ensure-fontified))))
 
 (defun redact--disable ()
   (when redact--enabled
@@ -516,6 +550,28 @@
 (define-globalized-minor-mode global-redact-mode
   redact-mode redact--turn-on
   :group 'redact)
+
+(defun redact--ensure-buffer-enabled ()
+  "全局模式开启而当前 buffer 漏了 `redact-mode' 时静默补上。
+绑定 `redact-mode--suppress-set-explicitly'，免得把补启用当成用户显式开启，
+导致重新打开全局模式后该 buffer 不再被自动启用。"
+  (when (and global-redact-mode
+             (not redact-mode)
+             (not (minibufferp))
+             (not (eq major-mode 'vterm-mode)))
+    (let ((redact-mode--suppress-set-explicitly t))
+      (redact-mode 1))))
+
+(defun redact--window-buffer-changed (frame)
+  "窗口切换 buffer 时，在画面绘制前完成遮挡。
+这个钩子在 redisplay 中、窗口内容绘制前运行，所以这里同步 fontify
+能避免第一帧露出明文；同时兜住被 major mode / 文件局部变量清掉的启用状态。"
+  (when global-redact-mode
+    (dolist (window (window-list frame 'no-minibuffer))
+      (with-current-buffer (window-buffer window)
+        (redact--ensure-buffer-enabled)
+        (when redact-mode
+          (redact--fontify-window window))))))
 
 ;;; 词表维护
 
@@ -580,6 +636,8 @@
         (assq-delete-all 'redact-mode mode-line-misc-info))
   (add-to-list 'mode-line-misc-info
                '(redact-mode (" " (:eval (redact--modeline-lock)))))
+  ;; 显示前的最后一道保险：窗口切换到新 buffer 时先同步 fontify。
+  (add-hook 'window-buffer-change-functions #'redact--window-buffer-changed)
   (when (fboundp 'map!)
     (map! :leader :desc "Toggle secret masking" "t k" #'global-redact-mode)))
 
@@ -592,12 +650,9 @@
 ;; 清掉，而 `after-change-major-mode-hook' 只会补一次。这里每次命令后
 ;; 检查当前可见 buffer，漏了就补上。
 (defun redact--ensure-current-buffer ()
-  (when (and global-redact-mode
-             (not redact-mode)
-             (not (minibufferp))
-             (not (eq major-mode 'vterm-mode))
-             (get-buffer-window (current-buffer)))
-    (redact-mode 1)))
+  (when (and (get-buffer-window (current-buffer))
+             (not redact-mode))
+    (redact--ensure-buffer-enabled)))
 
 (add-hook 'post-command-hook #'redact--ensure-current-buffer)
 
