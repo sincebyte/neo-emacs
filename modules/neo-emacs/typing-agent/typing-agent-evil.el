@@ -178,12 +178,27 @@ RET 发送为 Return 键；TAB 用 `insert' 精确插入，避免触发 yasnippe
 
 ;;; 状态切换
 
+(defun typing-agent-evil--force-normal (&optional no-mirror)
+  "不经键盘宏把 Evil 切回 Normal（幂等），并在 KeyCastr 上显示一次 ESC。
+为什么不用 `execute-kbd-macro' 发送 ESC：在某些主模式（现场是
+web-mode）里 ESC 会落到 `ESC-prefix'，宏执行到末尾时 `read_key_sequence'
+还要等后续按键来补完键序列；宏已经用尽，它就转去读真实键盘，
+`execute-kbd-macro' 永不返回。任务从此卡在「已写日志、没排下一步」的
+状态，输入锁不释放，HTTP 也不再 accept。状态函数没有这个风险。
+NO-MIRROR 为 t 时不发 KeyCastr 显示（用于连按多次的取消场景）。"
+  (when (and (fboundp 'evil-normal-state)
+             (not (typing-agent-evil-normal-p)))
+    (unless no-mirror
+      (typing-agent-keycast-mirror-event ?\e))
+    (evil-normal-state))
+  (typing-agent-evil-normal-p))
+
 (defun typing-agent-evil-ensure-normal (&optional context)
   "确保当前处于 Evil Normal 状态。
 CONTEXT 用于错误信息。允许的转换：
   normal / motion              -> 直接通过
-  insert / replace / visual   -> 发送 ESC
-  operator                    -> 发送 ESC 取消
+  insert / replace / visual   -> 直接切回 Normal
+  operator                    -> 直接切回 Normal（取消挂起的操作）
   emacs                       -> 仅当 `typing-agent-evil-auto-normal' 时切换
 其他状态直接报错。"
   (typing-agent-evil-require-available)
@@ -195,11 +210,12 @@ CONTEXT 用于错误信息。允许的转换：
          (signal 'typing-agent-state-error
                  (list (format "%s：要求 Normal 状态，当前为 %s"
                                (or context "操作") state))))
-       ;; 最多按三次 ESC，处理 operator + visual 叠加的情况。
+       ;; 连续切换三次，处理 operator + visual 叠加的情况；每次调用
+       ;; `typing-agent-evil--force-normal' 都幂等，已经是 Normal 时不动。
        (dotimes (_ 3)
          (when (memq (typing-agent-evil-state)
                      '(insert replace visual operator))
-           (typing-agent-evil--execute-keys (vector 27))))
+           (typing-agent-evil--force-normal)))
        (unless (typing-agent-evil-normal-p)
          (signal 'typing-agent-state-error
                  (list (format "%s：按 ESC 后仍未回到 Normal，当前为 %s"
@@ -262,17 +278,16 @@ Javadoc 打成 ` *  * 文本` 这种越缩越深的形状，所以这里必须�
   (cond
    ((typing-agent-evil-normal-p) t)
    ((typing-agent-evil-insert-p)
-    ;; 先收起补全弹框，避免 ESC 被 corfu 的按键映射吃掉。
+    ;; 补全弹框会吃掉 ESC，先收起。
     (typing-agent-completion-quit)
-    (typing-agent-evil--execute-keys (vector 27))
+    ;; 不再用键盘宏发 ESC：ESC 落成前缀键时宏会悬空等按键、永不返回，
+    ;; 整个任务卡死（2026-11-01 Login.vue 的现场）。直接切状态，并在
+    ;; KeyCastr 上照样显示一次 ESC。
+    (typing-agent-evil--force-normal)
     (unless (typing-agent-evil-normal-p)
-      ;; ESC 被用户配置拦截时，用 Evil 的状态函数兜底，并记录一次警告。
-      (when (fboundp 'evil-normal-state)
-        (evil-normal-state))
-      (unless (typing-agent-evil-normal-p)
-        (signal 'typing-agent-state-error
-                (list (format "退出 Insert 后仍未回到 Normal，当前为 %s"
-                              (typing-agent-evil-state-name))))))
+      (signal 'typing-agent-state-error
+              (list (format "退出 Insert 后仍未回到 Normal，当前为 %s"
+                            (typing-agent-evil-state-name)))))
     t)
    (t
     (signal 'typing-agent-state-error

@@ -1204,17 +1204,13 @@ STARTED 非 nil 表示调用前任务已经占用执行权（例如刚在 dired 
         (dotimes (_ (- (current-column) target))
           (typing-agent-evil--execute-keys (vector 127))))
        ((< (current-column) target)
-        ;; 行首要补 N 个空格：退出 Insert 回 Normal，用 Evil 的计数前缀
-        ;; `N a <SPC> <ESC>'（append）一次插入 N 个空格，而不是 dotimes
-        ;; 一个个 self-insert，既快又不会越打越慢。这里用 `a' 而非 `i'：
-        ;; TAB 已把行缩进到接近目标列，光标停在已有缩进的最后一个字符上，
-        ;; `a' 才把空格追加到缩进末尾；`i' 在光标前插入，会把空格插进已有
-        ;; 缩进中间，末尾多出一个空格。换行后行首本就为空时二者等价。
+        ;; 行首要补 N 个空格：当前就在 Insert 状态，直接把 N 个空格放进
+        ;; 一个键盘宏发出去。不再用 `N a <SPC> <ESC>' 的 Evil 计数前缀：
+        ;; 那条路径末尾的 ESC 在 web-mode 这类主模式下会落成前缀键，
+        ;; 宏等不到后续按键就永远不返回，任务卡死在「行首补空格」。
         (let ((n (- target (current-column))))
-          (typing-agent-task-log task 'debug "行首补 %d 个空格（%d a <SPC> <ESC>）" n n)
-          (typing-agent-evil-exit-insert)
-          (typing-agent-evil-send-keys (format "%d a <SPC> <escape>" n))
-          (typing-agent-evil-enter-insert "a"))))
+          (typing-agent-task-log task 'debug "行首补 %d 个空格（%d 次 <SPC>）" n n)
+          (typing-agent-evil--execute-keys (make-vector n ?\s)))))
       ;; tab / 空格的写法必须与预期逐字符一致。
       (let ((actual (buffer-substring-no-properties
                      (line-beginning-position) (point))))
@@ -1470,8 +1466,17 @@ CHAR-INDEX 非 nil 时，用它替换 STATE 里的字符索引（选中候选后
                (char-index (plist-get state :char-index)))
           (if (>= char-index (length line))
               (typing-agent-engine--lines-finish-line task state)
-            (let ((char (aref line char-index)))
+            (let ((char (aref line char-index))
+                  (started (float-time)))
               (typing-agent-evil-send-char char)
+              ;; 单键耗时是「越打越慢」的直接指标：正常应在几十毫秒内，
+              ;; 超过 0.25 秒说明有逐键钩子在拖（LSP、font-lock、KeyCastr
+              ;; 写入等），留一条日志方便定位，不靠猜。
+              (let ((cost (- (float-time) started)))
+                (when (> cost 0.25)
+                  (typing-agent-task-log
+                   task 'warn "单键耗时 %.2f 秒（%S，第 %d 字符）"
+                   cost char (1+ char-index))))
               (setf (plist-get state :char-index) (1+ char-index))
               (setf (typing-agent-task-op-state task) state)
               (if (typing-agent-engine--completion-start-p
