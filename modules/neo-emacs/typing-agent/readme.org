@@ -520,13 +520,17 @@ curl -s -H "$AUTH" $BASE/task/<id> | jq '{status, index, total, error, result}'
   为真再开始输入（=typing-agent-completion-prewarm-lsp=，默认开）。这正是新建
   文件在录制里也有补全的关键——以前新文件是在没有 LSP 时打开的，整个任务
   都没有提示。等待上限是 =typing-agent-completion-prewarm-timeout=（默认 30
-  秒）：JDT 首次导入项目、建索引可能要几十秒，超时就照常开始打字，等它随后
-  就绪时补全自动接上；不想要这段等待就把预热设为 =nil=。
-- 预热超时后 LSP 才连上的情况也处理了：每次补全检查都会重新判断
+  秒）：JDT 首次导入项目、建索引可能要几十秒。开启预热时，连接超时会在
+  编辑前停止任务；连接后还会发起真实补全请求确认链路可用，空候选是合法响应。
+  已打开的 buffer 会补齐 CAPF；发现已退出的 server 会尝试重连，无需关闭文件。
+  不想等待时可以显式把预热设为 =nil=。
+- 禁用预热后 LSP 才连上的情况也处理了：每次补全检查都会重新判断
   =eglot-managed-p=，server 一到位就恢复补全，并在 =eglot-managed-mode-hook=
   里补摘一次逐字符变更钩子，避免后半段又回到每字符重解析的慢路径。
 - 录制前想先把首次启动的等待做完，可以在任意 Java buffer 里执行
   =M-x typing-agent-prewarm-lsp=；之后任务开始时 LSP 已经在跑，几乎立即有补全。
+- =completion=false= 会明确记录到任务日志，且不会再被错误地当成默认 true
+  触发冷启动。调用方只有在用户明确要求关闭补全时才传 false。
 
 性能（越打越慢的治理）：
 

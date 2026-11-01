@@ -120,13 +120,12 @@
 
 (defun typing-agent--quiesce-eglot-hooks ()
   "摘掉 Eglot 的逐字符变更钩子，并记住原本是否启用。
-任务期间补全只依赖 `eglot-completion-at-point'，每次触发补全前整份同步
-一次文档即可；逐字符增量同步是「越打越慢」的主要来源。
+无论是否启用补全，都暂停逐字符同步，避免变更记录和服务端解析累积。
+启用补全时在查询前同步；关闭补全时只需在任务结束后同步最终文档。
 任务开始时还没有 LSP 的话，等它途中连上后 `eglot-managed-mode-hook'
 会再调一次这里：新出现的钩子照样摘掉，并把 saved 标成 t，任务结束时
 恢复给用户后续编辑使用。"
-  (when (and typing-agent--completion-active
-             (fboundp 'eglot--before-change))
+  (when (fboundp 'eglot--before-change)
     (unless (local-variable-p 'typing-agent--eglot-hooks-quiesced)
       (setq-local typing-agent--eglot-hooks-quiesced t)
       (setq-local typing-agent--saved-eglot-before-change
@@ -344,8 +343,10 @@ JSON 里可能传入 CRLF，而 Emacs buffer 内部使用 LF。"
 
 (defun typing-agent-engine--option (task key &optional default)
   "读取 TASK 的选项 KEY。"
-  (let ((value (alist-get key (typing-agent-task-options task))))
-    (if (or (null value) (eq value :false)) default value)))
+  (let ((entry (assq key (typing-agent-task-options task))))
+    (if entry
+        (unless (eq (cdr entry) :false) (cdr entry))
+      default)))
 
 ;;; 任务提交
 
@@ -522,7 +523,10 @@ FUNCTION 总在 TASK 的 buffer 中执行。"
 只用于启发式判断：有 server 时尝试把 buffer 加入；没有时绝不启动。"
   (and (boundp 'eglot--servers-by-project)
        (hash-table-p eglot--servers-by-project)
-       (> (hash-table-count eglot--servers-by-project) 0)))
+        (cl-loop for servers being the hash-values of eglot--servers-by-project
+                 thereis (cl-some (lambda (server)
+                                   (ignore-errors (jsonrpc-running-p server)))
+                                 servers))))
 
 (defun typing-agent-engine--without-lsp (function)
   "调用 FUNCTION；只在「没有任何 LSP 在运行」时阻止 `eglot-ensure' 启动。
@@ -542,19 +546,29 @@ JDT 建索引和下载依赖时会推迟 Emacs 的定时器，逐字符输入会
   (and (fboundp 'eglot-current-server)
        (fboundp 'eglot-managed-p)
        (ignore-errors
-         (and (eglot-current-server)
-              (eglot-managed-p)))))
+          (let ((server (eglot-current-server)))
+            (and server (jsonrpc-running-p server)
+                 (eglot-managed-p))))))
 
 (defun typing-agent-engine--connect-lsp-now ()
   "在当前 buffer 立即发起 Eglot 接管，不依赖下一次交互命令。
 已有项目 server 时补齐 managed-mode 和 didOpen；否则只执行
 `eglot-ensure' 新注册的连接钩子，不运行用户的其他 post-command 钩子。"
-  (if (and (eglot-current-server)
-           (fboundp 'eglot--maybe-activate-editing-mode))
+  (require 'eglot)
+  (let ((server (eglot-current-server)))
+    (cond
+     ((and server (not (jsonrpc-running-p server)))
+      ;; managed 标记和缓存可能仍指向已退出的进程，不能当成就绪。
+      (eglot-reconnect server))
+     (server
       (eglot--maybe-activate-editing-mode)
-    (let ((post-command-hook nil))
-      (eglot-ensure)
-      (run-hooks 'post-command-hook))))
+      ;; 已打开的 buffer 可能被其它配置覆盖了 CAPF，不必关闭重开。
+      (when (eglot-managed-p)
+        (add-hook 'completion-at-point-functions #'eglot-completion-at-point nil t)))
+     (t
+      (let ((post-command-hook nil))
+        (eglot-ensure)
+        (run-hooks 'post-command-hook))))))
 
 (defun typing-agent-engine--ensure-lsp (task)
   "确保当前 buffer 接入 Eglot，必要时冷启动并等待就绪。
@@ -598,9 +612,44 @@ JDT 建索引和下载依赖时会推迟 Emacs 的定时器，逐字符输入会
            "LSP %s（%.1f 秒）"
            (if (typing-agent-engine--lsp-ready-p)
                "已就绪"
-             "未就绪，继续输入")
+              "未就绪")
            (- (float-time) started)))
-        (typing-agent-engine--eglot-sync-now)))))
+         (typing-agent-engine--eglot-sync-now)))))
+
+(defun typing-agent-engine--prepare-completion (task)
+  "在修改文本前准备 TASK 的补全链路；失败不能静默退化为逐字输入。"
+  (setq-local typing-agent--completion-active nil)
+  (cond
+   ((not (typing-agent-engine--option task :completion
+                                            typing-agent-completion-enabled))
+    (typing-agent-task-log task 'warn
+                           "补全已由任务选项关闭（completion=false），将逐字符输入"))
+   ((derived-mode-p 'prog-mode)
+    (require 'eglot)
+    (let ((supported (or (eglot-current-server)
+                         (cdr (eglot--lookup-mode major-mode)))))
+      (if (not supported)
+          (typing-agent-task-log task 'info "当前主模式未配置 Eglot，使用普通输入")
+        (unless (require 'corfu nil t)
+          (signal 'typing-agent-state-error '("补全已开启，但无法加载 Corfu")))
+        (typing-agent-engine--ensure-lsp task)
+        (when (and typing-agent-completion-prewarm-lsp
+                   (not (typing-agent-engine--lsp-ready-p)))
+          (signal 'typing-agent-state-error
+                  '("Eglot 未就绪，已在编辑前停止；请检查语言服务器后重试，无需关闭 buffer")))
+        (when (typing-agent-engine--lsp-ready-p)
+          (typing-agent-engine--connect-lsp-now)
+          (unless (eglot-server-capable :completionProvider)
+            (signal 'typing-agent-state-error '("Eglot 未提供补全能力")))
+          ;; managed 只代表初始化握手成功；用真实请求确认文档可访问。
+          ;; 空候选是合法响应，不能因此判定连接失败。
+          (eglot--request (eglot-current-server) :textDocument/completion
+                          (eglot--CompletionParams)
+                          :timeout typing-agent-completion-prewarm-timeout))
+        (setq-local typing-agent--completion-active t)
+        (typing-agent-task-log task 'info "补全已开启：Eglot %s / Corfu 已加载"
+                               (if (typing-agent-engine--lsp-ready-p)
+                                   "已连接" "等待连接")))))))
 
 ;;;###autoload
 (defun typing-agent-prewarm-lsp ()
@@ -684,17 +733,8 @@ TASK 为 nil 时只按 `typing-agent-maximize-window' 判断。"
         ;; 不保存任务开始前的窗口布局：任务结束就停在最后编辑/查看的 buffer。
         (typing-agent-engine--focus-buffer task buffer)
         (with-current-buffer buffer
-          ;; 已有 LSP 时把 buffer 加入项目；新建文件时主动拉起 LSP 并等它
-          ;; 就绪（见 `typing-agent-completion-prewarm-lsp'），否则这批
-          ;; 新文件在录制过程中始终没有补全。
-          (typing-agent-engine--ensure-lsp task)
-          ;; 只要主模式支持就标记为“希望补全”；Eglot 是否就绪在每次
-          ;; 补全检查时动态判断，预热超时后 server 中途就绪也能接上。
-          (setq-local typing-agent--completion-active
-                      (and typing-agent-completion-enabled
-                           (alist-get :completion
-                                      (typing-agent-task-options task))
-                           (typing-agent-completion-wanted-p)))
+          ;; 修改前检查开关、连接和真实补全请求，旧 buffer 也走同一入口。
+          (typing-agent-engine--prepare-completion task)
           (typing-agent-mode 1)
           (when (typing-agent-engine--option task :recording)
             (typing-agent-recording-prepare-current))

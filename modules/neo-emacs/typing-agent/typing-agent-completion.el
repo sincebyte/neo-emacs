@@ -90,7 +90,7 @@ Eglot 没有候选时不会再弹框，重试几次后继续正常输入。"
 
 (defcustom typing-agent-completion-prewarm-timeout 30
   "等待 Eglot 就绪的最长秒数。
-超时后照常开始打字，只是可能暂时没有补全；LSP 就绪后补全会自动恢复。"
+启用补全和预热时，超时会在编辑前停止任务，避免静默退化为逐字符输入。"
   :type 'number
   :group 'typing-agent)
 

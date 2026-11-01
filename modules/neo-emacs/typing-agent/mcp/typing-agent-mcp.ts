@@ -163,6 +163,7 @@ const TOOLS = [
     name: "task",
     description: `提交一个编辑任务，由 Emacs + Evil 用可见按键逐字符修改代码。OpenCode 不直接写文件。
 任务开始时 Emacs 会自动找到目标文件并让它独占当前 frame（单窗口），结束默认保持单窗口。
+代码任务保留默认 completion=true；只有用户明确要求关闭补全时才传 completion=false，不能为避开 LSP 问题而关闭补全。
 ${OPERATION_HELP}`,
     inputSchema: {
       type: "object",

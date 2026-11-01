@@ -13,6 +13,7 @@
 
 (require 'ert)
 (require 'cl-lib)
+(require 'eglot)
 (require 'typing-agent)
 (require 'typing-agent-humanizer)
 (require 'typing-agent-keycast)
@@ -542,13 +543,32 @@ Javadoc 不会再被叠加成 ` *  * 文本'。"
       (should (memq 'eglot--before-change before-change-functions))
       (should (memq 'eglot--after-change after-change-functions)))))
 
+(ert-deftest typing-agent-test-quiesce-eglot-without-completion ()
+  ;; 关闭补全也必须暂停逐字符同步；恢复后用户编辑仍然触发钩子。
+  (let ((changes 0))
+    (cl-letf (((symbol-function 'eglot--before-change) #'ignore)
+              ((symbol-function 'eglot--after-change)
+               (lambda (&rest _) (cl-incf changes))))
+      (with-temp-buffer
+        (setq-local typing-agent--completion-active nil)
+        (add-hook 'before-change-functions #'eglot--before-change nil t)
+        (add-hook 'after-change-functions #'eglot--after-change nil t)
+        (unwind-protect
+            (progn
+              (typing-agent--quiesce-buffer)
+              (dotimes (_ 1000) (insert "x"))
+              (should (= changes 0)))
+          (typing-agent--restore-buffer))
+        (insert "y")
+        (should (= changes 1))))))
+
 (ert-deftest typing-agent-test-eglot-hooks-quiesced-when-lsp-arrives-late ()
   ;; 任务开始时没有 LSP：先没有钩子可摘；等它途中连上后，新钩子也要摘掉，
   ;; 任务结束时再把钩子还给用户后续编辑。
   (cl-letf (((symbol-function 'eglot--before-change) #'ignore)
             ((symbol-function 'eglot--after-change) #'ignore))
     (with-temp-buffer
-      (setq-local typing-agent--completion-active t)
+      (setq-local typing-agent--completion-active nil)
       (setq-local typing-agent-mode t)
       (typing-agent--quiesce-buffer)
       (should-not (memq 'eglot--before-change before-change-functions))
@@ -582,7 +602,8 @@ Javadoc 不会再被叠加成 ` *  * 文本'。"
   ;; 项目 server 存在不等于新文件已发送 didOpen、装好 CAPF。
   (let ((managed nil)
         (activated nil))
-    (cl-letf (((symbol-function 'eglot-current-server) (lambda () 'fake))
+    (cl-letf (((symbol-function 'jsonrpc-running-p) (lambda (_) t))
+              ((symbol-function 'eglot-current-server) (lambda () 'fake))
               ((symbol-function 'eglot-managed-p) (lambda () managed))
               ((symbol-function 'eglot-ensure)
                (lambda () (ert-fail "不应重连已有 server")))
@@ -599,9 +620,11 @@ Javadoc 不会再被叠加成 ` *  * 文本'。"
 (ert-deftest typing-agent-test-ensure-lsp-prewarms ()
   ;; 项目里没有 LSP 时，开启预热会冷启动并等到 eglot-managed-p 为真，
   ;; 这样新建文件在打字时也能有补全。
-  (let ((server nil)
+  (let ((typing-agent-completion-prewarm-lsp t)
+        (server nil)
         (ensured nil))
-    (cl-letf (((symbol-function 'eglot-current-server) (lambda () server))
+    (cl-letf (((symbol-function 'jsonrpc-running-p) (lambda (_) t))
+              ((symbol-function 'eglot-current-server) (lambda () server))
               ((symbol-function 'eglot-managed-p) (lambda () (not (null server))))
               ((symbol-function 'eglot-ensure)
                (lambda () (setq ensured t server 'fake)))
@@ -631,7 +654,8 @@ Javadoc 不会再被叠加成 ` *  * 文本'。"
   ;; 已有 server 时立即连接，不需要冷启动。
   (let ((server nil)
         (ensured nil))
-    (cl-letf (((symbol-function 'eglot-current-server) (lambda () server))
+    (cl-letf (((symbol-function 'jsonrpc-running-p) (lambda (_) t))
+              ((symbol-function 'eglot-current-server) (lambda () server))
               ((symbol-function 'eglot-managed-p) (lambda () (not (null server))))
               ((symbol-function 'eglot-ensure)
                (lambda () (setq ensured t server 'fake)))
@@ -1100,6 +1124,68 @@ BODY 为字符串时按 JSON 发送；TOKEN 为 nil 时使用当前 token。"
   (should-not (alist-get :completion
                          (typing-agent-engine-parse-options
                           '(:options (:completion :false))))))
+
+(ert-deftest typing-agent-test-option-preserves-explicit-false ()
+  (let ((task (typing-agent-task-create :options '((:completion . nil)))))
+    (should-not (typing-agent-engine--option task :completion t))
+    (should (typing-agent-engine--option task :missing t))))
+
+(ert-deftest typing-agent-test-lsp-dead-server-not-ready ()
+  (cl-letf (((symbol-function 'eglot-current-server) (lambda () 'dead))
+            ((symbol-function 'eglot-managed-p) (lambda () t))
+            ((symbol-function 'jsonrpc-running-p) (lambda (_) nil))
+            ((symbol-function 'eglot-reconnect)
+             (lambda (server) (should (eq server 'dead)) 'reconnected)))
+    (should-not (typing-agent-engine--lsp-ready-p))
+    (should (eq (typing-agent-engine--connect-lsp-now) 'reconnected))))
+
+(ert-deftest typing-agent-test-lsp-empty-project-not-running ()
+  (let ((eglot--servers-by-project (make-hash-table)))
+    (puthash 'old-project nil eglot--servers-by-project)
+    (should-not (typing-agent-engine--any-lsp-running-p))))
+
+(ert-deftest typing-agent-test-completion-disabled-skips-prewarm ()
+  (with-temp-buffer
+    (prog-mode)
+    (cl-letf (((symbol-function 'typing-agent-engine--ensure-lsp)
+               (lambda (_) (ert-fail "关闭补全不能预热")))
+              ((symbol-function 'typing-agent-task-log) #'ignore))
+      (typing-agent-engine--prepare-completion
+       (typing-agent-task-create :options '((:completion . nil))))
+      (should-not typing-agent--completion-active))))
+
+(ert-deftest typing-agent-test-completion-preflight-timeout-stops ()
+  (with-temp-buffer
+    (prog-mode)
+    (let ((typing-agent-completion-prewarm-lsp t))
+      (cl-letf (((symbol-function 'eglot-current-server) (lambda () 'fake))
+                ((symbol-function 'typing-agent-engine--ensure-lsp) #'ignore)
+                ((symbol-function 'typing-agent-engine--lsp-ready-p) #'ignore)
+                ((symbol-function 'typing-agent-task-log) #'ignore))
+        (should-error
+         (typing-agent-engine--prepare-completion
+          (typing-agent-task-create :options '((:completion . t))))
+         :type 'typing-agent-state-error)
+        (should-not typing-agent--completion-active)
+        (should (equal (buffer-string) ""))))))
+
+(ert-deftest typing-agent-test-completion-preflight-empty-response-is-ready ()
+  (with-temp-buffer
+    (prog-mode)
+    (let (probed)
+      (cl-letf (((symbol-function 'eglot-current-server) (lambda () 'fake))
+                ((symbol-function 'typing-agent-engine--ensure-lsp) #'ignore)
+                ((symbol-function 'typing-agent-engine--lsp-ready-p) (lambda () t))
+                ((symbol-function 'typing-agent-engine--connect-lsp-now) #'ignore)
+                ((symbol-function 'eglot-server-capable) (lambda (&rest _) t))
+                ((symbol-function 'eglot--CompletionParams) #'ignore)
+                ((symbol-function 'eglot--request)
+                 (lambda (&rest _) (setq probed t) nil))
+                ((symbol-function 'typing-agent-task-log) #'ignore))
+        (typing-agent-engine--prepare-completion
+         (typing-agent-task-create :options '((:completion . t))))
+        (should probed)
+        (should typing-agent--completion-active)))))
 
 (ert-deftest typing-agent-test-import-line-p ()
   ;; import 行一次性写入的判定。
