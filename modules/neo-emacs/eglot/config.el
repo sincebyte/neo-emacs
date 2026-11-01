@@ -53,6 +53,7 @@
 ;; detail。JDT LS 返回的 detail 是“类名.方法签名”，与左侧候选文本重复，还会把
 ;; 弹窗撑得很宽。这里从 eglot 的 capf 结果中移除该属性，Corfu 便不再显示这段。
 (require 'cl-lib)
+(load! "jdt-recovery")
 
 (defun +eglot--drop-completion-annotation (capf)
   "Drop `:annotation-function' from eglot completion CAPF."
