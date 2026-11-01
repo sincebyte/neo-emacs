@@ -22,6 +22,7 @@
 (require 'typing-agent-humanizer)
 (require 'typing-agent-keycast)
 (require 'typing-agent-completion)
+(require 'typing-agent-lock)
 (require 'typing-agent-evil)
 (require 'typing-agent-validator)
 (require 'typing-agent-diff)

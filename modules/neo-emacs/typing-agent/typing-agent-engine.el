@@ -23,10 +23,19 @@
 (require 'typing-agent-completion)
 (require 'typing-agent-evil)
 (require 'typing-agent-humanizer)
+(require 'typing-agent-lock)
 (require 'typing-agent-validator)
 (require 'typing-agent-recording)
 
 (declare-function corfu-mode "corfu")
+(defvar eglot--servers-by-project)
+(defvar eglot--recent-changes)
+(defvar eglot--docver)
+(defvar eglot--managed-mode)
+(declare-function eglot--before-change "eglot")
+(declare-function eglot--after-change "eglot")
+(declare-function eglot--signal-textDocument/didChange "eglot")
+(declare-function eglot--maybe-activate-editing-mode "eglot")
 
 ;;; 执行期间的 buffer 局部保护
 
@@ -45,6 +54,18 @@
   "任务开始前 `electric-indent-inhibit' 是否是 buffer 局部变量。")
 (defvar-local typing-agent--saved-corfu-auto nil
   "任务开始前的 `corfu-auto'。")
+(defvar-local typing-agent--saved-corfu-settings nil
+  "任务前的 Corfu 设置，记录变量名、是否局部绑定和原值。")
+(defvar-local typing-agent--saved-doom-word-count nil
+  "任务开始前的 `doom-modeline-enable-word-count'（可能不存在）。")
+(defvar-local typing-agent--saved-doom-word-count-local nil
+  "任务开始前 `doom-modeline-enable-word-count' 是否已是 buffer 局部变量。")
+(defvar-local typing-agent--saved-eglot-before-change nil
+  "任务开始前 `eglot--before-change' 是否在 `before-change-functions' 里。")
+(defvar-local typing-agent--saved-eglot-after-change nil
+  "任务开始前 `eglot--after-change' 是否在 `after-change-functions' 里。")
+(defvar-local typing-agent--eglot-hooks-quiesced nil
+  "任务期间是否已经摘过 Eglot 的逐字符变更钩子。")
 
 (defconst typing-agent--quiesced-minor-modes
   '(electric-indent-mode
@@ -57,7 +78,12 @@
     corfu-mode
     company-mode
     aggressive-indent-mode
-    evil-cleverparens-mode)
+    evil-cleverparens-mode
+    flymake-mode
+    flycheck-mode
+    indent-bars-mode
+    ws-butler-mode
+    focus-mode)
   "执行任务期间临时关闭的 buffer 局部 minor modes。
 关闭目的：防止自动配对、自动缩进、补全弹窗和 snippet 改变实际输入内容。
 启用补全的任务会保留 `corfu-mode'，但用 buffer 局部的 `corfu-auto' = nil
@@ -92,6 +118,33 @@
       (when (functionp fallback)
         (setq-local flycheck-display-errors-function fallback)))))
 
+(defun typing-agent--quiesce-eglot-hooks ()
+  "摘掉 Eglot 的逐字符变更钩子，并记住原本是否启用。
+任务期间补全只依赖 `eglot-completion-at-point'，每次触发补全前整份同步
+一次文档即可；逐字符增量同步是「越打越慢」的主要来源。
+任务开始时还没有 LSP 的话，等它途中连上后 `eglot-managed-mode-hook'
+会再调一次这里：新出现的钩子照样摘掉，并把 saved 标成 t，任务结束时
+恢复给用户后续编辑使用。"
+  (when (and typing-agent--completion-active
+             (fboundp 'eglot--before-change))
+    (unless (local-variable-p 'typing-agent--eglot-hooks-quiesced)
+      (setq-local typing-agent--eglot-hooks-quiesced t)
+      (setq-local typing-agent--saved-eglot-before-change
+                  (and (memq 'eglot--before-change before-change-functions) t))
+      (setq-local typing-agent--saved-eglot-after-change
+                  (and (memq 'eglot--after-change after-change-functions) t)))
+    (when (memq 'eglot--before-change before-change-functions)
+      (setq-local typing-agent--saved-eglot-before-change t)
+      (remove-hook 'before-change-functions #'eglot--before-change t))
+    (when (memq 'eglot--after-change after-change-functions)
+      (setq-local typing-agent--saved-eglot-after-change t)
+      (remove-hook 'after-change-functions #'eglot--after-change t))))
+
+(defun typing-agent--eglot-arrived ()
+  "任务期间 LSP 才连上时，补做逐字符钩子的摘除。"
+  (when (bound-and-true-p typing-agent-mode)
+    (typing-agent--quiesce-eglot-hooks)))
+
 (defun typing-agent--quiesce-buffer ()
   "在当前 buffer 中关闭会干扰逐字符输入的局部行为。
 保存原值，任务结束后由 `typing-agent--restore-buffer' 恢复。"
@@ -114,6 +167,9 @@
                (not (bound-and-true-p corfu-mode)))
       (setq-local typing-agent--enabled-corfu-mode t)
       (ignore-errors (corfu-mode 1)))
+    ;; 保留 LSP：补全（含自动 import）依赖 Eglot 的 capf，任务期间不关闭。
+    ;; 诊断类 minor mode（flymake/flycheck）已在上面的 quiesce 列表里关掉，
+    ;; 所以 LSP 只服务于补全，不会因为诊断/语义高亮反复推迟定时器。
     (setq-local typing-agent--saved-auto-fill auto-fill-function)
     (setq typing-agent--saved-auto-fill-local
           (local-variable-p 'auto-fill-function))
@@ -126,11 +182,39 @@
     ;; `flycheck-popup-tip' 会往 buffer 末尾插空行撑提示高度，任务期间会污染
     ;; 文件内容；这个 buffer 里的诊断一律改走回显区。
     (typing-agent--avoid-popup-tip-padding)
-    (when (boundp 'corfu-auto)
-      (setq-local typing-agent--saved-corfu-auto corfu-auto)
-      (setq-local corfu-auto nil))
+    ;; 高亮仅供导航，禁止 Corfu 在下一次普通按键前隐式提交候选。
+    ;; 保存局部绑定状态，成功、失败和取消均通过 restore 恢复。
+    (setq typing-agent--saved-corfu-settings nil)
+    (dolist (variable '(corfu-auto corfu-preview-current))
+      (when (boundp variable)
+        (push (list variable (local-variable-p variable) (symbol-value variable))
+              typing-agent--saved-corfu-settings)
+        (set (make-local-variable variable) nil)))
+    ;; doom-modeline 的 word-count 段在 java-mode 等模式下每次 modeline 更新
+    ;; 都 count-words 全文件遍历（O(n)），打字越久文件越大越慢。任务期间在
+    ;; 这个 buffer 里临时关掉，结束恢复。
+    (when (boundp 'doom-modeline-enable-word-count)
+      (setq-local typing-agent--saved-doom-word-count
+                  doom-modeline-enable-word-count)
+      (setq typing-agent--saved-doom-word-count-local
+            (local-variable-p 'doom-modeline-enable-word-count))
+      (setq-local doom-modeline-enable-word-count nil))
+    ;; eglot 的变更钩子每个字符都跑：before-change 做两次 O(n) 的
+    ;; `line-number-at-pos' 行号换算，并把带 marker 的增量记录堆进
+    ;; `eglot--recent-changes'；after-change 每个字符 cancel+重建一个 idle
+    ;; timer，还会把增量变更喂给 jdtls 让它反复重解析。这些开销随文件变大/
+    ;; 编辑次数变多而累积，是「越打越慢」的剩余来源之一。任务期间摘掉它们，
+    ;; 改为补全触发前由 `typing-agent-engine--eglot-sync-now' 整份同步。
+    (typing-agent--quiesce-eglot-hooks)
+    ;; 任务开始时还没有 LSP 时，打字途中 server 才连上（例如预热超时后
+    ;; JDT 才完成初始化）。等它 managed 后再摘一次逐字符钩子，避免后半段
+    ;; 又回到每字符重解析的慢路径。
+    (add-hook 'eglot-managed-mode-hook
+              #'typing-agent--eglot-arrived nil t)
     (when (bound-and-true-p completion-in-region-mode)
-      (ignore-errors (completion-in-region-mode -1)))))
+      (ignore-errors (completion-in-region-mode -1)))
+    ;; 补全词状态从零开始，避免上个任务残留 'has / 'none。
+    (setq-local typing-agent--completion-word-state nil)))
 
 (defun typing-agent--restore-buffer ()
   "恢复 `typing-agent--quiesce-buffer' 改动的 buffer 局部设置。"
@@ -154,9 +238,28 @@
                     typing-agent--saved-electric-indent-inhibit)
       (kill-local-variable 'electric-indent-inhibit))
     (kill-local-variable 'typing-agent--saved-electric-indent-inhibit)
-    (when (local-variable-p 'typing-agent--saved-corfu-auto)
-      (setq-local corfu-auto typing-agent--saved-corfu-auto)
-      (kill-local-variable 'typing-agent--saved-corfu-auto))
+    (dolist (setting typing-agent--saved-corfu-settings)
+      (if (nth 1 setting)
+          (set (make-local-variable (car setting)) (nth 2 setting))
+        (kill-local-variable (car setting))))
+    (kill-local-variable 'typing-agent--saved-corfu-settings)
+    (when (local-variable-p 'typing-agent--saved-doom-word-count)
+      (if typing-agent--saved-doom-word-count-local
+          (setq-local doom-modeline-enable-word-count
+                      typing-agent--saved-doom-word-count)
+        (kill-local-variable 'doom-modeline-enable-word-count))
+      (kill-local-variable 'typing-agent--saved-doom-word-count))
+    ;; 恢复 eglot 变更钩子，并把最终内容整份同步回去，保证之后用户的补全/
+    ;; 诊断基于最新文本，而不是任务期间那份摘了钩子的「脏」状态。
+    (when typing-agent--saved-eglot-before-change
+      (add-hook 'before-change-functions #'eglot--before-change nil t))
+    (when typing-agent--saved-eglot-after-change
+      (add-hook 'after-change-functions #'eglot--after-change nil t))
+    (remove-hook 'eglot-managed-mode-hook #'typing-agent--eglot-arrived t)
+    (kill-local-variable 'typing-agent--saved-eglot-before-change)
+    (kill-local-variable 'typing-agent--saved-eglot-after-change)
+    (kill-local-variable 'typing-agent--eglot-hooks-quiesced)
+    (typing-agent-engine--eglot-sync-now)
     (kill-local-variable 'typing-agent--completion-active)))
 
 (define-minor-mode typing-agent-mode
@@ -300,7 +403,8 @@ SPEC 是 `typing-agent-json-parse' 解析出的 plist。返回
         (signal 'typing-agent-input-error
                 (list (format "目标路径是目录: %s" file))))
       (if (file-exists-p file)
-          (let* ((buffer (find-file-noselect file)))
+          (let* ((buffer (typing-agent-engine--without-lsp
+                          (lambda () (find-file-noselect file)))))
             (with-current-buffer buffer
               (when buffer-read-only
                 (signal 'typing-agent-state-error
@@ -336,14 +440,23 @@ SPEC 是 `typing-agent-json-parse' 解析出的 plist。返回
 (defun typing-agent-engine--call-in-task-buffer (task function)
   "在 TASK 的 buffer 中调用 FUNCTION。
 定时器回调执行时 current buffer 未必是任务 buffer（可能是 minibuffer
-或其他窗口），因此每个异步步骤都必须先切回任务 buffer。"
+或其他窗口），因此每个异步步骤都必须先切回任务 buffer。
+FUNCTION 抛出的任何错误都转为任务失败：分行输入等异步状态机不经过
+`typing-agent-engine--step' 的 condition-case，一旦抛错（例如行尾 ESC
+失败）若不被这里接住，任务会永远停在 running、输入锁定无法释放、
+watchdog 每 15 秒空转一次。"
   (let ((buffer (typing-agent-task-buffer task)))
-    (if (buffer-live-p buffer)
-        (with-current-buffer buffer
-          (funcall function task))
+    (cond
+     ((not (buffer-live-p buffer))
       (typing-agent-engine--fail
        task
-       (list 'typing-agent-state-error "目标 buffer 已关闭")))))
+       (list 'typing-agent-state-error "目标 buffer 已关闭")))
+     (t
+      (condition-case err
+          (with-current-buffer buffer
+            (funcall function task))
+        (error
+         (typing-agent-engine--fail task err)))))))
 
 (defun typing-agent-engine--schedule (task delay &optional function)
   "在 DELAY 秒后执行 FUNCTION（默认 `typing-agent-engine--step'）。
@@ -351,19 +464,182 @@ SPEC 是 `typing-agent-json-parse' 解析出的 plist。返回
 FUNCTION 总在 TASK 的 buffer 中执行。"
   (when (typing-agent-task-timer task)
     (cancel-timer (typing-agent-task-timer task)))
-  (let ((function (or function #'typing-agent-engine--step)))
+  (when (typing-agent-task-watchdog task)
+    (cancel-timer (typing-agent-task-watchdog task)))
+  (let* ((function (or function #'typing-agent-engine--step))
+         (seconds (max 0 delay)))
+    (setf (typing-agent-task-last-step-at task) (float-time))
     (setf (typing-agent-task-timer task)
           (run-at-time
-           (max 0 delay) nil
+           seconds nil
            (lambda (task)
              (typing-agent-engine--call-in-task-buffer task function))
+           task))
+    ;; 定时器链偶尔会被 quit 或第三方 hook 打断，任务永远停在 running。
+    ;; 超过预期时间还没有下一步时重新驱动一次，避免整次演示卡死。
+    (setf (typing-agent-task-watchdog task)
+          (run-at-time
+           (+ seconds 15) nil
+           (lambda (task)
+             (when (eq (typing-agent-task-status task)
+                       typing-agent-status-running)
+               (typing-agent-task-log
+                task 'warn "任务 15 秒没有进展，重新驱动定时器")
+               (typing-agent-engine--schedule task 0.05 function)))
            task))))
 
 (defun typing-agent-engine--cancel-timer (task)
-  "取消 TASK 当前定时器。"
+  "取消 TASK 当前定时器与 watchdog。
+任务结束/失败/取消后必须把 watchdog 一并取消，否则残留的 watchdog
+会在 15 秒后空转一次（虽然它检查状态不做事，但没必要留着）。"
   (when (typing-agent-task-timer task)
     (ignore-errors (cancel-timer (typing-agent-task-timer task)))
-    (setf (typing-agent-task-timer task) nil)))
+    (setf (typing-agent-task-timer task) nil))
+  (when (typing-agent-task-watchdog task)
+    (ignore-errors (cancel-timer (typing-agent-task-watchdog task)))
+    (setf (typing-agent-task-watchdog task) nil)))
+
+(defun typing-agent-engine--dismiss-transient-ui ()
+  "收掉 minibuffer、补全弹框等临时界面，避免任务按键被它们吃掉。
+任务开始时用户可能正停在文件选择框、搜索框或补全弹框里，此时直接开始
+输入会让字符进入 minibuffer，表现为任务卡住或 Emacs 报 search-failed。"
+  (when (active-minibuffer-window)
+    (condition-case nil
+        (with-selected-window (active-minibuffer-window)
+          (abort-recursive-edit))
+      (quit nil)
+      (error nil)))
+  (when (fboundp 'corfu-quit)
+    (ignore-errors (corfu-quit)))
+  (when (fboundp 'company-abort)
+    (ignore-errors (company-abort)))
+  (when (bound-and-true-p evil-ex-search)
+    (when (fboundp 'evil-ex-search-abort)
+      (ignore-errors (evil-ex-search-abort)))))
+
+(defun typing-agent-engine--any-lsp-running-p ()
+  "是否有任一 LSP server 正在运行。
+只用于启发式判断：有 server 时尝试把 buffer 加入；没有时绝不启动。"
+  (and (boundp 'eglot--servers-by-project)
+       (hash-table-p eglot--servers-by-project)
+       (> (hash-table-count eglot--servers-by-project) 0)))
+
+(defun typing-agent-engine--without-lsp (function)
+  "调用 FUNCTION；只在「没有任何 LSP 在运行」时阻止 `eglot-ensure' 启动。
+JDT 建索引和下载依赖时会推迟 Emacs 的定时器，逐字符输入会卡成每步十几秒；
+所以任务打开文件时绝不冷启动 LSP。但已有 server 在跑时不去拦 `eglot-ensure'，
+让新打开的 buffer 正常加入项目，补全（含 import）才能用。"
+  (if (and (fboundp 'eglot-ensure)
+           (not (typing-agent-engine--any-lsp-running-p)))
+      (let ((advice (lambda (&rest _) nil)))
+        (advice-add 'eglot-ensure :override advice)
+        (unwind-protect (funcall function)
+          (advice-remove 'eglot-ensure advice)))
+    (funcall function)))
+
+(defun typing-agent-engine--lsp-ready-p ()
+  "当前 buffer 是否已经连上并初始化完 Eglot server。"
+  (and (fboundp 'eglot-current-server)
+       (fboundp 'eglot-managed-p)
+       (ignore-errors
+         (and (eglot-current-server)
+              (eglot-managed-p)))))
+
+(defun typing-agent-engine--connect-lsp-now ()
+  "在当前 buffer 立即发起 Eglot 接管，不依赖下一次交互命令。
+已有项目 server 时补齐 managed-mode 和 didOpen；否则只执行
+`eglot-ensure' 新注册的连接钩子，不运行用户的其他 post-command 钩子。"
+  (if (and (eglot-current-server)
+           (fboundp 'eglot--maybe-activate-editing-mode))
+      (eglot--maybe-activate-editing-mode)
+    (let ((post-command-hook nil))
+      (eglot-ensure)
+      (run-hooks 'post-command-hook))))
+
+(defun typing-agent-engine--ensure-lsp (task)
+  "确保当前 buffer 接入 Eglot，必要时冷启动并等待就绪。
+项目里已有 server 时只把 buffer 加入；没有任何 server 且任务启用了补全、
+`typing-agent-completion-prewarm-lsp' 非 nil 时，调用 `eglot-ensure' 冷启动，
+最多等待 `typing-agent-completion-prewarm-timeout' 秒，超时照常开始打字。
+`find-file-noselect' 打开文件时项目可能还没被识别（例如项目尚未 git init），
+`eglot-ensure' 会静默失败；buffer 显示到窗口后再补一次连接。"
+  (when (and (fboundp 'eglot-ensure)
+             (fboundp 'eglot-current-server)
+             (not (typing-agent-engine--lsp-ready-p)))
+    (let* ((running (typing-agent-engine--any-lsp-running-p))
+           (prewarm (and (bound-and-true-p typing-agent-completion-prewarm-lsp)
+                         (typing-agent-engine--option task :completion t)))
+           (timeout (cond (prewarm typing-agent-completion-prewarm-timeout)
+                          (running 3.0)
+                          (t 0))))
+      (when (or running prewarm)
+        (typing-agent-task-log
+         task 'info "%s"
+         (if running
+             "检测到 LSP 在运行，把 buffer 加入项目"
+           "LSP 未运行，冷启动并等待就绪"))
+        (let ((started (float-time)))
+          (unless running
+            (message "typing-agent: 正在启动 LSP，最多等待 %s 秒…" timeout))
+          (condition-case err
+              (typing-agent-engine--connect-lsp-now)
+            (error
+             (typing-agent-task-log task 'warn "Eglot 接管失败：%s"
+                                    (error-message-string err))))
+          (let ((deadline (+ started timeout)))
+            (while (and (not (typing-agent-engine--lsp-ready-p))
+                        (< (float-time) deadline))
+              (accept-process-output nil 0.1)
+              (redisplay)))
+          (unless running
+            (message nil))
+          (typing-agent-task-log
+           task (if (typing-agent-engine--lsp-ready-p) 'info 'warn)
+           "LSP %s（%.1f 秒）"
+           (if (typing-agent-engine--lsp-ready-p)
+               "已就绪"
+             "未就绪，继续输入")
+           (- (float-time) started)))
+        (typing-agent-engine--eglot-sync-now)))))
+
+;;;###autoload
+(defun typing-agent-prewarm-lsp ()
+  "为当前 buffer 拉起 Eglot 并等到就绪。
+录制前手动执行一次，可以把 JDT 首次导入项目、建索引的等待放到正式任务之外；
+已经连上时立即返回。"
+  (interactive)
+  (unless (buffer-file-name)
+    (user-error "当前 buffer 没有关联文件"))
+  (if (typing-agent-engine--lsp-ready-p)
+      (message "typing-agent: LSP 已就绪")
+    (let ((started (float-time)))
+      (message "typing-agent: 正在启动 LSP，最多等待 %s 秒…"
+               typing-agent-completion-prewarm-timeout)
+      (typing-agent-engine--connect-lsp-now)
+      (let ((deadline (+ started typing-agent-completion-prewarm-timeout)))
+        (while (and (not (typing-agent-engine--lsp-ready-p))
+                    (< (float-time) deadline))
+          (accept-process-output nil 0.1)
+          (redisplay)))
+      (message "typing-agent: LSP %s（%.1f 秒）"
+               (if (typing-agent-engine--lsp-ready-p) "已就绪" "未就绪")
+               (- (float-time) started)))))
+
+(defun typing-agent-engine--eglot-sync-now ()
+  "把当前 buffer 的整份内容同步给 Eglot（full sync）。
+任务期间 eglot 的 before/after-change 钩子被摘掉（见
+`typing-agent--quiesce-buffer'），改为在补全触发前手动整份同步，这样补全
+仍基于最新文本，而逐字符输入不再承担 eglot 的行号换算、增量记录堆积和
+didChange 反复喂给 jdtls 的负担。full sync 只发生在补全触发点和任务结束，
+远少于逐字符增量同步。"
+  (when (and (fboundp 'eglot--signal-textDocument/didChange)
+             (boundp 'eglot--managed-mode)
+             eglot--managed-mode)
+    (ignore-errors
+      (when (boundp 'eglot--docver)
+        (setq eglot--docver (1+ eglot--docver)))
+      (setq eglot--recent-changes :emacs-messup)
+      (eglot--signal-textDocument/didChange))))
 
 (defun typing-agent-engine--focus-buffer (task buffer)
   "把 BUFFER 显示到用户眼前，并按需让它独占窗口。
@@ -401,23 +677,38 @@ TASK 为 nil 时只按 `typing-agent-maximize-window' 判断。"
   "TASK 的 BUFFER 已经在眼前，准备输入并开始执行。"
   (condition-case err
       (progn
+        ;; 先收掉搜索框、补全弹框等临时界面，再切到目标 buffer 敲键，
+        ;; 否则按键会进入 minibuffer，任务卡住。
+        (typing-agent-engine--dismiss-transient-ui)
         ;; 先找到文件并最大化窗口，再开始敲键。
         ;; 不保存任务开始前的窗口布局：任务结束就停在最后编辑/查看的 buffer。
         (typing-agent-engine--focus-buffer task buffer)
         (with-current-buffer buffer
+          ;; 已有 LSP 时把 buffer 加入项目；新建文件时主动拉起 LSP 并等它
+          ;; 就绪（见 `typing-agent-completion-prewarm-lsp'），否则这批
+          ;; 新文件在录制过程中始终没有补全。
+          (typing-agent-engine--ensure-lsp task)
+          ;; 只要主模式支持就标记为“希望补全”；Eglot 是否就绪在每次
+          ;; 补全检查时动态判断，预热超时后 server 中途就绪也能接上。
           (setq-local typing-agent--completion-active
                       (and typing-agent-completion-enabled
                            (alist-get :completion
                                       (typing-agent-task-options task))
-                           (typing-agent-completion-applicable-p)))
+                           (typing-agent-completion-wanted-p)))
           (typing-agent-mode 1)
           (when (typing-agent-engine--option task :recording)
             (typing-agent-recording-prepare-current))
           (undo-boundary))
+        ;; visit/create 阶段的受信事件计数到此为止，之后打字全部走
+        ;; `execute-kbd-macro'（executing-kbd-macro 放行），清空残留。
+        (setq typing-agent--inject-count 0)
         (typing-agent-humanizer-reset
          (typing-agent-engine--option task :speed 1.0))
         (typing-agent-task-log task 'info "开始执行")
-        (typing-agent-engine--schedule task 0.05))
+        ;; 刚进入 buffer 先像人一样看一眼，再开始敲第一行。
+        (typing-agent-engine--schedule
+         task (typing-agent-humanizer--random-range
+               typing-agent-buffer-enter-pause)))
     (error
      (typing-agent-engine--fail task err))))
 
@@ -434,7 +725,20 @@ TASK 为 nil 时只按 `typing-agent-maximize-window' 判断。"
             ((eq (window-buffer (selected-window)) buffer)
              (typing-agent-engine--start-typing task buffer))
             ((>= (float-time) deadline)
-             (typing-agent-task-log task 'warn "跳转等待超时，直接开始")
+             (typing-agent-task-log task 'warn "跳转等待超时，收掉弹框后直接开始")
+             ;; 让还在等待的选择框流程作废，避免它稍后继续注入按键。
+             (when (boundp 'typing-agent-evil--visit-token)
+               (cl-incf typing-agent-evil--visit-token))
+             ;; 收弹框可能产生 `quit'（C-g 的 signal），必须连 quit 一起
+             ;; 吞掉，否则后面的 start-typing 不会执行，任务停在 running。
+             (condition-case err
+                 (progn
+                   (typing-agent-engine--dismiss-transient-ui)
+                   (typing-agent-evil--visit-direct file nil))
+               (quit nil)
+               (error
+                (typing-agent-task-log
+                 task 'warn "直接打开失败：%s" (error-message-string err))))
              (typing-agent-engine--start-typing task buffer))
             (t
              (run-at-time 0.1 nil #'check)))))
@@ -453,15 +757,16 @@ STARTED 非 nil 表示调用前任务已经占用执行权（例如刚在 dired 
     (setf (typing-agent-task-status task) typing-agent-status-running)
     (setf (typing-agent-task-started-at task) (typing-agent--now))
     (setq typing-agent--active-task task))
+  (typing-agent-lock-on)
   (let ((buffer (typing-agent-task-buffer task)))
     (cond
      ((not (buffer-live-p buffer))
       (typing-agent-engine--fail
        task (list 'typing-agent-state-error "目标 buffer 已关闭")))
-     ;; 批处理里没有命令循环；文件已经显示；或正卡在 minibuffer 里时直接开始。
+     ;; 批处理里没有命令循环；文件已经显示时直接开始。
+     ;; 卡在 minibuffer 里时不走文件选择流程，交给 `--start-typing' 先收掉它。
      ((or noninteractive
           (eq (window-buffer (selected-window)) buffer)
-          (active-minibuffer-window)
           (not (fboundp 'typing-agent-evil-visit-file)))
       (typing-agent-engine--start-typing task buffer))
      (t
@@ -474,6 +779,7 @@ STARTED 非 nil 表示调用前任务已经占用执行权（例如刚在 dired 
     (setf (typing-agent-task-status task) typing-agent-status-running)
     (setf (typing-agent-task-started-at task) (typing-agent--now))
     (setq typing-agent--active-task task)
+    (typing-agent-lock-on)
     (typing-agent-task-log task 'info "目标文件不存在：在 dired 中创建")
     (condition-case err
         (typing-agent-evil-create-file
@@ -890,15 +1196,25 @@ STARTED 非 nil 表示调用前任务已经占用执行权（例如刚在 dired 
           (setq guard (1+ guard))
           (when (<= (current-column) before)
             (setq guard limit))))
-      (typing-agent-task-log task 'info "TAB 缩进到第 %d 列" target)
+      (typing-agent-task-log task 'info "TAB 缩进：第 %d 列（目标 %d 列）"
+                             (current-column) target)
       ;; 用空格 / 退格把列号校正到精确位置。
       (cond
        ((> (current-column) target)
         (dotimes (_ (- (current-column) target))
           (typing-agent-evil--execute-keys (vector 127))))
        ((< (current-column) target)
-        (dotimes (_ (- target (current-column)))
-          (typing-agent-evil-send-char ?\s))))
+        ;; 行首要补 N 个空格：退出 Insert 回 Normal，用 Evil 的计数前缀
+        ;; `N a <SPC> <ESC>'（append）一次插入 N 个空格，而不是 dotimes
+        ;; 一个个 self-insert，既快又不会越打越慢。这里用 `a' 而非 `i'：
+        ;; TAB 已把行缩进到接近目标列，光标停在已有缩进的最后一个字符上，
+        ;; `a' 才把空格追加到缩进末尾；`i' 在光标前插入，会把空格插进已有
+        ;; 缩进中间，末尾多出一个空格。换行后行首本就为空时二者等价。
+        (let ((n (- target (current-column))))
+          (typing-agent-task-log task 'debug "行首补 %d 个空格（%d a <SPC> <ESC>）" n n)
+          (typing-agent-evil-exit-insert)
+          (typing-agent-evil-send-keys (format "%d a <SPC> <escape>" n))
+          (typing-agent-evil-enter-insert "a"))))
       ;; tab / 空格的写法必须与预期逐字符一致。
       (let ((actual (buffer-substring-no-properties
                      (line-beginning-position) (point))))
@@ -919,6 +1235,28 @@ STARTED 非 nil 表示调用前任务已经占用执行权（例如刚在 dired 
     (nreverse lines)))
 
 ;;; 分行输入（Normal <-> Insert）
+
+(defcustom typing-agent-import-inline t
+  "任务里出现的 import 行是否一次性整行写入，而不是逐字符敲。
+Java `import ...`、Go `import ...` 这类行是 IDE/补全自动补的，不是人敲
+出来的；开启后这些行直接 insert 整行（不镜像 KeyCastr），又快又自然。
+设为 nil 时退回逐字符输入，保持完全一致的打字演示。"
+  :type 'boolean
+  :group 'typing-agent)
+
+(defun typing-agent-engine--import-line-p (line)
+  "LINE 是否是需要一次性写入的 import 行。
+匹配 Java `import ...`、`import static ...`，以及 Go `import ...` /
+`import (...)`。行首允许有空白。"
+  (and (stringp line)
+       (string-match-p "\\`[ \t]*import\\([ \t(]\\|$\\)" line)))
+
+(defun typing-agent-engine--insert-import-line (task line skip)
+  "在 Insert 状态下一次性插入 import 行 LINE（跳过前 SKIP 个缩进字符）。
+缩进已经在 `--lines-next' 的 open 阶段用 TAB 写好，这里只插入剩余正文。
+import 不是真实按键，不镜像到 KeyCastr。"
+  (typing-agent-task-log task 'info "import 行：一次性写入 %S" line)
+  (insert (substring line skip)))
 
 (defun typing-agent-engine--start-lines (task lines indent-p auto-exit start expected open)
   "开始按行输入 LINES。
@@ -941,12 +1279,35 @@ Normal。START 是校验起点，EXPECTED 是应写入 buffer 的内容；OPEN �
 
 ;;; 补全
 
+(defvar-local typing-agent--completion-word-state nil
+  "当前标识符（词）的补全状态。
+nil 表示尚未检查；`has' 表示这个词已有候选、后续字符继续追踪唯一化；
+`none' 表示这个词确认无候选、后续字符退避不再白等 LSP。
+点号或词首开始新词时会重新检查并更新这个值。")
+
+(defun typing-agent-engine--completion-word-eligible-p (line char-index char)
+  "根据「词状态」判断是否值得为 CHAR 再查一次补全。
+点号和词首总是检查（开始/刷新一个词）；非词首只在「本词已知有候选」
+时继续追踪，否则退避，避免无候选时每个字符都白等一次 LSP 响应。"
+  (cond
+   ((eq char ?.) t)
+   ((and (typing-agent-completion-word-start-p line char-index char)
+         (not (and (> char-index 1)
+                   (eq (aref line (- char-index 2)) ?.)))) t)
+   (t (eq typing-agent--completion-word-state 'has))))
+
 (defun typing-agent-engine--completion-start-p (line char-index char)
-  "刚在 LINE 的 CHAR-INDEX 处输入 CHAR 后，是否开始一次补全检查。"
+  "刚在 LINE 的 CHAR-INDEX 处输入 CHAR 后，是否开始一次补全检查。
+先做纯字符判断（触发位置 + 词状态退避），不满足就直接短路，避免每个
+字符都跑一次 `syntax-ppss'；通过后才检查是否在字符串/注释里。"
   (and typing-agent--completion-active
+       ;; Eglot 可能在任务中途才就绪（预热超时后 JDT 继续初始化），
+       ;; 每个检查点重新判断，server 一到位补全就接着用。
+       (typing-agent-completion-applicable-p)
        (typing-agent-evil-insert-p)
-       (typing-agent-completion-insert-context-p)
-       (typing-agent-completion-check-position-p line char-index char)))
+       (typing-agent-completion-check-position-p line char-index char)
+       (typing-agent-engine--completion-word-eligible-p line char-index char)
+       (typing-agent-completion-insert-context-p)))
 
 (defun typing-agent-engine--completion-done (task state &optional char-index)
   "结束补全检查，回到逐字符输入。
@@ -968,8 +1329,10 @@ CHAR-INDEX 非 nil 时，用它替换 STATE 里的字符索引（选中候选后
       (pcase phase
         ('completion-show
          (let ((popup (typing-agent-completion-popup-p)))
-           (unless popup
-             (typing-agent-completion-trigger))
+           ;; 始终触发：首次让弹框出现，后续让 corfu 重新 complete 刷新候选。
+           ;; 只在弹框没开时才 trigger 的话，「有候选」的词追踪时读到的永远是
+           ;; 旧候选，候选永远无法唯一化，也就永远选不中。
+           (typing-agent-completion-trigger)
            (setf (plist-get state :completion-tries)
                  (if popup tries (1+ tries)))
            (setf (plist-get state :phase) 'completion-check)
@@ -983,21 +1346,32 @@ CHAR-INDEX 非 nil 时，用它替换 STATE 里的字符索引（选中候选后
         ('completion-check
          (if (typing-agent-completion-popup-p)
              (let ((result (typing-agent-completion-inspect line)))
-               (pcase (plist-get result :status)
-                 ('selected
+                (pcase (plist-get result :status)
+                  ('navigating
+                   (typing-agent-engine--schedule
+                    task typing-agent-completion-selection-pause
+                    #'typing-agent-engine--completion-next))
+                  ('selected
+                  ;; 这个词通过补全完成，词状态清零，等下一个词首再判。
+                  (setq typing-agent--completion-word-state nil)
                   (typing-agent-task-log
-                   task 'info "补全：选择唯一候选 %S，字符索引 %d -> %d"
+                   task 'info "补全：选择目标候选 %S，字符索引 %d -> %d"
                    (plist-get result :text)
                    (plist-get state :char-index)
                    (plist-get result :char-index))
                   (typing-agent-engine--completion-done
                    task state (plist-get result :char-index)))
                  ('multiple
+                  ;; 有候选但还不唯一，继续输入追踪。
+                  (setq typing-agent--completion-word-state 'has)
                   (typing-agent-task-log
                    task 'debug "补全：%d 个候选，继续输入"
                    (plist-get result :count))
                   (typing-agent-engine--completion-done task state))
                  ('rejected
+                  ;; 无匹配候选：收起弹框，本词剩余字符不再等待。
+                  (setq typing-agent--completion-word-state 'none)
+                  (typing-agent-completion-quit)
                   (typing-agent-task-log
                    task 'debug "补全：候选 %S 与目标不匹配，继续输入"
                    (plist-get result :text))
@@ -1011,6 +1385,8 @@ CHAR-INDEX 非 nil 时，用它替换 STATE 里的字符索引（选中候选后
                  (typing-agent-engine--schedule
                   task typing-agent-completion-retry-delay
                   #'typing-agent-engine--completion-next))
+             ;; 重试耗尽仍无弹框：这个词没有候选，标记退避，本词不再白等。
+             (setq typing-agent--completion-word-state 'none)
              (typing-agent-engine--completion-done task state))))
 
         (_
@@ -1058,16 +1434,35 @@ CHAR-INDEX 非 nil 时，用它替换 STATE 里的字符索引（选中候选后
           (when open
             (typing-agent-evil-enter-insert open))
           (when (and (plist-get state :indent-p)
-                     (> (length indent) 0)
-                     (typing-agent-engine--at-line-start-p))
-            (typing-agent-engine--apply-line-indent task indent)
-            (setq skip (length indent)))
+                     (> (length indent) 0))
+            (if (typing-agent-engine--at-line-start-p)
+                (progn
+                  (typing-agent-engine--apply-line-indent task indent)
+                  (setq skip (length indent)))
+              ;; 正常路径不会走到这里：说明有别的包在 `o' 开新行时自动插了
+              ;; 前缀（例如 Doom 的注释续行 ` * '）。此时再从 0 开始输入整行
+              ;; 会把前缀叠加成 ` *  * 文本'，留一条日志方便定位。
+              (typing-agent-task-log
+               task 'warn "第 %d 行行首不是空白（%S），跳过缩进"
+               (1+ index)
+               (buffer-substring-no-properties
+                (line-beginning-position) (point)))))
           (setf (plist-get state :open) nil)
           (setf (plist-get state :phase) 'type)
-          (setf (plist-get state :char-index) skip)
           (setf (typing-agent-task-op-state task) state)
-          (typing-agent-engine--schedule
-           task 0.03 #'typing-agent-engine--lines-next)))
+          ;; import 行：一次性整行写入，不逐字符敲（import 是机器自动补的）。
+          (if (and typing-agent-import-inline
+                   (typing-agent-engine--import-line-p line))
+              (progn
+                (typing-agent-engine--insert-import-line task line skip)
+                (setf (plist-get state :char-index) (length line))
+                (setf (typing-agent-task-op-state task) state)
+                (typing-agent-engine--schedule
+                 task 0.02 #'typing-agent-engine--lines-next))
+            (setf (plist-get state :char-index) skip)
+            (setf (typing-agent-task-op-state task) state)
+            (typing-agent-engine--schedule
+             task 0.03 #'typing-agent-engine--lines-next))))
 
        ;; 输入当前行的字符。
        (t
@@ -1085,6 +1480,10 @@ CHAR-INDEX 非 nil 时，用它替换 STATE 里的字符索引（选中候选后
                     (setf (plist-get state :phase) 'completion-show)
                     (setf (plist-get state :completion-tries) 0)
                     (setf (typing-agent-task-op-state task) state)
+                    ;; 补全前把当前内容整份同步给 Eglot：任务期间 eglot 的
+                    ;; 逐字符变更钩子已被摘掉，这里手动同步一次，补全才基于
+                    ;; 最新文本（含刚敲的这个字符）。
+                    (typing-agent-engine--eglot-sync-now)
                     (typing-agent-engine--schedule
                      task typing-agent-completion-settle
                      #'typing-agent-engine--completion-next))
@@ -1093,7 +1492,8 @@ CHAR-INDEX 非 nil 时，用它替换 STATE 里的字符索引（选中候选后
                            (typing-agent-completion-popup-p))
                   (typing-agent-completion-quit))
                 (typing-agent-engine--schedule
-                 task (typing-agent-humanizer-delay char speed)
+                 task (typing-agent-humanizer-delay
+                       char speed (aref line char-index))
                  #'typing-agent-engine--lines-next))))))))))
 
 (defun typing-agent-engine--lines-finish-line (task state)
@@ -1102,6 +1502,16 @@ CHAR-INDEX 非 nil 时，用它替换 STATE 里的字符索引（选中候选后
 再停一下才开始输入下一行（`typing-agent-next-line-pause'）。"
   (let* ((lines (plist-get state :lines))
          (next (1+ (plist-get state :index))))
+    (typing-agent-completion-quit)
+    ;; 首行可能从行中开始，末行后可能还有原有文本；只校验本次写入部分。
+    (let* ((beg (if (= next 1) (plist-get state :start)
+                  (line-beginning-position)))
+           (expected (nth (1- next) lines))
+           (actual (buffer-substring-no-properties beg (point))))
+      (unless (string= actual expected)
+        (signal 'typing-agent-verify-error
+                (list (format "第 %d 行输入不一致：预期 %S，实际 %S"
+                              next expected actual)))))
     (cond
      ;; 最后一行：直接进入收尾。
      ((>= next (length lines))
@@ -1262,7 +1672,9 @@ CHAR-INDEX 非 nil 时，用它替换 STATE 里的字符索引（选中候选后
         (when (bound-and-true-p typing-agent-mode)
           (typing-agent-mode -1))))
     (when (eq typing-agent--active-task task)
-      (setq typing-agent--active-task nil))))
+      (setq typing-agent--active-task nil))
+    ;; 任务结束（完成/失败/取消）后解锁输入。
+    (typing-agent-lock-off)))
 
 (defun typing-agent-engine--fail (task err)
   "把 TASK 标记为失败，记录 ERR，并恢复执行环境。"

@@ -79,14 +79,14 @@ BODY 中变量 `file' 是文件路径。"
   (should-not (typing-agent-humanizer-punctuation-p ?a)))
 
 (ert-deftest typing-agent-test-humanizer-human-pace ()
-  ;; 偏快的真人手速：基础 6.5 字符/秒上下，单字符间隔不低于 0.1 秒，
-  ;; 再怎么抖也不会快得像机器连发。
+  ;; 提速后的节奏：基础 11 字符/秒（约 132 WPM），单字符间隔在 0.07 秒上下，
+  ;; 有随机快慢，但不会慢到卡、也不会快得像机器连发（min-key-delay 兜底）。
   (typing-agent-humanizer-reset 1.0)
   (let ((typing-agent-thinking-probability 0)
         (typing-agent-burst-probability 0)
         (delay (typing-agent-humanizer-delay ?a)))
-    (should (>= delay 0.10))
-    (should (<= delay 0.30)))
+    (should (>= delay 0.02))
+    (should (<= delay 0.40)))
   ;; 不再模拟错字：打错的实现和任务选项都已移除。
   (should-not (fboundp 'typing-agent-humanizer-should-typo-p))
   (should-not (assq :typo_probability
@@ -344,6 +344,99 @@ BODY 中变量 `file' 是文件路径。"
                                "    }\n}\n")
                        (typing-agent-file-content file)))))))
 
+(defun typing-agent-test--comment-continuing-open-below (fn count)
+  "模拟 Doom 的 `o'：在注释内开新行时续写 ` * ' 前缀。
+只用于验证任务把 `+evil-want-o/O-to-continue-comments' 绑成 nil 后，
+Javadoc 不会再被叠加成 ` *  * 文本'。"
+  (if (or (not +evil-want-o/O-to-continue-comments)
+          (not (nth 4 (syntax-ppss))))
+      (funcall fn count)
+    (prog1 (funcall fn count)
+      (save-excursion
+        (goto-char (line-beginning-position))
+        (insert " * ")))))
+
+(ert-deftest typing-agent-test-engine-javadoc-ignores-comment-continuation ()
+  ;; Doom 的 `o'/`O' 在注释内会自动续写 ` * ' 前缀
+  ;; （`+evil-want-o/O-to-continue-comments'）。任务自己按 spec 写整行缩进，
+  ;; 两者叠加会把 Javadoc 打成 ` *  * 文本'。这里用一条模拟 advice 复现
+  ;; Doom 的行为，确保任务把它关掉后仍逐字符一致。
+  (skip-unless (fboundp 'evil-mode))
+  (let ((content "public class A {\n    /**\n}\n")
+        (expected (concat "public class A {\n"
+                          "    /**\n"
+                          "     * 楼栋名称\n"
+                          "     *\n"
+                          "     * @author van\n"
+                          "     */\n"
+                          "}\n")))
+    (typing-agent-test-with-temp-file content
+      (let ((original +evil-want-o/O-to-continue-comments))
+        (setq +evil-want-o/O-to-continue-comments t)
+        (advice-add 'evil-open-below :around
+                    #'typing-agent-test--comment-continuing-open-below)
+        (unwind-protect
+            (let ((task (typing-agent-engine-submit
+                         (typing-agent-json-parse
+                          (json-encode
+                           (typing-agent-json-prepare
+                            (list (cons :file file)
+                                  (cons :options (list :speed 30))
+                                  (cons :operations
+                                        (vconcat
+                                         (list (list :type "search_text"
+                                                     :text "    /**")
+                                               (list :type "move_cursor"
+                                                     :position "line_end")
+                                               (list :type "enter_insert"
+                                                     :command "o")
+                                               (list :type "type_text"
+                                                     :text (concat
+                                                            "     * 楼栋名称\n"
+                                                            "     *\n"
+                                                            "     * @author van\n"
+                                                            "     */"))
+                                               (list :type "exit_insert")))))))))))
+              (should (typing-agent-test--wait task))
+              (should (eq (typing-agent-task-status task) 'completed))
+              (should (equal expected
+                             (with-current-buffer (typing-agent-task-buffer task)
+                               (buffer-substring-no-properties
+                                (point-min) (point-max))))))
+          (advice-remove 'evil-open-below
+                         #'typing-agent-test--comment-continuing-open-below)
+          (setq +evil-want-o/O-to-continue-comments original))))))
+
+(ert-deftest typing-agent-test-engine-import-inline ()
+  ;; import 行一次性整行写入，不逐字符敲；最终内容仍逐字符一致。
+  (skip-unless (fboundp 'evil-mode))
+  (let ((content "public class A {\n}\n"))
+    (typing-agent-test-with-temp-file content
+      (let ((task (typing-agent-engine-submit
+                   (typing-agent-json-parse
+                    (json-encode
+                     (typing-agent-json-prepare
+                      (list (cons :file file)
+                            (cons :options (list :speed 30))
+                            (cons :operations
+                                  (vconcat
+                                   (list (list :type "search_text"
+                                               :text "public class A {")
+                                         (list :type "move_cursor"
+                                               :position "line_start")
+                                         (list :type "enter_insert"
+                                               :command "O")
+                                         (list :type "type_text"
+                                               :text "import java.util.List;\nimport java.util.Map;")
+                                         (list :type "exit_insert")
+                                         (list :type "save_buffer")))))))))))
+        (should (typing-agent-test--wait task))
+        (should (eq (typing-agent-task-status task) 'completed))
+        (should (equal (concat "import java.util.List;\n"
+                               "import java.util.Map;\n"
+                               "public class A {\n}\n")
+                       (typing-agent-file-content file)))))))
+
 (ert-deftest typing-agent-test-engine-indent-preserves-tabs ()
   ;; 文件用制表符缩进时，TAB 缩进后仍必须精确还原成 tab。
   (skip-unless (fboundp 'evil-mode))
@@ -432,6 +525,124 @@ BODY 中变量 `file' 是文件路径。"
                       #'flycheck-popup-tip-show-popup))
       (should (functionp flycheck-display-errors-function))
       (typing-agent--restore-buffer))))
+
+(ert-deftest typing-agent-test-quiesce-eglot-hooks ()
+  ;; 任务期间摘掉 eglot 的逐字符变更钩子（消除 O(n) 行号换算与增量记录堆积），
+  ;; 结束后恢复。这里用假 eglot 函数验证钩子的摘除/恢复。
+  (cl-letf (((symbol-function 'eglot--before-change) #'ignore)
+            ((symbol-function 'eglot--after-change) #'ignore))
+    (with-temp-buffer
+      (setq-local typing-agent--completion-active t)
+      (add-hook 'before-change-functions #'eglot--before-change nil t)
+      (add-hook 'after-change-functions #'eglot--after-change nil t)
+      (typing-agent--quiesce-buffer)
+      (should-not (memq 'eglot--before-change before-change-functions))
+      (should-not (memq 'eglot--after-change after-change-functions))
+      (typing-agent--restore-buffer)
+      (should (memq 'eglot--before-change before-change-functions))
+      (should (memq 'eglot--after-change after-change-functions)))))
+
+(ert-deftest typing-agent-test-eglot-hooks-quiesced-when-lsp-arrives-late ()
+  ;; 任务开始时没有 LSP：先没有钩子可摘；等它途中连上后，新钩子也要摘掉，
+  ;; 任务结束时再把钩子还给用户后续编辑。
+  (cl-letf (((symbol-function 'eglot--before-change) #'ignore)
+            ((symbol-function 'eglot--after-change) #'ignore))
+    (with-temp-buffer
+      (setq-local typing-agent--completion-active t)
+      (setq-local typing-agent-mode t)
+      (typing-agent--quiesce-buffer)
+      (should-not (memq 'eglot--before-change before-change-functions))
+      (add-hook 'before-change-functions #'eglot--before-change nil t)
+      (add-hook 'after-change-functions #'eglot--after-change nil t)
+      (typing-agent--eglot-arrived)
+      (should-not (memq 'eglot--before-change before-change-functions))
+      (should-not (memq 'eglot--after-change after-change-functions))
+      (typing-agent--restore-buffer)
+      (should (memq 'eglot--before-change before-change-functions))
+      (should (memq 'eglot--after-change after-change-functions)))))
+
+(ert-deftest typing-agent-test-lsp-connect-runs-deferred-hook-only ()
+  ;; 真实 eglot-ensure 延迟到 post-command 才连接；定时任务不能只等待。
+  (with-temp-buffer
+    (let ((connected nil)
+          (unrelated nil))
+      (setq-local post-command-hook (list (lambda () (setq unrelated t))))
+      (let ((original post-command-hook))
+        (cl-letf (((symbol-function 'eglot-current-server) #'ignore)
+                  ((symbol-function 'eglot-ensure)
+                   (lambda ()
+                     (add-hook 'post-command-hook
+                               (lambda () (setq connected t)) nil t))))
+          (typing-agent-engine--connect-lsp-now)
+          (should connected)
+          (should-not unrelated)
+          (should (equal post-command-hook original)))))))
+
+(ert-deftest typing-agent-test-lsp-existing-server-unmanaged-buffer ()
+  ;; 项目 server 存在不等于新文件已发送 didOpen、装好 CAPF。
+  (let ((managed nil)
+        (activated nil))
+    (cl-letf (((symbol-function 'eglot-current-server) (lambda () 'fake))
+              ((symbol-function 'eglot-managed-p) (lambda () managed))
+              ((symbol-function 'eglot-ensure)
+               (lambda () (ert-fail "不应重连已有 server")))
+              ((symbol-function 'eglot--maybe-activate-editing-mode)
+               (lambda () (setq activated t managed t)))
+              ((symbol-function 'typing-agent-engine--any-lsp-running-p) (lambda () t))
+              ((symbol-function 'typing-agent-engine--option) (lambda (&rest _) nil))
+              ((symbol-function 'typing-agent-task-log) #'ignore)
+              ((symbol-function 'typing-agent-engine--eglot-sync-now) #'ignore))
+      (typing-agent-engine--ensure-lsp nil)
+      (should activated)
+      (should (typing-agent-engine--lsp-ready-p)))))
+
+(ert-deftest typing-agent-test-ensure-lsp-prewarms ()
+  ;; 项目里没有 LSP 时，开启预热会冷启动并等到 eglot-managed-p 为真，
+  ;; 这样新建文件在打字时也能有补全。
+  (let ((server nil)
+        (ensured nil))
+    (cl-letf (((symbol-function 'eglot-current-server) (lambda () server))
+              ((symbol-function 'eglot-managed-p) (lambda () (not (null server))))
+              ((symbol-function 'eglot-ensure)
+               (lambda () (setq ensured t server 'fake)))
+              ((symbol-function 'typing-agent-engine--any-lsp-running-p) #'ignore)
+              ((symbol-function 'typing-agent-engine--option) (lambda (&rest _) t))
+              ((symbol-function 'typing-agent-task-log) #'ignore)
+              ((symbol-function 'typing-agent-engine--eglot-sync-now) #'ignore)
+              ((symbol-function 'accept-process-output) #'ignore))
+      (typing-agent-engine--ensure-lsp nil)
+      (should ensured)
+      (should (eq server 'fake)))))
+
+(ert-deftest typing-agent-test-ensure-lsp-no-prewarm ()
+  ;; 关掉预热、且没有任何 server 时，绝不冷启动。
+  (let ((typing-agent-completion-prewarm-lsp nil)
+        (ensured nil))
+    (cl-letf (((symbol-function 'eglot-current-server) #'ignore)
+              ((symbol-function 'eglot-managed-p) (lambda () t))
+              ((symbol-function 'eglot-ensure) (lambda () (setq ensured t)))
+              ((symbol-function 'typing-agent-engine--any-lsp-running-p) #'ignore)
+              ((symbol-function 'typing-agent-engine--option) (lambda (&rest _) t))
+              ((symbol-function 'typing-agent-task-log) #'ignore))
+      (typing-agent-engine--ensure-lsp nil)
+      (should-not ensured))))
+
+(ert-deftest typing-agent-test-ensure-lsp-joins-running-server ()
+  ;; 已有 server 时立即连接，不需要冷启动。
+  (let ((server nil)
+        (ensured nil))
+    (cl-letf (((symbol-function 'eglot-current-server) (lambda () server))
+              ((symbol-function 'eglot-managed-p) (lambda () (not (null server))))
+              ((symbol-function 'eglot-ensure)
+               (lambda () (setq ensured t server 'fake)))
+              ((symbol-function 'typing-agent-engine--any-lsp-running-p) (lambda () t))
+              ((symbol-function 'typing-agent-engine--option) (lambda (&rest _) nil))
+              ((symbol-function 'typing-agent-task-log) #'ignore)
+              ((symbol-function 'typing-agent-engine--eglot-sync-now) #'ignore)
+              ((symbol-function 'accept-process-output) #'ignore))
+      (typing-agent-engine--ensure-lsp nil)
+      (should ensured)
+      (should (eq server 'fake)))))
 
 (ert-deftest typing-agent-test-visit-file-already-shown ()
   ;; 文件已经在当前窗口：只跳行，不再弹选择框、不换 buffer。
@@ -803,7 +1014,6 @@ BODY 为字符串时按 JSON 发送；TOKEN 为 nil 时使用当前 token。"
       (should (string-match-p "\"ok\":false" (cadr result))))))
 
 ;;; 补全
-
 (ert-deftest typing-agent-test-completion-trigger-char ()
   (should (typing-agent-completion-trigger-char-p ?.))
   (should (typing-agent-completion-trigger-char-p ?a))
@@ -826,6 +1036,18 @@ BODY 为字符串时按 JSON 发送；TOKEN 为 nil 时使用当前 token。"
   (should-not (typing-agent-completion-check-position-p "System." 7 ?.))
   (should-not (typing-agent-completion-check-position-p "foo.(" 4 ?.))
   (should-not (typing-agent-completion-check-position-p "a " 1 ?a)))
+
+(ert-deftest typing-agent-test-completion-word-start ()
+  (let ((line "System.out.pri"))
+    ;; p 前面是点号，是词首。
+    (should (typing-agent-completion-word-start-p line 12 ?p))
+    ;; r 前面还是 p（标识符），不是词首。
+    (should-not (typing-agent-completion-word-start-p line 13 ?r))
+    ;; 点号本身不是词首。
+    (should-not (typing-agent-completion-word-start-p line 11 ?.)))
+  ;; 行首第一个字符是词首。
+  (should (typing-agent-completion-word-start-p "print" 1 ?p))
+  (should-not (typing-agent-completion-word-start-p "print" 2 ?r)))
 
 (ert-deftest typing-agent-test-completion-fit ()
   (let ((line "        System.out.println(\"hello\");"))
@@ -861,9 +1083,15 @@ BODY 为字符串时按 JSON 发送；TOKEN 为 nil 时使用当前 token。"
     (should (equal "println" (plist-get clean :insertText)))
     (should-not (plist-get clean :textEdit))
     (should-not (plist-get clean :insertTextFormat))
-    (should-not (plist-get clean :additionalTextEdits))
     (should-not (plist-get clean :command))
     (should-not (plist-get clean :data))
+    ;; import 默认开启：additionalTextEdits 保留，选中后随候选一起应用。
+    (should (plist-get clean :additionalTextEdits))
+    ;; 显式关闭 import 时才清掉 additionalTextEdits，保持逐字符精确。
+    (let ((typing-agent-completion-import nil))
+      (should-not (plist-get
+                   (typing-agent-completion--clean-item item)
+                   :additionalTextEdits)))
     (should (equal clean (get-text-property 0 'eglot--lsp-item string)))
     (should (equal "println" (substring-no-properties string)))))
 
@@ -872,6 +1100,16 @@ BODY 为字符串时按 JSON 发送；TOKEN 为 nil 时使用当前 token。"
   (should-not (alist-get :completion
                          (typing-agent-engine-parse-options
                           '(:options (:completion :false))))))
+
+(ert-deftest typing-agent-test-import-line-p ()
+  ;; import 行一次性写入的判定。
+  (should (typing-agent-engine--import-line-p "import java.util.List;"))
+  (should (typing-agent-engine--import-line-p "import static foo.Bar.baz;"))
+  (should (typing-agent-engine--import-line-p "import ("))
+  (should (typing-agent-engine--import-line-p "  import com.x.Y;"))
+  (should-not (typing-agent-engine--import-line-p "public class A {"))
+  (should-not (typing-agent-engine--import-line-p "imports x"))
+  (should-not (typing-agent-engine--import-line-p "")))
 
 (ert-deftest typing-agent-test-keycast-event-text ()
   ;; 特殊键与 KeyCastr 自己的显示保持一致。
@@ -885,7 +1123,12 @@ BODY 为字符串时按 JSON 发送；TOKEN 为 nil 时使用当前 token。"
   (should (equal (typing-agent-keycast--event-text ?\C-g) "C-g"))
   (should (equal (typing-agent-keycast--event-text 'tab) "⇥"))
   (should (equal (typing-agent-keycast--event-text 'return) "⏎"))
-  (should (equal (typing-agent-keycast--event-text ?中) "中")))
+  (should-not (typing-agent-keycast--event-text ?中))
+  (dolist (char (string-to-list "中文繁體𠀀，。！？：；（）【】《》“”‘’、—…"))
+    (should-not (typing-agent-keycast--event-text char)))
+  (dolist (char (string-to-list "aZ09_{}[]();,.!?é"))
+    (should (equal (typing-agent-keycast--event-text char)
+                   (char-to-string char)))))
 
 (ert-deftest typing-agent-test-keycast-mirror-text ()
   ;; 用真正的数据报 socket 走一遍协议，确认 KeyCastr 收到 JSON 行。
@@ -906,14 +1149,17 @@ BODY 为字符串时按 JSON 发送；TOKEN 为 nil 时使用当前 token。"
                  :family 'local :service path :server t :type 'datagram
                  :noquery t :coding 'utf-8-unix
                  :filter (lambda (_process string) (push string received))))
-          (typing-agent-keycast-mirror-text "a ")
-          (typing-agent-keycast-mirror-events (vector ?\r ?\t))
+          (typing-agent-keycast-mirror-text "a中文，。 ")
+          (typing-agent-keycast-mirror-events (vector ?\r ?中 ?\t))
+          (typing-agent-keycast-mirror-events (list ?文 ?！))
           (accept-process-output nil 1.0)
           (let ((payload (apply #'concat (nreverse received))))
             (should (string-match-p "\"text\":\"a\"" payload))
             (should (string-match-p "\"text\":\"␣\"" payload))
             (should (string-match-p "\"text\":\"⏎\"" payload))
-            (should (string-match-p "\"text\":\"⇥\"" payload))))
+            (should (string-match-p "\"text\":\"⇥\"" payload))
+            (should (= 4 (length (split-string payload "\n" t))))
+            (should-not (string-match-p "[中文，。！]" payload))))
       (when (process-live-p typing-agent-keycast--process)
         (delete-process typing-agent-keycast--process))
       (when (process-live-p server)

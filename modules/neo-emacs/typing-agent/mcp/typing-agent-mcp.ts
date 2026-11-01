@@ -176,7 +176,7 @@ ${OPERATION_HELP}`,
         options: {
           type: "object",
           description:
-            "speed（默认 1.0）、typo_probability（默认 0.015）、allow_dirty、save、recording、post_delay。任务结束不做恢复，停在最后编辑或查看的 buffer",
+            "speed（默认 1.0，约 11 字符/秒）、allow_dirty、save、recording、completion（Eglot 补全弹框，默认 true）、post_delay。任务运行期间输入被锁定（停止只能 control=stop）；任务结束不做恢复，停在最后编辑或查看的 buffer",
         },
         expected: {
           type: "object",

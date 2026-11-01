@@ -37,7 +37,7 @@ Typing Agent 把修改拆成一个个操作（定位、进入 Insert、逐字符
 | =typing-agent-recording.el= | 录制模式的窗口准备与恢复 |
 | =typing-agent-server.el= | 本地 HTTP/1.1 服务、Bearer 鉴权、路由 |
 | =config.el= | Doom 模块入口、快捷键、自动启动 |
-| =test/typing-agent-test.el= | 41 项 ERT 测试（含 HTTP 全流程、dired 创建与补全纯逻辑） |
+| =test/typing-agent-test.el= | 47 项 ERT 测试（含 HTTP 全流程、dired 创建、补全纯逻辑、import 一次性写入与输入锁定） |
 | =opencode/= | 可直接复制到 OpenCode 配置目录的 tool 与 skill |
 | =mcp/typing-agent-mcp.ts= | 可选的 MCP stdio server，把 HTTP API 包装成 MCP 工具 |
 
@@ -213,12 +213,17 @@ cat ~/.local/state/typing-agent/token
 
 * 打字节奏
 
-- 基础速度 6.5 字符/秒（=typing-agent-typing-speed=），约合每分钟 390 个字符
-  （约 78 WPM），属于人类里打字偏快的那一档；每个字符还有 ±30% 的随机浮动。
-- 小概率进入 burst（=typing-agent-burst-speed= 9.5 字符/秒），只是手顺了一小段，
-  不会出现 20+ 字符/秒的机器连发。
-- 标点、换行、开新行后都会停顿；极少数情况下会停下来「思考」一下。
+- 基础速度 11 字符/秒（=typing-agent-typing-speed=），约合每分钟 660 个字符
+  （约 132 WPM），接近人类打字的上限；每个字符还有 ±35% 的随机浮动。
+- 同一个标识符/单词内部会连贯快打（=typing-agent-word-cps-factor= 1.9 倍，
+  词内约 21 字符/秒），从一个词切到下一个词、敲完空格后都只留极短的空隙。
+- 小概率进入 burst（=typing-agent-burst-speed= 17 字符/秒，约 204 WPM），是
+  刻意「夸张」的一段手速爆发，用来凸显行云流水的观感。
+- 标点、换行、开新行后的停顿都被压缩到很短；「思考」停顿的概率极低。
 - *不模拟打错字*：写进 buffer 的每个字符都是对的，没有打错再退格的表演。
+
+整体比真人偏快，介于「人类最强手速」和「夸张」之间。想再快或慢，用任务选项
+=options.speed= 整体缩放（1.0 为标准，1.5 再快一半，0.7 放慢）。
 
 * KeyCastr 按键显示
 
@@ -245,9 +250,9 @@ socket，由 KeyCastr 直接交给当前 visualizer 显示。
 
 1. *查看或编辑别的文件先弹选择框*：=read=（follow 插件触发 =/open=）和编辑
    任务开始时，如果目标文件还没显示在眼前，不直接切 buffer，而是像人一样弹出
-   选择框 —— 已经打开的 buffer 用 =consult-buffer=，否则按最近文件 / 项目文件 /
+   选择框 —— 已经打开的 buffer 用 =consult-buffer=，否则按项目文件 /
    =find-file= 选择 —— 停 =typing-agent-visit-pause=（默认 0.6 秒），再逐字符
-   输入文件名（=typing-agent-visit-char-delay=，默认 0.15 秒一个字符），停
+   输入文件名（=typing-agent-visit-char-delay=，默认基础间隔 0.05 秒，随机浮动至两倍），停
    =typing-agent-confirm-pause=（默认 1 秒）再回车跳过去。每一步都等上一步真的
    生效；超过 =typing-agent-visit-timeout=（默认 6 秒）才收掉选择框直接切换，
    不会卡在 minibuffer 里。文件已经在当前窗口时只跳行，不打扰画面。
@@ -255,7 +260,7 @@ socket，由 KeyCastr 直接交给当前 visualizer 显示。
 3. 光标居中，方便观看。
 
 选择方式由 =typing-agent-visit-method= 控制（=auto=、=consult-buffer=、
-=consult-recent-file=、=project-find-file=、=find-file=、=direct=）；=direct= 退回
+=project-find-file=、=find-file=、=direct=）；=direct= 退回
 直接切换。默认 =auto=。窗口是否独占由 =typing-agent-maximize-window= 控制，默认开启。
 
 任务开始时如果目标文件已经在窗口里，不会多弹一次选择框。任务结束*不做任何恢复*：
@@ -267,6 +272,23 @@ socket，由 KeyCastr 直接交给当前 visualizer 显示。
 buffer 末尾插空行，任务结束时那些空行会留在文件里。回显区不碰 buffer 内容，
 诊断照样看得到；这个 buffer 局部设置会一直保留。
 手动 =SPC t y r= 进入的录制模式仍会保存并在 =SPC t y R= 时恢复布局（那是用户显式操作）。
+
+* 输入锁定
+
+任务运行期间，用户的键盘和鼠标输入会被*全部拦下*，避免误触打断打字：
+
+- *范围*：从任务开始（=running=）到收尾（=cleanup=）全程锁定；暂停（=/pause=）、
+  继续（=/resume=）期间同样保持锁定，直到任务完成、失败或被取消才恢复。
+- *怎么拦*：全局 =typing-agent-lock-mode= 用一个深度 -90 的 =pre-command-hook=
+  在命令执行前把用户命令换成占位命令（=typing-agent-lock-blocked=）；占位命令
+  只提示一次「输入已锁定」，之后静默忽略，不刷屏。
+- *agent 自己的按键照常放行*：走 =execute-kbd-macro= 的按键靠
+  =executing-kbd-macro= 放行；走 =unread-command-events= 注入的按键在推送时按
+  事件数累加受信计数（=typing-agent--inject-count=），命令执行前递减放行。
+- *停止只能走 MCP*：本地按键（含 =C-g=、=SPC t y= 快捷键）都会被拦，想中途
+  停下用 MCP 的 =/stop=，或 =emacsclient -e "(typing-agent-cancel)"=。MCP 的
+  =/stop= 走 HTTP 进程过滤器，不经命令循环，不受锁定影响。
+- 不需要锁定就 =(setq typing-agent-input-lock nil)=。
 
 * 快捷键
 
@@ -396,10 +418,10 @@ curl -s -H "$AUTH" $BASE/task/<id> | jq '{status, index, total, error, result}'
 1. *新建文件走 dired*：目标文件不存在时，任务先像人一样在目录里创建它，而不是
    直接跳进一个空 buffer ——
    - 打开父目录的 dired（整个 frame 只剩它），停 =typing-agent-create-pause=
-     （默认 0.5 秒）让目录列表出来；
+     （默认 0.6 秒）让目录列表出来；
    - 按 dired 的「新建空文件」键（Doom / Dirvish 下是 =c=，没有绑定就用 M-x），
      弹出 =Create empty file:=；
-   - 逐字符输入文件名（=typing-agent-create-char-delay=，默认 0.12 秒一个字符），
+   - 逐字符输入文件名（=typing-agent-create-char-delay=，默认基础间隔 0.05 秒，随机浮动至两倍），
      每敲一个字符都确认它真的出现在提示框里；
    - 停 =typing-agent-confirm-pause=（默认 1 秒）再回车创建；
    - 等文件真的存在、dired 刷新，在目录里定位到新文件，停一下再回车打开；
@@ -418,10 +440,15 @@ curl -s -H "$AUTH" $BASE/task/<id> | jq '{status, index, total, error, result}'
 3. *删除走操作符*：整行替换、=delete_lines=、=delete_text= 的整行情形都用 =dd=；
    删完再进 Insert 写新内容。行内文本用 Visual 删除 + =i=。
 4. *缩进交给主模式*：行首缩进用 =TAB=（=indent-for-tab-command=）让主模式决定，
-   再用空格/退格把列号校正到目标位置；如果主模式给出的 tab/空格写法与预期不同，
-   最后按预期字符改写，保证落盘内容和任务描述逐字符一致。
+   再用空格/退格把列号校正到目标位置；补空格用 Evil 计数前缀 =N a <SPC> <ESC>=
+   一次插入（而不是一个个 =SPC= 敲，又慢又拖）；如果主模式给出的 tab/空格写法
+   与预期不同，最后按预期字符改写，保证落盘内容和任务描述逐字符一致。
 5. *逐字符校验*：每段输入结束都会比对实际写入的内容，发现自动配对、自动缩进、
    snippet 展开等干扰就立刻失败，不会带着错误内容保存。
+6. *import 行直接写入*：任务文本里以 =import= 开头的行（Java、Go 的 import 语句）
+   *一次性整行插入*，不逐字符敲——import 是 IDE/补全自动补的、不是人敲出来的，
+   直接「唰」地出现更自然也更快（=typing-agent-import-inline=，默认开，设为
+   =nil= 退回逐字符）。插入内容仍然参与最后的逐字符校验，落盘结果与预期一致。
 
 ** 代码补全弹框（Eglot + corfu）
 
@@ -430,19 +457,25 @@ curl -s -H "$AUTH" $BASE/task/<id> | jq '{status, index, total, error, result}'
 
 触发时机：
 
-- 输入点号 =.= 或标识符字符（字母、数字、=_=、=$=）之后；
+- 输入点号 =.= 之后（成员补全，恒触发）；
+- 输入标识符字符（字母、数字、=_=、=$=）之后 —— 每个字符都会检查，这样候选
+  随着输入唯一化时能被*及时选中*，而不是键完整个单词；
 - 只有目标行后面还有标识符字符时才检查 —— 单词已经写完、行尾、标点时直接跳过，
   不会为了一次没有意义的补全白等 LSP；
-- 字符串和注释里不触发。
+- 字符串和注释里不触发；
+- *无候选退避*：一个词在词首确认没有候选后，本词后续字符不再白等 LSP，
+  直接快速逐字符输入，直到下一个词首/点号。
 
 行为：
 
-1. 触发后等待 corfu 弹框出现（=typing-agent-completion-settle=，默认 0.16 秒），
-   弹框出现后再停 =typing-agent-completion-popup-pause=（默认 0.12 秒），
+1. 触发后等待 corfu 弹框出现（=typing-agent-completion-settle=，默认 0.06 秒），
+   弹框出现后再停 =typing-agent-completion-popup-pause=（默认 0.25 秒），
    让弹框在屏幕上看得见。弹框没出现就按 =typing-agent-completion-retry-delay=
    重试，最多 =typing-agent-completion-max-retries= 次，然后继续正常输入。
-2. *候选多个*：继续逐字符输入，让弹框自己筛；弹框保留在屏幕上，日志记
-   「补全：N 个候选，继续输入」。
+2. *前五项优先*：按目标代码匹配完整标识符，目标位于前五项时，优先上下移动
+   高亮并确认，不受候选总数限制，也不等待匹配唯一化；多个匹配取排序最靠前的一项。
+   每步停留 =typing-agent-completion-selection-pause=（默认 0.18 秒）；目标在第五项
+   之后或无匹配时继续输入。KeyCastr 显示方向键和确认键，不再镜像补全插入的字符。
 3. *只剩一个候选*：只有同时满足下面条件才选中，否则继续手动输入并记
    「候选与目标不匹配」：
    - 候选带 Eglot 的 =eglot--lsp-item=；
@@ -451,13 +484,29 @@ curl -s -H "$AUTH" $BASE/task/<id> | jq '{status, index, total, error, result}'
    - 它比已经输入的部分更长。
 
    选中后按实际写入的字符数推进字符索引，*绝不把已经补全的字符再敲一遍*。
-   选中前会清掉 LSP item 里的 =textEdit=、=insertTextFormat=、
-   =additionalTextEdits=、=command=、=data=，所以不会触发 snippet 占位符、
-   自动 import 或 completion resolve 改写内容；插入仍然走 =corfu-insert=，
-   undo 分组和弹框收尾与用户自己按 =RET= 一致。
-4. 插入后立即校验 buffer 里那段文本正好等于候选纯文本，不一致就恢复已输入前缀
+   选中前会清掉 LSP item 里的 =textEdit=、=insertTextFormat=、=command=、
+   =data=，所以不会触发 snippet 占位符或 completion resolve 改写内容。
+   =additionalTextEdits=（例如自动 import）默认*保留*：选中候选时 import 会
+   随之一并应用，减少手动写 import 行（=typing-agent-completion-import=，
+   默认开）。插入仍然走 =corfu-insert=，undo 分组和弹框收尾与用户自己按
+   =RET= 一致。
+4. 任务期间将 =corfu-preview-current= 临时设为 =nil=：上下选择只改变高亮，
+   普通字符不会隐式确认候选，确认由补全状态机显式执行。任务退出后恢复原值及
+   原有的 buffer 局部绑定状态。
+   每行结束、进入下一行之前校验本次写入的文本；不一致立即停止，错误包含行号、
+   预期内容和实际内容，避免错误累积到整段结束。
+   插入后立即校验 buffer 里那段文本正好等于候选纯文本，不一致就恢复已输入前缀
    并让任务失败（=typing-agent-verify-error=），绝不带着错误内容保存。
 5. 退出 Insert（=ESC=）前先收起弹框，避免 ESC 被 corfu 的按键映射吃掉。
+
+关于 import 与最终校验：
+
+- 自动 import 会在文件顶部插入新行，属于补全的合法副作用，不在目标行内；
+  补全的状态机只按目标行推进，import 不影响「少敲字」的精确性。
+- 因此 import 场景请用 =expected.contains= / =not_contains= 校验最终内容，
+  *不要*用 =content= / =sha256=（它们要求全文逐字符一致，自动加的 import
+  会让它们失败）。不需要 import 时，把 =typing-agent-completion-import=
+  设为 =nil=，即可回到逐字符精确、可配合 =content= / =sha256= 的行为。
 
 实现约定：
 
@@ -465,7 +514,32 @@ curl -s -H "$AUTH" $BASE/task/<id> | jq '{status, index, total, error, result}'
   局部的 =corfu-auto= 置 nil，弹框只由补全状态机在需要时主动触发，避免自动弹框
   的时机和逐字符输入打架；
 - 只处理 Eglot 的 capf；其他来源的候选不接管；
-- 没有 Eglot 的 buffer 完全回到原来的逐字符输入，行为与以前一致。
+- 没有 Eglot 的 buffer 完全回到原来的逐字符输入，行为与以前一致；
+- LSP 已运行时任务期间保持运行（补全依赖它）；LSP 没启动时，任务会在开始
+  打字前主动*预热*：调用 =eglot-ensure= 把它拉起来，并等到 =eglot-managed-p=
+  为真再开始输入（=typing-agent-completion-prewarm-lsp=，默认开）。这正是新建
+  文件在录制里也有补全的关键——以前新文件是在没有 LSP 时打开的，整个任务
+  都没有提示。等待上限是 =typing-agent-completion-prewarm-timeout=（默认 30
+  秒）：JDT 首次导入项目、建索引可能要几十秒，超时就照常开始打字，等它随后
+  就绪时补全自动接上；不想要这段等待就把预热设为 =nil=。
+- 预热超时后 LSP 才连上的情况也处理了：每次补全检查都会重新判断
+  =eglot-managed-p=，server 一到位就恢复补全，并在 =eglot-managed-mode-hook=
+  里补摘一次逐字符变更钩子，避免后半段又回到每字符重解析的慢路径。
+- 录制前想先把首次启动的等待做完，可以在任意 Java buffer 里执行
+  =M-x typing-agent-prewarm-lsp=；之后任务开始时 LSP 已经在跑，几乎立即有补全。
+
+性能（越打越慢的治理）：
+
+- 任务期间在这个 buffer 里临时关掉 doom-modeline 的 =word-count= 段：它在
+  =java-mode= 下每次 modeline 刷新都对全文件 =count-words= 遍历（O(n)），
+  文件越大越慢；结束后恢复原值。
+- 任务期间摘掉 Eglot 的逐字符变更钩子（=eglot--before-change= /
+  =eglot--after-change=）：前者每个字符做两次 O(n) 的 =line-number-at-pos=
+  行号换算并把带 marker 的增量记录堆进 =eglot--recent-changes=，后者每个
+  字符 cancel+重建 idle timer，两者还会把增量变更反复喂给 JDT 让它重解析。
+  摘掉后改为在补全触发点（词首/点号）和任务结束时由
+  =typing-agent-engine--eglot-sync-now= 整份同步（full sync），逐字符输入
+  本身不再承担这些累积开销。
 
 ** options
 
@@ -494,7 +568,7 @@ curl -s -H "$AUTH" $BASE/task/<id> | jq '{status, index, total, error, result}'
 * 录制流程建议
 
 1. =SPC t y r= 进入录制准备，摆好窗口。
-2. 用 OpenCode 提交任务；默认 =speed= 1.0 已经是偏快的真人手速（约 6.5 字符/秒），
+2. 用 OpenCode 提交任务；默认 =speed= 1.0 已经是偏快的真人手速（约 11 字符/秒），
    想再慢一点设 0.6–0.8，一般不建议超过 1.2。
 3. 中途想停下讲解就 =SPC t y p=，讲完 =SPC t y c=。
 4. 出错或想重来，=SPC t y u= 回到任务开始前（文件一起回滚）。
@@ -522,11 +596,11 @@ emacs --batch -Q -L . -L "$EVIL" -L "$EVIL/dir" \
       -f ert-run-tests-batch-and-exit
 #+end_src
 
-当前 45 项全通过，覆盖：JSON 编码、diff 解析、校验器、逐字符输入、保存、任务级撤销、
+当前 47 项全通过，覆盖：JSON 编码、diff 解析、校验器、逐字符输入、保存、任务级撤销、
 HTTP 鉴权与 =/status=、=/buffer=、=/tasks=、=/task= 全流程、=/undo=、=/diff=、404，
-新建文件（dired 创建、新建键与打开目录）、以及补全的触发字符、检查位置、候选与
-目标行匹配、纯文本/清理后的 LSP item、=completion= 选项，以及 KeyCastr
-镜像的特殊键映射和真实 socket 收发。
+新建文件（dired 创建、新建键与打开目录）、补全的触发字符、检查位置、候选与
+目标行匹配、纯文本/清理后的 LSP item、=completion= 选项、import 行一次性写入，
+以及 KeyCastr 镜像的特殊键映射和真实 socket 收发。
 
 HTTP 测试使用端口 18766；如果当前进程已有服务在跑会跳过，避免影响真实服务。
 
@@ -537,8 +611,9 @@ HTTP 测试使用端口 18766；如果当前进程已有服务在跑会跳过，
 - 目标文件不存在时会先在 dired 中创建；buffer 不能只读，默认不能有未保存修改。
 - Diff 转操作是基础版：整段替换，不生成逐行最小编辑。
 - 不做 OBS 自动控制、多 Agent、CGEvent 注入。
-- 补全只接 Eglot + corfu，且只用候选的纯文本 =insertText=：不展开 snippet、
-  不执行自动 import；没有 Eglot 的 buffer 逐字符输入不变。
+- 补全只接 Eglot + corfu，且只用候选的纯文本 =insertText=：不展开 snippet；
+  自动 import（=additionalTextEdits=）默认*开启*，可用
+  =typing-agent-completion-import= 关闭；没有 Eglot 的 buffer 逐字符输入不变。
 - 任务期间请勿手动编辑目标 buffer，也不要用其他工具改同一个文件。
 
 * 故障排查
@@ -548,7 +623,7 @@ HTTP 测试使用端口 18766；如果当前进程已有服务在跑会跳过，
 - *401*：token 不匹配，重新读 =~/.local/state/typing-agent/token=。
 - *409 有未保存修改*：先 =POST /save=，或确认后传 =options.allow_dirty: true=。
 - *422 定位失败*：=search= 文本与文件实际内容不一致（缩进、换行、全角空格）。重新读文件再改。
-- *打字太快/太慢*：调 =options.speed=，默认 1.0 为偏快的真人手速。
+- *打字太快/太慢*：调 =options.speed=，默认 1.0 为标准速度（约 11 字符/秒）。
 - *撤销失败*：buffer 撤销被禁用，或回退 =typing-agent-undo-max-steps= 步后仍未回到快照；
   错误会明确抛出，不会假装成功。
 - *KeyCastr 不亮*：确认 KeyCastr 在运行、版本带注入 socket

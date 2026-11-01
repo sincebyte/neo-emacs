@@ -202,7 +202,7 @@ ${OPERATION_HELP}`,
       .record(tool.schema.string(), tool.schema.unknown())
       .optional()
       .describe(
-        "任务选项：speed（速度倍率，默认 1.0）、typo_probability（默认 0.015）、allow_dirty（默认 false）、save（任务结束自动保存）、recording（录制模式）、post_delay（结束停顿秒数）。任务结束不做恢复，停在最后编辑或查看的 buffer。",
+        "任务选项：speed（速度倍率，默认 1.0，约 11 字符/秒）、allow_dirty（默认 false）、save（任务结束自动保存）、recording（录制模式）、completion（Eglot 补全弹框，默认 true）、post_delay（结束停顿秒数）。任务运行期间输入被锁定（停止只能 control=stop）；任务结束不做恢复，停在最后编辑或查看的 buffer。",
       ),
     expected: tool.schema
       .record(tool.schema.string(), tool.schema.unknown())

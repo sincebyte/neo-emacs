@@ -21,6 +21,7 @@
 (require 'typing-agent)
 (require 'typing-agent-keycast)
 (require 'typing-agent-completion)
+(require 'typing-agent-lock)
 
 (declare-function evil-mode "evil")
 (declare-function evil-insert "evil-commands")
@@ -35,7 +36,6 @@
 (declare-function evil-normal-state-p "evil-states")
 (declare-function evil-visual-state-p "evil-states")
 (declare-function consult-buffer "consult")
-(declare-function consult-recent-file "consult")
 (declare-function project-find-file "project")
 (declare-function project-current "project")
 (declare-function dired "dired")
@@ -47,8 +47,11 @@
 (defvar evil-mode)
 (defvar evil-state)
 (defvar evil-auto-indent)
-(defvar recentf-mode)
-(defvar recentf-list)
+;; Doom 的 `+evil-want-o/O-to-continue-comments'：为 t 时 `o'/`O' 在注释里
+;; 会自动补出 ` * ' 续行前缀。这里声明成 special variable（默认 nil，Doom
+;; 已 defcustom 时不会被覆盖），好在执行任务时动态绑定为 nil；非 Doom 环境
+;; 没有这条 advice，绑定 nil 也无副作用。
+(defvar +evil-want-o/O-to-continue-comments nil)
 
 (defcustom typing-agent-evil-auto-normal t
   "遇到 Insert / Visual / Operator 状态时，是否自动按 ESC 回到 Normal。
@@ -105,6 +108,21 @@
 
 ;;; 发送按键
 
+(defvar typing-agent-evil--executing-keys nil
+  "非 nil 表示正在发送 Typing Agent 的按键事件。")
+
+(defun typing-agent-evil--modeline-matches (original &rest args)
+  "渲染 ORIGINAL 时隐藏 Agent 按键产生的宏执行提示。
+只在显示层屏蔽 `executing-kbd-macro'，保留真正的宏录制提示。"
+  (let ((executing-kbd-macro
+         (unless typing-agent-evil--executing-keys executing-kbd-macro)))
+    (apply original args)))
+
+;; 宏提示函数是 defsubst，可能已内联到 matches，故包装整个显示段。
+(with-eval-after-load 'doom-modeline-segments
+  (advice-add 'doom-modeline-segment--matches :around
+              #'typing-agent-evil--modeline-matches))
+
 (defun typing-agent-evil--execute-keys (macro)
   "在当前 buffer 中执行键盘宏 MACRO。
 `execute-kbd-macro' 把每条命令都执行在 selected window 的 buffer 上：
@@ -112,7 +130,8 @@
 当前 buffer 放进 selected window，执行完再把当前 buffer 切回来。
 执行前先把这个宏里的按键镜像到 KeyCastr，让录制里看得到手速。"
   (typing-agent-keycast-mirror-events macro)
-  (let ((buffer (current-buffer)))
+  (let ((buffer (current-buffer))
+        (typing-agent-evil--executing-keys t))
     (let ((window (selected-window)))
       (when (and (windowp window)
                  (window-live-p window)
@@ -218,12 +237,17 @@ CONTEXT 用于错误信息。允许的转换：
 (defun typing-agent-evil-enter-insert (command)
   "用 Evil 命令 COMMAND 进入 Insert 模式。
 COMMAND 必须是 i/a/I/A/o/O 之一。执行前要求 Normal，执行后校验状态。
-打开新行时临时关闭 `evil-auto-indent'，让任务自己控制每一行缩进。"
+打开新行时临时关闭 `evil-auto-indent'，让任务自己控制每一行缩进。
+
+Doom 的 `+evil-want-o/O-to-continue-comments' 会让 `o'/`O' 在注释内自动
+续写 ` * ' 前缀。任务的 spec 本身已经带着完整的行首缩进，两者叠加会把
+Javadoc 打成 ` *  * 文本` 这种越缩越深的形状，所以这里必须一并关掉。"
   (typing-agent-evil-require-normal "enter_insert")
   (unless (member command typing-agent-evil-insert-commands)
     (signal 'typing-agent-input-error
             (list (format "不支持的进入 Insert 命令: %s" command))))
-  (let ((evil-auto-indent nil))
+  (let ((evil-auto-indent nil)
+        (+evil-want-o/O-to-continue-comments nil))
     (typing-agent-evil--execute-keys (kbd command)))
   (unless (typing-agent-evil-insert-p)
     (signal 'typing-agent-state-error
@@ -478,6 +502,11 @@ COUNT 为重复次数，默认 1。"
 
 ;;; 像人一样切换 buffer / 打开文件
 
+(defun typing-agent-evil--char-delay (base)
+  "基于 BASE 生成一个带随机起伏的输入间隔，像真人敲文件名。
+BASE 上下浮动 0~100%，避免匀速机械；BASE 为 0 时直接返回 0。"
+  (+ base (* base (/ (float (random 100)) 100.0))))
+
 (defcustom typing-agent-confirm-pause 1.0
   "输入文件名之后、按回车确认之前的停顿，单位：秒。
 创建文件和切换 buffer 都使用它：名字先出现在提示框里，停一下再回车。"
@@ -486,13 +515,12 @@ COUNT 为重复次数，默认 1。"
 
 (defcustom typing-agent-visit-method 'auto
   "查看或切换文件时使用的交互方式。
-`auto' 按场景选择：已经打开的 buffer 用 `consult-buffer'，最近文件用
-`consult-recent-file'，项目内文件用 `project-find-file'，其余用
+`auto' 按场景选择：已经打开的 buffer 用 `consult-buffer'，
+项目内文件用 `project-find-file'，其余用
 `find-file'。也可以指定其中一个命令；`direct' 表示不弹选择框。
-无论哪种方式，都会先弹出选择框、输入名字，再回车跳过去。"
+除 `direct' 外，都会先弹出选择框、输入名字，再回车跳过去。"
   :type '(choice (const auto)
                  (const consult-buffer)
-                 (const consult-recent-file)
                  (const project-find-file)
                  (const find-file)
                  (const direct))
@@ -503,8 +531,10 @@ COUNT 为重复次数，默认 1。"
   :type 'number
   :group 'typing-agent)
 
-(defcustom typing-agent-visit-char-delay 0.15
-  "文件跳转时，在选择框里逐字符输入名字的间隔，单位：秒。"
+(defcustom typing-agent-visit-char-delay 0.05
+  "文件跳转时，在选择框里逐字符输入名字的基础间隔，单位：秒。
+实际每个字符在此基础上有 0~100% 的随机起伏（见
+`typing-agent-evil--char-delay'），不是匀速。"
   :type 'number
   :group 'typing-agent)
 
@@ -546,9 +576,15 @@ DELAY 为 0 表示立刻调用 OK。"
                   (not (string-match-p "\\`M-x " prompt))))))))
 
 (defun typing-agent-evil--visit-abort-minibuffer ()
-  "选择框还开着时按 C-g 收掉它。"
+  "收掉还开着的选择框。
+优先直接 `abort-recursive-edit'，比注入 C-g 可靠：选择框已经失焦时
+C-g 会落到普通 buffer，那里未必绑定 C-g，会报 “C-g is undefined”。"
   (when (active-minibuffer-window)
-    (typing-agent-evil--push-events (vector 7))))
+    (condition-case nil
+        (with-selected-window (active-minibuffer-window)
+          (abort-recursive-edit))
+      (error
+       (typing-agent-evil--push-events (vector 7))))))
 
 (defun typing-agent-evil--visit-force-direct (file line tries)
   "最多试 TRIES 次收掉选择框，然后直接打开 FILE 的 LINE。"
@@ -568,15 +604,18 @@ DELAY 为 0 表示立刻调用 OK。"
 
 (defun typing-agent-evil--push-events (events)
   "把 EVENTS 注入 `unread-command-events'，让命令循环当成真实按键处理。
-这些按键同样不会进 macOS 的按键流，先镜像到 KeyCastr。"
+这些按键同样不会进 macOS 的按键流，先镜像到 KeyCastr；并计入受信事件数，
+让输入锁定在任务运行期间放行它们。"
   (typing-agent-keycast-mirror-events events)
   (setq unread-command-events
-        (append (append events nil) unread-command-events)))
+        (append (append events nil) unread-command-events))
+  (when (bound-and-true-p typing-agent--input-locked)
+    (typing-agent-lock-trust-events events)))
 
 (defun typing-agent-evil--visit-plan (file &optional already)
   "为 FILE 选择「人式打开」方式，返回 (COMMAND INPUT)，direct 时返回 nil。
 ALREADY 非空表示 FILE 的 buffer 已经打开，此时用 buffer 选择器；否则
-按最近文件、项目文件、普通 find-file 的顺序选择。"
+按项目文件、普通 find-file 的顺序选择。"
   (let* ((file (expand-file-name file))
          (buffer (find-buffer-visiting file))
          (name (file-name-nondirectory file))
@@ -585,16 +624,11 @@ ALREADY 非空表示 FILE 的 buffer 已经打开，此时用 buffer 选择器�
      ((eq method 'direct) nil)
      ((eq method 'consult-buffer)
       (list 'consult-buffer (or (and buffer (buffer-name buffer)) name)))
-     ((eq method 'consult-recent-file) (list 'consult-recent-file name))
      ((eq method 'project-find-file) (list 'project-find-file name))
      ((eq method 'find-file) (list 'find-file file))
      ;; auto：已打开的 buffer 用 buffer 选择器。
      ((and already buffer (fboundp 'consult-buffer))
       (list 'consult-buffer (buffer-name buffer)))
-     ((and (bound-and-true-p recentf-mode)
-           (fboundp 'consult-recent-file)
-           (member file (mapcar #'expand-file-name recentf-list)))
-      (list 'consult-recent-file name))
      ((and (fboundp 'project-find-file)
            (let ((inhibit-message t))
              (ignore-errors
@@ -612,7 +646,7 @@ ALREADY 非空表示 FILE 的 buffer 已经打开，此时用 buffer 选择器�
         (when (and (integerp line) (> line 0))
           (goto-line line))
         (recenter))
-      (when (> (length (window-list)) 1)
+      (when (and typing-agent-maximize-window (> (length (window-list)) 1))
         (ignore-errors (delete-other-windows)))
       buffer)))
 
@@ -668,9 +702,11 @@ buffer 真的切过去。超时（`typing-agent-visit-timeout'）才收掉选择
                       (and (stringp now)
                            (not (equal now before)))))
                   (lambda ()
-                    (run-at-time typing-agent-visit-char-delay nil
-                                 (lambda ()
-                                   (type-name chars (1+ index)))))
+                    (run-at-time
+                     (typing-agent-evil--char-delay typing-agent-visit-char-delay)
+                     nil
+                     (lambda ()
+                       (type-name chars (1+ index)))))
                   typing-agent-visit-timeout 0 alive give-up))))))
       (run-at-time
        0 nil
@@ -704,8 +740,10 @@ dired 出现、按下新建键、输入完文件名、创建完成、打开文�
   :type 'number
   :group 'typing-agent)
 
-(defcustom typing-agent-create-char-delay 0.15
-  "在「Create empty file:」提示里逐字符输入文件名时的间隔，单位：秒。"
+(defcustom typing-agent-create-char-delay 0.05
+  "在「Create empty file:」提示里逐字符输入文件名的基础间隔，单位：秒。
+实际每个字符在此基础上有 0~100% 的随机起伏（见
+`typing-agent-evil--char-delay'），不是匀速。"
   :type 'number
   :group 'typing-agent)
 
@@ -881,9 +919,11 @@ GUARD 返回 nil 时中止后续按键（用于任务被取消）。LOG 是
                       (and (stringp now)
                            (not (equal now before)))))
                   (lambda ()
-                    (run-at-time typing-agent-create-char-delay nil
-                                 (lambda ()
-                                   (type-each chars (1+ index)))))
+                    (run-at-time
+                     (typing-agent-evil--char-delay typing-agent-create-char-delay)
+                     nil
+                     (lambda ()
+                       (type-each chars (1+ index)))))
                   "输入文件名时按键没有生效"
                   0)))))
          (type-file-name ()

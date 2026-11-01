@@ -170,6 +170,8 @@
   error
   result
   timer
+  watchdog
+  last-step-at
   mode-prepared)
 
 (defvar typing-agent--tasks (make-hash-table :test #'equal)

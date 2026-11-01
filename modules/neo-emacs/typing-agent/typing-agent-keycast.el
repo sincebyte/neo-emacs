@@ -124,13 +124,21 @@ MODIFIERS 是 \"shift\"、\"control\"、\"option\"、\"command\" 的列表。
 
 (defun typing-agent-keycast--char-text (char)
   "把字符 CHAR 转成 KeyCastr 的显示文本。
-控制字符用 `key-description'，例如 `C-g'；普通字符原样显示。"
-  (or (cdr (assq char typing-agent-keycast-special-glyphs))
-      (if (or (< char 32) (= char 127))
-          (condition-case nil
-              (key-description (vector char))
-            (error nil))
-        (char-to-string char))))
+汉字和中文标点不镜像，仅影响按键显示，不影响实际输入。
+控制字符用 `key-description'，例如 `C-g'；其他字符原样显示。"
+  (unless (or (eq (aref char-script-table char) 'han)
+              ;; CJK 标点、全角标点及中文常用的引号、破折号、省略号。
+              (<= #x3000 char #x303f)
+              (<= #xff01 char #xff60)
+              (<= #xffe0 char #xffe6)
+              (<= #x2018 char #x201f)
+              (memq char '(#x2014 #x2026)))
+    (or (cdr (assq char typing-agent-keycast-special-glyphs))
+        (if (or (< char 32) (= char 127))
+            (condition-case nil
+                (key-description (vector char))
+              (error nil))
+          (char-to-string char)))))
 
 (defun typing-agent-keycast--event-text (event)
   "把 Emacs 按键事件 EVENT 转成 KeyCastr 的显示文本。"
