@@ -214,7 +214,6 @@
         git                 ; magit wit
         agentshell          ; ai integration
         redact              ; mask secrets on screen
-        typing-agent        ; let OpenCode edit code with visible Evil keys
         ;; eaf               ; emacs application framework
         ;; windows             ; toggle window by popwin
         ;; addspace         ; add space when typing
