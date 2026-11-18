@@ -2,9 +2,12 @@
 ;;;
 (add-hook 'web-mode-hook (lambda ()
                            (rainbow-delimiters-mode)
-                           (setq display-line-numbers                       t
-                                 lsp-modeline-code-actions-enable           nil
-                                 doom-modeline-icon                         nil)))
+                           ;; `doom-modeline-icon'/`lsp-modeline-code-actions-enable'
+                           ;; 是全局变量，用 setq 会把所有 buffer 的 icon 一起关掉，
+                           ;; 这里只让 web-mode buffer 生效。
+                           (setq display-line-numbers t)
+                           (setq-local lsp-modeline-code-actions-enable nil
+                                       doom-modeline-icon nil)))
 (add-hook 'js-mode-hook (lambda ()
                           (focus-mode                                       nil)
                           (rainbow-delimiters-mode)

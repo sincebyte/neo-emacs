@@ -54,6 +54,7 @@
 ;; 弹窗撑得很宽。这里从 eglot 的 capf 结果中移除该属性，Corfu 便不再显示这段。
 (require 'cl-lib)
 (load! "jdt-recovery")
+(load! "buffer-recovery")
 
 (defun +eglot--drop-completion-annotation (capf)
   "Drop `:annotation-function' from eglot completion CAPF."

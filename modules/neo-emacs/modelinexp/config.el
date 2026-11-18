@@ -131,6 +131,7 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
 
 (defconst my/modeline-alpha-faces
   '((doom-modeline-buffer-file-alpha        . doom-modeline-buffer-file)
+    (doom-modeline-host-alpha               . doom-modeline-host-state)
     (doom-modeline-evil-normal-alpha-state  . doom-modeline-evil-normal-state)
     (doom-modeline-evil-insert-alpha-state  . doom-modeline-evil-insert-state)
     (doom-modeline-evil-visual-alpha-state  . doom-modeline-evil-visual-state)
@@ -222,6 +223,7 @@ segment 背景颜色对齐；若 glyph 背景不透明（未启用 ns-alpha-glyp
 ;; 想恢复"跟随主题自动挑色"，把 `my/modeline-block-palette' 设成 nil 即可。
 (defvar my/modeline-block-palette
   '((normal   :bg "#7aa2f7" :fg "black")     ; NORMAL 模式 → 蓝底黑字
+    (host     :bg "#496BB8" :fg "#1a1b26")   ; 远程主机 → TokyoNight 紫色（purple）
     (filename :bg "#3b4261" :fg "#7aa2f7")   ; 文件名 → 石板灰底浅蓝字（用 evil 模式底色）
     (git      :bg "#3b4261" :fg "#7aa2f7")   ; git 分支 → 石板灰底浅蓝字
     (major    :bg "#3b4261" :fg "#7aa2f7")   ; major-mode（vcs/magit）→ 与 git 分支同色
@@ -523,6 +525,25 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
                     :foreground "black"
                     :weight 'bold)
 
+  ;; 远程主机段（含房子图标）的配色与 Powerline 箭头。
+  (defface doom-modeline-host-state
+    '((t :inherit doom-modeline))
+    "远程主机段的 face。"
+    :group 'doom-modeline)
+  (my/set-face-fontset 'doom-modeline-host-state (my/create-modeline-fontset))
+  (set-face-attribute 'doom-modeline-host-state nil
+                      :foreground (my/modeline-role-fg 'host)
+                      :background (my/modeline-role-color 'host)
+                      :weight 'bold)
+  (defface doom-modeline-host-alpha
+    '((t :inherit doom-modeline))
+    "Powerline 分隔符用的主机段 face。"
+    :group 'doom-modeline)
+  (set-face-attribute 'doom-modeline-host-alpha nil
+                    :background (my/modeline-alpha 'doom-modeline-host-state :background)
+                    :foreground "black"
+                    :weight 'bold)
+
   (set-face-attribute 'doom-modeline-panel nil
                     :inherit 'doom-modeline
                     :foreground "#68f3ca"
@@ -661,6 +682,101 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
   (add-hook '+workspace-new-hook #'fresh/modelineconfig)
   )))
 
+;;; 主机标识 ----------------------------------------------------------------
+;; 仅远程（TRAMP）buffer 在文件名色块前显示主机：取主机地址，
+;; 若 ~/.ssh/config 中为该主机配置了 Host 名称，则优先显示名称。
+;; 本机 buffer 不显示。结果带缓存，避免 modeline 每次重绘都重新解析文件。
+
+(defcustom my/modeline-ssh-config-file "~/.ssh/config"
+  "用于把远程主机地址映射为 Host 名称的 SSH 配置文件。"
+  :type 'file
+  :group 'doom-modeline)
+
+(defvar my/modeline-ssh-config-cache nil
+  "SSH 配置解析缓存，格式为 (KEY . ENTRIES)。")
+
+(defvar my/modeline-host-label-cache (make-hash-table :test #'equal)
+  "主机地址到显示名称的缓存。")
+
+(defun my/modeline-ssh-config-entries ()
+  "解析 SSH 配置，返回 ((ALIASES . HOSTNAME) ...)。
+结果按文件修改时间和大小缓存，避免 modeline 每次重绘都重新读取文件。"
+  (let* ((file (expand-file-name my/modeline-ssh-config-file))
+         (attrs (file-attributes file))
+         (mtime (and attrs (float-time (nth 5 attrs))))
+         (key (and attrs (list mtime (nth 7 attrs)))))
+    (if (and my/modeline-ssh-config-cache
+             (equal key (car my/modeline-ssh-config-cache)))
+        (cdr my/modeline-ssh-config-cache)
+      (let ((entries nil)
+            (aliases nil)
+            (hostname nil))
+        (when (and attrs (file-readable-p file))
+          (with-temp-buffer
+            (insert-file-contents file)
+            (goto-char (point-min))
+            (while (not (eobp))
+              (let* ((raw (buffer-substring-no-properties
+                           (line-beginning-position) (line-end-position)))
+                     (line (string-trim (car (split-string raw "#"))))
+                     (tokens (and (not (string-empty-p line))
+                                  (split-string line "[ \t]+")))
+                     (keyword (downcase (or (car tokens) "")))
+                     (values (cdr tokens)))
+                (cond
+                 ((equal keyword "host")
+                  (when aliases
+                    (push (cons (nreverse aliases) hostname) entries))
+                  (setq aliases (copy-sequence values)
+                        hostname nil))
+                 ((equal keyword "match")
+                  (when aliases
+                    (push (cons (nreverse aliases) hostname) entries))
+                  (setq aliases nil
+                        hostname nil))
+                 ((and (equal keyword "hostname") aliases values)
+                  (setq hostname (car values)))))
+              (forward-line 1))
+            (when aliases
+              (push (cons (nreverse aliases) hostname) entries))))
+        ;; 配置文件变了，之前缓存的主机显示名也要一起失效。
+        (clrhash my/modeline-host-label-cache)
+        (setq my/modeline-ssh-config-cache (cons key (nreverse entries)))
+        (cdr my/modeline-ssh-config-cache)))))
+
+(defun my/modeline-ssh-config-name (host)
+  "返回 SSH 配置中与 HOST 对应的名称，没有则返回 nil。
+HOST 既可能是配置里的别名，也可能是配置中某个 HostName（如 IP）。"
+  (when (and host (not (string-empty-p host)))
+    (let ((host (downcase host))
+          (entries (my/modeline-ssh-config-entries)))
+      (or
+       ;; HOST 本身就是配置中的别名（忽略通配符条目）
+       (cl-loop for (aliases . _) in entries
+                when (cl-some (lambda (alias)
+                                (and (not (string-match-p "[*?]" alias))
+                                     (string= (downcase alias) host)))
+                              aliases)
+                return (cl-find-if (lambda (alias)
+                                     (string= (downcase alias) host))
+                                   aliases))
+       ;; HOST 是某个 HostName，映射回对应的 Host 名称
+       (cl-loop for (aliases . hostname) in entries
+                when (and hostname (string= (downcase hostname) host))
+                return (cl-find-if (lambda (alias)
+                                     (not (string-match-p "[*?]" alias)))
+                                   aliases))))))
+
+(defun my/modeline-host-label ()
+  "返回当前远程 buffer 所属主机的显示名：优先 SSH 配置名称，否则为 IP。
+本机 buffer 不显示主机标识，返回 nil。"
+  (when-let* ((remote (file-remote-p (or buffer-file-name default-directory)
+                                     'host)))
+    (or (gethash remote my/modeline-host-label-cache)
+        (puthash remote
+                 (or (my/modeline-ssh-config-name remote) remote)
+                 my/modeline-host-label-cache))))
+
 ;;; 关闭 modeline 上的所有鼠标行为 ---------------------------------------
 ;; mode-line 各段字符串会带 help-echo(悬浮提示)/mouse-face(悬浮高亮)/
 ;; local-map & keymap(鼠标点击)/pointer(手型光标) 等文本属性, 鼠标移上去会
@@ -752,12 +868,12 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
                                           'doom-modeline-evil-normal-alpha-state)
                                         (my/modeline-base-alpha-face) ))))
 
-  ;; 直接从 evil-state 段过渡到文件名段：只用一个箭头。
+  ;; 直接从 evil-state 段过渡到后面的色块：只用一个箭头。
+  ;; 远程 buffer 的目标是主机色块，本地 buffer 的目标是文件名色块。
   ;; 原来的 `powerline-evil-right' + `powerline-filename-right-1' 会在中间
-  ;; 露出 mode-line 底色，形成一个箭头形状的空白；这里把目标 face 直接设成
-  ;; `doom-modeline-buffer-file-alpha'，让两个色块无缝衔接。
+  ;; 露出 mode-line 底色，形成一个箭头形状的空白，这里直接一次过渡。
   (doom-modeline-def-segment powerline-evil-filename-right
-    "Powerline separator from the evil-state segment straight into the buffer-file segment."
+    "Powerline separator from the evil-state segment straight into the host/file segment."
     (propertize " " 'display
                 (my/powerline-arrow-left
                  (if (doom-modeline--active)
@@ -769,7 +885,10 @@ fontset 会把它解析成 Symbols Nerd Font Mono（墨迹更矮），分支图�
                       ((eq evil-state 'motion)   'doom-modeline-evil-motion-alpha-state)
                       (t                         'doom-modeline-evil-normal-alpha-state))
                    'doom-modeline-evil-normal-alpha-state)
-                 'doom-modeline-buffer-file-alpha)))
+                 ;; 远程 buffer 先进主机色块，本地 buffer 直接进文件名色块。
+                 (if (my/modeline-host-label)
+                     'doom-modeline-host-alpha
+                   'doom-modeline-buffer-file-alpha))))
 
   (doom-modeline-def-segment powerline-filename-right-1
     "Insert a Powerline separator into the Doom Modeline."
@@ -975,6 +1094,31 @@ to disambiguate."
   (defvar my-modeline-filename-icon-raise 0.1
     "Vertical raise (in line-height units) for the buffer-file type icon.")
 
+  (doom-modeline-def-segment my-host
+    "Show the remote host (SSH name or IP) before the file name."
+    (when-let ((host (my/modeline-host-label)))
+      (when (not (string-empty-p host))
+        (concat
+         ;; 色块左侧留白。
+         (propertize " " 'face 'doom-modeline-host-state)
+         ;; 远程主机：Font Awesome 云图标（nf-fa-cloud）。
+         (let ((icon (nerd-icons-faicon "nf-fa-cloud")))
+           (when (and (stringp icon) (not (string-empty-p icon)))
+             (let ((face (get-text-property 0 'face icon)))
+               (concat
+                (propertize icon 'face
+                            (append (if (listp face) face (list :inherit face))
+                                    (list :foreground "#DCEBFA"
+                                          :background (my/modeline-role-color 'host)))
+                            'display (list 'raise my-modeline-filename-icon-raise))
+                (propertize " " 'face 'doom-modeline-host-state)))))
+         (propertize (concat host " ") 'face 'doom-modeline-host-state)
+         ;; 主机 → 文件名的 Powerline 箭头。
+         (propertize " " 'display
+                     (my/powerline-arrow-left
+                      'doom-modeline-host-alpha
+                      'doom-modeline-buffer-file-alpha))))))
+
   (doom-modeline-def-segment my-filename
     "Show buffer filename with disambiguation if needed."
     (concat
@@ -1029,7 +1173,7 @@ to disambiguate."
   ;; (display-battery-mode 1)
   (display-time-mode 1)
   (my/doom-modeline-def-modeline 'main
-    '(my-segment powerline-evil-filename-right my-filename powerline-filename-right-2 wechat-msg-count matches parrot selection-info)
+    '(my-segment powerline-evil-filename-right my-host my-filename powerline-filename-right-2 wechat-msg-count matches parrot selection-info)
     '(misc-info minor-modes input-method buffer-encoding
       powerline-separator-left-git-start my-git-branch
       powerline-separator-left-mt my-time ))

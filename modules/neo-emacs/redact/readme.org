@@ -15,29 +15,180 @@
 2. Spring 占位符默认值：=@Value("${uap.global.jwt:...}")=、=${db.password:...}=
 3. 已知形态的密钥：OpenAI、AWS、GitHub、GitLab、Slack、Google、Stripe、
    阿里云、腾讯云、JWT、=Bearer= token、=scheme://user:pass@host= 中的密码
-4. 域名：=v.example.com=、=https://stream.example.com/...= 里的主机名
-5. 中国大陆手机号（含 =+86= 前缀）
-6. PEM 私钥块（=-----BEGIN ... PRIVATE KEY-----=），逐行遮挡
-7. 敏感词表 =redact-words=：人名、公司名、项目名等无法用正则识别的词
+4. *gitleaks 规则库命中的密钥*（见下节）
+5. 域名：=v.example.com=、=https://stream.example.com/...= 里的主机名
+6. IPv4 地址：=10.100.2.1=、=https://171.221.254.248/=、
+   =172.16.0.0/24= 里的地址部分（端口、路径、掩码保留）
+7. UUID：=urn:uuid:550e8400-e29b-41d4-a716-446655440000=、花括号、引号里的
+   8-4-4-4-12 形式，只遮 UUID 本体
+8. 雪花算法 ID：18-19 位连续数字（详见下文）
+9. 中国大陆手机号（含 =+86= 前缀）
+10. PEM 私钥块（=-----BEGIN ... PRIVATE KEY-----=），逐行遮挡
+11. 敏感词表 =redact-words=：人名、公司名、项目名等无法用正则识别的词
+12. Org 表格里表头是 =账密=、=密码=、=Password= 等列名的整列（见「Org 表格列」）
 
-默认不处理：用户名、邮箱、身份证、银行卡、IP 地址。需要遮时把词加进
-=redact-words=。
+默认不处理：用户名、邮箱。末位是数字的 18 位身份证号会被雪花 ID 规则遮掉，
+19 位银联卡号同样；不需要时用 =redact-mask-snowflake-ids= 关掉。
+
+IP、UUID、雪花 ID 各自可以用开关关掉。运行中改用 =M-x setopt=，
+=setq= 不会清掉已经画上去的遮挡：
+
+| 变量 | 默认 | 作用 |
+|---|---|---|
+| =redact-mask-ip-addresses= | =t= | 是否遮挡 IPv4 |
+| =redact-mask-uuids= | =t= | 是否遮挡 UUID |
+| =redact-mask-snowflake-ids= | =t= | 是否遮挡雪花 ID |
+
+判据：四段点分数字，每段 0-255，且前后不能紧邻字母、数字、点和横线。
+所以 =1.2.3.4.5=、=v1.2.3.4=、=file.1.2.3.4.log= 都不当 IP。IPv6 不处理。
+
+UUID 只认带横线的 8-4-4-4-12；前后紧邻十六进制字符时跳过，
+所以无横线的 32 位 MD5 和嵌在更长哈希里的片段都不会被切一段出来。
+
+雪花 ID 写死 18-19 位；前后紧邻字母、数字、下划线或点时跳过，
+所以 17 位和 20 位数字、=v123456789012345678= 这类标识符都不遮。
+
+**gitleaks 集成**
+
+内置正则是“按形态猜”，gitleaks 是“按规则库 + 熵”判定，两者互补：
+
+- gitleaks 认不出 =db.password = "S3cr3tP@ssw0rd!xyz"= 这种值里带 =@!= 的赋值，
+  内置正则认得出；
+- 内置正则只认识列出来的几种密钥前缀，其他厂商的 token 靠 gitleaks。
+
+行为：
+
+- 打开文件 buffer 时异步跑一次 =gitleaks dir <临时文件>=；
+- 编辑停下 =redact-gitleaks-idle-delay=（默认 0.6 秒）后重扫，粘贴密钥也能补上；
+- 首次打开最多同步等 =redact-gitleaks-blocking-wait=（默认 0.2 秒），
+  让第一帧就已经遮好，超时转后台；
+- 结果按内容 MD5 缓存，同一份文本反复打开不再起进程；
+- 临时文件保留原扩展名（让 =.env= 之类路径规则生效），进程结束立即删除。
+
+安装：=brew install gitleaks=。找不到时只退回内置规则，不会报错。
+
+| 变量 | 默认 | 作用 |
+|---|---|---|
+| =redact-gitleaks-enabled= | =t= | 总开关 |
+| =redact-gitleaks-executable= | ="gitleaks"= | 可执行文件 |
+| =redact-gitleaks-config= | =nil= | 自定义 =.toml= 规则文件 |
+| =redact-gitleaks-max-size= | =2000000= | 超过该字符数不扫 |
+| =redact-gitleaks-idle-delay= | =0.6= | 编辑后重扫延迟，=nil= 关闭 |
+| =redact-gitleaks-blocking-wait= | =0.2= | 打开时同步等待上限，=nil= 不等 |
+| =redact-gitleaks-timeout= | =15= | 单次进程超时（秒） |
+| =redact-gitleaks-extra-args= | =nil= | 追加参数，如 =("--enable-rule" "generic-api-key")= |
+| =redact-gitleaks-ignore-modes= | 终端类 mode | 这些 mode 不跑 gitleaks |
+| =redact-gitleaks-scan-non-file-buffers= | =nil= | 是否也扫 `*scratch*` 等无文件 buffer |
+
+命中 =redact-ignored-values= 或短于 =redact-min-length= 的值仍然跳过，
+现有名单对 gitleaks 的结果同样生效。
+
+=redact-words= 也照旧工作，两者叠加。
+
+**前置过滤：超大文件和二进制文件**
+
+打开 buffer 时先判断一次，命中就直接不启用 =redact-mode=，内置正则和
+gitleaks 都不跑：
+
+| 条件 | 默认 | 变量 |
+|---|---|---|
+| 体积超过 30 MiB | 31457280 字节 | =redact-max-buffer-size= |
+| 二进制内容 | 跳过 | =redact-skip-binary-buffers= |
+
+二进制的判定：
+
+1. =buffer-file-coding-system= 是 =no-conversion= 或 =binary=
+   （Emacs 遇到 NUL 字节时就是这么标记的）；
+2. major mode 是 =image-mode= / =doc-view-mode= / =archive-mode= /
+   =hexl-mode= 等渲染类 mode；
+3. 开头 4096 个字符里出现 NUL 字节。
+
+判定用未修改 buffer 的磁盘字节数，已经改过的 buffer 退化成字符数估算。
+buffer 在编辑过程中增长到超过上限时，=post-command-hook= 会主动关闭遮挡。
+
+两级阈值各管各的：
+
+- =redact-max-buffer-size=（30 MiB）：整体不做任何匹配；
+- =redact-gitleaks-max-size=（2 MB）：仍然做内置正则，但不起 gitleaks 进程。
+
+=redact-mode= 手动开启不受限制：显式调用 =M-x redact-mode= 仍然生效，
+适合临时检查某个文件。
+
+**Org 表格列**
+
+笔记里最常见的写法是密码直接躺在某一列，前面没有任何键名：
+
+#+begin_example
+| 系统 | 环境 | 地址         | 账密                | 备注 |
+|------+------+--------------+---------------------+------|
+| VPN  | 生产 | 10.0.0.1     | liuzj/Liuzijie@123  |      |
+#+end_example
+
+这种表格里没有 =password:= 之类的提示，内置正则和 gitleaks 都认不出来。
+所以按表头列名判定：表头命中 =redact-table-columns= 的列，整列数据逐格遮挡，
+表头和 =|---+---|= 分隔行保持可见。
+
+| 变量 | 默认 | 作用 |
+|---|---|---|
+| =redact-table-columns= | 账密、密码、Password… | 需要遮挡的列名 |
+| =redact-table-idle-delay= | =0.3= | 编辑后重扫延迟（秒），=nil= 只在打开时扫一次 |
+
+列名比较规则：
+
+- 忽略大小写、空白和 Org 强调标记，=*Password*= 等同 =password=；
+- 括号里的补充说明会被去掉，=账密（账号/密码）= 等同 =账密=；
+- 英文列名全等比较，=key= 不会误伤 =keyword=；
+- 中文列名按子串比较，=密码= 能命中 =登录密码=、=支付密码=。
+
+没有表头的表格（第一行直接是数据）会退回按列内容形态判断：某列至少两个
+非空单元格、且全部形如 =用户名/密码=，密码至少 8 位并含字母和数字（或
+=!@#$%^&*= 这类符号）时，整列逐格遮挡。这样 =admin/yy889750=、
+=minio/tPtJSnNxyttPiy4H= 不需要表头也能遮，而 =docs/getting-started=、
+=nginx/1.25.3=、=application/json= 不会被误判。
+
+只处理 =org-mode= 的 buffer，靠 overlay 遮挡，不动文本内容。
+表格行里的所有遮挡（列规则、内置正则、gitleaks）都按原文的显示宽度生成
+星号（中文算 2 列），所以竖线仍然对齐，不会因为遮了密码或地址就整张表
+错位；代价是表格里被遮内容的长度在屏幕上可见。表格外仍然固定 6 个星号。
 
 **实现要点**
 
-- =font-lock= + =display= 文本属性：增量、随编辑自动重排。
+- =font-lock= + =display= 文本属性（内置正则）+ overlay（gitleaks 结果）：
+  前者增量重排，后者按扫描结果整体重建，互不干扰。
 - 启用时同步 =font-lock-ensure=，不等 redisplay 的 jit-lock 分块 fontify；
   否则进入 buffer 的第一帧会先露出明文，下一帧才变成星号。
 - =window-buffer-change-functions= 在窗口切换 buffer、绘制前再兜底一次：
-  补启用漏掉的 buffer，并同步遮挡可见区域。
-- 遮挡串固定 6 个星号，不按原长生成，避免泄露长度。
+  补启用漏掉的 buffer，并同步遮挡可见区域、补一次 gitleaks 扫描。
+- 遮挡串固定 6 个星号，不按原长生成，避免泄露长度；唯一例外是 Org 表格行，
+  行内所有遮挡按原文显示宽度生成等宽星号，否则整行会变窄、竖线错位。
 - 启用时 modeline 显示锁图标：=Symbols Nerd Font Mono= 的 =nf-fa-lock=
   字形（U+F023），不用彩色 emoji。
 - 域名只认常见 TLD；=sh/pl/md/rs/so/in/zip/cc= 等同时是代码文件扩展名的
   后缀不在白名单里，避免把 =run.sh=、=README.md= 当成域名。
+- IPv4 先按 `N.N.N.N' 粗匹配，再校验每段 0-255；前后紧邻字母、数字、点或
+  横线时跳过，避免把更长的点分串和版本号切一段出来。
+- UUID 与雪花 ID 也是粗匹配 + 边界检查：UUID 前后不得紧邻十六进制字符，
+  雪花 ID 前后不得紧邻字母、数字、下划线或点，避免切哈希和长数字。
 - PEM 私钥块跨行，用 overlay 逐行遮挡，保留行数。
 - 值短于 =redact-min-length=（默认 6）或命中 =redact-ignored-values= 时不遮。
 - Spring 占位符只遮 =${key:default}= 里的默认值，键名保持可见。
+- gitleaks 报的 =StartColumn= 不可靠，只按 =StartLine=/=EndLine= 加行内
+  搜索 =Secret= 定位；定位失败时遮整行，宁可多遮。
+- gitleaks 的 =stdin= 模式在 Emacs 异步管道下读不到 EOF、进程不会退出，
+  所以改用临时文件 + =dir= 模式。
+- 表格列遮挡用 overlay，按表头列名定位；编辑停下 =redact-table-idle-delay=
+  后整份重扫，只有改动落在表格行上才触发，写正文不会白扫。
+- 没有表头时按列内容形态推断账密列：整列非空单元格都符合 =用户名/密码=
+  且密码足够长才认，宁可漏遮也不把路径、版本号遮掉。
+- 三处 overlay 列表（PEM / gitleaks / 表格列）在清理时都按标记属性扫一遍整个
+  buffer：切主模式会清空 buffer-local 列表但留下 overlay，不扫的话每次重开
+  表格就多一层 overlay。
+- 同一段文本被多条规则命中时（整段域名 + 词表里的 =minexiot=、表格单元格 +
+  格里的 IP），必须先把并集算出来再整段重算。=display= 是按「值相同的连续
+  区间」渲染的：一段遮挡被另一段劈成几块后，每块都会再渲染一遍整串星号，
+  行宽就成倍膨胀（=a.minexiot.com= 会渲染成 25+8+25 个星号）。实现上文本
+  属性之间用 =redact--text-run-bounds= 合并，文本属性与遮挡 overlay 相交时
+  直接跳过（overlay 的 =display= 本来就更优先）。
 
 **已知限制**
 
@@ -45,10 +196,25 @@
 - =isearch= / =swiper= / =consult-line= / =occur= 会重新显示原文。
 - =vterm= 暂不接入（它自己维护缓冲区渲染）。
 - 大文件超过 =font-lock-maximum-size=（当前配置 500KB）时 font-lock 不工作，
-  规则也不会生效。
+  内置正则的规则不会生效；gitleaks 另有 =redact-gitleaks-max-size= 限制。
 - 超过 =redact-eager-fontify-max-size=（默认 2MB）的 buffer 只在显示时
   同步遮挡可见区域，滚动到未 fontify 的部分仍可能短暂露出原文；
   需要绝对安全时调大这个值。
+- gitleaks 扫描期间写一个临时文件（=temporary-file-directory= 下，权限 0600），
+  进程结束立即删除；Emacs 异常退出时由 =kill-emacs-hook= 兜底清理。
+- 内容变化后，新密钥最多要等 =redact-gitleaks-idle-delay= 才被遮住。
+- 表格列优先按表头识别；表头不在 =redact-table-columns= 里时退回
+  =用户名/密码= 形态推断。=release/v2024.10.1= 这类「单词/版本号」列
+  可能被误遮，给表格加表头可以精确指定列。
+- 表格行内按原文宽度生成星号，所以表格里被遮内容的长度在屏幕上是可见的
+  （列宽本来也可见）；表格外仍固定 6 个星号。
+- IPv6 不遮。四段的版本号（=1.2.3.4=）会被当成 IPv4 遮掉，
+  三段（=29.1.50=）不受影响。
+- 雪花 ID 的位数写死 18-19 位：19 位银联卡号、末位是数字的 18 位身份证号
+  会被一并遮掉；需要保留时用 =setopt redact-mask-snowflake-ids nil=。
+  17 位和 20 位数字不遮。
+- UUID 只认带横线的 8-4-4-4-12；32 位无横线串（MD5、SHA 片段）不遮，
+  段长不是 8-4-4-4-12 的写法也不遮。大小写不敏感。
 
 ** 敏感词表
 
@@ -65,9 +231,14 @@
 |---|---|
 | =M-x redact-add-word= | 把 region 内容或输入加入词表 |
 | =M-x redact-remove-word= | 从词表移除 |
-| =M-x redact-refresh= | 用 =setq= 改完后刷新已渲染区域 |
+| =M-x redact-refresh= | 清缓存并强制重扫所有 buffer |
 
 **加规则**
 
-编辑 =config.el= 里的 =redact--credential-regexp= / =redact--token-regexp=，
-或在 =redact-ignored-values= 里加白名单。改完 =M-x doom/reload= 即可。
+- 内置正则：编辑 =config.el= 里的 =redact--credential-regexp= /
+  =redact--token-regexp=，或在 =redact-ignored-values= 里加白名单。
+- gitleaks：把 =redact-gitleaks-config= 指向自己的 =.toml=，或在
+  =redact-gitleaks-extra-args= 里传 =--enable-rule= 等参数。
+
+改完 =M-x doom/reload= 即可。已有 buffer 里按旧规则画上去的遮挡属性和
+overlay 会在模块重新加载时自动清掉重建；也可以手动 =M-x redact-refresh=。

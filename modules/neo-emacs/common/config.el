@@ -8,6 +8,19 @@
 
 (global-set-key (kbd "<RET>" ) 'evil-ret )
 
+;; 几乎不再用键盘宏：解绑默认的录制/重放键，避免误触进入录制状态
+;; （`F3' 一按就开始录制，modeline 会一直显示录制中）。
+;; 宏本身没有禁用，需要时仍可用 `M-x kmacro-*' 或 `C-x C-k' 前缀。
+(dolist (key '("C-x (" "C-x )" "C-x e" "<f3>" "<f4>"))
+  (global-unset-key (kbd key)))
+
+;; evil normal state 的 `q' 同样是录制宏，一并去掉。
+;; 不能只 unset：normal state 没绑定时会退到 global-map 的
+;; `self-insert-command'，按 q 就变成插入字符。绑到 `ignore' 静默吞掉。
+;; 执行宏的 `@' / `Q' 保留。
+(after! evil
+  (define-key evil-normal-state-map (kbd "q") #'ignore))
+
 (setq enable-local-variables :safe
       byte-compile-warnings '(not free-vars unresolved callargs redefine obsolete noruntime cl-functions interactive-only make-local))
 

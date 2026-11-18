@@ -288,9 +288,23 @@ G（`vterm-reset-cursor-point'）回到缓冲区末尾时恢复输出；ESC 时�
     (delete-overlay my/vterm--copied-overlay))
   (setq my/vterm--copied-overlay nil))
 
+(defcustom my/vterm-copied-region-hint nil
+  "复制后用 overlay 标出刚复制的区域（`my/vterm-copied-region'）。
+
+默认 nil：yank（`v e y'）、`M-w'、`vterm-copy-mode-done'、鼠标拖选之后都
+不留任何底色，选区该消失就消失。提示底色继承 `region'（同色，`:extend t'
+满行宽），开着时很容易和真的选区混淆，所以默认关掉。
+想恢复这个提示，把它设成 t 即可，比如：
+
+  (setq my/vterm-copied-region-hint t)"
+  :type 'boolean
+  :group 'vterm)
+
 (defun my/vterm--highlight-copied-region (beg end)
-  "用 overlay 标出 vterm 中刚复制的 BEG..END。"
-  (when (and (derived-mode-p 'vterm-mode)
+  "用 overlay 标出 vterm 中刚复制的 BEG..END。
+`my/vterm-copied-region-hint' 为 nil 时什么也不画。"
+  (when (and my/vterm-copied-region-hint
+             (derived-mode-p 'vterm-mode)
              (integer-or-marker-p beg)
              (integer-or-marker-p end)
              (< beg end))
@@ -316,16 +330,52 @@ G（`vterm-reset-cursor-point'）回到缓冲区末尾时恢复输出；ESC 时�
 ;; 鼠标拖选（`select-active-regions' 已经把它放进剪贴板）之后直接敲键时，
 ;; mark 会被 `vterm-send-key' 里的 `deactivate-mark' 取消；在取消前把刚才的
 ;; 选区记下来，照样保留提示底色。
-(defun my/vterm--remember-region-before-deactivate ()
-  "在 vterm 中选区被取消时，保留刚才选中范围的提示底色。"
-  (when (and (derived-mode-p 'vterm-mode)
-             (mark t))
-    (let ((beg (min (point) (mark t)))
-          (end (max (point) (mark t))))
-      (when (< beg end)
-        (my/vterm--highlight-copied-region beg end)))))
+;;
+;; 不能只看 `(mark t)'：`deactivate-mark' 带 force 调用时（ESC、C-g、部分包）
+;; 根本不判断选区是否有效，而 vterm 的 point 永远被输出拉到终端光标处，一个
+;; 早先遗留的 mark 就会被撑成 mark..缓冲区末尾，画出来就是整屏的“假选中”。
+;; 所以只在“这条命令刚由鼠标拉出选区、且此刻选区真的有效”时记录。
+(defconst my/vterm-mouse-selection-commands '(mouse-drag-region mouse-set-region)
+  "会留下鼠标拖选区的命令。")
 
-(add-hook 'deactivate-mark-hook #'my/vterm--remember-region-before-deactivate)
+(defun my/vterm--deactivate-advice (orig &rest args)
+  "在 vterm 中取消选区前记下鼠标刚拉出的范围，取消后画提示底色。"
+  (let ((selection (and (derived-mode-p 'vterm-mode)
+                        (memq last-command my/vterm-mouse-selection-commands)
+                        (use-region-p)
+                        (cons (region-beginning) (region-end)))))
+    (prog1 (apply orig args)
+      (when selection
+        (my/vterm--highlight-copied-region (car selection) (cdr selection))))))
+
+(advice-add 'deactivate-mark :around #'my/vterm--deactivate-advice)
+
+;; 终端里（vim、less、ssh……）的 yank / 复制 Emacs 完全看不见：那个 Y 只是被
+;; `vterm--self-insert' 原样发给子进程，没有任何 Emacs 侧的钩子会跑，所以复制
+;; 提示也就不会自己消失。这里把“往终端敲键”当结束信号：一旦你开始打字，上一次
+;; 复制的提示就收起来。
+(defun my/vterm--clear-copied-on-input-advice (orig &rest args)
+  "往终端发按键之后清掉复制提示。"
+  (prog1 (apply orig args)
+    (when (derived-mode-p 'vterm-mode)
+      (my/vterm-clear-copied-region))))
+
+(with-eval-after-load 'vterm
+  (advice-add 'vterm--self-insert :around #'my/vterm--clear-copied-on-input-advice)
+  (advice-add 'vterm--self-insert-meta :around #'my/vterm--clear-copied-on-input-advice))
+
+;; 离开 vterm（切 buffer、切 workspace、popup 收起）时也清掉提示：否则切回来
+;; 还看见整块底色，和真的全选一模一样。
+(defun my/vterm--clear-copied-when-hidden (&rest _)
+  "vterm buffer 不再显示在任何窗口里时，清掉复制提示底色。"
+  (dolist (buf (buffer-list))
+    (unless (get-buffer-window buf t)
+      (with-current-buffer buf
+        (when (and (derived-mode-p 'vterm-mode) my/vterm--copied-overlay)
+          (my/vterm-clear-copied-region))))))
+
+(add-hook 'window-buffer-change-functions #'my/vterm--clear-copied-when-hidden)
+(add-hook 'window-configuration-change-hook #'my/vterm--clear-copied-when-hidden)
 
 ;; 开始新选区时先清掉上一次“刚复制”的提示，避免两块底色叠在一起。
 (defun my/vterm--clear-copied-region-on-activate ()
