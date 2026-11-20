@@ -392,8 +392,45 @@
 (map! :ne  "; b"      'switch-to-buffer                      )
 (map! :ne "; d"       'opencode-toggle-maximize-or-agent-shell )
 (map! :ne  "; q"      'ace-window       )
-(map! :ne  "; f"      'dirvish                               )
-(map! :map dirvish-mode-map :ne "; f" #'+dired/quit-all      )
+
+;; Dirvish: `; f` 打开时记住来源 buffer，`q` 退出时回到它。
+;; 不能依赖 dirvish 自己的 `dv-winconf`：Doom 设置了
+;; `dirvish-reuse-session 'open`，会话被复用时那个 window configuration
+;; 可能还是上一次打开 dirvish 时的旧布局，于是按 q 会显示当时那个
+;; 文件，而不是 `; f` 之前正在看的文件。
+(defvar-local my/dirvish-origin-buffer nil
+  "Buffer from which the current Dirvish session was opened.")
+
+(defun my/dirvish-here ()
+  "Open Dirvish in `default-directory', remembering the current buffer.
+Also handles the case where `dirvish' reuses an existing session instead of
+displaying a new buffer in the selected window."
+  (interactive)
+  (let ((origin (current-buffer)))
+    (dirvish)
+    (when-let* ((dv (dirvish--get-session 'type 'default))
+                (idx (cdr (dv-index dv)))
+                ((buffer-live-p idx)))
+      (with-current-buffer idx
+        (setq my/dirvish-origin-buffer origin)))))
+
+(defun my/dirvish-quit-and-return ()
+  "Quit Dirvish and go back to the buffer it was opened from."
+  (interactive)
+  (let ((origin my/dirvish-origin-buffer))
+    (dirvish-quit)
+    (when (and (buffer-live-p origin)
+               (not (eq (window-buffer) origin)))
+      (if-let* ((win (get-buffer-window origin (selected-frame))))
+          (select-window win)
+        (switch-to-buffer origin)))))
+
+(map! :ne  "; f"      'my/dirvish-here                       )
+;; 放在 `after! dirvish` 里，确保晚于 dired 模块自身的 `q`/`; f` 绑定执行。
+(after! dirvish
+  (map! :map dirvish-mode-map
+        :n  "q"    #'my/dirvish-quit-and-return
+        :ne "; f"  #'+dired/quit-all))
 (map! :n   "SPC t n"  '+workspace/new                        )
 (map! :n   "SPC f n"  'copy-buffer-file-name                 )
 (map! :v   "SPC f n"  'copy-buffer-file-name                 )
